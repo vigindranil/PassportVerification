@@ -4,9 +4,7 @@ dotenv.config();
 import loginRoutes from './routes/login.js';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js'
-import testRoutes from './routes/test.js';
-import updateRoutes from './routes/user.js'
-import districNodal from './routes/user.js'
+import masterRoutes from './routes/master.js'
 import verifyToken from './middleware/authMiddleware.js';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -28,6 +26,7 @@ app.use('/api/auth/',  loginRoutes);
 //private Route
 app.use('/api/auth/', verifyToken, authRoutes);
 app.use('/api/user/', verifyToken,userRoutes)
+app.use('/api/master', verifyToken ,masterRoutes)
 
 // test route
 app.use('/test', (req, res)=>{

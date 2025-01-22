@@ -1,6 +1,7 @@
 import { saveUserRegistrationModel } from '../models/userModel.js';
 import { updateUserActivationStatusModel } from '../models/userModel.js'
 import {getDistrictNodalDashBoardModel} from '../models/userModel.js'
+import {showuserDetailsModel} from '../models/userModel.js'
 export const saveUserRegistration = async (req, res) => {
     try {
         const { UserID,
@@ -16,7 +17,11 @@ export const saveUserRegistration = async (req, res) => {
             UserRoleID,
             DistrictID,
             PSID } = req.body;
-        const result = await saveUserRegistrationModel(UserID,
+
+            console.log("req.user.UserID", req.user.UserID);
+            
+        const result = await saveUserRegistrationModel(
+            UserID,
             UserName,
             UserPassword,
             Firstname,
@@ -28,7 +33,8 @@ export const saveUserRegistration = async (req, res) => {
             Designation,
             UserRoleID,
             DistrictID,
-            PSID, req.user.UserID); // change aadhar token
+            PSID,
+            req.user.UserID); // change aadhar token
 
         console.log('askodgjklmv', result);
 
@@ -61,7 +67,7 @@ export const updateUserActivationStatus = async (req, res) => {
     try {
         const { UserID,
 
-            ActivationStatus, } = req.body;
+            ActivationStatus } = req.body;
         const [result] = await updateUserActivationStatusModel(UserID,
             ActivationStatus,
             req.user.UserID); // change aadhar token
@@ -120,4 +126,35 @@ export const getDistrictNodalDashBoard = async (req, res) => {
     }
 };
 
+
+
+export const showuserDetails = async (req, res) => {
+    try {
+        const [result] = await showuserDetailsModel(req.user.UserID); 
+        console.log("result", result);
+        
+        if (result?.length !== 0) {
+            return res.status(200).json({
+                status: 0,
+                message: "Data fetched successfully",
+                data: result
+            });
+        } else {
+            return res.status(400).json({
+                status: 1,
+                message: "No data found",
+            });
+
+        }
+
+
+    } catch (error) {
+        console.error("Error fetching :", error);
+        res.status(500).json({
+            status: 1,
+            message: "An error occurred",
+            data: null,
+        });
+    }
+};
 
