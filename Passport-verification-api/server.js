@@ -54,7 +54,7 @@ dotenv.config();
 import loginRoutes from './routes/login.js';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js'
-import testRoutes from './routes/test.js';
+
 import updateRoutes from './routes/user.js'
 import districNodal from './routes/user.js'
 import verifyToken from './middleware/authMiddleware.js';
