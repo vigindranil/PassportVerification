@@ -1,15 +1,16 @@
 import express from "express";
-import { getPoliceStationsByDistrict } from '../controllers/masterController.js';
+import { getPoliceStationsByDistrict, showDistrict } from '../controllers/masterController.js';
+
 const router = express.Router();
 
 /**
  * @swagger
- * /master:
+ * /master/getPoliceStationsByDistrict:
  *   post:
- *     summary: master means distric deatils.
- *     description: Distric details list 
+ *     summary: Fetch police stations by district ID
+ *     description: Retrieves a list of police stations for a given district ID
  *     tags:
- *       - Authentication
+ *       - District
  *     requestBody:
  *       required: true
  *       content:
@@ -17,24 +18,28 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               contact:
- *                 type: string
- *                 description: Email or phone number to send the OTP to.
- *                 example: example@example.com
+ *               districtId:
+ *                 type: integer
+ *                 description: The ID of the district
+ *                 example: 1
  *     responses:
  *       200:
- *         description: master distric details
+ *         description: Police stations fetched successfully
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *                 status:
+ *                   type: integer
+ *                   example: 0
  *                 message:
  *                   type: string
- *                   example: OTP sent successfully.
+ *                   example: Police stations fetched successfully
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
  *       400:
  *         description: Bad request
  *         content:
@@ -42,17 +47,56 @@ const router = express.Router();
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 error:
+ *                 status:
+ *                   type: integer
+ *                   example: 1
+ *                 message:
  *                   type: string
- *                   example: Invalid input.
+ *                   example: Invalid districtId
  */
 
-
-
+/**
+ * @swagger
+ * /master/showDistrict:
+ *   get:
+ *     summary: Fetch all districts
+ *     description: Retrieves a list of all districts
+ *     tags:
+ *       - District
+ *     responses:
+ *       200:
+ *         description: Districts fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 0
+ *                 message:
+ *                   type: string
+ *                   example: Districts fetched successfully
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 1
+ *                 message:
+ *                   type: string
+ *                   example: An error occurred while fetching districts
+ */
 
 router.post('/getPoliceStationsByDistrict', getPoliceStationsByDistrict);
+router.post('/showDistrict', showDistrict);
 
 export default router;
