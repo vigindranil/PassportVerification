@@ -10,6 +10,8 @@ import districNodal from './routes/user.js'
 import verifyToken from './middleware/authMiddleware.js';
 import cors from 'cors';
 import morgan from 'morgan';
+import setupSwagger from "./utils/swagger.js";
+import logger from './utils/logger.js';
 const app = express();
 const port = 3003;
 
@@ -20,7 +22,13 @@ app.use(cors({
   methods: '*',
   credentials: true,
 }));
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
+app.use(morgan('combined', {
+  stream: {
+    write: (message) => logger.info(message.trim()) // Write log messages using winston
+  }
+}));
+
 
 //public Route
 app.use('/api/auth/',  loginRoutes);
@@ -35,6 +43,9 @@ app.use('/test', (req, res)=>{
 })
 
 
+setupSwagger(app);
+
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-  });
+  console.log(`Server is running on port ${port}`);
+  console.log(`Swagger UI is available at http://localhost:${port}/api-docs`);
+});
