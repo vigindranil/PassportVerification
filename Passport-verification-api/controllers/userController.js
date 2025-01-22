@@ -106,6 +106,11 @@ export const getDistrictNodalDashBoard = async (req, res) => {
             return res.status(200).json({
                 status: 0,
                 message: "Data fetched successfully",
+                data: {
+                    Pending:0,
+                    Processed:0,
+                    Last15DaysPending:0 
+                }
             });
         } else {
             return res.status(400).json({
