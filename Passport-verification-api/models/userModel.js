@@ -19,7 +19,7 @@ export async function saveUserRegistrationModel(
   EntryUserID
 ) {
   const [rows] = await pool.query(
-    "CALL sp_saveUserRegistration(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @ErrorCode);",
+    "CALL sp_saveUserRegistrationv2(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @ErrorCode, @ID);",
     [
       UserID,
       UserName,
@@ -38,7 +38,8 @@ export async function saveUserRegistrationModel(
     ]
   );
 
-  return await pool.query("SELECT @ErrorCode AS ErrorCode;");
+  const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
+  return result[0].ErrorCode;
 
 }
 
@@ -56,7 +57,8 @@ export async function updateUserActivationStatusModel(
     ]
   );
 
-  return await pool.query("SELECT @ErrorCode AS ErrorCode;");
+  const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
+  return result[0].ErrorCode;
 
 }
 
@@ -76,3 +78,16 @@ export async function getDistrictNodalDashBoardModel(
 }
 
 
+
+export async function showuserDetailsModel(
+  EntryUserID
+) {
+  try {
+    const [rows] = await pool.query('CALL sp_showuserDetails(?)', [EntryUserID]);
+    console.log(rows);
+    
+    return rows;
+  } catch (error) {
+    throw new Error('Database error: ' + error.message);
+  }
+}
