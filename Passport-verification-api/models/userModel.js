@@ -96,3 +96,20 @@ export async function showuserDetailsModel(
     throw new Error('Database error: ' + error.message);
   }
 }
+
+
+
+
+export async function getEoDashBoardModel(
+  EntryUserID
+) {
+  try {
+    const [rows] = await pool.query('CALL sp_getEoDashBoard(?)', [EntryUserID]);
+    console.log("EntryUserID", EntryUserID);
+    console.log(rows);
+    
+    return rows;
+  } catch (error) {
+    throw new Error('Database error: ' + error.message);
+  }
+}

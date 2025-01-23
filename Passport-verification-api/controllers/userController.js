@@ -1,8 +1,8 @@
 import { saveUserRegistrationModel } from '../models/userModel.js';
 import { updateUserActivationStatusModel } from '../models/userModel.js'
-import {getDistrictNodalDashBoardModel} from '../models/userModel.js'
-import {showuserDetailsModel} from '../models/userModel.js'
-
+import { getDistrictNodalDashBoardModel } from '../models/userModel.js'
+import { showuserDetailsModel } from '../models/userModel.js'
+import { getEoDashBoardModel } from '../models/userModel.js'
 
 /**
  * @swagger
@@ -64,7 +64,7 @@ export const saveUserRegistration = async (req, res) => {
     try {
         const { UserID,
             UserName,
-            FullName ,
+            FullName,
             UserPassword,
             Firstname,
             LastName,
@@ -76,26 +76,26 @@ export const saveUserRegistration = async (req, res) => {
             UserRoleID,
             DistrictID,
             PSID
-             } = req.body;
+        } = req.body;
 
-            console.log("req.user.UserID", req.user.UserID);
-            
+        console.log("req.user.UserID", req.user.UserID);
+
         const result = await saveUserRegistrationModel(
             UserID,
             UserName,
-            FullName ,
-            UserPassword,
+            FullName,
+            btoa(UserPassword),
             Firstname,
             LastName,
             MobileNo,
             EmailID,
             Gender,
-            AADHAARNo,
+            btoa(AADHAARNo),
             Designation,
             UserRoleID,
             DistrictID,
             PSID,
-           
+
             req.user.UserID); // change aadhar token
 
         console.log('askodgjklmv', result);
@@ -228,17 +228,17 @@ export const updateUserActivationStatus = async (req, res) => {
  */
 export const getDistrictNodalDashBoard = async (req, res) => {
     try {
-        const [result] = await getDistrictNodalDashBoardModel(req.user.UserID); 
+        const [result] = await getDistrictNodalDashBoardModel(req.user.UserID);
         console.log("result", result);
-        
+
         if (result?.length !== 0) {
             return res.status(200).json({
                 status: 0,
                 message: "Data fetched successfully",
                 data: {
-                    Pending:0,
-                    Processed:0,
-                    Last15DaysPending:0 
+                    Pending: 0,
+                    Processed: 0,
+                    Last15DaysPending: 0
                 }
             });
         } else {
@@ -305,9 +305,9 @@ export const getDistrictNodalDashBoard = async (req, res) => {
 
 export const showuserDetails = async (req, res) => {
     try {
-        const [result] = await showuserDetailsModel(req.user.UserID); 
+        const [result] = await showuserDetailsModel(req.user.UserID);
         console.log("result", result);
-        
+
         if (result?.length !== 0) {
             return res.status(200).json({
                 status: 0,
@@ -333,3 +333,34 @@ export const showuserDetails = async (req, res) => {
     }
 };
 
+
+
+export const getEoDashBoard = async (req, res) => {
+    try {
+        const [result] = await getEoDashBoardModel(req.user.UserID);
+        console.log("result", result);
+
+        if (result?.length == 0) {
+            return res.status(200).json({
+                status: 0,
+                message: "Data fetched successfully",
+                data: result
+            });
+        } else {
+            return res.status(400).json({
+                status: 1,
+                message: "No data found",
+            });
+
+        }
+
+
+    } catch (error) {
+        console.error("Error fetching :", error);
+        res.status(500).json({
+            status: 1,
+            message: "An error occurred",
+            data: null,
+        });
+    }
+};
