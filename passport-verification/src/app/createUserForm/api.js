@@ -60,12 +60,3 @@ export const showuserDetails = async () => {
     return null;
   }
 };
-export const showDesignation = async () => {
-  try {
-
-    return await postRequest("master/showDesignation")
-  } catch (error) {
-    console.log("Error saving user:", error);
-    return null;
-  }
-};

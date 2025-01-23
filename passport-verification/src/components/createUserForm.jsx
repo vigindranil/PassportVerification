@@ -12,7 +12,7 @@ import { saveUser } from "@/app/createUserForm/api"
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { getDistrict, getPoliceStationsByDistrict, showuserDetails, showDesignation } from "@/app/createUserForm/api"
+import { getDistrict, getPoliceStationsByDistrict, showuserDetails } from "@/app/createUserForm/api"
 
 const UserManagement = () => {
   const [searchDistrict, setSearchDistrict] = useState("")
@@ -21,7 +21,6 @@ const UserManagement = () => {
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
   const [users, setUsers] = useState([])
-  const [designation, setDesignation] = useState([])
   const [searchTerm, setSearchTerm] = useState("");
   const itemsPerPage = 6;
   const [currentPage, setCurrentPage] = useState(1);
@@ -96,19 +95,6 @@ const UserManagement = () => {
       console.error("Error fetching districts:", error)
     }
   }
-  
-  const fetchDesignation = async () => {
-    try {
-      const designation = await showDesignation();
-      console.log("designation",designation.data);
-      if (designation.data.length > 0) {
-        setDesignation(designation?.data);
-      }
-    } catch (error) {
-      console.error("Error fetching user details:", error)
-    }
-  }
-
 
   const fetchUserDetails = async () => {
     try {
@@ -162,7 +148,6 @@ const UserManagement = () => {
   useEffect(() => {
     fetchDistricts()
     fetchUserDetails()
-    fetchDesignation()
   }, [])
 
 
@@ -295,11 +280,12 @@ const UserManagement = () => {
               <SelectValue placeholder="Select Designation" />
             </SelectTrigger>
             <SelectContent>
-            {designation?.map((des, index) => (
-                <SelectItem key={index} value={des.desCode}>
-                  {des.Name}
-                </SelectItem>
-              ))}
+              <SelectItem value="300">OC/IC</SelectItem>
+              <SelectItem value="100">DYSP</SelectItem>
+              <SelectItem value="200">SP</SelectItem>
+              <SelectItem value="400">Addl.SP</SelectItem>
+              <SelectItem value="500">Addl.CP</SelectItem>
+              <SelectItem value="600">CP</SelectItem>
             </SelectContent>
           </Select>
         </div>
