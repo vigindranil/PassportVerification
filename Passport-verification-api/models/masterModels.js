@@ -25,3 +25,13 @@ export async function showDistrictModel() {
     throw new Error('Database error: ' + error.message);
   }
 }
+
+
+export async function showDesignationModel() {
+    try {
+      const [rows] = await pool.query('CALL showDesgination();');
+      return rows[0]; // Return the first result set from the stored procedure
+    } catch (error) {
+      throw new Error('Database error: ' + error.message);
+    }
+  }
