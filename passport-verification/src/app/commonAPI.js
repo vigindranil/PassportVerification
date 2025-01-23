@@ -31,7 +31,7 @@ export const postRequest = async (url, request_body) => {
       return result;
     }
   } catch (error) {
-    console.error(error);
+    console.log(error);
     throw error; // Propagate error to the caller
   }
 };
@@ -60,7 +60,7 @@ export const getRequest = async (url) => {
       return result;
     }
   } catch (error) {
-    console.error(error);
+    console.log(error);
     throw error; // Propagate error to the caller
   }
 };
