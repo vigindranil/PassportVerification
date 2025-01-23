@@ -2,11 +2,55 @@ import jwt from "jsonwebtoken";
 import { getUserLoginModel, updateAuthToken } from '../models/authModels.js';
 import { generateOtpAadhaar, verifyOtpAadhaar } from "./thirdPartyAPI.js";
 
-
 // Secret key for JWT (ensure this is stored securely in environment variables)
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// Login route
+/**
+ * @swagger
+ * /sendOtp:
+ *   post:
+ *     summary: Send OTP
+ *     description: Sends a one-time password (OTP) to the user's Aadhaar-linked mobile number.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: The username of the user.
+ *               password:
+ *                 type: string
+ *                 description: The password of the user.
+ *             required:
+ *               - username
+ *               - password
+ *     responses:
+ *       200:
+ *         description: OTP sent successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: number
+ *                   example: 0
+ *                 message:
+ *                   type: string
+ *                   example: "OTP sent successfully"
+ *                 token:
+ *                   type: string
+ *                   example: "JWT_TOKEN_STRING"
+ *       400:
+ *         description: Bad request (Invalid username or password).
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal server error.
+ */
 export const sendOtp = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -25,21 +69,18 @@ export const sendOtp = async (req, res) => {
             });
         }
 
-        const [rows] = await getUserLoginModel(username, password);
+        const [rows] = await getUserLoginModel(username, btoa(password));
 
-    // console.log (rows);
         const transactionId = await generateOtpAadhaar(atob(rows["AADHAARNo"]), rows["UserID"]);
-        // const transactionId = await generateOtpAadhaar("857162391079", 1);
         
         if (!transactionId) {
             return res.status(400).json({
                 status: 1,
                 message: "Failed to send OTP",
-            })
+            });
         }
 
         if (rows.length !== 0) {
-            // Generate JWT token
             const token = jwt.sign(
                 {
                     UserID: rows["UserID"],
@@ -51,34 +92,23 @@ export const sendOtp = async (req, res) => {
                     UserTypeName: rows["UserTypeName"],
                     Username: rows["Username"],
                     UserFullName: rows["UserFullName"],
-                    TransactionId: transactionId,   // Get from Aadhaar Send OTP
+                    TransactionId: transactionId,
                 },
-                JWT_SECRET, // Secret key
-                { expiresIn: "24h" } //Token expiry
+                JWT_SECRET,
+                { expiresIn: "24h" }
             );
 
+            const [result] = await updateAuthToken(rows["UserID"], token, transactionId);
 
-            const [result] = await updateAuthToken(rows["UserID"], token, transactionId); // change aadhar token
-
-        
-            // {
-            //     httpOnly: true,
-            //     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-            //     // secure: process.env.NODE_ENV === 'production',
-            //     secure: true,
-            //     sameSite: 'lax',
-            //     path: '/',
-            // }
             res.cookie('data', token);
 
             res.status(200).json({
                 status: 0,
                 message: "OTP sent successfully",
-                token: token
+                token: token,
             });
 
-        }
-        else {
+        } else {
             return res.status(404).json({
                 status: 1,
                 message: "Invalid user.",
@@ -86,10 +116,9 @@ export const sendOtp = async (req, res) => {
             });
         }
 
-
     } catch (error) {
-      console.log(error);
-      
+        console.log(error);
+
         return res.status(500).json({
             status: 1,
             message: "An error occurred, Please try again",
@@ -98,12 +127,47 @@ export const sendOtp = async (req, res) => {
     }
 };
 
-// verify otp route
+/**
+ * @swagger
+ * /verifyOtp:
+ *   post:
+ *     summary: Verify OTP
+ *     description: Verifies the one-time password (OTP) sent to the user's Aadhaar-linked mobile number.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               otp:
+ *                 type: string
+ *                 description: The OTP sent to the user.
+ *             required:
+ *               - otp
+ *     responses:
+ *       200:
+ *         description: OTP verified successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: number
+ *                   example: 0
+ *                 message:
+ *                   type: string
+ *                   example: "OTP has been verified successfully"
+ *       400:
+ *         description: Bad request (Invalid OTP).
+ *       500:
+ *         description: Internal server error.
+ */
 export const verifyOtp = async (req, res) => {
     try {
         const { otp } = req.body;
 
-        
         if (!otp) {
             return res.status(400).json({
                 status: 1,
@@ -113,21 +177,19 @@ export const verifyOtp = async (req, res) => {
 
         const otpStatus = await verifyOtpAadhaar(otp, req.user.UserID, req.user.TransactionId);
 
-        
-        if (otpStatus) { // if otp validated
+        if (otpStatus) {
             return res.status(200).json({
                 status: 0,
                 message: "OTP has been verified successfully",
-            })
+            });
         } else {
             return res.status(400).json({
                 status: 1,
-                message: "Failded to verify OTP",
+                message: "Failed to verify OTP",
             });
         }
 
     } catch (error) {
-      
         return res.status(500).json({
             status: 1,
             message: "An error occurred, Please try again",
@@ -135,4 +197,3 @@ export const verifyOtp = async (req, res) => {
         });
     }
 };
-

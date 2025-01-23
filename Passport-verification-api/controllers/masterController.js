@@ -1,10 +1,59 @@
-import {getPoliceStationsByDistrictModel} from '../models/masterModels.js';
+import { getPoliceStationsByDistrictModel } from '../models/masterModels.js';
 import { showDistrictModel } from '../models/masterModels.js';
 
+/**
+ * @swagger
+ * /getPoliceStationsByDistrict:
+ *   post:
+ *     summary: Get Police Stations by District
+ *     description: Fetches a list of police stations based on the provided district ID.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               districtId:
+ *                 type: number
+ *                 description: The ID of the district to fetch police stations for.
+ *             required:
+ *               - districtId
+ *     responses:
+ *       200:
+ *         description: Police stations fetched successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: number
+ *                   example: 0
+ *                 message:
+ *                   type: string
+ *                   example: "Police stations fetched successfully"
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       stationId:
+ *                         type: number
+ *                         example: 101
+ *                       stationName:
+ *                         type: string
+ *                         example: "Central Police Station"
+ *       400:
+ *         description: Bad request (Invalid districtId).
+ *       404:
+ *         description: No police stations found for the given districtId.
+ *       500:
+ *         description: Internal server error.
+ */
 export const getPoliceStationsByDistrict = async (req, res) => {
   try {
     const { districtId } = req.body;
-
 
     if (!districtId || isNaN(districtId)) {
       return res.status(400).json({
@@ -37,10 +86,42 @@ export const getPoliceStationsByDistrict = async (req, res) => {
   }
 };
 
-
-
-
-
+/**
+ * @swagger
+ * /showDistrict:
+ *   get:
+ *     summary: Show Districts
+ *     description: Fetches a list of all districts.
+ *     responses:
+ *       200:
+ *         description: Districts fetched successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: number
+ *                   example: 0
+ *                 message:
+ *                   type: string
+ *                   example: "Districts fetched successfully"
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       districtId:
+ *                         type: number
+ *                         example: 1
+ *                       districtName:
+ *                         type: string
+ *                         example: "District A"
+ *       404:
+ *         description: No districts found.
+ *       500:
+ *         description: Internal server error.
+ */
 export const showDistrict = async (req, res) => {
   try {
     const result = await showDistrictModel();
