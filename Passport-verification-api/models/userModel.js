@@ -5,6 +5,7 @@ import pool from '../db.js';
 export async function saveUserRegistrationModel(
   UserID,
   UserName,
+  FullName ,
   UserPassword,
   Firstname,
   LastName,
@@ -17,12 +18,15 @@ export async function saveUserRegistrationModel(
   DistrictID,
   PSID,
   EntryUserID
+ 
+
 ) {
   const [rows] = await pool.query(
-    "CALL sp_saveUserRegistrationv2(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @ErrorCode, @ID);",
+    "CALL sp_saveUserRegistrationv2(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, @ErrorCode, @ID);",
     [
       UserID,
       UserName,
+      FullName,
       UserPassword,
       Firstname,
       LastName,
@@ -34,7 +38,8 @@ export async function saveUserRegistrationModel(
       UserRoleID,
       DistrictID,
       PSID,
-      EntryUserID
+      EntryUserID,
+      FullName
     ]
   );
 
