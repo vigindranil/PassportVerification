@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { OTPInput } from "@/components/otp-input"
-import { User, Lock, Eye, EyeOff } from 'lucide-react'
+import { User, Lock, Eye, EyeOff, RotateCcw, LoaderCircle } from 'lucide-react'
 import { sendOtp, verifyOtp } from "@/app/login/api"
 
 const LoginForm = () => {
@@ -14,6 +14,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState("")
   const [loadingOtpSend, setLoadingOtpSend] = useState(false)
   const [loadingOtpVerify, setLoadingOtpVerify] = useState(false)
+  const [loadingResendOtp, setLoadingResendOtp] = useState(false)
   const [error, setError] = useState("")
   const [showOtp, setShowOtp] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -29,8 +30,14 @@ const LoginForm = () => {
     try {
       const response = await sendOtp(username, password)
       console.log("sendOtp", response)
-      setMessage(`OTP sent successfully`)
-      setShowOtp(true)
+      
+      if(response){
+        setMessage(`OTP sent successfully`)
+        setShowOtp(true)
+      }else {
+        setMessage(`Failed to send OTP, Please try again`)
+        setShowOtp(true)
+      }
     } catch (error) {
       setMessage(`Error: ${error.message}`)
     } finally {
@@ -60,16 +67,21 @@ const LoginForm = () => {
 
   const handleResend = async () => {
     setError("")
-    setLoadingOtpSend(true)
+    setLoadingResendOtp(true)
 
     try {
       const response = await sendOtp(username, password)
       setMessage(`OTP sent successfully`)
-      setShowOtp(true)
+      if(response){
+        setShowOtp(true)
+        setResendTimer(60);
+      }else {
+        setMessage(`Failed to resend otp, Please try again`)
+      }
     } catch (error) {
-      setMessage(`Error: ${error.message}`)
+      setMessage(`Failed to resend otp`)
     } finally {
-      setLoadingOtpSend(false)
+      setLoadingResendOtp(false)
     }
   }
 
@@ -135,7 +147,7 @@ const LoginForm = () => {
               </div>
             </div>
             <Button onClick={() => handleSendOtp()} className="w-full bg-blue-600 hover:bg-blue-700 text-white" disabled={loadingOtpSend}>
-              {loadingOtpSend ? "Processing..." : "Login"}
+              {loadingOtpSend ? <>Logging in <LoaderCircle className="animate-spin"/></> : "Login"}
             </Button>
           </div>
         </>
@@ -145,7 +157,7 @@ const LoginForm = () => {
         <>
           <h2 className="text-2xl font-bold text-center mb-6 text-slate-600">Verify OTP</h2>
           <span className="text-sm text-slate-500">
-            A six digit secret code has been sent to your aadhaar linked phone number
+            A six digit secret code has been sent to your aadhaar linked phone number.
           </span>
           <div className="space-y-4 mt-6">
             <div className="space-y-2">
@@ -153,13 +165,13 @@ const LoginForm = () => {
               <OTPInput onComplete={(completedOtp) => setOtp(completedOtp)} />
             </div>
             <Button onClick={handleVerifyOtp} className="w-full bg-green-600 hover:bg-green-700 text-white" disabled={loadingOtpVerify}>
-              {loadingOtpVerify ? "Verifying..." : "Verify OTP"}
+              {loadingOtpVerify ? <>Verifying <LoaderCircle className="animate-spin"/></> : "Verify OTP"}
             </Button>
-            <Button onClick={handleVerifyOtp} className={`w-full text-white ${resendTimer === 0
+            <Button onClick={handleResend} className={`w-full text-white ${resendTimer === 0
                 ? "bg-blue-600 hover:bg-blue-700"
-                : "bg-blue-400 hover:bg-blue-400"
+                : "bg-blue-500 hover:bg-blue-500"
               }`} disabled={resendTimer === 0 ? false : true}>
-              Resend OTP {resendTimer !== 0 && `after ${resendTimer} seconds`}
+              {loadingResendOtp ? <>Loading <LoaderCircle className="animate-spin"/></> : <><RotateCcw /> Resend OTP</>} {resendTimer !== 0 && `after ${resendTimer} seconds`}
             </Button>
 
           </div>
