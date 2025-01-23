@@ -1,6 +1,6 @@
 import { getPoliceStationsByDistrictModel } from '../models/masterModels.js';
 import { showDistrictModel } from '../models/masterModels.js';
-
+import {showDesignationModel} from '../models/masterModels.js';
 /**
  * @swagger
  * /getPoliceStationsByDistrict:
@@ -147,3 +147,30 @@ export const showDistrict = async (req, res) => {
     });
   }
 };
+
+
+export const showDesignation = async (req, res) => {
+    try {
+      const result = await showDesignationModel();
+  
+      if (result.length > 0) {
+        return res.status(200).json({
+          status: 0,
+          message: 'Designations fetched successfully',
+          data: result,
+        });
+      } else {
+        return res.status(404).json({
+          status: 1,
+          message: 'No designations found',
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching designations:', error);
+      return res.status(500).json({
+        status: 1,
+        message: 'An error occurred while fetching designations',
+        error: error.message,
+      });
+    }
+  };
