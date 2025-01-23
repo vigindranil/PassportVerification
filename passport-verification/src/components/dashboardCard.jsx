@@ -26,6 +26,7 @@ const DashboardCards = () => {
 
     const fetchDashboard = async () => {
         const response = await getDistrictNodalDashBoard();
+        console.log(response);
         setData(response.data);
 
     }

@@ -32,6 +32,7 @@ const UserManagement = () => {
 
   const [formData, setFormData] = useState({
     UserName: "",
+    UserFullName: "",
     Firstname: "",
     LastName: "",
     MobileNo: "",
@@ -138,6 +139,7 @@ const UserManagement = () => {
       console.error("Error fetching police stations:", error)
     }
   }
+  
 
   const toggleUserStatus = (userId) => {
     setUsers((prev) => prev.map((user) => (user.id === userId ? { ...user, isEnabled: !user.isEnabled } : user)))
@@ -162,6 +164,16 @@ const UserManagement = () => {
             name="UserName"
             value={formData.UserName}
             onChange={(e) => setFormData({ ...formData, UserName: e.target.value })}
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="UserName">User Full Name</Label>
+          <Input
+            id="UserFullName"
+            name="UserFullName"
+            value={formData.UserFullName}
+            onChange={(e) => setFormData({ ...formData, UserFullName: e.target.value })}
             required
           />
         </div>
@@ -268,12 +280,12 @@ const UserManagement = () => {
               <SelectValue placeholder="Select Designation" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="30">OC/IC</SelectItem>
-              <SelectItem value="10">DYSP</SelectItem>
-              <SelectItem value="20">SP</SelectItem>
-              <SelectItem value="40">Addl.SP</SelectItem>
-              <SelectItem value="50">Addl.CP</SelectItem>
-              <SelectItem value="50">CP</SelectItem>
+              <SelectItem value="300">OC/IC</SelectItem>
+              <SelectItem value="100">DYSP</SelectItem>
+              <SelectItem value="200">SP</SelectItem>
+              <SelectItem value="400">Addl.SP</SelectItem>
+              <SelectItem value="500">Addl.CP</SelectItem>
+              <SelectItem value="600">CP</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -376,6 +388,7 @@ const UserManagement = () => {
                   <TableHead className="font-semibold">Full Name</TableHead>
                   <TableHead className="font-semibold">District Name</TableHead>
                   <TableHead className="font-semibold">Police Station</TableHead>
+                  <TableHead className="font-semibold">Designation</TableHead>
                   <TableHead className="font-semibold">User Role</TableHead>
                   <TableHead className="font-semibold text-center">Actions</TableHead>
                </TableRow>
@@ -385,12 +398,13 @@ const UserManagement = () => {
                   <TableRow>
                     <TableCell colSpan={6}>Loading...</TableCell> Loading...
                   </TableRow>): users.length > 0 ? (
-                users.map((row) => (
-                  <TableRow key={row.UserId}>
+                users?.map((row, index) => (
+                  <TableRow key={index}>
                     <TableCell>{row.UserName || "N/A"}</TableCell>
                     <TableCell>{row.FullName || "N/A"}</TableCell>
                     <TableCell>{row.DistrictName || "N/A"}</TableCell>
                     <TableCell>{row.PoliceStationName || "N/A"}</TableCell>
+                    <TableCell>{row.Designation || "N/A"}</TableCell>
                     <TableCell>{row.userType || "N/A"}</TableCell>
                     <TableCell>
                       <div className="flex space-x-1">
