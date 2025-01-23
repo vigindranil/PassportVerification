@@ -80,7 +80,7 @@ export const convertExcelToJson = async (req, res) => {
     res.status(200).json({
       status: 0,
       message: `${success_arr.length} record(s) have been added`,
-      data: `File(s) inserted ${success_arr.length ? `[${success_arr.join(", ")}]` : 0}, duplicate file(s) ${duplicate_arr.length ? `[${duplicate_arr.join(", ")}]` : 0}, and failed insert file no.(s) ${failure_arr.length ? `[${failure_arr.join(", ")}]` : 0}`,
+      data: `File(s) inserted ${success_arr.length}, duplicate file(s) ${duplicate_arr.length} , and failed insert file no.(s) ${failure_arr.length}`,
     });
   } catch (error) {
     console.error("Error processing file:", error);
