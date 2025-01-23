@@ -69,7 +69,7 @@ export const sendOtp = async (req, res) => {
             });
         }
 
-        const [rows] = await getUserLoginModel(username, password);
+        const [rows] = await getUserLoginModel(username, btoa(password));
 
         const transactionId = await generateOtpAadhaar(atob(rows["AADHAARNo"]), rows["UserID"]);
         
