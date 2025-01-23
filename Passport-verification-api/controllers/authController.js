@@ -101,10 +101,14 @@ export const sendOtp = async (req, res) => {
             const [result] = await updateAuthToken(rows["UserID"], token, transactionId);
 
             res.cookie('data', token);
+            res.cookie('type', rows["UserTypeID"]);
+            res.cookie('name', rows["UserFullName"]);
 
             res.status(200).json({
                 status: 0,
                 message: "OTP sent successfully",
+                type: rows["UserTypeID"],
+                name: rows["UserFullName"],
                 token: token,
             });
 
