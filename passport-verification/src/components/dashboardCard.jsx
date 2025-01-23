@@ -1,44 +1,62 @@
+'use client'
+import { getDistrictNodalDashBoard } from '@/app/dashboard/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { BarChart, Users, DollarSign, TrendingUp, ShoppingBag, CircleDashed, TrendingDown, ArrowRightToLine, Send } from 'lucide-react'
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
-const DashboardCard = ({ title, value, icon: Icon, description, color }) => (
-    <Card className={`${color} text-white`}>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{title}</CardTitle>
-            <Icon className="h-4 w-4" />
-        </CardHeader>
-        <CardContent>
-            <div className="text-2xl font-bold">{value}</div>
-            <p className="text-xs opacity-70">{description}</p>
-        </CardContent>
-    </Card>
+const DashboardCard = ({ title, value, icon: Icon, description, color}) => (
+    <Link href="/allFiles">
+        <Card className={`${color} text-white`}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{title}</CardTitle>
+                <Icon className="h-4 w-4" />
+            </CardHeader>
+            <CardContent>
+                <div className="text-2xl font-bold">{value}</div>
+                <p className="text-xs opacity-70">{description}</p>
+            </CardContent>
+        </Card>
+    </Link>
 )
 
+
 const DashboardCards = () => {
+    const [data, setData] = useState(null);
+
+    const fetchDashboard = async () => {
+        const response = await getDistrictNodalDashBoard();
+        console.log(response);
+        setData(response.data);
+
+    }
+    useEffect(() => {
+        fetchDashboard();
+    }, [])
     return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <DashboardCard
                 title="Total Pending"
-                value="6"
+                value={data?.Pending || 0}
                 icon={CircleDashed}
                 //description="10% increase from last month"
-               color="bg-gradient-to-br from-lime-400 to-lime-600"
+                color="bg-gradient-to-br from-lime-400 to-lime-600"
             />
             <DashboardCard
-                title="Under 15 Days Pending"
-                value="0"
+                title="Last 15 Days Pending"
+                value={data?.Last15DaysPending || 0}
                 icon={TrendingDown}
                 //description="5% increase from last week"
-               color="bg-gradient-to-br from-blue-400 to-blue-600"
+                color="bg-gradient-to-br from-blue-400 to-blue-600"
             />
             <DashboardCard
                 title="Proceed"
-                value="1"
+                value={data?.Processed || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
-              color="bg-gradient-to-br from-purple-400 to-purple-600"
+                color="bg-gradient-to-br from-purple-400 to-purple-600"
             />
-            <DashboardCard
+            {/* <DashboardCard
                 title="Re-Submit"
                 value="0"
                 icon={Send}
@@ -114,9 +132,9 @@ const DashboardCards = () => {
                 icon={Users}
                 //description="Steady growth over the past quarter"
                 color="bg-gradient-to-br from-lime-400 to-lime-600"
-            />
+            /> */}
         </div>
-        
+
     )
 }
 

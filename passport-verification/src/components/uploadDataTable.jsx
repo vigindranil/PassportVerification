@@ -9,6 +9,7 @@ import UploadDocumentsModal from "@/components/uploadDocumentModal"
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { Badge } from "./ui/badge";
 
 export default function uploadDataTable() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -154,16 +155,12 @@ export default function uploadDataTable() {
                 <TableCell>{row.pvSequence}</TableCell>
                 <TableCell>{row.fileNumber}</TableCell>
                 <TableCell>
-                  <span
-                    className={`px-2 py-1 rounded text-sm ${row.status === "SP Approved"
-                      ? "bg-green-100 text-green-800"
-                      : row.status === "SP Not Approved"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-blue-100 text-blue-800"
-                      }`}
-                  >
-                    {row.status}
-                  </span>
+                  <Badge className={`px-2 py-1 rounded text-xs font-normal  ${row.status === "SP Approved"
+                    ? "bg-green-100 text-green-800"
+                    : row.status === "SP Not Approved"
+                      ? "bg-red-100 text-red-800"
+                      : "bg-blue-100 text-blue-800"
+                    }`}>{row.status}</Badge>
                 </TableCell>
                 <TableCell>{row.applicantName}</TableCell>
                 <TableCell>{row.policeStation}</TableCell>
