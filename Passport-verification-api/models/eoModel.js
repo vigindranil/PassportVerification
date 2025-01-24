@@ -14,3 +14,17 @@ export async function saveDocumentUploadModel(ApplicationId, DocumentPath, Docum
     throw new Error('Database error: ' + error.message);
   }
 }
+
+
+export async function getDocumentUploadDetailsModel(ApplicationId, EntryUserId) {
+    try {
+      const [rows] = await pool.query(
+        'CALL sp_getDocumentUploadDetails(?, ?);',
+        [ApplicationId, EntryUserId]
+      );
+  
+      return rows[0]; // Return the result of the stored procedure
+    } catch (error) {
+      throw new Error('Database error: ' + error.message);
+    }
+  }

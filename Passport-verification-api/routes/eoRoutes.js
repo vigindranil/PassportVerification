@@ -1,5 +1,5 @@
 import express from 'express';
-import { saveDocumentUpload } from '../controllers/eoController.js';
+import { saveDocumentUpload , getDocumentUploadDetails} from '../controllers/eoController.js';
 
 const router = express.Router();
 
@@ -42,5 +42,6 @@ const router = express.Router();
  */
 
 router.post('/eodocumentupload', saveDocumentUpload);
+router.post('/documentUploadDetailsModel', getDocumentUploadDetails)
 
 export default router;
