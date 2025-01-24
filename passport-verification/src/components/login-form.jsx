@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label"
 import { OTPInput } from "@/components/otp-input"
 import { User, Lock, Eye, EyeOff, RotateCcw, LoaderCircle } from 'lucide-react'
 import { sendOtp, verifyOtp } from "@/app/login/api"
+import { useToast } from "../hooks/use-toast"
+import { ToastAction } from "@/components/ui/toast"
 
 const LoginForm = () => {
   const [username, setUsername] = useState("")
@@ -22,17 +24,24 @@ const LoginForm = () => {
   const [message, setMessage] = useState(null)
   const [resendTimer, setResendTimer] = useState(60);
   const router = useRouter()
+  const { toast } = useToast()
 
   const handleSendOtp = async () => {
+    
     setError("")
     setLoadingOtpSend(true)
-
     try {
       const response = await sendOtp(username, password)
       console.log("sendOtp", response)
       
       if(response){
-        setMessage(`OTP sent successfully`)
+        toast({
+          title: "OTP sent successfully",
+          description: "A six digit code was sent to your aadhaar linked phone number",
+          action: (
+            <ToastAction altText="close">Close</ToastAction>
+          ),
+        })
         setShowOtp(true)
       }else {
         setMessage(`Failed to send OTP, Please try again`)
@@ -40,6 +49,12 @@ const LoginForm = () => {
       }
     } catch (error) {
       setMessage(`Error: ${error.message}`)
+      toast({
+        variant: "destructive",
+        title: "Failed to Send OTP!",
+        description: "Something went wrong, Please try again",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
     } finally {
       setLoadingOtpSend(false)
     }
@@ -75,11 +90,24 @@ const LoginForm = () => {
       if(response){
         setShowOtp(true)
         setResendTimer(60);
+        toast({
+          title: "OTP sent successfully",
+          description: "A six digit code was sent to your aadhaar linked phone number",
+          action: (
+            <ToastAction altText="close">Close</ToastAction>
+          ),
+        })
       }else {
         setMessage(`Failed to resend otp, Please try again`)
       }
     } catch (error) {
       setMessage(`Failed to resend otp`)
+      toast({
+        variant: "destructive",
+        title: "Failed to Send OTP!",
+        description: "Something went wrong, Please try again",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
     } finally {
       setLoadingResendOtp(false)
     }

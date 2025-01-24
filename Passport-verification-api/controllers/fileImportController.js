@@ -33,6 +33,22 @@ export const convertExcelToJson = async (req, res) => {
 
     // Trim JSON keys and values
     const jsonData = trimJsonData(data);
+
+    res.status(200).json({
+      status: 0,
+      message: `${jsonData.length} record(s) have been parsed successfully`,
+      data: jsonData
+    });
+  } catch (error) {
+    console.error("Error processing file:", error);
+    res.status(500).json({ status: 1, message: "Error processing file", data: null });
+  }
+};
+
+export const uploadExcel = async (req, res) => {
+  try {
+    const { jsonData } = req.body;
+
     let failure_error = 0;
     let duplicate_error = 0;
     let failure_arr = [];
