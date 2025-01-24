@@ -11,6 +11,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import multer from 'multer';
 import setupSwagger from "./utils/swagger.js";
+import eoDocumentUpload from "./routes/eoRoutes.js"
 // import logger from './utils/logger.js';
 const app = express();
 const port = 3003;
@@ -26,14 +27,15 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 //public Route
-app.use('/api/auth/',  loginRoutes);
+app.use('/api/auth/', loginRoutes);
 app.use('/api/fileImport',verifyToken, upload.single('file'), fileImportRoutes)
 app.use('/api/fileUpload',verifyToken, fileImportRoutes)
 
 //private Route
 app.use('/api/auth/', verifyToken, authRoutes);
-app.use('/api/user/', verifyToken,userRoutes);
-app.use('/api/master', verifyToken ,masterRoutes)
+app.use('/api/user/', verifyToken, userRoutes);
+app.use('/api/master', verifyToken ,masterRoutes);
+app.use('/api/eo', verifyToken, eoDocumentUpload);
 
 // test route
 app.use('/test', (req, res)=>{

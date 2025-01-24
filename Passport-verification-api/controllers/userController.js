@@ -1,3 +1,5 @@
+import { updateAuthToken } from '../models/authModels.js';
+import { logoutModel } from '../models/logoutModel.js';
 import { getApplicationStatusModel, saveUserRegistrationModel } from '../models/userModel.js';
 import { updateUserActivationStatusModel } from '../models/userModel.js'
 import { getDistrictNodalDashBoardModel } from '../models/userModel.js'
@@ -156,13 +158,12 @@ export const saveUserRegistration = async (req, res) => {
 
 export const updateUserActivationStatus = async (req, res) => {
     try {
-        const { UserID,
+        const { UserID, ActivationStatus } = req.body;
+        const result = await updateUserActivationStatusModel(UserID,
+            ActivationStatus); // change aadhar token
 
-            ActivationStatus } = req.body;
-        const [result] = await updateUserActivationStatusModel(UserID,
-            ActivationStatus,
-            req.user.UserID); // change aadhar token
-
+            console.log("result", result);
+            
         if (result == 0) {
             return res.status(200).json({
                 status: 0,
@@ -178,10 +179,10 @@ export const updateUserActivationStatus = async (req, res) => {
 
 
     } catch (error) {
-        console.error("Error fetching state information:", error);
+        console.error("Error:", error);
         res.status(500).json({
             status: 1,
-            message: "An error occurred while fetching state information",
+            message: "An error occurred",
             data: null,
         });
     }
@@ -337,11 +338,12 @@ export const showuserDetails = async (req, res) => {
 
 export const getApplicationStatus = async (req, res) => {
     try {
-        const { status_id } = req.body;
-        const [result] = await getApplicationStatusModel(req.user.UserID, status_id);
+        const { status_id, periord_id } = req.body;
+
+        const [result] = await getApplicationStatusModel(req.user.UserID, status_id,periord_id);
         console.log("result", result);
 
-        if (result?.length == 0) {
+        if (result?.length > 0) {
             return res.status(200).json({
                 status: 0,
                 message: "Data fetched successfully",
@@ -402,3 +404,33 @@ export const getApplicationCountsv1 = async (req, res) => {
         });
     }
 };
+
+
+export const logout = async (req, res) => {
+    try {
+        const result = await logoutModel(req.user.UserID, " ", " ");
+
+            console.log("result", result);
+            
+        if (result == 0) {
+            return res.status(200).json({
+                status: 0,
+                message: "Logout successfully",
+            });
+        } else {
+            return res.status(400).json({
+                status: 1,
+                message: "Failed to logout",
+            });
+
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({
+            status: 1,
+            message: "Failed to logout",
+            data: null,
+        });
+    }
+};
+
