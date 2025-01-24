@@ -1,5 +1,5 @@
 import express from "express";
-import {saveUserRegistration, updateUserActivationStatus ,getDistrictNodalDashBoard,showuserDetails, getApplicationStatus} from '../controllers/userController.js';
+import {saveUserRegistration, updateUserActivationStatus ,getDistrictNodalDashBoard,showuserDetails, getApplicationStatus, getApplicationCountsv1} from '../controllers/userController.js';
 
 /**
  * @swagger
@@ -57,4 +57,5 @@ router.post('/updateUser', updateUserActivationStatus);
 router.post('/getDistrictNodalDashBoard', getDistrictNodalDashBoard);
 router.post('/showuserDetails', showuserDetails);
 router.post('/getApplicationStatus', getApplicationStatus);
+router.post('/getApplicationCountsV1', getApplicationCountsv1);
 export default router;

@@ -110,3 +110,18 @@ export async function getApplicationStatusModel(
     throw new Error('Database error: ' + error.message);
   }
 }
+
+
+
+export async function getApplicationCountsv1Model(
+  EntryUserID
+) {
+  try {
+    const [rows] = await pool.query('CALL GetApplicationCountsv1(?)', [EntryUserID]);
+    console.log(rows);
+    
+    return rows;
+  } catch (error) {
+    throw new Error('Database error: ' + error.message);
+  }
+}
