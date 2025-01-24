@@ -5,8 +5,8 @@ import { BarChart, Users, DollarSign, TrendingUp, ShoppingBag, CircleDashed, Tre
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-const DashboardCard = ({ title, value, icon: Icon, description, color}) => (
-    <Link href="/allFiles">
+const DashboardCard = ({ title, value, icon: Icon, description, color, link}) => (
+    <Link href={link}>
         <Card className={`${color} text-white`}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">{title}</CardTitle>
@@ -41,6 +41,7 @@ const DashboardCards = () => {
                 icon={CircleDashed}
                 //description="10% increase from last month"
                 color="bg-gradient-to-br from-lime-400 to-lime-600"
+                link="/totalPending"
             />
             <DashboardCard
                 title="Last 15 Days Pending"
@@ -48,6 +49,7 @@ const DashboardCards = () => {
                 icon={TrendingDown}
                 //description="5% increase from last week"
                 color="bg-gradient-to-br from-blue-400 to-blue-600"
+                link="/last15DaysPending"
             />
             <DashboardCard
                 title="Proceed"
@@ -55,6 +57,7 @@ const DashboardCards = () => {
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
                 color="bg-gradient-to-br from-purple-400 to-purple-600"
+                link="/processed"
             />
             {/* <DashboardCard
                 title="Re-Submit"
