@@ -23,13 +23,14 @@ export const convertExcelToJson = async (req, res) => {
     const file = req.file;
 
     if (!file) {
-      return res.status(400).json({ message: "No file uploaded" });
+      return res.status(400).json({status: 1, message: "No file uploaded", data: null });
     }
 
     const workbook = xlsx.read(file.buffer, { type: "buffer" });
     const sheetName = workbook.SheetNames[0];
 
     const data = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
     // Trim JSON keys and values
     const jsonData = trimJsonData(data);
     let failure_error = 0;
@@ -38,7 +39,6 @@ export const convertExcelToJson = async (req, res) => {
     let success_arr = [];
     let duplicate_arr = [];
 
-    // Use map to create an array of promises
     const promises = jsonData.map(async (element) => {
       const result = await saveApplicationDetailsModel(
         element["DPHq ID/Name"],
@@ -73,14 +73,16 @@ export const convertExcelToJson = async (req, res) => {
       }
     });
 
-    // Wait for all promises to complete
     await Promise.all(promises);
 
-    // Send response after all iterations are done
     res.status(200).json({
       status: 0,
       message: `${success_arr.length} record(s) have been added`,
-      data: `File(s) inserted ${success_arr.length}, duplicate file(s) ${duplicate_arr.length} , and failed insert file no.(s) ${failure_arr.length}`,
+      data: {
+        added: success_arr,
+        duplicate: duplicate_arr,
+        failed: failure_arr,
+      }
     });
   } catch (error) {
     console.error("Error processing file:", error);
