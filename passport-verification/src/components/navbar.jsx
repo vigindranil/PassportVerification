@@ -18,6 +18,10 @@ const Navbar = () => {
     const [currentTime, setCurrentTime] = useState(new Date())
     const [userImg, setUserImg] = useState("")
     const [userName, setUserName] = useState(null)
+    const [type, setType] = useState(null)
+    const [ds, setDs] = useState(null)
+    const [ps, setPs] = useState(null)
+
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -35,6 +39,15 @@ const Navbar = () => {
 
         const Name = Cookies.load('name');
         setUserName(Name);
+
+        const DS = Cookies.load('district');
+        setDs(DS);
+
+        const PS = Cookies.load('ps');
+        setPs(PS);
+
+        const TYPE = Cookies.load('type');
+        setType(TYPE);
     },[])
 
     const formatDate = (date) => {
@@ -75,7 +88,7 @@ const Navbar = () => {
 
                 <div className="text-sm">
                     <div>{userName && userName}</div>
-                    <div>{userName && userName}</div>
+                    <div>{(type == 10 || type == 20) ? ds : ps}</div>
                 </div>
 
                     <DropdownMenuTrigger asChild>

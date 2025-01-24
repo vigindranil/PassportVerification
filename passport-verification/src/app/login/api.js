@@ -24,6 +24,8 @@ export const sendOtp = async (username, password) => {
     Cookies.save("data", data.token);
     Cookies.save("name", data.name);
     Cookies.save("type", data.type);
+    Cookies.save("ps", data.ps);
+    Cookies.save("district", data.district);
     console.log(data);
     return true;
 

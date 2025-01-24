@@ -426,7 +426,6 @@ const UserManagement = () => {
                     <TableCell><p>{row?.userType || "N/A"}</p></TableCell>
                     <TableCell>
                       <div className="flex space-x-1">
-                        <Button size="sm" variant="default" className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1">Details</Button>
                         {row.IsActive == 0 && <Button onClick={()=>handleUpdateUserStatus(row.UserID, 1)} size="sm" variant="default" className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1">{statuUpdateLoader ? statuUpdateLoader : 'Activate'}</Button>}
                         {row.IsActive == 1 && <Button onClick={()=>handleUpdateUserStatus(row.UserID, 0)} size="sm" variant="default" className="bg-red-600 hover:bg-red-700 text-white text-xs px-1 py-1">{statuUpdateLoader ? statuUpdateLoader : 'De-Activate'}</Button>}
                       </div>

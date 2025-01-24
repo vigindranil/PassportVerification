@@ -29,9 +29,9 @@ const Sidebar = () => {
             <nav className="flex-1">
                 <ul className="space-y-2 px-3">
                     {[
-                        { type_id: [10], icon: Home, label: 'Home', href: '/dashboard' },
-                        { type_id: [10], icon: Upload, label: 'Upload Data', href: '/upload' },
-                        { type_id: [10], icon: CirclePlus, label: 'Create User', href: '/createUserForm' },
+                        { type_id: 10, icon: Home, label: 'Home', href: '/dashboard' },
+                        { type_id: 10, icon: Upload, label: 'Upload Data', href: '/upload' },
+                        { type_id: 10, icon: CirclePlus, label: 'Create User', href: '/createUserForm' },
                         // { icon: FileInput, label: 'Proceed Files', href: '/analytics' },
                         // { icon: FileUp, label: 'File Dispatched', href: '/settings' },
                         // { icon: FileText, label: 'View PDF Count', href: '/settings' },
@@ -41,7 +41,6 @@ const Sidebar = () => {
                         // { icon: FileCheck2, label: 'File Complited', href: '/settings' },
                         // { icon: Search, label: 'CRS Data Search', href: '/settings' },
                     ].map((item) => (
-                  
                         <li key={item.label}>
                             <Link href={item.href} className={`flex items-center p-2 rounded-lg transition-colors ${isActive(item.href) ? 'bg-white text-indigo-800' : 'hover:bg-indigo-800'}`}>
                                 <item.icon className="w-5 h-5 mr-3" />
