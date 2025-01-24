@@ -36,8 +36,13 @@ export default function ExcelUploader() {
       } else {
         const response = await uploadExcel(file);
         console.log('response', response);
-        setMessage(response.data);
-        setError('');
+        if (response.status == 0){
+          setMessage(response.data);
+          setError('');
+        }else {
+          setError(response.message);
+          setMessage('');
+        }
       }
     } catch (e) {
       console.error(e);
@@ -73,7 +78,10 @@ export default function ExcelUploader() {
                 >
                   {uploading ? 'Uploading...' : 'Upload Excel'}
                 </Button>
-                {message && <p className="text-sm text-center text-green-600">{message}</p>}
+                {message && <p className="text-sm font-bold text-green-600">{message.added.length} file(s) added, {message.duplicate.length} duplicate file(s), and {message.failed.length} file(s) failed to upload.</p>}
+                {message && <p className="text-sm ">File(s) uploaded: {message.added.length ? message.added.join(", ") : message.added.length}</p>}
+                {message && <p className="text-sm ">Duplicate file(s): {message.duplicate.length ? message.duplicate.join(", ") : message.duplicate.length}</p>}
+                {message && <p className="text-sm ">Failed file(s): {message.failed.length ? message.failed.join(", ") : message.failed.length}</p>}
                 {error && <p className="text-sm text-center text-red-500">{error}</p>}
               </form>
             </CardContent>
