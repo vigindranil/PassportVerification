@@ -79,9 +79,8 @@ export default function ExcelUploader() {
                   {uploading ? 'Uploading...' : 'Upload Excel'}
                 </Button>
                 {message && <p className="text-sm font-bold text-green-600">{message.added.length} file(s) added, {message.duplicate.length} duplicate file(s), and {message.failed.length} file(s) failed to upload.</p>}
-                {message && <p className="text-sm ">File(s) uploaded: {message.added.length ? message.added.join(", ") : message.added.length}</p>}
-                {message && <p className="text-sm ">Duplicate file(s): {message.duplicate.length ? message.duplicate.join(", ") : message.duplicate.length}</p>}
-                {message && <p className="text-sm ">Failed file(s): {message.failed.length ? message.failed.join(", ") : message.failed.length}</p>}
+                {message?.duplicate?.length > 0 && <p className="text-sm ">Duplicate file(s): {message.duplicate.length ? <span className='text-yellow-600'>{message.duplicate.join(", ")}</span> : message.duplicate.length}</p>}
+                {message?.failed?.length > 0 && <p className="text-sm ">Failed file(s): {message.failed.length ? <span className='text-red-500'>{message.failed.join(", ")}</span> : message.failed.length}</p>}
                 {error && <p className="text-sm text-center text-red-500">{error}</p>}
               </form>
             </CardContent>

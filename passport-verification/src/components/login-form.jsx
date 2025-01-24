@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label"
 import { OTPInput } from "@/components/otp-input"
 import { User, Lock, Eye, EyeOff, RotateCcw, LoaderCircle } from 'lucide-react'
 import { sendOtp, verifyOtp } from "@/app/login/api"
+import { useToast } from "../hooks/use-toast"
+import { ToastAction } from "@/components/ui/toast"
 
 const LoginForm = () => {
   const [username, setUsername] = useState("")
@@ -22,11 +24,20 @@ const LoginForm = () => {
   const [message, setMessage] = useState(null)
   const [resendTimer, setResendTimer] = useState(60);
   const router = useRouter()
+  const { toast } = useToast()
 
   const handleSendOtp = async () => {
+    
     setError("")
     setLoadingOtpSend(true)
 
+    // toast({
+    //   title: "Scheduled: Catch up ",
+    //   description: "Friday, February 10, 2023 at 5:57 PM",
+    //   action: (
+    //     <ToastAction altText="Goto schedule to undo">Undo</ToastAction>
+    //   ),
+    // })
     try {
       const response = await sendOtp(username, password)
       console.log("sendOtp", response)
