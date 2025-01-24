@@ -26,12 +26,12 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 //public Route
-app.use('/api/auth/',  loginRoutes);
+app.use('/api/auth/', loginRoutes);
 app.use('/api/fileImport',verifyToken, upload.single('file'), fileImportRoutes)
 
 //private Route
 app.use('/api/auth/', verifyToken, authRoutes);
-app.use('/api/user/', verifyToken,userRoutes);
+app.use('/api/user/', verifyToken, userRoutes);
 app.use('/api/master', verifyToken ,masterRoutes)
 
 // test route

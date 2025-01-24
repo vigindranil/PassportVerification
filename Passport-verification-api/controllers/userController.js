@@ -1,3 +1,5 @@
+import { updateAuthToken } from '../models/authModels.js';
+import { logoutModel } from '../models/logoutModel.js';
 import { getApplicationStatusModel, saveUserRegistrationModel } from '../models/userModel.js';
 import { updateUserActivationStatusModel } from '../models/userModel.js'
 import { getDistrictNodalDashBoardModel } from '../models/userModel.js'
@@ -403,4 +405,32 @@ export const getApplicationCountsv1 = async (req, res) => {
     }
 };
 
+
+export const logout = async (req, res) => {
+    try {
+        const result = await logoutModel(req.user.UserID, " ", " ");
+
+            console.log("result", result);
+            
+        if (result == 0) {
+            return res.status(200).json({
+                status: 0,
+                message: "Logout successfully",
+            });
+        } else {
+            return res.status(400).json({
+                status: 1,
+                message: "Failed to logout",
+            });
+
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({
+            status: 1,
+            message: "Failed to logout",
+            data: null,
+        });
+    }
+};
 
