@@ -24,7 +24,7 @@ import {
 import { getApplicationStatus } from "@/app/totalPending/api";
 import moment from "moment";
 
-export default function PendingApplicationDatatable() {
+export default function last15PendingDays() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedDetails, setSelectedDetails] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -42,7 +42,7 @@ export default function PendingApplicationDatatable() {
 
   const fetchApplicationStatus = async () => {
     try {
-      const response = await getApplicationStatus(0, 7);
+      const response = await getApplicationStatus(0, 15);
       console.log("Application Status Data:", response);
 
       setVerificationData(response.data);

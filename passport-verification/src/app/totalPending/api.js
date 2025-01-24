@@ -1,11 +1,11 @@
 import { postRequest } from "../commonAPI";
 
-export const getApplicationStatus = async () => {
+export const getApplicationStatus = async (status, period) => {
   try {
 
     return await postRequest("user/getApplicationStatus", {
-        "status_id": "0",
-        "periord_id": "7"
+        "status_id": status,
+        "periord_id": period
     });
   } catch (error) {
     console.log("Error:", error);
