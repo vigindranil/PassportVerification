@@ -105,12 +105,16 @@ export const sendOtp = async (req, res) => {
             res.cookie('data', token);
             res.cookie('type', rows["UserTypeID"]);
             res.cookie('name', rows["UserFullName"]);
+            res.cookie('district', rows["DistrictName"]);
+            res.cookie('ps', rows["PoliceStationName"]);
 
             res.status(200).json({
                 status: 0,
                 message: "OTP sent successfully",
                 type: rows["UserTypeID"],
                 name: rows["UserFullName"],
+                district: rows["DistrictName"],
+                ps: rows["PoliceStationName"],
                 token: token,
             });
 
