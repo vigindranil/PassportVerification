@@ -89,6 +89,8 @@ const UserManagement = () => {
       console.log(districtData);
 
       if (districtData) {
+        console.log("districts", districtData.data);
+        
         setDistrictsData(districtData.data)
       }
     } catch (error) {
@@ -126,7 +128,7 @@ const UserManagement = () => {
   const onChangeDistrict = async (DistrictID) => {
     try {
       setPsLoader("Loading...")
-      setFormData({ ...formData, DistrictID: formData.DistrictID });
+      setFormData({ ...formData, DistrictID: DistrictID });
       const policeStationData = await getPoliceStationsByDistrict(DistrictID);
       if (policeStationData) {
         setPoliceStationsData(policeStationData.data);
@@ -136,7 +138,8 @@ const UserManagement = () => {
         setPsLoader("Select District First")
       }
     } catch (error) {
-      console.error("Error fetching police stations:", error)
+      console.log("Error fetching police stations:", error)
+      
     }
   }
   
