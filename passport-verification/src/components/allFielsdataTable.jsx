@@ -1,26 +1,33 @@
 "use client";
 
 import { useState } from "react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { FileAcceptModal } from "@/components/file-accept-modal"
-import UploadDocumentsModal from "@/components/uploadDocumentModal"
-import * as XLSX from 'xlsx';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 export default function PoliceVerificationTable() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [acceptedFiles, setAcceptedFiles] = useState([]);
-  const [uploadFile, setUploadFile] = useState(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [selectedDetails, setSelectedDetails] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const itemsPerPage = 6;
-
-  const handleAcceptFile = (fileNumber) => {
-    setAcceptedFiles((prev) => [...prev, fileNumber]);
-  };
 
   const verificationData = [
     {
@@ -79,8 +86,8 @@ export default function PoliceVerificationTable() {
     },
   ];
 
-  const filteredData = verificationData.filter(row =>
-    Object.values(row).some(value =>
+  const filteredData = verificationData.filter((row) =>
+    Object.values(row).some((value) =>
       value.toString().toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
@@ -100,15 +107,27 @@ export default function PoliceVerificationTable() {
   const exportToPDF = () => {
     const doc = new jsPDF();
     doc.autoTable({
-      head: [['File Number', 'Applicant Name', 'Police Station', 'Phone No.', 'Date of Birth']],
-      body: verificationData.map(row => [row.fileNumber, row.applicantName, row.policeStation, row.phoneNo, row.dateOfBirth]),
+      head: [
+        ["File Number", "Applicant Name", "Police Station", "Phone No.", "Date of Birth"],
+      ],
+      body: verificationData.map((row) => [
+        row.fileNumber,
+        row.applicantName,
+        row.policeStation,
+        row.phoneNo,
+        row.dateOfBirth,
+      ]),
     });
-    doc.save('police_verification_data.pdf');
+    doc.save("police_verification_data.pdf");
   };
 
   const printTable = () => {
-    const printContent = document.getElementById('police-verification-table');
-    const windowPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+    const printContent = document.getElementById("police-verification-table");
+    const windowPrint = window.open(
+      "",
+      "",
+      "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
+    );
     windowPrint.document.write(printContent.innerHTML);
     windowPrint.document.close();
     windowPrint.focus();
@@ -120,9 +139,15 @@ export default function PoliceVerificationTable() {
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="space-x-2">
-          <Button variant="outline" onClick={exportToExcel}>Excel</Button>
-          <Button variant="outline" onClick={exportToPDF}>PDF</Button>
-          <Button variant="outline" onClick={printTable}>Print</Button>
+          <Button variant="outline" onClick={exportToExcel}>
+            Excel
+          </Button>
+          <Button variant="outline" onClick={exportToPDF}>
+            PDF
+          </Button>
+          <Button variant="outline" onClick={printTable}>
+            Print
+          </Button>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-500">Search:</span>
@@ -142,7 +167,9 @@ export default function PoliceVerificationTable() {
               <TableHead className="font-semibold">Applicant Name</TableHead>
               <TableHead className="font-semibold">Police Station</TableHead>
               <TableHead className="font-semibold">Phone No.</TableHead>
-              <TableHead className="font-semibold whitespace-nowrap">Date of Birth</TableHead>
+              <TableHead className="font-semibold whitespace-nowrap">
+                Date of Birth
+              </TableHead>
               <TableHead className="font-semibold text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -156,36 +183,17 @@ export default function PoliceVerificationTable() {
                 <TableCell>{row.dateOfBirth}</TableCell>
                 <TableCell>
                   <div className="flex space-x-1">
-                    <Button size="sm" variant="default" className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1">Details</Button>
                     <Button
                       size="sm"
-                      variant="secondary"
-                      className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-1 py-1"
-                      onClick={() => setSelectedFile({
-                        name: row.applicantName,
-                        fileNumber: row.fileNumber
-                      })}
+                      variant="default"
+                      className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1"
+                      onClick={() => {
+                        setSelectedDetails(row);
+                        setIsDetailsModalOpen(true);
+                      }}
                     >
-                      Accept File
+                      Details
                     </Button>
-                    {acceptedFiles.includes(row.fileNumber) && (
-                      <Button size="sm" variant="secondary" className="bg-gray-600 hover:bg-gray-700 text-white text-xs px-1 py-1">
-                        View PP
-                      </Button>
-                    )}
-                    {acceptedFiles.includes(row.fileNumber) && (
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        className="bg-lime-600 hover:bg-lime-700 text-white text-xs px-1 py-1"
-                        onClick={() => setUploadFile({
-                          name: row.applicantName,
-                          fileNumber: row.fileNumber
-                        })}
-                      >
-                        Upload Document
-                      </Button>
-                    )}
                   </div>
                 </TableCell>
               </TableRow>
@@ -195,13 +203,14 @@ export default function PoliceVerificationTable() {
       </div>
       <div className="flex items-center justify-between mt-4 text-sm">
         <div>
-          Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of {filteredData.length} entries
+          Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of{" "}
+          {filteredData.length} entries
         </div>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
           >
             Prev
@@ -219,29 +228,47 @@ export default function PoliceVerificationTable() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
           >
             Next
           </Button>
         </div>
       </div>
-      {selectedFile && (
-        <FileAcceptModal
-          isOpen={true}
-          onClose={() => setSelectedFile(null)}
-          fileData={selectedFile}
-          onAccept={handleAcceptFile}
-        />
-      )}
-      {uploadFile && (
-        <UploadDocumentsModal
-          isOpen={true}
-          onClose={() => setUploadFile(null)}
-          fileData={uploadFile}
-        />
+      {isDetailsModalOpen && selectedDetails && (
+        <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>File Details</DialogTitle>
+            </DialogHeader>
+            <DialogDescription>
+              <div className="space-y-2">
+                <div>
+                  <li className="list-none">PV Sequence: {selectedDetails.pvSequence}</li>
+                </div>
+                <div>
+                  <li className="list-none">File Number: {selectedDetails.fileNumber}</li>
+                </div>
+                <div>
+                  <li className="list-none">Status: {selectedDetails.status}</li>
+                </div>
+                <div>
+                  <li className="list-none">Applicant Name: {selectedDetails.applicantName}</li>
+                </div>
+                <div>
+                  <li className="list-none">Police Station: {selectedDetails.policeStation}</li>
+                </div>
+                <div>
+                  <li className="list-none">Phone No: {selectedDetails.phoneNo}</li>
+                </div>
+                <div>
+                  <li className="list-none">Date of Birth: {selectedDetails.dateOfBirth}</li>
+                </div>
+              </div>
+            </DialogDescription>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
-  )
+  );
 }
-

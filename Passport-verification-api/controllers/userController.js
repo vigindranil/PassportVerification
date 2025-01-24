@@ -1,8 +1,8 @@
-import { saveUserRegistrationModel } from '../models/userModel.js';
+import { getApplicationStatusModel, saveUserRegistrationModel } from '../models/userModel.js';
 import { updateUserActivationStatusModel } from '../models/userModel.js'
 import { getDistrictNodalDashBoardModel } from '../models/userModel.js'
 import { showuserDetailsModel } from '../models/userModel.js'
-import { getEoDashBoardModel } from '../models/userModel.js'
+import {getApplicationCountsv1Model} from '../models/userModel.js'
 
 /**
  * @swagger
@@ -335,9 +335,10 @@ export const showuserDetails = async (req, res) => {
 
 
 
-export const getEoDashBoard = async (req, res) => {
+export const getApplicationStatus = async (req, res) => {
     try {
-        const [result] = await getEoDashBoardModel(req.user.UserID);
+        const { status_id } = req.body;
+        const [result] = await getApplicationStatusModel(req.user.UserID, status_id);
         console.log("result", result);
 
         if (result?.length == 0) {
@@ -345,6 +346,43 @@ export const getEoDashBoard = async (req, res) => {
                 status: 0,
                 message: "Data fetched successfully",
                 data: result
+            });
+        } else {
+            return res.status(400).json({
+                status: 1,
+                message: "No data found",
+            });
+
+        }
+
+
+    } catch (error) {
+        console.error("Error fetching :", error);
+        res.status(500).json({
+            status: 1,
+            message: "An error occurred",
+            data: null,
+        });
+    }
+};
+
+
+
+
+export const getApplicationCountsv1 = async (req, res) => {
+    try {
+        const [result] = await getApplicationCountsv1Model(req.user.UserID);
+        console.log("result", result);
+
+        if (result?.length !== 0) {
+            return res.status(200).json({
+                status: 0,
+                message: "Data fetched successfully",
+                data: {
+                    Pending: result[0].TotalPendingApplications,
+                    Processed: result[0].TotalProcessedApplications,
+                    Last15DaysPending: result[0].Last15DaysPendingApplications
+                }
             });
         } else {
             return res.status(400).json({
