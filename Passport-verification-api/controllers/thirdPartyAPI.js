@@ -26,7 +26,7 @@ export const generateOtpAadhaar = async (aadhaar_number, user_id) => {
             timeout: 0 // Node-fetch does not have a built-in timeout option; you can handle it separately if needed
         });
 
-        console.log("api aadhaar response: " + response);
+        console.log("api aadhaar response: ", response);
         const transactionId = response.headers.get('x-transaction-id');
         console.log("api aadhaar transactionId: " + transactionId);
         
@@ -34,10 +34,11 @@ export const generateOtpAadhaar = async (aadhaar_number, user_id) => {
         if(response.ok){
             return transactionId;
         }else{
-            return false;
+            return transactionId;
         }
 
     } catch (error) {
+        console.log("Error generating OTP: ", error);
         return false;
     }
 };
