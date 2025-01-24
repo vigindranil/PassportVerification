@@ -28,6 +28,7 @@ const upload = multer({ storage });
 //public Route
 app.use('/api/auth/',  loginRoutes);
 app.use('/api/fileImport',verifyToken, upload.single('file'), fileImportRoutes)
+app.use('/api/fileUpload',verifyToken, fileImportRoutes)
 
 //private Route
 app.use('/api/auth/', verifyToken, authRoutes);
