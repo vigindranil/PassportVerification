@@ -1,8 +1,9 @@
 import express from "express";
-import {convertExcelToJson} from '../controllers/fileImportController.js';
+import {convertExcelToJson, uploadExcel} from '../controllers/fileImportController.js';
 
 const router = express.Router();
 
-router.post('/importExcel', convertExcelToJson);
+router.post('/convertExcelToJson', convertExcelToJson);
+router.post('/uploadExcel', uploadExcel);
 
 export default router;
