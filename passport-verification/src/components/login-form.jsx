@@ -30,20 +30,18 @@ const LoginForm = () => {
     
     setError("")
     setLoadingOtpSend(true)
-
-    // toast({
-    //   title: "Scheduled: Catch up ",
-    //   description: "Friday, February 10, 2023 at 5:57 PM",
-    //   action: (
-    //     <ToastAction altText="Goto schedule to undo">Undo</ToastAction>
-    //   ),
-    // })
     try {
       const response = await sendOtp(username, password)
       console.log("sendOtp", response)
       
       if(response){
-        setMessage(`OTP sent successfully`)
+        toast({
+          title: "OTP sent successfully",
+          description: "A six digit code was sent to your aadhaar linked phone number",
+          action: (
+            <ToastAction altText="close">Close</ToastAction>
+          ),
+        })
         setShowOtp(true)
       }else {
         setMessage(`Failed to send OTP, Please try again`)
@@ -51,6 +49,12 @@ const LoginForm = () => {
       }
     } catch (error) {
       setMessage(`Error: ${error.message}`)
+      toast({
+        variant: "destructive",
+        title: "Failed to Send OTP!",
+        description: "Something went wrong, Please try again",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
     } finally {
       setLoadingOtpSend(false)
     }
@@ -86,11 +90,24 @@ const LoginForm = () => {
       if(response){
         setShowOtp(true)
         setResendTimer(60);
+        toast({
+          title: "OTP sent successfully",
+          description: "A six digit code was sent to your aadhaar linked phone number",
+          action: (
+            <ToastAction altText="close">Close</ToastAction>
+          ),
+        })
       }else {
         setMessage(`Failed to resend otp, Please try again`)
       }
     } catch (error) {
       setMessage(`Failed to resend otp`)
+      toast({
+        variant: "destructive",
+        title: "Failed to Send OTP!",
+        description: "Something went wrong, Please try again",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
     } finally {
       setLoadingResendOtp(false)
     }
