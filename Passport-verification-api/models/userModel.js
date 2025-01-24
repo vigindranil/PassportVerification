@@ -63,6 +63,8 @@ export async function updateUserActivationStatusModel(
   );
 
   const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
+  console.log("error code", result[0].ErrorCode);
+  
   return result[0].ErrorCode;
 
 }
@@ -101,10 +103,11 @@ export async function showuserDetailsModel(
 
 
 export async function getApplicationStatusModel(
-  EntryUserID, Status
+  EntryUserID, Status, Periord 
 ) {
   try {
-    const [rows] = await pool.query('CALL sp_getapplicationstatus(?,?)', [EntryUserID,Status ]);
+    const [rows] = await pool.query('CALL sp_getapplicationstatus(?,?,?)', [EntryUserID,Status, Periord ]);
+    console.log(rows);
     return rows;
   } catch (error) {
     throw new Error('Database error: ' + error.message);
@@ -125,3 +128,5 @@ export async function getApplicationCountsv1Model(
     throw new Error('Database error: ' + error.message);
   }
 }
+
+
