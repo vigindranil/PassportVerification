@@ -23,7 +23,26 @@ export async function getDocumentUploadDetailsModel(ApplicationId, EntryUserId) 
         [ApplicationId, EntryUserId]
       );
   
-      return rows[0]; // Return the result of the stored procedure
+      return rows[0]; 
+    } catch (error) {
+      throw new Error('Database error: ' + error.message);
+    }
+  }
+
+
+
+  export async function saveCaseAssignModel(applicationId, citizenType, filePath, entryUserId) {
+    try {
+      const [rows] = await pool.query(
+        'CALL sp_savecaseassign(?, ?, ?, ?, @application_Id, @ErrorCode); SELECT @application_Id AS application_Id, @ErrorCode AS ErrorCode;',
+        [applicationId, citizenType, filePath, entryUserId]
+      );
+  
+      const result = rows[1][0];
+      return {
+        applicationId: result.application_Id,
+        errorCode: result.ErrorCode,
+      };
     } catch (error) {
       throw new Error('Database error: ' + error.message);
     }
