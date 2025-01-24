@@ -44,6 +44,12 @@ const LoginForm = () => {
         })
         setShowOtp(true)
       }else {
+        toast({
+          variant: "destructive",
+          title: "Failed to Send OTP!",
+          description: "Something went wrong, Please try again",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
         setMessage(`Failed to send OTP, Please try again`)
         setShowOtp(true)
       }
@@ -71,10 +77,21 @@ const LoginForm = () => {
       router.push("/dashboard")
       if (response.status == 0) {
       } else {
+        toast({
+          variant: "destructive",
+          title: "Failed to Verify OTP!",
+          description: "Something went wrong, Please try again",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
         setError(response.message)
       }
     } catch (error) {
-      setError(error)
+      toast({
+        variant: "destructive",
+        title: "Failed to Verify OTP!",
+        description: "Something went wrong, Please try again",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
     } finally {
       setLoadingOtpVerify(false)
     }
@@ -98,10 +115,14 @@ const LoginForm = () => {
           ),
         })
       }else {
-        setMessage(`Failed to resend otp, Please try again`)
+        toast({
+          variant: "destructive",
+          title: "Failed to Send OTP!",
+          description: "Something went wrong, Please try again",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
       }
     } catch (error) {
-      setMessage(`Failed to resend otp`)
       toast({
         variant: "destructive",
         title: "Failed to Send OTP!",

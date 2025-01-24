@@ -1,23 +1,26 @@
 'use client';
 
 import React, { useState } from 'react';
-import * as XLSX from 'xlsx';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Navbar from '@/components/navbar';
 import Sidebar from '@/components/sidebar';
-import DataTable from '@/components/uploadDataTable'
-import { uploadExcel } from './api';
+import { convertExcelToJson, uploadExcel } from './api';
+import { useToast } from "@/hooks/use-toast"
+import { ToastAction } from "@/components/ui/toast"
+import DataTable from '@/components/excelParsedDatatable';
 
 export default function ExcelUploader() {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [importing, setImporting] = useState(false);
   const [parsedData, setParsedData] = useState([]);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1); // Track current page
   const rowsPerPage = 5; // Number of rows per page
+  const { toast } = useToast()
 
   const handleFileChange = (e) => {
     if (e.target.files) {
@@ -26,29 +29,89 @@ export default function ExcelUploader() {
     }
   };
 
+  const handleExcelParse = async (e) => {
+    try {
+      e.preventDefault();
+      setImporting(true);
+      if (!file) {
+
+        return;
+      } else {
+        const response = await convertExcelToJson(file);
+        console.log('response', response);
+        if (response.status == 0) {
+          setParsedData(response.data);
+          toast({
+            title: "Successfull",
+            description: response?.message || "File was successfully converted",
+            action: (
+              <ToastAction altText="close">Close</ToastAction>
+            ),
+          })
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Failed to Convert!",
+            description: "Something went wrong, Please try again",
+            action: <ToastAction altText="Try again">Try again</ToastAction>,
+          })
+          setError(response.message);
+        }
+      }
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Failed to Convert!",
+        description: "Something went wrong, Please try again",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
+      setError('Failed to import file. Please try again.');
+    } finally {
+      setImporting(false);
+    }
+  };
+
   const handleUpload = async (e) => {
     try {
       e.preventDefault();
       setUploading(true);
-      if (!file) {
-        
+      if (!parsedData || parsedData?.length == 0) {
+        toast({
+          variant: "destructive",
+          title: "Failed to upload!",
+          description: "Please import excel file before uploading",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
         return;
       } else {
-        const response = await uploadExcel(file);
+        const response = await uploadExcel(parsedData);
         console.log('response', response);
-        if (response.status == 0){
-          setMessage(response.data);
+        if (response?.status == 0){
+          toast({
+            title: "Successfull",
+            description: response?.message || "File was successfully uploaded",
+            action: (
+              <ToastAction altText="close">Close</ToastAction>
+            ),
+          })
+          setMessage(response?.data);
           setError('');
         }else {
-          setError(response.message);
+          setError(response?.message);
           setMessage('');
         }
       }
     } catch (e) {
-      console.error(e);
+      console.log(e);
       setError('Failed to upload file. Please try again.');
       setMessage('');
-    }finally {
+      toast({
+        variant: "destructive",
+        title: "Failed to upload!",
+        description: "Something went wrong, Please try again",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
+    } finally {
       setUploading(false);
     }
   };
@@ -68,13 +131,20 @@ export default function ExcelUploader() {
               <form className="space-y-4">
                 <Input
                   type="file"
-                  accept=".xlsx, .xls, .pdf"
+                  accept=".xlsx, .xls, .csv"
                   onChange={handleFileChange}
                   disabled={uploading}
                 />
                 <Button
+                  onClick={handleExcelParse}
+                  disabled={importing}
+                >
+                  {importing ? 'Converting...' : 'Import Excel'}
+                </Button>
+                <Button
+                  className="mx-2"
                   onClick={handleUpload}
-                  disabled={!file || uploading}
+                  disabled={uploading}
                 >
                   {uploading ? 'Uploading...' : 'Upload Excel'}
                 </Button>
@@ -87,7 +157,7 @@ export default function ExcelUploader() {
           </Card>
           <Card>
             <CardContent>
-              <DataTable />
+              <DataTable data={parsedData} />
             </CardContent>
           </Card>
         </main>
