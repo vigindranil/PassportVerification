@@ -113,6 +113,8 @@ export const sendOtp = async (req, res) => {
                 message: "OTP sent successfully",
                 type: rows["UserTypeID"],
                 name: rows["UserFullName"],
+                district: rows["DistrictName"],
+                ps: rows["PoliceStationName"],
                 token: token,
             });
 
