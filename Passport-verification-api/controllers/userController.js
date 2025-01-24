@@ -1,8 +1,8 @@
-import { saveUserRegistrationModel } from '../models/userModel.js';
+import { getApplicationStatusModel, saveUserRegistrationModel } from '../models/userModel.js';
 import { updateUserActivationStatusModel } from '../models/userModel.js'
 import { getDistrictNodalDashBoardModel } from '../models/userModel.js'
 import { showuserDetailsModel } from '../models/userModel.js'
-import { getEoDashBoardModel } from '../models/userModel.js'
+
 
 /**
  * @swagger
@@ -335,9 +335,10 @@ export const showuserDetails = async (req, res) => {
 
 
 
-export const getEoDashBoard = async (req, res) => {
+export const getApplicationStatus = async (req, res) => {
     try {
-        const [result] = await getEoDashBoardModel(req.user.UserID);
+        const { status_id } = req.body;
+        const [result] = await getApplicationStatusModel(req.user.UserID, status_id);
         console.log("result", result);
 
         if (result?.length == 0) {
@@ -364,3 +365,4 @@ export const getEoDashBoard = async (req, res) => {
         });
     }
 };
+
