@@ -31,7 +31,7 @@ const Navbar = () => {
 
     useEffect(() => {
         const base6gImg = sessionStorage.getItem('_img');
-        setUserImg(`data:image/jpeg;base64,${base6gImg}`);
+        setUserImg(base6gImg);
 
         const user_enc = Cookies.load('_ud');
         console.log("user_enc: " + user_enc);

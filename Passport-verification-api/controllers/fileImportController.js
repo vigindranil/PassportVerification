@@ -23,22 +23,39 @@ export const convertExcelToJson = async (req, res) => {
     const file = req.file;
 
     if (!file) {
-      return res.status(400).json({ message: "No file uploaded" });
+      return res.status(400).json({status: 1, message: "No file uploaded", data: null });
     }
 
     const workbook = xlsx.read(file.buffer, { type: "buffer" });
     const sheetName = workbook.SheetNames[0];
 
     const data = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
     // Trim JSON keys and values
     const jsonData = trimJsonData(data);
+
+    res.status(200).json({
+      status: 0,
+      message: `${jsonData.length} record(s) have been parsed successfully`,
+      data: jsonData
+    });
+  } catch (error) {
+    console.error("Error processing file:", error);
+    res.status(500).json({ status: 1, message: "Error processing file", data: null });
+  }
+};
+
+export const uploadExcel = async (req, res) => {
+  try {
+    const { jsonData } = req.body;
+
     let failure_error = 0;
     let duplicate_error = 0;
     let failure_arr = [];
     let success_arr = [];
     let duplicate_arr = [];
 
-    const promises = jsonData?.forEach(async (element) => {
+    const promises = jsonData.map(async (element) => {
       const result = await saveApplicationDetailsModel(
         element["DPHq ID/Name"],
         element["Police Station"],
@@ -58,32 +75,34 @@ export const convertExcelToJson = async (req, res) => {
         element["PV Sequence No."],
         element["E-mail ID"],
         element["Phone No."],
-        req.user.UserID
+        req?.user?.UserID || null
       );
 
       if (result == 1) {
-        failure_error = result + failure_error;
-        failure_arr = [...failure_arr, element["File Number"]];
+        failure_error += 1;
+        failure_arr.push(element["File Number"]);
       } else if (result == 2) {
-        duplicate_error = result + duplicate_error;
-        duplicate_arr = [...duplicate_arr, element["File Number"]];  
-        console.log(duplicate_arr);
+        duplicate_error += 1;
+        duplicate_arr.push(element["File Number"]);
       } else if (result == 0) {
-        success_arr = [...success_arr, element["File Number"]]; 
+        success_arr.push(element["File Number"]);
       }
     });
 
     await Promise.all(promises);
-    
+
     res.status(200).json({
       status: 0,
-      message: `${duplicate_arr.length} record(s) have been added`,
-      data: `File(s) inserted [${success_arr.join(", ")}] , duplicate file(s) [${duplicate_arr.join(", ")}] and failded to insert file no.(s) [${failure_arr.join(", ")}]`,
+      message: `${success_arr.length} record(s) have been added`,
+      data: {
+        added: success_arr,
+        duplicate: duplicate_arr,
+        failed: failure_arr,
+      }
     });
   } catch (error) {
     console.error("Error processing file:", error);
-    res
-      .status(500)
-      .json({status: 0, message: "Error processing file", data: null });
+    res.status(500).json({ status: 1, message: "Error processing file", data: null });
   }
 };
+

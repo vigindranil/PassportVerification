@@ -8,12 +8,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Navbar from '@/components/navbar';
 import Sidebar from '@/components/sidebar';
 import DataTable from '@/components/uploadDataTable'
+import { uploadExcel } from './api';
 
 export default function ExcelUploader() {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [parsedData, setParsedData] = useState([]);
   const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1); // Track current page
   const rowsPerPage = 5; // Number of rows per page
 
@@ -24,14 +26,31 @@ export default function ExcelUploader() {
     }
   };
 
-  const handleUpload = () => {
-    if (!file) {
-      setMessage('Please select a file first.');
-      return;
+  const handleUpload = async (e) => {
+    try {
+      e.preventDefault();
+      setUploading(true);
+      if (!file) {
+        
+        return;
+      } else {
+        const response = await uploadExcel(file);
+        console.log('response', response);
+        if (response.status == 0){
+          setMessage(response.data);
+          setError('');
+        }else {
+          setError(response.message);
+          setMessage('');
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      setError('Failed to upload file. Please try again.');
+      setMessage('');
+    }finally {
+      setUploading(false);
     }
-
-    setUploading(true);
-    setMessage('');// Read the file as a binary buffer
   };
 
   return (
@@ -46,7 +65,7 @@ export default function ExcelUploader() {
               <CardTitle>Upload Excel File</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <form className="space-y-4">
                 <Input
                   type="file"
                   accept=".xlsx, .xls, .pdf"
@@ -57,10 +76,13 @@ export default function ExcelUploader() {
                   onClick={handleUpload}
                   disabled={!file || uploading}
                 >
-                  {uploading ? 'Uploading...' : 'Parse and Display'}
+                  {uploading ? 'Uploading...' : 'Upload Excel'}
                 </Button>
-                {message && <p className="text-sm text-center">{message}</p>}
-              </div>
+                {message && <p className="text-sm font-bold text-green-600">{message.added.length} file(s) added, {message.duplicate.length} duplicate file(s), and {message.failed.length} file(s) failed to upload.</p>}
+                {message?.duplicate?.length > 0 && <p className="text-sm ">Duplicate file(s): {message.duplicate.length ? <span className='text-yellow-600'>{message.duplicate.join(", ")}</span> : message.duplicate.length}</p>}
+                {message?.failed?.length > 0 && <p className="text-sm ">Failed file(s): {message.failed.length ? <span className='text-red-500'>{message.failed.join(", ")}</span> : message.failed.length}</p>}
+                {error && <p className="text-sm text-center text-red-500">{error}</p>}
+              </form>
             </CardContent>
           </Card>
           <Card>

@@ -72,7 +72,9 @@ export const sendOtp = async (req, res) => {
         const [rows] = await getUserLoginModel(username, btoa(password));
 
         const transactionId = await generateOtpAadhaar(atob(rows["AADHAARNo"]), rows["UserID"]);
+        console.log("transactionId",transactionId);
         
+
         if (!transactionId) {
             return res.status(400).json({
                 status: 1,

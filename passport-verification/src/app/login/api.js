@@ -23,6 +23,8 @@ export const sendOtp = async (username, password) => {
     }
     const data = await response.json();
     Cookies.save("data", data.token);
+    Cookies.save("name", data.name);
+    Cookies.save("type", data.type);
     console.log(data);
     return true;
 

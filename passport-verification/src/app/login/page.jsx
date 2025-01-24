@@ -6,6 +6,7 @@ import BackgroundImage from "@/assets/img.jpg"
 import Logo from "@/assets/wbplogo.png"
 
 export default function LoginPage() {
+  
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative">
       <Image src={BackgroundImage || "/placeholder.svg"} alt="Background" fill className="object-cover" priority />
