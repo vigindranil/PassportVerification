@@ -100,14 +100,11 @@ export async function showuserDetailsModel(
 
 
 
-export async function getEoDashBoardModel(
-  EntryUserID
+export async function getApplicationStatusModel(
+  EntryUserID, Status
 ) {
   try {
-    const [rows] = await pool.query('CALL sp_getEoDashBoard(?)', [EntryUserID]);
-    console.log("EntryUserID", EntryUserID);
-    console.log(rows);
-    
+    const [rows] = await pool.query('CALL sp_getapplicationstatus(?,?)', [EntryUserID,Status ]);
     return rows;
   } catch (error) {
     throw new Error('Database error: ' + error.message);

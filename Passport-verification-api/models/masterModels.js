@@ -13,14 +13,11 @@ export async function getPoliceStationsByDistrictModel(districtId) {
 
 
 
-/**
- * Fetch all districts
- * @returns {Promise<object[]>} List of districts
- */
+
 export async function showDistrictModel() {
   try {
     const [rows] = await pool.query('CALL showDistrict()');
-    return rows[0]; // Assuming the procedure returns a single result set
+    return rows[0]; 
   } catch (error) {
     throw new Error('Database error: ' + error.message);
   }
@@ -30,7 +27,7 @@ export async function showDistrictModel() {
 export async function showDesignationModel() {
     try {
       const [rows] = await pool.query('CALL showDesgination();');
-      return rows[0]; // Return the first result set from the stored procedure
+      return rows[0]; 
     } catch (error) {
       throw new Error('Database error: ' + error.message);
     }
