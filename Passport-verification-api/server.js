@@ -12,6 +12,7 @@ import morgan from 'morgan';
 import multer from 'multer';
 import setupSwagger from "./utils/swagger.js";
 import eoDocumentUpload from "./routes/eoRoutes.js"
+import getApplicationDetails from "./routes/application.js"
 // import logger from './utils/logger.js';
 const app = express();
 const port = 3003;
@@ -36,6 +37,7 @@ app.use('/api/auth/', verifyToken, authRoutes);
 app.use('/api/user/', verifyToken, userRoutes);
 app.use('/api/master', verifyToken ,masterRoutes);
 app.use('/api/eo', verifyToken, eoDocumentUpload);
+app.use('/api/application', verifyToken,getApplicationDetails );
 
 // test route
 app.use('/test', (req, res)=>{
