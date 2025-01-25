@@ -67,7 +67,7 @@ const DashboardCards = () => {
             {login_type == 40 && <DashboardCard
                 type="40"
                 title="Enquiry Pending"
-                value={data?.Pending || 0}
+                value={data?.TotalPendingApplications || 0}
                 icon={CircleDashed}
                 //description="10% increase from last month"
                 color="bg-gradient-to-br from-lime-400 to-lime-600"
@@ -76,7 +76,7 @@ const DashboardCards = () => {
             {login_type == 40 && <DashboardCard
                 type="40"
                 title="On-Going Enquiries"
-                value={data?.Last15DaysPending || 0}
+                value={data?.Last15DaysPendingApplications || 0}
                 icon={TrendingDown}
                 //description="5% increase from last week"
                 color="bg-gradient-to-br from-blue-400 to-blue-600"
@@ -85,7 +85,7 @@ const DashboardCards = () => {
             {login_type == 40 && <DashboardCard
                 type="40"
                 title="Enquiry Complete"
-                value={data?.Processed || 0}
+                value={data?.TotalProcessedApplications || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
                 color="bg-gradient-to-br from-purple-400 to-purple-600"
