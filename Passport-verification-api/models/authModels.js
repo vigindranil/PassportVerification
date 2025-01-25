@@ -7,7 +7,8 @@ export async function getUserLoginModel(username, password) {
         
         return rows[0];
     } catch (error) {
-        throw new Error('Database error: ' + error.message);
+        console.log(error.message);
+        return null
     }
 };
 

@@ -1,11 +1,12 @@
 'use client'
-import { getDistrictNodalDashBoard , getApplicationStatus } from '@/app/dashboard/api';
+import { getDistrictNodalDashBoard, getApplicationStatus } from '@/app/dashboard/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { CircleDashed, TrendingDown, ArrowRightToLine } from 'lucide-react'
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import Cookies from "react-cookies";
 
-const DashboardCard = ({ title, value, icon: Icon, description, color, link}) => (
+const DashboardCard = ({ title, value, icon: Icon, description, color, link, type }) => (
     <Link href={link}>
         <Card className={`${color} text-white`}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -23,6 +24,7 @@ const DashboardCard = ({ title, value, icon: Icon, description, color, link}) =>
 
 const DashboardCards = () => {
     const [data, setData] = useState(null);
+    const login_type = Cookies.load('type')
 
     const fetchDashboard = async () => {
         const response = await getDistrictNodalDashBoard();
@@ -35,30 +37,60 @@ const DashboardCards = () => {
     }, [])
     return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <DashboardCard
+            {login_type == 10 && <DashboardCard
+                type="10"
                 title="Total Pending"
                 value={data?.Pending || 0}
                 icon={CircleDashed}
                 //description="10% increase from last month"
                 color="bg-gradient-to-br from-lime-400 to-lime-600"
                 link="/totalPending"
-            />
-            <DashboardCard
+            />}
+            {login_type == 10 && <DashboardCard
+                type="10"
                 title="Last 15 Days Pending"
                 value={data?.Last15DaysPending || 0}
                 icon={TrendingDown}
                 //description="5% increase from last week"
                 color="bg-gradient-to-br from-blue-400 to-blue-600"
                 link="/last15DaysPending"
-            />
-            <DashboardCard
+            />}
+            {login_type == 10 && <DashboardCard
+                type="10"
                 title="Proceed"
                 value={data?.Processed || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
                 color="bg-gradient-to-br from-purple-400 to-purple-600"
                 link="/processed"
-            />
+            />}
+            {login_type == 40 && <DashboardCard
+                type="40"
+                title="Enquiry Pending"
+                value={data?.Pending || 0}
+                icon={CircleDashed}
+                //description="10% increase from last month"
+                color="bg-gradient-to-br from-lime-400 to-lime-600"
+                link="/totalPending"
+            />}
+            {login_type == 40 && <DashboardCard
+                type="40"
+                title="On-Going Enquiries"
+                value={data?.Last15DaysPending || 0}
+                icon={TrendingDown}
+                //description="5% increase from last week"
+                color="bg-gradient-to-br from-blue-400 to-blue-600"
+                link="/last15DaysPending"
+            />}
+            {login_type == 40 && <DashboardCard
+                type="40"
+                title="Enquiry Complete"
+                value={data?.Processed || 0}
+                icon={ArrowRightToLine}
+                //description="15% increase from yesterday"
+                color="bg-gradient-to-br from-purple-400 to-purple-600"
+                link="/processed"
+            />}
             {/* <DashboardCard
                 title="Re-Submit"
                 value="0"

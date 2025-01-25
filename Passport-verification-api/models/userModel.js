@@ -71,21 +71,6 @@ export async function updateUserActivationStatusModel(
 
 
 
-export async function getDistrictNodalDashBoardModel(
-  EntryUserID
-) {
-  try {
-    const [rows] = await pool.query('CALL sp_getDistrictNodalDashBoard(?)', [EntryUserID]);
-    console.log(rows);
-    
-    return rows[0];
-  } catch (error) {
-    throw new Error('Database error: ' + error.message);
-  }
-}
-
-
-
 export async function showuserDetailsModel(
   EntryUserID
 ) {
@@ -121,7 +106,7 @@ export async function getApplicationCountsv1Model(
 ) {
   try {
     const [rows] = await pool.query('CALL GetApplicationCountsv1(?)', [EntryUserID]);
-    console.log(rows);
+    console.log("GetApplicationCountsv1", rows);
     
     return rows;
   } catch (error) {

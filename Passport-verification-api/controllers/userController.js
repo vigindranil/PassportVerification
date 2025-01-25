@@ -380,11 +380,7 @@ export const getApplicationCountsv1 = async (req, res) => {
             return res.status(200).json({
                 status: 0,
                 message: "Data fetched successfully",
-                data: {
-                    Pending: result[0].TotalPendingApplications,
-                    Processed: result[0].TotalProcessedApplications,
-                    Last15DaysPending: result[0].Last15DaysPendingApplications
-                }
+                data: result[0]
             });
         } else {
             return res.status(400).json({

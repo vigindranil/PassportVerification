@@ -34,6 +34,38 @@ export const postRequest = async (url, request_body) => {
   }
 };
 
+export const logout = async () => {
+  try {
+    const authToken = Cookies.load("data");
+    const HEADERS = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+
+    const requestOptions = {
+      method: "POST",
+      headers: new Headers(HEADERS),
+      body: JSON.stringify({}), // Empty body for logout request
+      redirect: "follow",
+    };
+
+    const response = await fetch(`${BASE_URL}user/logout`, requestOptions);
+    console.log(response);
+
+    if (response?.status === 401) {
+      window.location.href = '/session-expired';
+    } else if (!response.ok) {
+      return null;
+    } else {
+      const result = await response.json(); // Assuming the API returns JSON
+      return result;
+    }
+  } catch (error) {
+    console.log(error);
+    return result;
+  }
+};
+
 export const getRequest = async (url) => {
   try {
     const authToken = Cookies.load("data");

@@ -11,8 +11,8 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/drop-down-menu'
 import Image from 'next/image'
-import { decrypt } from '@/utils/crypto'
 import Cookies from "react-cookies";
+import { logout } from '@/app/commonAPI'
 
 const Navbar = () => {
     const [currentTime, setCurrentTime] = useState(new Date())
@@ -67,9 +67,14 @@ const Navbar = () => {
         })
     }
 
-    const handleLogout = () => {
-        console.log('User logged out')
-        window.location.reload()
+    const handleLogout = async() => {
+        await logout();
+        Cookies.remove('name');
+        Cookies.remove('district');
+        Cookies.remove('ps');
+        Cookies.remove('type');
+        Cookies.remove('data');
+        window.location.href = "/";
     }
 
     return (
