@@ -2,7 +2,6 @@ import { updateAuthToken } from '../models/authModels.js';
 import { logoutModel } from '../models/logoutModel.js';
 import { getApplicationStatusModel, saveUserRegistrationModel } from '../models/userModel.js';
 import { updateUserActivationStatusModel } from '../models/userModel.js'
-import { getDistrictNodalDashBoardModel } from '../models/userModel.js'
 import { showuserDetailsModel } from '../models/userModel.js'
 import {getApplicationCountsv1Model} from '../models/userModel.js'
 
