@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { getApplicationStatus } from "@/app/totalPending/api";
 import moment from "moment";
+import { useRouter } from "next/navigation";
 
 export default function PendingApplicationDatatable() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -32,6 +33,7 @@ export default function PendingApplicationDatatable() {
   const itemsPerPage = 6;
   const [applicationStatus, setApplicationStatus] = useState(null);
   const [verificationData, setVerificationData] = useState([]);
+  const router = useRouter()
 
 
   const filteredData = verificationData.filter((row) =>
@@ -43,7 +45,6 @@ export default function PendingApplicationDatatable() {
   const fetchApplicationStatus = async () => {
     try {
       const response = await getApplicationStatus(0, 7);
-      console.log("Application Status Data:", response);
 
       setVerificationData(response.data);
     } catch (error) {
@@ -97,6 +98,7 @@ export default function PendingApplicationDatatable() {
   useEffect(() => {
     fetchApplicationStatus();
   }, []);
+
 
   return (
     <div className="p-6">
@@ -176,10 +178,7 @@ export default function PendingApplicationDatatable() {
                       size="sm"
                       variant="default"
                       className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1"
-                      onClick={() => {
-                        setSelectedDetails(row);
-                        setIsDetailsModalOpen(true);
-                      }}
+                      onClick={() =>router.push(`/applicationDetails/${row.FileNumber}`)}
                     >
                       Details
                     </Button>
