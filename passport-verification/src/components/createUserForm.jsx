@@ -12,7 +12,7 @@ import { saveUser } from "@/app/createUserForm/api"
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { getDistrict, getPoliceStationsByDistrict, showuserDetails } from "@/app/createUserForm/api"
+import { getDistrict, getPoliceStationsByDistrict, showuserDetails, tooglebutton } from "@/app/createUserForm/api"
 
 const UserManagement = () => {
   const [searchDistrict, setSearchDistrict] = useState("")
@@ -29,6 +29,7 @@ const UserManagement = () => {
   const [districtsData, setDistrictsData] = useState([])
   const [policeStationsData, setPoliceStationsData] = useState([])
   const [psLoader, setPsLoader] = useState("Select District First")
+  const [statuUpdateLoader, setStatuUpdateLoader] = useState(null)
 
   const [formData, setFormData] = useState({
     UserName: "",
@@ -143,7 +144,6 @@ const UserManagement = () => {
     }
   }
   
-
   const toggleUserStatus = (userId) => {
     setUsers((prev) => prev.map((user) => (user.id === userId ? { ...user, isEnabled: !user.isEnabled } : user)))
   }
@@ -153,6 +153,21 @@ const UserManagement = () => {
     fetchUserDetails()
   }, [])
 
+  const handleUpdateUserStatus = async (UserID, Status) => {
+    try {
+      setStatuUpdateLoader("Loading...")
+      const response = await tooglebutton(UserID, Status);
+      if (response.status == 0) {
+        await fetchUserDetails();
+      }else {
+        console.log(response.message)
+      }
+    } catch (error) {
+      console.log("Error fetching police stations:", error)
+    } finally {
+      setStatuUpdateLoader(null)
+    }
+  }
 
   return (
     <div className="container mx-auto p-6 space-y-8">
@@ -399,19 +414,20 @@ const UserManagement = () => {
               <TableBody>
                 {loading ? (
                   <TableRow>
-                    <TableCell colSpan={6}>Loading...</TableCell> Loading...
-                  </TableRow>): users.length > 0 ? (
+                    <TableCell colSpan={6}>Loading...</TableCell>
+                  </TableRow>) : users.length > 0 ? (
                 users?.map((row, index) => (
                   <TableRow key={index}>
-                    <TableCell>{row.UserName || "N/A"}</TableCell>
-                    <TableCell>{row.FullName || "N/A"}</TableCell>
-                    <TableCell>{row.DistrictName || "N/A"}</TableCell>
-                    <TableCell>{row.PoliceStationName || "N/A"}</TableCell>
-                    <TableCell>{row.Designation || "N/A"}</TableCell>
-                    <TableCell>{row.userType || "N/A"}</TableCell>
+                    <TableCell><p>{row?.UserName || "N/A"}</p></TableCell>
+                    <TableCell><p>{row?.FullName || "N/A"}</p></TableCell>
+                    <TableCell><p>{row?.DistrictName || "N/A"}</p></TableCell>
+                    <TableCell><p>{row?.PoliceStationName || "N/A"}</p></TableCell>
+                    <TableCell><p>{row?.Designation || "N/A"}</p></TableCell>
+                    <TableCell><p>{row?.userType || "N/A"}</p></TableCell>
                     <TableCell>
                       <div className="flex space-x-1">
-                        <Button size="sm" variant="default" className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1">Details</Button>
+                        {row.IsActive == 0 && <Button onClick={()=>handleUpdateUserStatus(row.UserID, 1)} size="sm" variant="default" className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1">{statuUpdateLoader ? statuUpdateLoader : 'Activate'}</Button>}
+                        {row.IsActive == 1 && <Button onClick={()=>handleUpdateUserStatus(row.UserID, 0)} size="sm" variant="default" className="bg-red-600 hover:bg-red-700 text-white text-xs px-1 py-1">{statuUpdateLoader ? statuUpdateLoader : 'De-Activate'}</Button>}
                       </div>
                     </TableCell>
                   </TableRow>

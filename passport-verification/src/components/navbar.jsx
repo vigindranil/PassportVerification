@@ -17,7 +17,11 @@ import Cookies from "react-cookies";
 const Navbar = () => {
     const [currentTime, setCurrentTime] = useState(new Date())
     const [userImg, setUserImg] = useState("")
-    const [userData, setUserData] = useState(null)
+    const [userName, setUserName] = useState(null)
+    const [type, setType] = useState(null)
+    const [ds, setDs] = useState(null)
+    const [ps, setPs] = useState(null)
+
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -33,14 +37,17 @@ const Navbar = () => {
         const base6gImg = sessionStorage.getItem('_img');
         setUserImg(base6gImg);
 
-        const user_enc = Cookies.load('_ud');
-        console.log("user_enc: " + user_enc);
-        
-        const user_dec = decrypt(user_enc);
-        const user = JSON.parse(user_dec);
+        const Name = Cookies.load('name');
+        setUserName(Name);
 
-        setUserData(user);
-        console.log("user: ",user);
+        const DS = Cookies.load('district');
+        setDs(DS);
+
+        const PS = Cookies.load('ps');
+        setPs(PS);
+
+        const TYPE = Cookies.load('type');
+        setType(TYPE);
     },[])
 
     const formatDate = (date) => {
@@ -78,6 +85,12 @@ const Navbar = () => {
 
             <div className="flex items-center space-x-4">
                 <DropdownMenu>
+
+                <div className="text-sm">
+                    <div>{userName && userName}</div>
+                    <div>{(type == 10 || type == 20) ? ds : ps}</div>
+                </div>
+
                     <DropdownMenuTrigger asChild>
                         <div>
                             {userImg ? (
@@ -95,12 +108,6 @@ const Navbar = () => {
                             )}
                         </div>
                     </DropdownMenuTrigger>
-
-                <div className="text-sm">
-                    <div>{userData && userData?.name}</div>
-                    <div>{userData && userData?.rank}</div>
-                </div>
-
                  <Button variant="outline" onClick={handleLogout} className ="text-white bg-red-500 hover:bg-slate-200 border-1 border-slate-800">
                   Sign-out
                 </Button>

@@ -1,7 +1,7 @@
 'use client'
-import { getDistrictNodalDashBoard } from '@/app/dashboard/api';
+import { getDistrictNodalDashBoard , getApplicationStatus } from '@/app/dashboard/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { BarChart, Users, DollarSign, TrendingUp, ShoppingBag, CircleDashed, TrendingDown, ArrowRightToLine, Send } from 'lucide-react'
+import { CircleDashed, TrendingDown, ArrowRightToLine } from 'lucide-react'
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -28,8 +28,8 @@ const DashboardCards = () => {
         const response = await getDistrictNodalDashBoard();
         console.log(response);
         setData(response.data);
-
     }
+
     useEffect(() => {
         fetchDashboard();
     }, [])

@@ -145,7 +145,6 @@ export default function uploadDataTable() {
               <TableHead className="font-semibold">Applicant Name</TableHead>
               <TableHead className="font-semibold">Police Station</TableHead>
               <TableHead className="font-semibold">Phone No.</TableHead>
-              <TableHead className="font-semibold">Date of Birth</TableHead>
               <TableHead className="font-semibold">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -165,31 +164,9 @@ export default function uploadDataTable() {
                 <TableCell>{row.applicantName}</TableCell>
                 <TableCell>{row.policeStation}</TableCell>
                 <TableCell>{row.phoneNo}</TableCell>
-                <TableCell>{row.dateOfBirth}</TableCell>
                 <TableCell>
                   <div className="flex space-x-1">
                     <Button size="sm" variant="default" className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1">Details</Button>
-                    <Button size="sm" variant="secondary" className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-1 py-1" onClick={() => setSelectedFile({ name: row.applicantName, fileNumber: row.fileNumber })}>
-                      Accept File
-                    </Button>
-                    {acceptedFiles.includes(row.fileNumber) && (
-                      <Button size="sm" variant="secondary" className="bg-gray-600 hover:bg-gray-700 text-white text-xs px-1 py-1">
-                        View PP
-                      </Button>
-                    )}
-                    {acceptedFiles.includes(row.fileNumber) && (
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        className="bg-lime-600 hover:bg-lime-700 text-white text-xs px-1 py-1"
-                        onClick={() => setUploadFile({
-                          name: row.applicantName,
-                          fileNumber: row.fileNumber
-                        })}
-                      >
-                        Upload Document
-                      </Button>
-                    )}
                   </div>
                 </TableCell>
               </TableRow>

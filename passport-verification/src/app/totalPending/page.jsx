@@ -2,7 +2,7 @@ import React from 'react'
 import Navbar from '@/components/navbar';
 import Sidebar from '@/components/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import DataTable from '@/components/allFielsdataTable'
+import PendingApplicationDatatable from '@/components/pendingApplication';
 
 export default function allFiles() {
   return (
@@ -14,7 +14,7 @@ export default function allFiles() {
           <CardContent>
           <h3 className='text-2xl text-slate-600'>Total Pending</h3>
             <Card>
-              <DataTable />
+              <PendingApplicationDatatable />
             </Card>
           </CardContent>
         </main>

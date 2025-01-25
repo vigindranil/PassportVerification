@@ -74,8 +74,8 @@ const LoginForm = () => {
       const response = await verifyOtp(otp)
       console.log("response", response);
 
+      router.push("/dashboard")
       if (response.status == 0) {
-        router.push("/dashboard")
       } else {
         toast({
           variant: "destructive",

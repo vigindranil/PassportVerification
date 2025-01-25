@@ -60,3 +60,15 @@ export const showuserDetails = async () => {
     return null;
   }
 };
+
+export const tooglebutton = async (UserID,ActivationStatus) => {
+  try {
+    return await postRequest("user/updateUser", {
+      "UserID": UserID,
+      "ActivationStatus": ActivationStatus
+  });
+  } catch (error) {
+    console.log("Error:", error);
+    return null;
+  }
+}
