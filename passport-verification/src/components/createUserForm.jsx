@@ -13,6 +13,8 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { getDistrict, getPoliceStationsByDistrict, showuserDetails, tooglebutton } from "@/app/createUserForm/api"
+import { useToast } from "../hooks/use-toast"
+import { ToastAction } from "@/components/ui/toast"
 
 const UserManagement = () => {
   const [searchDistrict, setSearchDistrict] = useState("")
@@ -30,6 +32,7 @@ const UserManagement = () => {
   const [policeStationsData, setPoliceStationsData] = useState([])
   const [psLoader, setPsLoader] = useState("Select District First")
   const [statuUpdateLoader, setStatuUpdateLoader] = useState(null)
+  const { toast } = useToast()
 
   const [formData, setFormData] = useState({
     UserName: "",
@@ -91,7 +94,7 @@ const UserManagement = () => {
 
       if (districtData) {
         console.log("districts", districtData.data);
-        
+
         setDistrictsData(districtData.data)
       }
     } catch (error) {
@@ -103,7 +106,7 @@ const UserManagement = () => {
     try {
       const userDetails = await showuserDetails()
       if (userDetails) {
-        console.log("table",userDetails);
+        console.log("table", userDetails);
         setUsers(userDetails.data);
       }
     } catch (error) {
@@ -117,9 +120,29 @@ const UserManagement = () => {
     setSuccess(null)
     try {
       const response = await saveUser(formData)
-      setSuccess(`User created successfully: ${response.message}`)
-      fetchUserDetails() // Refresh user list after creating a new user
+      console.log("user saved", response);
+      if(response?.status == 0) {
+        toast({
+          title: "Successfull!",
+          description: "User Created Successfully",
+          action: <ToastAction altText="Try again">Close</ToastAction>,
+        })
+        fetchUserDetails() // Refresh user list after creating a new user
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Failed to Create User!",
+          description: response?.message,
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
+      }
     } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Failed to Create User!",
+        description: "Something went wrong, Please try again",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
       setError(`Error: ${error.message}`)
     } finally {
       setLoading(false)
@@ -140,10 +163,10 @@ const UserManagement = () => {
       }
     } catch (error) {
       console.log("Error fetching police stations:", error)
-      
+
     }
   }
-  
+
   const toggleUserStatus = (userId) => {
     setUsers((prev) => prev.map((user) => (user.id === userId ? { ...user, isEnabled: !user.isEnabled } : user)))
   }
@@ -159,7 +182,7 @@ const UserManagement = () => {
       const response = await tooglebutton(UserID, Status);
       if (response.status == 0) {
         await fetchUserDetails();
-      }else {
+      } else {
         console.log(response.message)
       }
     } catch (error) {
@@ -339,7 +362,7 @@ const UserManagement = () => {
             </SelectContent>
           </Select>
         </div>
-        
+
         <div className="md:col-span-2 lg:col-span-3 flex justify-center">
           <Button onClick={handleCreateUser} disabled={loading} className="px-6">
             <UserPlus className="mr-2 h-4 w-4" /> Create User
@@ -349,7 +372,7 @@ const UserManagement = () => {
 
 
 
-{/* TABLE STARTED HERE */}
+      {/* TABLE STARTED HERE */}
 
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold">User List</h2>
@@ -401,7 +424,7 @@ const UserManagement = () => {
           <div className="border rounded-lg" id="police-verification-table">
             <Table>
               <TableHeader>
-               <TableRow className="bg-[#e6f3ff]">
+                <TableRow className="bg-[#e6f3ff]">
                   <TableHead className="font-semibold">User Name</TableHead>
                   <TableHead className="font-semibold">Full Name</TableHead>
                   <TableHead className="font-semibold">District Name</TableHead>
@@ -409,37 +432,37 @@ const UserManagement = () => {
                   <TableHead className="font-semibold">Designation</TableHead>
                   <TableHead className="font-semibold">User Role</TableHead>
                   <TableHead className="font-semibold text-center">Actions</TableHead>
-               </TableRow>
+                </TableRow>
               </TableHeader>
               <TableBody>
                 {loading ? (
                   <TableRow>
                     <TableCell colSpan={6}>Loading...</TableCell>
                   </TableRow>) : users.length > 0 ? (
-                users?.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell><p>{row?.UserName || "N/A"}</p></TableCell>
-                    <TableCell><p>{row?.FullName || "N/A"}</p></TableCell>
-                    <TableCell><p>{row?.DistrictName || "N/A"}</p></TableCell>
-                    <TableCell><p>{row?.PoliceStationName || "N/A"}</p></TableCell>
-                    <TableCell><p>{row?.Designation || "N/A"}</p></TableCell>
-                    <TableCell><p>{row?.userType || "N/A"}</p></TableCell>
-                    <TableCell>
-                      <div className="flex space-x-1">
-                        {row.IsActive == 0 && <Button onClick={()=>handleUpdateUserStatus(row.UserID, 1)} size="sm" variant="default" className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1">{statuUpdateLoader ? statuUpdateLoader : 'Activate'}</Button>}
-                        {row.IsActive == 1 && <Button onClick={()=>handleUpdateUserStatus(row.UserID, 0)} size="sm" variant="default" className="bg-red-600 hover:bg-red-700 text-white text-xs px-1 py-1">{statuUpdateLoader ? statuUpdateLoader : 'De-Activate'}</Button>}
-                      </div>
+                    users?.map((row, index) => (
+                      <TableRow key={index}>
+                        <TableCell><p>{row?.UserName || "N/A"}</p></TableCell>
+                        <TableCell><p>{row?.FullName || "N/A"}</p></TableCell>
+                        <TableCell><p>{row?.DistrictName || "N/A"}</p></TableCell>
+                        <TableCell><p>{row?.PoliceStationName || "N/A"}</p></TableCell>
+                        <TableCell><p>{row?.Designation || "N/A"}</p></TableCell>
+                        <TableCell><p>{row?.userType || "N/A"}</p></TableCell>
+                        <TableCell>
+                          <div className="flex space-x-1">
+                            {row.IsActive == 0 && <Button onClick={() => handleUpdateUserStatus(row.UserID, 1)} size="sm" variant="default" className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1">{statuUpdateLoader ? statuUpdateLoader : 'Activate'}</Button>}
+                            {row.IsActive == 1 && <Button onClick={() => handleUpdateUserStatus(row.UserID, 0)} size="sm" variant="default" className="bg-red-600 hover:bg-red-700 text-white text-xs px-1 py-1">{statuUpdateLoader ? statuUpdateLoader : 'De-Activate'}</Button>}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center">
+                      No Data Found
                     </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                    <TableCell colSpan={6} className="text-center">
-                       No Data Found
-                    </TableCell>
-                </TableRow>
                 )}
-                </TableBody>
+              </TableBody>
             </Table>
           </div>
           <div className="flex items-center justify-between mt-4 text-sm">

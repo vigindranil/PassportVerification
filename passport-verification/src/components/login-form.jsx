@@ -10,6 +10,7 @@ import { User, Lock, Eye, EyeOff, RotateCcw, LoaderCircle } from 'lucide-react'
 import { sendOtp, verifyOtp } from "@/app/login/api"
 import { useToast } from "../hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
+import Cookies from "react-cookies";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("")
@@ -50,8 +51,6 @@ const LoginForm = () => {
           description: "Something went wrong, Please try again",
           action: <ToastAction altText="Try again">Try again</ToastAction>,
         })
-        setMessage(`Failed to send OTP, Please try again`)
-        setShowOtp(true)
       }
     } catch (error) {
       setMessage(`Error: ${error.message}`)
@@ -74,8 +73,14 @@ const LoginForm = () => {
       const response = await verifyOtp(otp)
       console.log("response", response);
 
-      router.push("/dashboard")
-      if (response.status == 0) {
+      if (response?.status == 0) {
+        const type = Cookies.load('type');
+        if(type == 10){
+          router.push("/dashboard")
+        }else if(type == 40) {
+          router.push("/dashboard-eo")
+        }
+
       } else {
         toast({
           variant: "destructive",
@@ -86,6 +91,8 @@ const LoginForm = () => {
         setError(response.message)
       }
     } catch (error) {
+      console.log(error.message);
+      
       toast({
         variant: "destructive",
         title: "Failed to Verify OTP!",
