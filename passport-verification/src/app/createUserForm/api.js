@@ -8,7 +8,7 @@ export const saveUser = async (userData) => {
     return await postRequest("user/saveUser", {
       "UserID": 0,
       "UserName": userData.UserName,
-      "UserPassword": `${userData.UserName}@${userData?.MobileNo.slice(-4)}`,
+      "UserPassword": "admin@123",
       "UserFullName": userData.UserFullName,
       "Firstname": userData.Firstname,
       "LastName": userData.LastName,
