@@ -5,6 +5,8 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export const postRequest = async (url, request_body) => {
   try {
     const authToken = Cookies.load("data");
+    console.log();
+    
     const HEADERS = {
       Authorization: `Bearer ${authToken}`,
       "Content-Type": "application/json",
