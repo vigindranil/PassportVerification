@@ -106,7 +106,7 @@ export async function getApplicationCountsv1Model(
 ) {
   try {
     const [rows] = await pool.query('CALL GetApplicationCountsv1(?)', [EntryUserID]);
-    console.log(rows);
+    console.log("GetApplicationCountsv1", rows);
     
     return rows;
   } catch (error) {
