@@ -19,16 +19,16 @@ const verifyToken = async(req, res, next) => {
     const [rows] = await getUserVerifyToken(decoded.UserID);
     
     if (new Date() > rows?.TokenValidUpto) {
-      return res.status(401).json({ message: 'Token expired! Please Login again to continue.' });
+      return res.status(401).json({status: 1, message: 'Token expired! Please Login again to continue.' });
     } else
     if(rows?.JWTToken != token){
-      return res.status(401).json({ message: 'Access denied! Unauthorized access.' });
+      return res.status(401).json({status: 1, message: 'Access denied! Unauthorized access.' });
     }
     req.user = decoded; // Attach user info to the request
     
     next(); // Proceed to the next middleware or route handler
   } catch (error) {
-    res.status(401).json({ message: 'Invalid or expired token.' });
+    res.status(401).json({status: 1, message: 'Invalid or expired token.' });
   }
 };
 

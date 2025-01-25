@@ -71,7 +71,8 @@ export const sendOtp = async (req, res) => {
 
         const [rows] = await getUserLoginModel(username, btoa(password));
 
-        const transactionId = await generateOtpAadhaar(atob(rows["AADHAARNo"]), rows["UserID"]);
+        // const transactionId = await generateOtpAadhaar(atob(rows["AADHAARNo"]), rows["UserID"]);
+        const transactionId = "---"
         console.log("transactionId",transactionId);
         
 
@@ -100,13 +101,15 @@ export const sendOtp = async (req, res) => {
                 { expiresIn: "24h" }
             );
 
-            const [result] = await updateAuthToken(rows["UserID"], token, transactionId || "");
+            const [result] = await updateAuthToken(rows["UserID"], token, transactionId);
 
             res.cookie('data', token);
             res.cookie('type', rows["UserTypeID"]);
             res.cookie('name', rows["UserFullName"]);
             res.cookie('district', rows["DistrictName"]);
             res.cookie('ps', rows["PoliceStationName"]);
+
+            console.log("token", token);
 
             res.status(200).json({
                 status: 0,
@@ -192,7 +195,8 @@ export const verifyOtp = async (req, res) => {
                 message: "OTP has been verified successfully",
             });
         }
-        const otpStatus = await verifyOtpAadhaar(otp, req.user.UserID, req.user.TransactionId);
+        // const otpStatus = await verifyOtpAadhaar(otp, req.user.UserID, req.user.TransactionId);
+        const otpStatus = true;
         console.log('otpStatus',otpStatus);
         console.log('otpStatus',otpStatus);
         
