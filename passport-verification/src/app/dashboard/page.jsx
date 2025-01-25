@@ -4,6 +4,8 @@ import React from 'react'
 import Sidebar from '@/components/sidebar'
 import Navbar from '@/components/navbar'
 import DashboardCards from '@/components/dashboardCard'
+import { DashboardCard } from '@/components/dashboard-card'
+import { RefreshCw } from 'lucide-react'
 
 export default function Dashboard() {
     return (
@@ -15,6 +17,13 @@ export default function Dashboard() {
                     <div className="container mx-auto px-6 py-8">
                         <div className="mt-8">
                             <DashboardCards />
+                            {/* <DashboardCard
+                                title="Returned Applications"
+                                value={0}
+                                icon={RefreshCw}
+                                percentageChange={-5}
+                                variant="yellow"
+                            /> */}
                         </div>
                     </div>
                 </main>
