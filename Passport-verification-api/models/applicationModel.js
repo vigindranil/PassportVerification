@@ -29,15 +29,16 @@ export async function getDocumentApplicationDetailsById(applicationId, entryUser
         [applicationId, entryUserId]
       );
   
+    console.log("applicationId", applicationId)
+    console.log("entryUserId", entryUserId)
     console.log("document", rows)
       if (rows && rows[0].length > 0) {
         return rows[0]; 
       } else {
-        null
+        return null;
       }
     } catch (error) {
-      console.error('Error fetching application details:', error.message);
-      throw new Error('Database error: ' + error.message);
+      return null;
     }
   }
 
@@ -49,15 +50,16 @@ export async function getApplicationStatusHistoryById(applicationId, entryUserId
         `CALL sp_getApplicationStatusHistorybyapplicationId(?, ?)`,
         [applicationId, entryUserId]
       );
-  
+      console.log("applicationId", applicationId)
+      console.log("entryUserId", entryUserId)
+      console.log("document", rows)
    
       if (rows && rows[0].length > 0) {
         return rows[0]; 
       } else {
-        throw new Error('No status history found for the given Application ID.');
+        return null;
       }
     } catch (error) {
-      console.error('Error fetching application status history:', error.message);
-      throw new Error('Database error: ' + error.message);
+      return null;
     }
   }
