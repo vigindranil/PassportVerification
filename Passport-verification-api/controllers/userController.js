@@ -365,7 +365,7 @@ export const getApplicationStatus = async (req, res) => {
         const Latitude = "test";
         const OperationName = "getApplicationStatus";
         const json = "{}"
-    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
+    // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
 
         const [result] = await getApplicationStatusModel(req.user.UserID, status_id,periord_id);
         console.log("result", result);
@@ -406,7 +406,7 @@ export const getApplicationCountsv1 = async (req, res) => {
         const Latitude = "test";
         const OperationName = "getApplicationCountsv1";
         const json = "{}"
-    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
+    // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
         const [result] = await getApplicationCountsv1Model(req.user.UserID);
         console.log("result", result);
 
