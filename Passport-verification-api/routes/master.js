@@ -1,5 +1,5 @@
 import express from "express";
-import { getPoliceStationsByDistrict, showDistrict, showDesignation } from '../controllers/masterController.js';
+import { getPoliceStationsByDistrict, showDistrict, showDesignation , getDocumentsByCitizenType, getCitizenTypes, getDocumentSubTypes, getDocumentTypeList} from '../controllers/masterController.js';
 
 const router = express.Router();
 
@@ -99,5 +99,8 @@ const router = express.Router();
 router.post('/getPoliceStationsByDistrict', getPoliceStationsByDistrict);
 router.post('/showDistrict', showDistrict);
 router.post('/showDesignation', showDesignation);
-
+router.post('/getDocumentsByCitizenType',getDocumentsByCitizenType)
+router.post('/getCitizenTypes',getCitizenTypes)
+router.post('/getDocumentSubTypesByID',getDocumentSubTypes)
+router.post('/getDocumentTypeList',getDocumentTypeList)
 export default router;

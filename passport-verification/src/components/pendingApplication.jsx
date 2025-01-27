@@ -28,7 +28,9 @@ export default function PendingApplicationDatatable({status}) {
 
   const fetchApplicationStatus = async () => {
     try {
-      const response = await getApplicationStatus(status, 7)
+      const response = await getApplicationStatus(status, 15)
+      console.log("akash", response);
+      
       setVerificationData(response.data)
     } catch (error) {
       console.error("Error fetching application status:", error)
@@ -80,7 +82,7 @@ export default function PendingApplicationDatatable({status}) {
     <div className="container mx-auto px-0 space-y-8 shadow-2xl">
       <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl overflow-hidden">
         <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
-          <h2 className="text-2xl font-bold text-white">Pending Application</h2>
+          <h2 className="text-2xl font-bold text-white">Verification Pending Application</h2>
         </div>
       </div>
       <div className="p-6">
