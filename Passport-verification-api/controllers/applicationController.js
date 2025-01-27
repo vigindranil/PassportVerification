@@ -1,5 +1,5 @@
 import { getApplicationDetailsByApplicationId, getDocumentApplicationDetailsById, getApplicationStatusHistoryById } from '../models/applicationModel.js';
-import { saveTransactionHistory } from '../models/logModel.js'
+ import { saveTransactionHistory } from '../models/logModel.js'
 
 
 export const getApplicationDetails = async (req, res) => {
@@ -21,11 +21,11 @@ export const getApplicationDetails = async (req, res) => {
         const documents = await getDocumentApplicationDetailsById(applicationId, entryUserId);
         const status = await getApplicationStatusHistoryById(applicationId, entryUserId);
 
-        const ipaddress = "test";
-        const macAddress = "test";
-        const Longitude = "test";
-        const Latitude = "test";
-        const OperationName = "getApplicationDetails";
+         const ipaddress = "test";
+         const macAddress = "test";
+         const Longitude = "test";
+     const Latitude = "test";
+         const OperationName = "getApplicationDetails";
         const json = "{}"
         const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, applicationId, OperationName, json, entryUserId)
 
