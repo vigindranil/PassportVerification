@@ -1,7 +1,11 @@
 import { getPoliceStationsByDistrictModel } from '../models/masterModels.js';
 import { showDistrictModel } from '../models/masterModels.js';
 import {showDesignationModel} from '../models/masterModels.js';
-import {saveTransactionHistory} from '../models/logModel.js'
+import {saveTransactionHistory} from '../models/logModel.js';
+import {getDocumentsByCitizenTypeModel} from '../models/masterModels.js';
+import {getCitizenTypesModel} from '../models/masterModels.js';
+import {getDocumentSubTypesByIdModel} from '../models/masterModels.js';
+import {getDocumentTypeListModel} from '../models/masterModels.js';
 /**
  * @swagger
  * /getPoliceStationsByDistrict:
@@ -164,6 +168,8 @@ export const showDistrict = async (req, res) => {
 };
 
 
+
+
 export const showDesignation = async (req, res) => {
     try {
       const ipaddress = "test";
@@ -192,6 +198,145 @@ export const showDesignation = async (req, res) => {
       return res.status(500).json({
         status: 1,
         message: 'An error occurred while fetching designations',
+        error: error.message,
+      });
+    }
+  };
+
+
+
+
+
+  export const getDocumentsByCitizenType = async (req, res) => {
+    try {
+      const { citizenTypeId } = req.body;
+  
+    
+      if (!citizenTypeId || isNaN(citizenTypeId)) {
+        return res.status(400).json({
+          status: 1,
+          message: 'Invalid citizen type ID',
+        });
+      }
+  
+     
+      const documents = await getDocumentsByCitizenTypeModel(parseInt(citizenTypeId, 10));
+  
+     
+      if (documents.length > 0) {
+        return res.status(200).json({
+          status: 0,
+          message: 'Documents retrieved successfully',
+          data: documents,
+        });
+      } else {
+        return res.status(404).json({
+          status: 1,
+          message: 'No documents found for the given citizen type',
+        });
+      }
+    } catch (error) {
+      console.error('Error in getDocumentsByCitizenTypeController:', error.message);
+      return res.status(500).json({
+        status: 1,
+        message: 'An error occurred while fetching documents',
+        error: error.message,
+      });
+    }
+  };
+
+
+  export const getCitizenTypes = async (req, res) => {
+    try {
+    
+      const citizenTypes = await getCitizenTypesModel();
+  
+    
+      if (citizenTypes.length > 0) {
+        return res.status(200).json({
+          status: 0,
+          message: 'Citizen types retrieved successfully',
+          data: citizenTypes,
+        });
+      } else {
+        return res.status(404).json({
+          status: 1,
+          message: 'No citizen types found',
+        });
+      }
+    } catch (error) {
+      console.error('Error in getCitizenTypesController:', error.message);
+      return res.status(500).json({
+        status: 1,
+        message: 'An error occurred while fetching citizen types',
+        error: error.message,
+      });
+    }
+  };
+
+
+  export const getDocumentSubTypes = async (req, res) => {
+    try {
+      const { CitizenId, DocId } = req.body;
+  
+     
+      if (!CitizenId || !DocId) {
+        return res.status(400).json({
+          status: 1,
+          message: 'CitizenId and DocId are required',
+        });
+      }
+  
+   
+      const documentSubTypes = await getDocumentSubTypesByIdModel(Number(CitizenId), Number(DocId));
+  
+     
+      if (documentSubTypes.length > 0) {
+        return res.status(200).json({
+          status: 0,
+          message: 'Document subtypes retrieved successfully',
+          data: documentSubTypes,
+        });
+      } else {
+        return res.status(404).json({
+          status: 1,
+          message: 'No document subtypes found for the given criteria',
+        });
+      }
+    } catch (error) {
+      console.error('Error in getDocumentSubTypesController:', error.message);
+      return res.status(500).json({
+        status: 1,
+        message: 'An error occurred while fetching document subtypes',
+        error: error.message,
+      });
+    }
+  };
+
+
+  export const getDocumentTypeList = async (req, res) => {
+    try {
+    
+      const documentTypeList = await getDocumentTypeListModel();
+  
+      
+      if (documentTypeList.length > 0) {
+        return res.status(200).json({
+          status: 0,
+          message: 'Document type list retrieved successfully',
+          data: documentTypeList,
+        });
+      } else {
+        return res.status(404).json({
+          status: 1,
+          message: 'No document types found',
+        });
+      }
+    } catch (error) {
+      console.error('Error in getDocumentTypeListController:', error.message);
+      return res.status(500).json({
+        status: 1,
+        message: 'An error occurred while fetching the document type list',
         error: error.message,
       });
     }
