@@ -2,7 +2,7 @@ import React from 'react'
 import Navbar from '@/components/navbar';
 import Sidebar from '@/components/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import DataTable from '@/components/last15PendingDays';
+import DataTable from '@/components/verification-eo';
 
 export default function allFiles() {
   return (

@@ -101,8 +101,11 @@ export const postFileRequest = async (url, request_body) => {
   try {
     const authToken = Cookies.load("data");
     const formData = new FormData();
-    formData.append('file', request_body.file);
-    
+
+    for (const key in request_body) {
+      formData.append(key, request_body[key]);
+    }
+
     const HEADERS = {
       Authorization: `Bearer ${authToken}`,
     };
@@ -115,7 +118,7 @@ export const postFileRequest = async (url, request_body) => {
     };
 
     const response = await fetch(`${BASE_URL}${url}`, requestOptions);
-    
+
 
     if (response?.status === 401) {
       window.location.href = '/session-expired';

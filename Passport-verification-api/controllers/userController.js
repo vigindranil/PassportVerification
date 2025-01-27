@@ -406,7 +406,7 @@ export const getApplicationCountsv1 = async (req, res) => {
         const Latitude = "test";
         const OperationName = "getApplicationCountsv1";
         const json = "{}"
-    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
+        // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,req.user.UserID)
         const [result] = await getApplicationCountsv1Model(req.user.UserID);
         console.log("result", result);
 

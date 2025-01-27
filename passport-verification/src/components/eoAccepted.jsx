@@ -12,7 +12,7 @@ import { getApplicationStatus } from "@/app/totalPending/api"
 import moment from "moment"
 import { useRouter } from "next/navigation"
 
-export default function PendingApplicationDatatable() {
+export default function PendingApplicationDatatable({status}) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [selectedDetails, setSelectedDetails] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
@@ -28,7 +28,7 @@ export default function PendingApplicationDatatable() {
 
   const fetchApplicationStatus = async () => {
     try {
-      const response = await getApplicationStatus(0, 7)
+      const response = await getApplicationStatus(status, 7)
       setVerificationData(response.data)
     } catch (error) {
       console.error("Error fetching application status:", error)
@@ -80,7 +80,7 @@ export default function PendingApplicationDatatable() {
     <div className="container mx-auto px-0 space-y-8 shadow-2xl">
       <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl overflow-hidden">
         <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
-          <h2 className="text-2xl font-bold text-white">Last 15 Days Pending</h2>
+          <h2 className="text-2xl font-bold text-white">EO Accepted Files</h2>
         </div>
       </div>
       <div className="p-6">
