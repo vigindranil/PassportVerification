@@ -83,7 +83,6 @@ const upload = multer({
 //public Route
 app.use("/api/", logRoutes);
 app.use("/api/auth/", loginRoutes);
-app.use("/api/upload", upload.single("file"), uploadRoutes);
 
 //private Route
 app.use("/api/auth/", verifyToken, authRoutes);
@@ -92,6 +91,7 @@ app.use("/api/master", verifyToken, masterRoutes);
 app.use("/api/eo", verifyToken, eoDocumentUpload);
 app.use("/api/application", verifyToken, getApplicationDetails);
 app.use("/api/fileUpload", verifyToken, fileImportRoutes);
+app.use("/api/upload", verifyToken, upload.single("file"), uploadRoutes);
 app.use(
   "/api/fileImport",
   verifyToken,
