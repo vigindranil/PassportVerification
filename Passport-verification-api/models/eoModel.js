@@ -1,15 +1,16 @@
 import pool from '../db.js';
 
 
-export async function saveDocumentUploadModel(ApplicationId, DocumentPath, DocumentTypeId, EntryUserId) {
+export async function saveDocumentUploadModel(ApplicationId, DocumentPath, DocumentTypeId, DeviceId,MacAddress, longitude,latitude,locationIp,EntryuserId ) {
   try {
+    
     const [rows] = await pool.query(
-      'CALL sp_saveDocumentUpload(?, ?, ?, ?, @ErrorCode);',
-      [ApplicationId, DocumentPath, DocumentTypeId, EntryUserId]
+      'CALL sp_saveDocumentUpload(?, ?, ?, ?,?,?,?,?,?, @DocId ,@Errorcode);',
+      [ApplicationId , DocumentPath , DocumentTypeId  , DeviceId  ,MacAddress , longitude , latitude ,locationIp , EntryuserId  ]
     );
-
-    const [result] = await pool.query('SELECT @ErrorCode AS ErrorCode;');
-    return result[0].ErrorCode; 
+    const [result] = await pool.query('SELECT @Errorcode AS Errorcode, @DocId As DocId;');
+    console.log("save",result[0]);
+    return result[0].Errorcode; 
   } catch (error) {
     throw new Error('Database error: ' + error.message);
   }

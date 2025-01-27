@@ -1,5 +1,5 @@
 import { saveDocumentUploadModel ,getDocumentUploadDetailsModel, saveCaseAssignModel} from '../models/eoModel.js';
-
+import {saveTransactionHistory} from '../models/logModel.js'
 
 export const saveDocumentUpload = async (req, res) => {
   try {
@@ -14,13 +14,21 @@ export const saveDocumentUpload = async (req, res) => {
       });
     }
 
-    const result = await saveDocumentUploadModel(ApplicationId, DocumentPath, DocumentTypeId, EntryUserId);
-
+    const ipaddress = "test";
+    const MacAddress = "test";
+    const longitude = "test";
+    const latitude = "test";
+    const DeviceId = "test";
+    const OperationName = "saveDocumentUpload";
+    const json = "{}"
+    const result = await saveDocumentUploadModel(ApplicationId, DocumentPath, DocumentTypeId,DeviceId , MacAddress ,longitude ,latitude ,ipaddress, EntryUserId);
+    await saveTransactionHistory(ipaddress, MacAddress, longitude, latitude, ApplicationId, OperationName, json, EntryUserId)
     switch (result) {
       case 0:
         return res.status(200).json({
           status: 0,
           message: 'Document uploaded successfully',
+
         });
       case 3:
         return res.status(403).json({
@@ -56,7 +64,13 @@ export const getDocumentUploadDetails = async (req, res) => {
           message: 'Invalid input data',
         });
       }
-  
+      const ipaddress = "test";
+      const macAddress = "test";
+      const Longitude = "test";
+      const Latitude = "test";
+      const OperationName = "getDocumentUploadDetails";
+      const json = "{}"
+  const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
       const result = await getDocumentUploadDetailsModel(ApplicationId, EntryUserId);
   
       if (result.length > 0) {
@@ -95,7 +109,13 @@ export const getDocumentUploadDetails = async (req, res) => {
           message: 'Invalid input data',
         });
       }
-  
+      const ipaddress = "test";
+      const macAddress = "test";
+      const Longitude = "test";
+      const Latitude = "test";
+      const OperationName = "saveCaseAssign";
+      const json = "{}"
+  const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
       const { applicationId: assignedApplicationId, errorCode } = await saveCaseAssignModel(
         applicationId,
         citizenType,
