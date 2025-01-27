@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 const DocumentTable = ({ documents }) => {
     return (
-        <Card className="mb-8">
+        <Card className="m-5">
             <CardContent>
                 <div className="overflow-x-auto">
                     <Table>

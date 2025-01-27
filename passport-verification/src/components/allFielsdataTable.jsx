@@ -12,6 +12,7 @@ import { getApplicationStatus } from "@/app/totalPending/api"
 import moment from "moment"
 import { useRouter } from "next/navigation"
 import { acceptApplication } from "@/app/allFiles/api"
+import { FileAcceptModal } from "./file-accept-modal"
 
 export default function PendingApplicationDatatable({status}) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
@@ -262,14 +263,16 @@ export default function PendingApplicationDatatable({status}) {
             </Button>
           </div>
         </div>
-        {isDetailsModalOpen && selectedDetails && (
+        {/* {isDetailsModalOpen && selectedDetails && (
             <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>File Details</DialogTitle>
                 </DialogHeader>
                 <DialogDescription>
-                  <div className="space-y-2">
+                  These are the details of the file.
+                </DialogDescription>
+                <div className="space-y-2">
                     <div>
                       <li className="list-none">PV Sequence: {selectedDetails.pvSequence}</li>
                     </div>
@@ -292,10 +295,9 @@ export default function PendingApplicationDatatable({status}) {
                       <li className="list-none">Date of Birth: {selectedDetails.dateOfBirth}</li>
                     </div>
                   </div>
-                </DialogDescription>
               </DialogContent>
             </Dialog>
-          )}
+          )} */}
           {isFileAcceptModalOpen && selectedDetails && (
             <FileAcceptModal
               isOpen={isFileAcceptModalOpen}
