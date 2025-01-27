@@ -48,6 +48,7 @@ export const getApplicationDetails = async (req, res) => {
         });
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     const applicationDetails = await getApplicationDetailsByApplicationId(applicationId, entryUserId);
 
@@ -84,4 +85,6 @@ export const getApplicationDetails = async (req, res) => {
   }
 =======
 >>>>>>> f31d8b7a0932ba0d28142d65b1e7ac6eebd5a6b4
+=======
+>>>>>>> 9f554df4c54069502863c694d31cdea710d1ed84
 };
