@@ -4,7 +4,7 @@ import { getApplicationStatusModel, saveUserRegistrationModel } from '../models/
 import { updateUserActivationStatusModel } from '../models/userModel.js'
 import { showuserDetailsModel } from '../models/userModel.js'
 import {getApplicationCountsv1Model} from '../models/userModel.js'
-
+import {saveTransactionHistory} from '../models/logModel.js'
 /**
  * @swagger
  * /saveUserRegistration:
@@ -80,7 +80,13 @@ export const saveUserRegistration = async (req, res) => {
         } = req.body;
 
         console.log("req.user.UserID", req.user.UserID);
-
+        const ipaddress = "test";
+        const macAddress = "test";
+        const Longitude = "test";
+        const Latitude = "test";
+        const OperationName = "saveUserRegistration";
+        const json = "{}"
+    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,req.user.UserID)
         const result = await saveUserRegistrationModel(
             UserID,
             UserName,
@@ -105,6 +111,7 @@ export const saveUserRegistration = async (req, res) => {
             return res.status(200).json({
                 status: 0,
                 message: "User has been created successfully",
+                
             });
         } else {
             return res.status(400).json({
@@ -158,6 +165,13 @@ export const saveUserRegistration = async (req, res) => {
 export const updateUserActivationStatus = async (req, res) => {
     try {
         const { UserID, ActivationStatus } = req.body;
+        const ipaddress = "test";
+        const macAddress = "test";
+        const Longitude = "test";
+        const Latitude = "test";
+        const OperationName = "updateUserActivationStatus";
+        const json = "{}"
+    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
         const result = await updateUserActivationStatusModel(UserID,
             ActivationStatus); // change aadhar token
 
@@ -305,6 +319,13 @@ export const updateUserActivationStatus = async (req, res) => {
 
 export const showuserDetails = async (req, res) => {
     try {
+        const ipaddress = "test";
+        const macAddress = "test";
+        const Longitude = "test";
+        const Latitude = "test";
+        const OperationName = "showuserDetails";
+        const json = "{}"
+    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
         const [result] = await showuserDetailsModel(req.user.UserID);
         console.log("result", result);
 
@@ -338,6 +359,13 @@ export const showuserDetails = async (req, res) => {
 export const getApplicationStatus = async (req, res) => {
     try {
         const { status_id, periord_id } = req.body;
+        const ipaddress = "test";
+        const macAddress = "test";
+        const Longitude = "test";
+        const Latitude = "test";
+        const OperationName = "getApplicationStatus";
+        const json = "{}"
+    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
 
         const [result] = await getApplicationStatusModel(req.user.UserID, status_id,periord_id);
         console.log("result", result);
@@ -372,6 +400,13 @@ export const getApplicationStatus = async (req, res) => {
 
 export const getApplicationCountsv1 = async (req, res) => {
     try {
+        const ipaddress = "test";
+        const macAddress = "test";
+        const Longitude = "test";
+        const Latitude = "test";
+        const OperationName = "getApplicationCountsv1";
+        const json = "{}"
+    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
         const [result] = await getApplicationCountsv1Model(req.user.UserID);
         console.log("result", result);
 
@@ -403,6 +438,13 @@ export const getApplicationCountsv1 = async (req, res) => {
 
 export const logout = async (req, res) => {
     try {
+        const ipaddress = "test";
+        const macAddress = "test";
+        const Longitude = "test";
+        const Latitude = "test";
+        const OperationName = "logout";
+        const json = "{}"
+    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
         const result = await logoutModel(req.user.UserID, " ", " ");
 
             console.log("result", result);

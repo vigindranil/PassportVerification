@@ -5,6 +5,5 @@ const router = express.Router();
 
 router.post('/eodocumentupload', saveDocumentUpload);
 router.post('/documentUploadDetailsModel', getDocumentUploadDetails)
-router.post('/acceptCaseUploadDocument', saveCaseAssign)
 
 export default router;

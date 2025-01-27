@@ -43,7 +43,7 @@ export async function getDocumentApplicationDetailsById(applicationId, entryUser
   }
 
 
-  export async function getApplicationStatusHistoryById(applicationId, entryUserId) {
+export async function getApplicationStatusHistoryById(applicationId, entryUserId) {
     try {
      
       const [rows] = await pool.query(

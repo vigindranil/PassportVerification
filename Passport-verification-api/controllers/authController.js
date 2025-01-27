@@ -38,7 +38,7 @@ export const sendOtp = async (req, res) => {
         //     });
         // }
 
-        if (rows.length !== 0) {
+        if (rows?.length !== 0) {
             const token = jwt.sign(
                 {
                     UserID: rows["UserID"],
