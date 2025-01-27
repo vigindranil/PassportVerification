@@ -12,7 +12,6 @@ export default function allFiles() {
         <Navbar />
         <main className="flex-1 overflow-y-auto p-6">
           <CardContent>
-          <h3 className='text-2xl text-slate-600'>Last 15 Days Pending</h3>
             <Card>
               <DataTable />
             </Card>

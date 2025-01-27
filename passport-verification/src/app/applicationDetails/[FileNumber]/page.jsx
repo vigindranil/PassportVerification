@@ -48,14 +48,14 @@ export default function Page({ FileNumber }) {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2 my-2">
                     <div className="flex flex-col">
                       <span className="text-sm font-medium text-gray-500">Applicant Name</span>
                       <span className="text-base">{applicationDetails?.applicationDetails.ApplicantName}</span>
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2 my-2">
                     <div className="flex flex-col">
                       <span className="text-sm font-medium text-gray-500">Police Station Name</span>
                       <span className="text-base">{applicationDetails?.applicationDetails.Ps_Name}</span>

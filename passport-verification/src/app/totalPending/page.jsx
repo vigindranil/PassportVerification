@@ -12,9 +12,8 @@ export default function allFiles() {
         <Navbar />
         <main className="flex-1 overflow-y-auto p-6">
           <CardContent>
-          <h3 className='text-2xl text-slate-600'>Total Pending</h3>
             <Card>
-              <PendingApplicationDatatable />
+              <PendingApplicationDatatable status={0}/>
             </Card>
           </CardContent>
         </main>

@@ -45,7 +45,7 @@ const DashboardCards = () => {
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
                 color="bg-gradient-to-br from-purple-400 to-purple-600"
-                link="/processed"
+                link="/eoAcceptedFile"
             />}
             {login_type == 10 && <DashboardCard
                 title="Pending Verification (EO)"
@@ -53,7 +53,7 @@ const DashboardCards = () => {
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
                 color="bg-gradient-to-br from-yellow-400 to-yellow-600"
-                link="/processed"
+                link="/pendingVerificatonEO"
             />}
             {login_type == 10 && <DashboardCard
                 title="Verification Completed (EO)"
@@ -61,7 +61,7 @@ const DashboardCards = () => {
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
                color="bg-gradient-to-br from-blue-400 to-blue-600"
-               link="/processed"
+               link="/verificationCompletedEO"
             />}
             {login_type == 10 && <DashboardCard
                 title="Pending IN OC"
@@ -69,7 +69,7 @@ const DashboardCards = () => {
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
                color="bg-gradient-to-br from-teal-400 to-teal-600"
-               link="/processed"
+               link="/pendingInOC"
             />}
             {login_type == 10 && <DashboardCard
                 title="Pending IN SP/DIB"
@@ -77,7 +77,7 @@ const DashboardCards = () => {
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
                color="bg-gradient-to-br from-purple-400 to-purple-600"
-               link="/processed"
+               link="/pendingInSPDIB"
             />}
             {login_type == 10 && <DashboardCard
                 title="Pending IN Enquiry Officer"
@@ -85,7 +85,7 @@ const DashboardCards = () => {
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
                 color="bg-gradient-to-br from-green-400 to-green-600"
-                link="/processed"
+                link="/pendingInEnquiryOfficer"
             />}
             {login_type == 40 && <DashboardCard
                 type="40"

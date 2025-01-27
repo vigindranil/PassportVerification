@@ -12,9 +12,8 @@ export default function allFiles() {
         <Navbar />
         <main className="flex-1 overflow-y-auto p-6">
           <CardContent>
-            <h3 className='text-2xl text-slate-600'>Processed Application</h3>
             <Card>
-              <DataTable />
+              <DataTable status={2} />
             </Card>
           </CardContent>
         </main>
