@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation"
 import { acceptApplication } from "@/app/allFiles/api"
 import { FileAcceptModal } from "./file-accept-modal"
 
-export default function PendingApplicationDatatable({status}) {
+export default function PendingApplicationDatatable({ status }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [selectedDetails, setSelectedDetails] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
@@ -76,12 +76,38 @@ export default function PendingApplicationDatatable({status}) {
   }
 
   const handleAcceptFile = async (applicationId, citizentype, file) => {
-    console.log(`applicationId: ${applicationId}`)
-    console.log(`citizentype: ${citizentype}`)
-    console.log(`file: ${file}`)
-    // Implement the logic for accepting the file
-    const response = await acceptApplication(applicationId, citizentype, file);
-    console.log('reponse:', response);
+    try{
+
+      console.log(`applicationId: ${applicationId}`)
+      console.log(`citizentype: ${citizentype}`)
+      console.log(`file: ${file}`)
+      // Implement the logic for accepting the file
+      const response = await acceptApplication(applicationId, citizentype, file);
+      console.log('reponse:', response);
+      
+      if (response?.status == 0) {
+        toast({
+        title: "Successfull!",
+        description: "Case accepted successfully",
+        action: <ToastAction altText="Try again">Close</ToastAction>,
+      })
+      fetchApplicationStatus();
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Failed to accept file!",
+        description: response?.message,
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
+    }
+  }catch (e) {
+    toast({
+      variant: "destructive",
+      title: "Failed to accept file!",
+      description: 'An error occurred',
+      action: <ToastAction altText="Try again">Try again</ToastAction>,
+    })
+  }
   }
 
   const handleViewPPAttachment = (fileNumber) => {
@@ -184,49 +210,49 @@ export default function PendingApplicationDatatable({status}) {
             </TableHeader>
             <TableBody>
               {
-              currentData?.length ?
-              currentData?.map((row, index) => (
-                <TableRow key={index}>
-                  <TableCell>{row.FileNumber}</TableCell>
-                  <TableCell>{row.ApplicantName}</TableCell>
-                  <TableCell>{row.Ps_Name}</TableCell>
-                  <TableCell>{row.PhoneNo}</TableCell>
-                  <TableCell>{row.DateOfBirth ? moment(row.DateOfBirth).format("DD/MM/YYYY") : "N/A"}</TableCell>
-                  <TableCell>
-                    <div className="flex space-x-1">
-                      <Button
-                        size="sm"
-                        variant="default"
-                        className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1"
-                        onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
-                      >
-                        Details
-                      </Button>
-                      <Button
-                          size="sm"
-                          variant="default"
-                          className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-1 py-1"
-                          onClick={() => {
-                            setSelectedDetails(row)
-                            setIsFileAcceptModalOpen(true)
-                          }}
-                        >
-                          Accept File
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="default"
-                          className="bg-purple-600 hover:bg-purple-700 text-white text-xs px-1 py-1"
-                          onClick={() => handleViewPPAttachment(row.fileNumber)}
-                        >
-                          View PP Attachment
-                        </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )) : <TableRow>
-              <TableCell className="text-center" colSpan={6}>No record found</TableCell>
-            </TableRow>}
+                currentData?.length ?
+                  currentData?.map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{row.FileNumber}</TableCell>
+                      <TableCell>{row.ApplicantName}</TableCell>
+                      <TableCell>{row.Ps_Name}</TableCell>
+                      <TableCell>{row.PhoneNo}</TableCell>
+                      <TableCell>{row.DateOfBirth ? moment(row.DateOfBirth).format("DD/MM/YYYY") : "N/A"}</TableCell>
+                      <TableCell>
+                        <div className="flex space-x-1">
+                          <Button
+                            size="sm"
+                            variant="default"
+                            className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1"
+                            onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
+                          >
+                            Details
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="default"
+                            className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-1 py-1"
+                            onClick={() => {
+                              setSelectedDetails(row)
+                              setIsFileAcceptModalOpen(true)
+                            }}
+                          >
+                            Accept File
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="default"
+                            className="bg-purple-600 hover:bg-purple-700 text-white text-xs px-1 py-1"
+                            onClick={() => handleViewPPAttachment(row.fileNumber)}
+                          >
+                            View PP Attachment
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )) : <TableRow>
+                    <TableCell className="text-center" colSpan={6}>No record found</TableCell>
+                  </TableRow>}
             </TableBody>
           </Table>
         </div>
@@ -298,14 +324,14 @@ export default function PendingApplicationDatatable({status}) {
               </DialogContent>
             </Dialog>
           )} */}
-          {isFileAcceptModalOpen && selectedDetails && (
-            <FileAcceptModal
-              isOpen={isFileAcceptModalOpen}
-              onClose={() => setIsFileAcceptModalOpen(false)}
-              fileData={selectedDetails}
-              onAccept={handleAcceptFile}
-            />
-          )}
+        {isFileAcceptModalOpen && selectedDetails && (
+          <FileAcceptModal
+            isOpen={isFileAcceptModalOpen}
+            onClose={() => setIsFileAcceptModalOpen(false)}
+            fileData={selectedDetails}
+            onAccept={handleAcceptFile}
+          />
+        )}
       </div>
     </div>
   )

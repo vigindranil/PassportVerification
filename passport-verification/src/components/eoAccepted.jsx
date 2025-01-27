@@ -29,9 +29,9 @@ export default function PendingApplicationDatatable({status}) {
   const fetchApplicationStatus = async () => {
     try {
       const response = await getApplicationStatus(status, 7)
-      setVerificationData(response.data)
+      setVerificationData(response?.data)
     } catch (error) {
-      console.error("Error fetching application status:", error)
+      console.log("Error fetching application status:", error)
     }
   }
 
@@ -51,7 +51,7 @@ export default function PendingApplicationDatatable({status}) {
     const doc = new jsPDF()
     doc.autoTable({
       head: [["File Number", "Applicant Name", "Police Station", "Phone No.", "Date of Birth"]],
-      body: verificationData.map((row) => [
+      body: verificationData?.map((row) => [
         row.FileNumber,
         row.ApplicantName,
         row.Ps_Name,
@@ -165,7 +165,7 @@ export default function PendingApplicationDatatable({status}) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentData.map((row, index) => (
+              {currentData?.map((row, index) => (
                 <TableRow key={index}>
                   <TableCell>{row.FileNumber}</TableCell>
                   <TableCell>{row.ApplicantName}</TableCell>
@@ -202,7 +202,7 @@ export default function PendingApplicationDatatable({status}) {
             >
               Prev
             </Button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            {Array.from({ length: totalPages }, (_, i) => i + 1)?.map((page) => (
               <Button
                 key={page}
                 variant={currentPage === page ? "default" : "outline"}

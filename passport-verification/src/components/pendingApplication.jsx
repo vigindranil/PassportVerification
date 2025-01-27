@@ -53,7 +53,7 @@ export default function PendingApplicationDatatable({status}) {
     const doc = new jsPDF()
     doc.autoTable({
       head: [["File Number", "Applicant Name", "Police Station", "Phone No.", "Date of Birth"]],
-      body: verificationData.map((row) => [
+      body: verificationData?.map((row) => [
         row.FileNumber,
         row.ApplicantName,
         row.Ps_Name,
@@ -167,7 +167,8 @@ export default function PendingApplicationDatatable({status}) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentData.map((row, index) => (
+              { currentData.length > 0 ?
+              currentData?.map((row, index) => (
                 <TableRow key={index}>
                   <TableCell>{row.FileNumber}</TableCell>
                   <TableCell>{row.ApplicantName}</TableCell>
@@ -187,7 +188,10 @@ export default function PendingApplicationDatatable({status}) {
                     </div>
                   </TableCell>
                 </TableRow>
-              ))}
+              )): 
+              <TableRow>
+                <TableCell colSpan={6} className="text-center">No Data Found</TableCell>
+                </TableRow>}
             </TableBody>
           </Table>
         </div>
@@ -204,7 +208,7 @@ export default function PendingApplicationDatatable({status}) {
             >
               Prev
             </Button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            {Array.from({ length: totalPages }, (_, i) => i + 1)?.map((page) => (
               <Button
                 key={page}
                 variant={currentPage === page ? "default" : "outline"}

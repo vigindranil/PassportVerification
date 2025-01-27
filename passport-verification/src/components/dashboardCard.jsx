@@ -112,7 +112,7 @@ const DashboardCards = () => {
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
                 color="bg-gradient-to-br from-purple-400 to-purple-600"
-                link="/processed"
+                link="/verificationCompletedEO"
             />}
             
             {/* <DashboardCard
