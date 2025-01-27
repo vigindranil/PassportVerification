@@ -27,7 +27,7 @@ export const getApplicationDetails = async (req, res) => {
         const Latitude = "test";
         const OperationName = "getApplicationDetails";
         const json = "{}"
-        const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, applicationId, OperationName, json, entryUserId)
+        // const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, applicationId, OperationName, json, entryUserId)
 
         return res.status(200).json({
             status: 0,
@@ -36,7 +36,7 @@ export const getApplicationDetails = async (req, res) => {
                 applicationDetails,
                 documents: documents,
                 status: status,
-                saveTransaction
+                // saveTransaction
             },
         });
     } catch (error) {
