@@ -325,7 +325,7 @@ export const showuserDetails = async (req, res) => {
         const Latitude = "test";
         const OperationName = "showuserDetails";
         const json = "{}"
-    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
+    // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
         const [result] = await showuserDetailsModel(req.user.UserID);
         console.log("result", result);
 
@@ -365,7 +365,7 @@ export const getApplicationStatus = async (req, res) => {
         const Latitude = "test";
         const OperationName = "getApplicationStatus";
         const json = "{}"
-    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
+    // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
 
         const [result] = await getApplicationStatusModel(req.user.UserID, status_id,periord_id);
         console.log("result", result);
@@ -444,7 +444,7 @@ export const logout = async (req, res) => {
         const Latitude = "test";
         const OperationName = "logout";
         const json = "{}"
-    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
+    // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
         const result = await logoutModel(req.user.UserID, " ", " ");
 
             console.log("result", result);
