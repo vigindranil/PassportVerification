@@ -1,25 +1,9 @@
 'use client'
 import { getDistrictNodalDashBoard, getApplicationStatus } from '@/app/dashboard/api';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { CircleDashed, TrendingDown, ArrowRightToLine } from 'lucide-react'
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Cookies from "react-cookies";
-
-const DashboardCard = ({ title, value, icon: Icon, description, color, link, type }) => (
-    <Link href={link}>
-        <Card className={`${color} text-white`}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{title}</CardTitle>
-                <Icon className="h-4 w-4" />
-            </CardHeader>
-            <CardContent>
-                <div className="text-2xl font-bold">{value}</div>
-                <p className="text-xs opacity-70">{description}</p>
-            </CardContent>
-        </Card>
-    </Link>
-)
+import DashboardCard from './dashboard-cards';
 
 
 const DashboardCards = () => {
@@ -33,7 +17,7 @@ const DashboardCards = () => {
 
     useEffect(() => {
         fetchDashboard();
-    }, [])
+    }, [login_type])
     return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {login_type == 10 && <DashboardCard
@@ -105,8 +89,8 @@ const DashboardCards = () => {
             />}
             {login_type == 40 && <DashboardCard
                 type="40"
-                title="Total Pending Applications"
-                value={data?.TotalPendingApplications || 0}
+                title="Verification Pending"
+                value={data?.EOAccepectButNotStartedVerify || 0}
                 icon={CircleDashed}
                 //description="10% increase from last month"
                 color="bg-gradient-to-br from-lime-400 to-lime-600"
@@ -114,8 +98,8 @@ const DashboardCards = () => {
             />}
             {login_type == 40 && <DashboardCard
                 type="40"
-                title="Last 15 Days Pending"
-                value={data?.TotalProcessedApplications || 0}
+                title="Verification Started"
+                value={data?.EOStartedVerify || 0}
                 icon={TrendingDown}
                 //description="5% increase from last week"
                 color="bg-gradient-to-br from-blue-400 to-blue-600"
@@ -123,8 +107,8 @@ const DashboardCards = () => {
             />}
             {login_type == 40 && <DashboardCard
                 type="40"
-                title="Processed"
-                value={data?.TotalCompleteApplications || 0}
+                title="Verification Completed"
+                value={data?.EOComplete || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
                 color="bg-gradient-to-br from-purple-400 to-purple-600"
