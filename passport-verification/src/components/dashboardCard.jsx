@@ -48,7 +48,7 @@ const DashboardCards = () => {
             {login_type == 10 && <DashboardCard
                 type="10"
                 title="Last 15 Days Pending"
-                value={data?.TotalProcessedApplications || 0}
+                value={data?.Last15DaysPendingApplications || 0}
                 icon={TrendingDown}
                 //description="5% increase from last week"
                 color="bg-gradient-to-br from-blue-400 to-blue-600"
@@ -56,24 +56,32 @@ const DashboardCards = () => {
             />}
             {login_type == 10 && <DashboardCard
                 type="10"
-                title="Processed"
-                value={data?.TotalCompleteApplications || 0}
+                title="EO Accepted"
+                value={data?.EOAccepectButNotStartedVerify || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
                 color="bg-gradient-to-br from-purple-400 to-purple-600"
                 link="/processed"
             />}
             {login_type == 10 && <DashboardCard
-                title="Pending EO"
-                value={data?.TotalCompleteApplications || 0}
+                title="Pending Verification (EO)"
+                value={data?.EOStartedVerify || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
                 color="bg-gradient-to-br from-yellow-400 to-yellow-600"
                 link="/processed"
             />}
             {login_type == 10 && <DashboardCard
+                title="Verification Completed (EO)"
+                value={data?.EOComplete || 0}
+                icon={ArrowRightToLine}
+                //description="Steady growth over the past quarter"
+               color="bg-gradient-to-br from-blue-400 to-blue-600"
+               link="/processed"
+            />}
+            {login_type == 10 && <DashboardCard
                 title="Pending IN OC"
-                value={data?.TotalCompleteApplications || 0}
+                value={data?.OCPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
                color="bg-gradient-to-br from-teal-400 to-teal-600"
@@ -81,7 +89,7 @@ const DashboardCards = () => {
             />}
             {login_type == 10 && <DashboardCard
                 title="Pending IN SP/DIB"
-                value={data?.TotalCompleteApplications || 0}
+                value={data?.SPPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
                color="bg-gradient-to-br from-purple-400 to-purple-600"
@@ -89,7 +97,7 @@ const DashboardCards = () => {
             />}
             {login_type == 10 && <DashboardCard
                 title="Pending IN Enquiry Officer"
-                value={data?.TotalCompleteApplications || 0}
+                value={data?.SEPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
                 color="bg-gradient-to-br from-green-400 to-green-600"
