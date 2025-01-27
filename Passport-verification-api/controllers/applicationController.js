@@ -15,10 +15,19 @@ console.log("entryUserId", entryUserId);
     }
 
     const applicationDetails = await getApplicationDetailsByApplicationId(applicationId, entryUserId);
-   
-    
-    const documents = await getDocumentApplicationDetailsById(applicationId, entryUserId);
-    const status = await getApplicationStatusHistoryById(applicationId, entryUserId);
+
+    let documents = [];
+    try {
+      documents = await getDocumentApplicationDetailsById(applicationId, entryUserId);
+    }catch (e) {
+      documents = [];
+    }
+    let status = [];
+    try {
+      status = await getApplicationStatusHistoryById(applicationId, entryUserId);
+    }catch (e) {
+      status = [];
+    }
 
     return res.status(200).json({
       status: 0,
