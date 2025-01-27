@@ -11,12 +11,26 @@ const setupSwagger = (app) => {
         description: "API documentation for the Passport Verification system.",
       },
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+        },
+      },
+    },
+    servers: [
+      {
+        url: "http://localhost:3003/api",
+        description: "Development server",
+      },
+    ],
     apis: ["./routes/*.js"], // Include all route files for Swagger documentation
   };
 
   const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-  // Set up the Swagger UI at /api-docs
+  // No need for custom authAction in this case
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 };
 

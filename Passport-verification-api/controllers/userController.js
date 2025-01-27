@@ -240,46 +240,39 @@ export const updateUserActivationStatus = async (req, res) => {
  *       500:
  *         description: Internal server error.
  */
-export const getDistrictNodalDashBoard = async (req, res) => {
-    try {
-        const ipaddress = "test";
-        const macAddress = "test";
-        const Longitude = "test";
-        const Latitude = "test";
-        const OperationName = "getDistrictNodalDashBoard";
-        const json = "{}"
-    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
-        const [result] = await getDistrictNodalDashBoardModel(req.user.UserID);
-        console.log("result", result);
+// export const getDistrictNodalDashBoard = async (req, res) => {
+//     try {
+//         const [result] = await getDistrictNodalDashBoardModel(req.user.UserID);
+//         console.log("result", result);
 
-        if (result?.length !== 0) {
-            return res.status(200).json({
-                status: 0,
-                message: "Data fetched successfully",
-                data: {
-                    Pending: 0,
-                    Processed: 0,
-                    Last15DaysPending: 0
-                }
-            });
-        } else {
-            return res.status(400).json({
-                status: 1,
-                message: "No data found",
-            });
+//         if (result?.length !== 0) {
+//             return res.status(200).json({
+//                 status: 0,
+//                 message: "Data fetched successfully",
+//                 data: {
+//                     Pending: 0,
+//                     Processed: 0,
+//                     Last15DaysPending: 0
+//                 }
+//             });
+//         } else {
+//             return res.status(400).json({
+//                 status: 1,
+//                 message: "No data found",
+//             });
 
-        }
+//         }
 
 
-    } catch (error) {
-        console.error("Error fetching :", error);
-        res.status(500).json({
-            status: 1,
-            message: "An error occurred",
-            data: null,
-        });
-    }
-};
+//     } catch (error) {
+//         console.error("Error fetching :", error);
+//         res.status(500).json({
+//             status: 1,
+//             message: "An error occurred",
+//             data: null,
+//         });
+//     }
+// };
 
 /**
  * @swagger
