@@ -6,7 +6,7 @@ export const postRequest = async (url, request_body) => {
   try {
     const authToken = Cookies.load("data");
     console.log();
-
+    
     const HEADERS = {
       Authorization: `Bearer ${authToken}`,
       "Content-Type": "application/json",
@@ -87,7 +87,7 @@ export const getRequest = async (url) => {
       window.location.href = '/session-expired';
     } else if (!response.ok) {
       throw new Error(response);
-    } else {
+    }else{ 
       const result = await response.json(); // Assuming the API returns JSON
       return result;
     }
@@ -101,16 +101,10 @@ export const postFileRequest = async (url, request_body) => {
   try {
     const authToken = Cookies.load("data");
     const formData = new FormData();
-    {
-      applicationId, citizentype, file, macAddress, locationIp, deviceId
-    }
 
-    formData.append('applicationId', request_body.applicationId);
-    formData.append('citizentype', request_body.citizentype);
-    formData.append('macAddress', request_body.macAddress);
-    formData.append('locationIp', request_body.locationIp);
-    formData.append('deviceId', request_body.deviceId);
-    formData.append('file', request_body.file);
+    for (const key in request_body) {
+      formData.append(key, request_body[key]);
+    }
 
     const HEADERS = {
       Authorization: `Bearer ${authToken}`,

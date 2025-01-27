@@ -41,9 +41,11 @@ export function FileAcceptModal({ isOpen, onClose, fileData, onAccept }) {
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="resident">Resident</SelectItem>
-                <SelectItem value="non-resident">Non-Resident</SelectItem>
-                <SelectItem value="foreign">Foreign National</SelectItem>
+                <SelectItem value="0">Select</SelectItem>
+                <SelectItem value="1">Citizen by Birth</SelectItem>
+                <SelectItem value="2">Nationalization</SelectItem>
+                <SelectItem value="3">Registration</SelectItem>
+                <SelectItem value="4">Decent</SelectItem>
               </SelectContent>
             </Select>
           </div>
