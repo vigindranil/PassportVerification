@@ -47,44 +47,4 @@ export const getApplicationDetails = async (req, res) => {
             error: error.message,
         });
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-    const applicationDetails = await getApplicationDetailsByApplicationId(applicationId, entryUserId);
-
-    let documents = [];
-    try {
-      documents = await getDocumentApplicationDetailsById(applicationId, entryUserId);
-    }catch (e) {
-      documents = [];
-    }
-    let status = [];
-    try {
-      status = await getApplicationStatusHistoryById(applicationId, entryUserId);
-    }catch (e) {
-      status = [];
-    }
-
-    return res.status(200).json({
-      status: 0,
-      message: 'Application details retrieved successfully',
-      data: {
-        applicationDetails,
-        documents: documents,
-        status: status
-
-    },
-    });
-  } catch (error) {
-    console.error('Error retrieving application details:', error);
-    return res.status(500).json({
-      status: 1,
-      message: 'An error occurred while retrieving the application details',
-      error: error.message,
-    });
-  }
-=======
->>>>>>> f31d8b7a0932ba0d28142d65b1e7ac6eebd5a6b4
-=======
->>>>>>> 9f554df4c54069502863c694d31cdea710d1ed84
 };
