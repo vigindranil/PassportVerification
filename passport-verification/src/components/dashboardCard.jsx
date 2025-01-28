@@ -108,7 +108,7 @@ const DashboardCards = () => {
             {login_type == 40 && <DashboardCard
                 type="40"
                 title="Verification Started"
-                value={data?.EOAccepectButNotStartedVerify || 0}
+                value={data?.EOStartedVerify || 0}
                 icon={TrendingDown}
                 //description="5% increase from last week"
                 color="bg-gradient-to-br from-blue-400 to-blue-600"

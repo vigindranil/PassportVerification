@@ -60,7 +60,7 @@ export async function saveCaseAssignModel(
     );
 
     const [result] = await pool.query('SELECT @application_Id AS application_Id, @ErrorCode AS ErrorCode;');
-    console.log("save", result[0]);
+    console.log("save", result[0][0]);
     return result[0].ErrorCode;
   } catch (error) {
     throw new Error('Database error: ' + error.message);

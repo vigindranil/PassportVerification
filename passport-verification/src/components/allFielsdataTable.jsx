@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation"
 import { acceptApplication } from "@/app/allFiles/api"
 import { FileAcceptModal } from "./file-accept-modal"
 import { toast } from "@/hooks/use-toast"
+import { ToastAction } from "./ui/toast"
 
 export default function PendingApplicationDatatable({ status }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
