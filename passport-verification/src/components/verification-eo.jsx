@@ -12,7 +12,7 @@ import { getApplicationStatus } from "@/app/totalPending/api"
 import moment from "moment"
 import { useRouter } from "next/navigation"
 
-export default function PendingApplicationDatatable(status) {
+export default function PendingApplicationDatatable({status}) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [selectedDetails, setSelectedDetails] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
@@ -28,7 +28,7 @@ export default function PendingApplicationDatatable(status) {
 
   const fetchApplicationStatus = async () => {
     try {
-      const response = await getApplicationStatus(status, 7)
+      const response = await getApplicationStatus(status, 15)
       console.log("hello from verification",response);
       
       setVerificationData(response?.data)

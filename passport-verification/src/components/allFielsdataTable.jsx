@@ -241,14 +241,14 @@ export default function PendingApplicationDatatable({ status }) {
                           >
                             Accept File
                           </Button>
-                          <Button
+                          {/* <Button
                             size="sm"
                             variant="default"
                             className="bg-purple-600 hover:bg-purple-700 text-white text-xs px-1 py-1"
                             onClick={() => handleViewPPAttachment(row.fileNumber)}
                           >
                             View PP Attachment
-                          </Button>
+                          </Button> */}
                         </div>
                       </TableCell>
                     </TableRow>
