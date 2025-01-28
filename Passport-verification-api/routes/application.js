@@ -1,5 +1,5 @@
 import express from 'express';
-import { getApplicationDetails } from '../controllers/applicationController.js';
+import { getApplicationDetails ,updateEnquiryStatus} from '../controllers/applicationController.js';
 
 const router = express.Router();
 
@@ -28,5 +28,5 @@ const router = express.Router();
  */
 
 router.post('/detailsapplicationId', getApplicationDetails);
-
+router.post('/updateEnquiryStatus', updateEnquiryStatus);
 export default router;
