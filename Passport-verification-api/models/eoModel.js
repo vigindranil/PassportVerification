@@ -35,7 +35,7 @@ export async function getDocumentUploadDetailsModel(ApplicationId, EntryUserId) 
 export async function saveCaseAssignModel(
   applicationId,
   citizentype,
- 
+  DocTypeId,
   filepath,
   macAddress,
   locationIp,
@@ -46,11 +46,11 @@ export async function saveCaseAssignModel(
 
 
     const [rows] = await pool.query(
-      'CALL sp_saveapplicationassign( ?, ?, ?, ?, ?, ?, ?, @application_Id, @ErrorCode);',
+      'CALL sp_saveapplicationassign( ?, ?, ?, ?, ?, ?, ?,?, @application_Id, @ErrorCode);',
       [
         applicationId,
         citizentype,
-        
+        DocTypeId ,
         filepath,
         macAddress,
         locationIp,

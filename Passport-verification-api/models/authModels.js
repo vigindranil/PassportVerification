@@ -1,3 +1,4 @@
+import { log } from "console";
 import pool from "../db.js";
 
 export async function getUserLoginModel(username, password) {
@@ -33,7 +34,10 @@ export async function updateAuthToken(
 
 export async function getUserVerifyToken(UserID) {
     try {
+        console.log("UserID",UserID);
+        
         const [rows] = await pool.query('CALL sp_getUserVerifyToken(?)', [UserID]);
+        console.log("rows",rows);
         return rows[0];
     } catch (error) {
         throw new Error('Database error: ' + error.message);

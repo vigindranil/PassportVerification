@@ -55,7 +55,8 @@ export const sendOtp = async (req, res) => {
                 JWT_SECRET,
                 { expiresIn: "24h" }
             );
-
+            console.log("rowsUserID", rows["UserID"]);
+            
             const [result] = await updateAuthToken(rows["UserID"], token, transactionId);
 
             res.cookie('data', token);

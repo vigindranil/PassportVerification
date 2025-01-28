@@ -63,7 +63,7 @@ export const updateEnquiryStatus = async (req, res) => {
       Remarks,
     } = req.body;
 
-    const result = await updateEnquiryStatusModel({
+    const result = await updateEnquiryStatusModel(
       ApplicationID,
       locationIp,
       macAddress,
@@ -71,19 +71,19 @@ export const updateEnquiryStatus = async (req, res) => {
       StatusID,
       StatusText,
       Remarks,
-      EntryUserID: req.user.UserID, 
-    });
+      req.user.UserID, 
+    );
 
-    if (result.success) {
+    if (result == 0) {
       return res.status(200).json({
         status: 0,
-        message: result.message,
+        message: "Status has been updated successfully",
       });
     } else {
       return res.status(400).json({
         status: 1,
-        message: result.message,
-        errorCode: result.errorCode,
+        message: 'Failed to update enquiry status',
+      
       });
     }
   } catch (error) {
