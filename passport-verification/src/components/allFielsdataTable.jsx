@@ -13,6 +13,7 @@ import moment from "moment"
 import { useRouter } from "next/navigation"
 import { acceptApplication } from "@/app/allFiles/api"
 import { FileAcceptModal } from "./file-accept-modal"
+import { toast } from "@/hooks/use-toast"
 
 export default function PendingApplicationDatatable({ status }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)

@@ -98,6 +98,15 @@ const DashboardCards = () => {
             />}
             {login_type == 40 && <DashboardCard
                 type="40"
+                title="Accepted & Verification Pending"
+                value={data?.EOAccepectButNotStartedVerify || 0}
+                icon={TrendingDown}
+                //description="5% increase from last week"
+                color="bg-gradient-to-br from-blue-400 to-blue-600"
+                link="/acceptedAndVerificationPending-eo"
+            />}
+            {login_type == 40 && <DashboardCard
+                type="40"
                 title="Verification Started"
                 value={data?.EOAccepectButNotStartedVerify || 0}
                 icon={TrendingDown}

@@ -22,7 +22,7 @@ export default function PendingApplicationDatatable({status}) {
   const [verificationData, setVerificationData] = useState([])
   const router = useRouter()
 
-  const filteredData = verificationData.filter((row) =>
+  const filteredData = verificationData?.filter((row) =>
     Object.values(row).some((value) => value.toString().toLowerCase().includes(searchTerm.toLowerCase())),
   )
 
@@ -35,10 +35,10 @@ export default function PendingApplicationDatatable({status}) {
     }
   }
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage)
+  const totalPages = Math.ceil(filteredData?.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  const currentData = filteredData.slice(startIndex, endIndex)
+  const currentData = filteredData?.slice(startIndex, endIndex)
 
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(verificationData)
@@ -191,7 +191,7 @@ export default function PendingApplicationDatatable({status}) {
         </div>
         <div className="flex items-center justify-between mt-4 text-sm">
           <div>
-            Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of {filteredData.length} entries
+            Showing {startIndex + 1} to {Math.min(endIndex, filteredData?.length)} of {filteredData?.length} entries
           </div>
           <div className="flex items-center gap-2">
             <Button

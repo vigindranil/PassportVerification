@@ -171,7 +171,7 @@ export const updateUserActivationStatus = async (req, res) => {
         const Latitude = "test";
         const OperationName = "updateUserActivationStatus";
         const json = "{}"
-    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
+    // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
         const result = await updateUserActivationStatusModel(UserID,
             ActivationStatus); // change aadhar token
 
