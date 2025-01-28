@@ -91,7 +91,7 @@ export async function getApplicationStatusModel(
   EntryUserID, Status, Periord 
 ) {
   try {
-    const [rows] = await pool.query('CALL sp_getapplicationstatus(?,?,?)', [EntryUserID,Status, Periord ]);
+    const [rows] = await pool.query('CALL sp_getapplicationstatusv2(?,?,?)', [EntryUserID,Status, Periord ]);
     console.log(rows);
     return rows;
   } catch (error) {

@@ -63,3 +63,52 @@ export async function getApplicationStatusHistoryById(applicationId, entryUserId
       return null;
     }
   }
+
+
+  export async function updateEnquiryStatusModel({
+    ApplicationID,
+    locationIp,
+    macAddress,
+    deviceId,
+    StatusID,
+    StatusText,
+    Remarks,
+    EntryUserID,
+  }) {
+    try {
+     
+      const [rows] = await pool.query(
+        `CALL sp_updateEnqueryStatusv1(?, ?, ?, ?, ?, ?, ?, ?, @ErrorCode)`,
+        [
+          ApplicationID,
+          locationIp,
+          macAddress,
+          deviceId,
+          StatusID,
+          StatusText,
+          Remarks,
+          EntryUserID,
+        ]
+      );
+  
+      const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
+      console.log("gsysgh",result)
+  return result[0].ErrorCode;
+    //   const [result] = await pool.query(`SELECT @ErrorCode AS ErrorCode;`);
+    //   const errorCode = result[0]?.ErrorCode ?? null;
+  
+    //   return {
+    //     success: errorCode === 0,
+    //     errorCode,
+    //     message:
+    //       errorCode === 0
+    //         ? "Enquiry status updated successfully."
+    //         : "Failed to update enquiry status.",
+    //   };
+    } catch (error) {
+      console.error("Error updating enquiry status:", error.message);
+      throw new Error("Database error: " + error.message);
+    }
+  }
+
+  

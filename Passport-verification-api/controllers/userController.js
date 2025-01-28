@@ -4,7 +4,7 @@ import { getApplicationStatusModel, saveUserRegistrationModel } from '../models/
 import { updateUserActivationStatusModel } from '../models/userModel.js'
 import { showuserDetailsModel } from '../models/userModel.js'
 import {getApplicationCountsv1Model} from '../models/userModel.js'
-import {saveTransactionHistory} from '../models/logModel.js'
+// import {saveTransactionHistory} from '../models/logModel.js'
 /**
  * @swagger
  * /saveUserRegistration:
@@ -86,7 +86,7 @@ export const saveUserRegistration = async (req, res) => {
         const Latitude = "test";
         const OperationName = "saveUserRegistration";
         const json = "{}"
-    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,req.user.UserID)
+    // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,req.user.UserID)
         const result = await saveUserRegistrationModel(
             UserID,
             UserName,
@@ -171,7 +171,7 @@ export const updateUserActivationStatus = async (req, res) => {
         const Latitude = "test";
         const OperationName = "updateUserActivationStatus";
         const json = "{}"
-    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
+    // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
         const result = await updateUserActivationStatusModel(UserID,
             ActivationStatus); // change aadhar token
 
