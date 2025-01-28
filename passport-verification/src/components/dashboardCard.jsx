@@ -60,24 +60,24 @@ const DashboardCards = () => {
                 value={data?.EOComplete || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-               color="bg-gradient-to-br from-blue-400 to-blue-600"
-               link="/verificationCompletedEO"
+                color="bg-gradient-to-br from-blue-400 to-blue-600"
+                link="/verificationCompletedEO"
             />}
             {login_type == 10 && <DashboardCard
                 title="Pending IN OC"
                 value={data?.OCPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-               color="bg-gradient-to-br from-teal-400 to-teal-600"
-               link="/pendingInOC"
+                color="bg-gradient-to-br from-teal-400 to-teal-600"
+                link="/pendingInOC"
             />}
             {login_type == 10 && <DashboardCard
                 title="Pending IN SP/DIB"
                 value={data?.SPPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-               color="bg-gradient-to-br from-purple-400 to-purple-600"
-               link="/pendingInSPDIB"
+                color="bg-gradient-to-br from-purple-400 to-purple-600"
+                link="/pendingInSPDIB"
             />}
             {login_type == 10 && <DashboardCard
                 title="Pending IN Enquiry Officer"
@@ -127,27 +127,26 @@ const DashboardCards = () => {
             />}
 
             {/* OC DASHBOARD CARD */}
-            
+
             {login_type == 30 && <DashboardCard
                 type="30"
-                title="Verification Completed By EO"
-                value={data?.EOComplete || 0}
+                title="Pending In OC"
+                value={data?.OCPending || 0}
+                icon={ArrowRightToLine}
+                //description="15% increase from yesterday"
+                color="bg-gradient-to-br from-blue-400 to-blue-600"
+                link="/allFiles-oc"
+            />}
+            {login_type == 30 && <DashboardCard
+                type="30"
+                title="Completed By OC"
+                value={data?.OCComplete || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
                 color="bg-gradient-to-br from-purple-400 to-purple-600"
                 link="/verificationCompletedEO"
             />}
-            {login_type == 30 && <DashboardCard
-                type="30"
-                title="Pending IN OC"
-                value={data?.OCPending || 0}
-                icon={ArrowRightToLine}
-                //description="15% increase from yesterday"
-               color="bg-gradient-to-br from-blue-400 to-blue-600"
-                link="/pendingInOC"
-            />}
-            
-           
+
         </div>
 
     )

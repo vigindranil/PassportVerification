@@ -11,14 +11,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { getApplicationStatus } from "@/app/totalPending/api"
 import moment from "moment"
 import { useRouter } from "next/navigation"
-import { acceptApplication } from "@/app/allFiles/api"
+import { acceptApplication, updateEnquiryStatus } from "@/app/allFiles/api"
 import { toast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import { FileAcceptModal } from "./approve-reject-modal"
 
 export default function PendingApplicationDatatable({ status }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
-  const [selectedDetails, setSelectedDetails] = useState(null)
+  const [selectedDetails, setSelectedDetails] = useState({})
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
   const itemsPerPage = 6
@@ -78,35 +78,32 @@ export default function PendingApplicationDatatable({ status }) {
     windowPrint.close()
   }
 
-  const handleAcceptFile = async (applicationId, citizentype, file) => {
+  const handleAcceptFile = async (applicationId, type, remarks) => {
     try{
-
-      console.log(`applicationId: ${applicationId}`)
-      console.log(`citizentype: ${citizentype}`)
-      console.log(`file: ${file}`)
       // Implement the logic for accepting the file
-      const response = await acceptApplication(applicationId, citizentype, file);
+      const response = await updateEnquiryStatus(applicationId, type, remarks);
       console.log('reponse:', response);
       
       if (response?.status == 0) {
         toast({
         title: "Successfull!",
-        description: "Case accepted successfully",
+        description: response?.message,
         action: <ToastAction altText="Try again">Close</ToastAction>,
       })
       fetchApplicationStatus();
     } else {
       toast({
         variant: "destructive",
-        title: "Failed to accept file!",
+        title: "Failed to update status!",
         description: response?.message,
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
     }
   }catch (e) {
+    console.log('Error:', e);
     toast({
       variant: "destructive",
-      title: "Failed to accept file!",
+      title: "Failed to update status!",
       description: 'An error occurred',
       action: <ToastAction altText="Try again">Try again</ToastAction>,
     })
@@ -238,7 +235,7 @@ export default function PendingApplicationDatatable({ status }) {
                             onClick={() => {
                               setType('approve')
                               setIsFileAcceptModalOpen(true)
-                              setSelectedDetails(row)
+                              setSelectedDetails(row.FileNumber)
                             }}
                           >
                             Approve
@@ -250,7 +247,7 @@ export default function PendingApplicationDatatable({ status }) {
                             onClick={() => {
                               setType('reject')
                               setIsFileAcceptModalOpen(true)
-                              setSelectedDetails(row)
+                              setSelectedDetails(row.FileNumber)
                             }}
                           >
                             Reject
@@ -309,7 +306,7 @@ export default function PendingApplicationDatatable({ status }) {
           <FileAcceptModal
             isOpen={isFileAcceptModalOpen}
             onClose={() => setIsFileAcceptModalOpen(false)}
-            fileData={selectedDetails}
+            applicationId={selectedDetails}
             onAccept={handleAcceptFile}
             type={type}
           />

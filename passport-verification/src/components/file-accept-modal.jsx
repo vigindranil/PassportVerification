@@ -19,7 +19,7 @@ export function FileAcceptModal({ isOpen, onClose, fileData, onAccept }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:min-w-[750px]">
         <DialogHeader>
           <DialogTitle>File Accept</DialogTitle>
         </DialogHeader>

@@ -2,7 +2,7 @@ import React from 'react'
 import Navbar from '@/components/navbar';
 import Sidebar from '@/components/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import DataTable from '@/components/pendingVerification-eo';
+import DataTable from '@/components/pendingApplication';
 
 export default function allFiles() {
   return (
