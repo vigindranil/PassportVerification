@@ -1,7 +1,7 @@
 import { getPoliceStationsByDistrictModel } from '../models/masterModels.js';
 import { showDistrictModel } from '../models/masterModels.js';
 import {showDesignationModel} from '../models/masterModels.js';
-import {saveTransactionHistory} from '../models/logModel.js';
+// import {saveTransactionHistory} from '../models/logModel.js';
 import {getDocumentsByCitizenTypeModel} from '../models/masterModels.js';
 import {getCitizenTypesModel} from '../models/masterModels.js';
 import {getDocumentSubTypesByIdModel} from '../models/masterModels.js';

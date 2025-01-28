@@ -78,7 +78,7 @@ export async function getApplicationStatusHistoryById(applicationId, entryUserId
     try {
      
       const [rows] = await pool.query(
-        `CALL sp_updateEnqueryStatus(?, ?, ?, ?, ?, ?, ?, ?, @ErrorCode)`,
+        `CALL sp_updateEnqueryStatusv1(?, ?, ?, ?, ?, ?, ?, ?, @ErrorCode)`,
         [
           ApplicationID,
           locationIp,
@@ -92,6 +92,7 @@ export async function getApplicationStatusHistoryById(applicationId, entryUserId
       );
   
       const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
+      console.log("gsysgh",result)
   return result[0].ErrorCode;
     //   const [result] = await pool.query(`SELECT @ErrorCode AS ErrorCode;`);
     //   const errorCode = result[0]?.ErrorCode ?? null;

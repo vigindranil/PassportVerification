@@ -7,7 +7,7 @@ export const getApplicationDetails = async (req, res) => {
         const { applicationId } = req.body;
         const entryUserId = req.user.UserID;
         console.log("entryUserId", entryUserId);
-
+        const filepath = process.env.FILE_UPLOAD_PATH;
         if (!applicationId || !entryUserId) {
             return res.status(400).json({
                 status: 1,
@@ -34,9 +34,9 @@ export const getApplicationDetails = async (req, res) => {
             message: 'Application details retrieved successfully',
             data: {
                 applicationDetails,
-                documents: documents,
-                status: status,
-                // saveTransaction
+                documents: documents || [],
+                status: status || [],
+                filepath
             },
         });
     } catch (error) {
