@@ -326,8 +326,8 @@ export const showuserDetails = async (req, res) => {
         const OperationName = "showuserDetails";
         const json = "{}"
     // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
+    console.log("user_ID", req.user.UserID);
         const [result] = await showuserDetailsModel(req.user.UserID);
-        console.log("result", result);
 
         if (result?.length !== 0) {
             return res.status(200).json({
@@ -345,7 +345,7 @@ export const showuserDetails = async (req, res) => {
 
 
     } catch (error) {
-        console.error("Error fetching :", error);
+        // console.error("Error fetching :", error);
         res.status(500).json({
             status: 1,
             message: "An error occurred",

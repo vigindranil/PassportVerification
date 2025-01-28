@@ -22,23 +22,23 @@ export default function PendingApplicationDatatable({status}) {
   const [verificationData, setVerificationData] = useState([])
   const router = useRouter()
 
-  const filteredData = verificationData.filter((row) =>
+  const filteredData = verificationData?.filter((row) =>
     Object.values(row).some((value) => value.toString().toLowerCase().includes(searchTerm.toLowerCase())),
   )
 
   const fetchApplicationStatus = async () => {
     try {
       const response = await getApplicationStatus(status, 7)
-      setVerificationData(response.data)
+      setVerificationData(response?.data)
     } catch (error) {
-      console.error("Error fetching application status:", error)
+      console.log("Error fetching application status:", error)
     }
   }
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage)
+  const totalPages = Math.ceil(filteredData?.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  const currentData = filteredData.slice(startIndex, endIndex)
+  const currentData = filteredData?.slice(startIndex, endIndex)
 
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(verificationData)
@@ -51,7 +51,7 @@ export default function PendingApplicationDatatable({status}) {
     const doc = new jsPDF()
     doc.autoTable({
       head: [["File Number", "Applicant Name", "Police Station", "Phone No.", "Date of Birth"]],
-      body: verificationData.map((row) => [
+      body: verificationData?.map((row) => [
         row.FileNumber,
         row.ApplicantName,
         row.Ps_Name,
@@ -165,7 +165,7 @@ export default function PendingApplicationDatatable({status}) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentData.map((row, index) => (
+              {currentData?.map((row, index) => (
                 <TableRow key={index}>
                   <TableCell>{row.FileNumber}</TableCell>
                   <TableCell>{row.ApplicantName}</TableCell>
@@ -191,7 +191,7 @@ export default function PendingApplicationDatatable({status}) {
         </div>
         <div className="flex items-center justify-between mt-4 text-sm">
           <div>
-            Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of {filteredData.length} entries
+            Showing {startIndex + 1} to {Math.min(endIndex, filteredData?.length)} of {filteredData?.length} entries
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -202,7 +202,7 @@ export default function PendingApplicationDatatable({status}) {
             >
               Prev
             </Button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            {Array.from({ length: totalPages }, (_, i) => i + 1)?.map((page) => (
               <Button
                 key={page}
                 variant={currentPage === page ? "default" : "outline"}
