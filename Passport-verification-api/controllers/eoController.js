@@ -104,7 +104,7 @@ export const saveCaseAssign = async (req, res) => {
       deviceId } = req.body;
     const entryUserId = req.user.UserID;
     const file = req.file;
-    const filepath = req?.file?.originalname;
+    const filepath = req?.filePath;
 
     if (!file) {
       return res.status(400).json({ status: 1, message: "No file uploaded" });

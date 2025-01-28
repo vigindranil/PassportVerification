@@ -377,9 +377,10 @@ export const getApplicationStatus = async (req, res) => {
                 data: result
             });
         } else {
-            return res.status(400).json({
+            return res.status(200).json({
                 status: 1,
                 message: "No data found",
+                data: []
             });
 
         }

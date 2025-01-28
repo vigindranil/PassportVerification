@@ -7,11 +7,15 @@ export const getApplicationDetails = async (req, res) => {
         const { applicationId } = req.body;
         const entryUserId = req.user.UserID;
         console.log("entryUserId", entryUserId);
+        const file_path = process.env.FILE_UPLOAD_PATH;
 
         if (!applicationId || !entryUserId) {
             return res.status(400).json({
                 status: 1,
                 message: 'Invalid input data',
+                documents: [],
+                status: [],
+                file_path
             });
         }
 
@@ -34,13 +38,12 @@ export const getApplicationDetails = async (req, res) => {
             message: 'Application details retrieved successfully',
             data: {
                 applicationDetails,
-                documents: documents,
-                status: status,
-                // saveTransaction
+                documents: documents || [],
+                status: status || [],
+                file_path
             },
         });
     } catch (error) {
-        console.error('Error retrieving application details:', error);
         return res.status(500).json({
             status: 1,
             message: 'An error occurred while retrieving the application details',

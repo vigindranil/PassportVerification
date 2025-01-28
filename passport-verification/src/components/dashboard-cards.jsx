@@ -4,10 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 const DashboardCard = ({ title, value, icon: Icon, description, color, link, type }) => (
     <Link href={link}>
-        <Card className={`${color} text-white`}>
+        <Card className={`bg-gradient-to-br from-${color}-600 to-${color}-300 text-white`}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">{title}</CardTitle>
-                <Icon className="h-4 w-4" />
+                <Icon className={`h-4 w-4 bg-${color}-400`} />
             </CardHeader>
             <CardContent>
                 <div className="text-2xl font-bold">{value}</div>

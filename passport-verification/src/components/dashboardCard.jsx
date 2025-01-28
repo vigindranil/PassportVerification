@@ -26,7 +26,7 @@ const DashboardCards = () => {
                 value={data?.TotalPendingApplications || 0}
                 icon={CircleDashed}
                 //description="10% increase from last month"
-                color="bg-gradient-to-br from-lime-400 to-lime-600"
+                color="lime"
                 link="/totalPending"
             />}
             {login_type == 10 && <DashboardCard
@@ -35,7 +35,7 @@ const DashboardCards = () => {
                 value={data?.Last15DaysPendingApplications || 0}
                 icon={TrendingDown}
                 //description="5% increase from last week"
-                color="bg-gradient-to-br from-blue-400 to-blue-600"
+                color="blue"
                 link="/last15DaysPending"
             />}
             {login_type == 10 && <DashboardCard
@@ -44,7 +44,7 @@ const DashboardCards = () => {
                 value={data?.EOAccepectButNotStartedVerify || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
-                color="bg-gradient-to-br from-purple-400 to-purple-600"
+                color="purple"
                 link="/eoAcceptedFile"
             />}
             {login_type == 10 && <DashboardCard
@@ -52,7 +52,7 @@ const DashboardCards = () => {
                 value={data?.EOStartedVerify || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-yellow-400 to-yellow-600"
+                color="yellow"
                 link="/pendingVerificatonEO"
             />}
             {login_type == 10 && <DashboardCard
@@ -60,7 +60,7 @@ const DashboardCards = () => {
                 value={data?.EOComplete || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-               color="bg-gradient-to-br from-blue-400 to-blue-600"
+               color="bg-gradient-to-br from-blue-600 to-blue-300"
                link="/verificationCompletedEO"
             />}
             {login_type == 10 && <DashboardCard
@@ -68,7 +68,7 @@ const DashboardCards = () => {
                 value={data?.OCPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-               color="bg-gradient-to-br from-teal-400 to-teal-600"
+               color="teal"
                link="/pendingInOC"
             />}
             {login_type == 10 && <DashboardCard
@@ -76,7 +76,7 @@ const DashboardCards = () => {
                 value={data?.SPPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-               color="bg-gradient-to-br from-purple-400 to-purple-600"
+               color="purple"
                link="/pendingInSPDIB"
             />}
             {login_type == 10 && <DashboardCard
@@ -84,7 +84,7 @@ const DashboardCards = () => {
                 value={data?.SEPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-green-400 to-green-600"
+                color="green"
                 link="/pendingInEnquiryOfficer"
             />}
             {login_type == 40 && <DashboardCard
@@ -93,7 +93,7 @@ const DashboardCards = () => {
                 value={data?.TotalPendingApplications || 0}
                 icon={CircleDashed}
                 //description="10% increase from last month"
-                color="bg-gradient-to-br from-lime-400 to-lime-600"
+                color="lime"
                 link="/totalPending"
             />}
             {login_type == 40 && <DashboardCard
@@ -102,7 +102,7 @@ const DashboardCards = () => {
                 value={data?.EOAccepectButNotStartedVerify || 0}
                 icon={TrendingDown}
                 //description="5% increase from last week"
-                color="bg-gradient-to-br from-blue-400 to-blue-600"
+                color="bg-gradient-to-br from-blue-600 to-blue-300"
                 link="/verificationStartedEO"
             />}
             {login_type == 40 && <DashboardCard
@@ -111,7 +111,7 @@ const DashboardCards = () => {
                 value={data?.EOComplete || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
-                color="bg-gradient-to-br from-purple-400 to-purple-600"
+                color="bg-gradient-to-br from-purple-600 to-purple-300"
                 link="/processed"
             />}
             
@@ -120,49 +120,49 @@ const DashboardCards = () => {
                 value="0"
                 icon={Users}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-indigo-400 to-indigo-600"
+                color="bg-gradient-to-br from-indigo-600 to-indigo-300"
             />
             <DashboardCard
                 title="Urgent Message From OC"
                 value="0"
                 icon={Users}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-purple-400 to-purple-600"
+                color="bg-gradient-to-br from-purple-600 to-purple-300"
             />
             <DashboardCard
                 title="Urgent Message From OC"
                 value="0"
                 icon={Users}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-green-400 to-green-600"
+                color="bg-gradient-to-br from-green-600 to-green-300"
             />
             <DashboardCard
                 title="Adverse Files"
                 value="0"
                 icon={Users}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-violet-400 to-violet-600"
+                color="bg-gradient-to-br from-violet-600 to-violet-300"
             />
             <DashboardCard
                 title="Urgent Message From Operator"
                 value="0"
                 icon={Users}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-yellow-400 to-yellow-600"
+                color="bg-gradient-to-br from-yellow-600 to-yellow-300"
             />
             <DashboardCard
                 title="Urgent Message From DC"
                 value="0"
                 icon={Users}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-blue-400 to-blue-600"
+                color="bg-gradient-to-br from-blue-600 to-blue-300"
             />
             <DashboardCard
                 title="Dispatch Files"
                 value="0"
                 icon={Users}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-lime-400 to-lime-600"
+                color="bg-gradient-to-br from-lime-600 to-lime-300"
             /> */}
         </div>
 
