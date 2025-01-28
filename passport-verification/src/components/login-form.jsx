@@ -79,6 +79,8 @@ const LoginForm = () => {
           router.push("/dashboard")
         }else if(type == 40) {
           router.push("/dashboard-eo")
+        }else if(type == 30) {
+          router.push("/dashboard-oc")
         }
 
       } else {

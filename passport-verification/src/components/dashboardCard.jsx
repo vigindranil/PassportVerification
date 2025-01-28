@@ -143,7 +143,7 @@ const DashboardCards = () => {
                 value={data?.OCPending || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
-                color="bg-gradient-to-br from-purple-400 to-purple-600"
+               color="bg-gradient-to-br from-blue-400 to-blue-600"
                 link="/pendingInOC"
             />}
             
