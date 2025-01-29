@@ -28,7 +28,7 @@ const DashboardCards = () => {
                 value={data?.TotalPendingApplications || 0}
                 icon={CircleDashed}
                 //description="10% increase from last month"
-                color="bg-gradient-to-br from-lime-400 to-lime-600"
+                color="lime"
                 link="/totalPending"
             />}
             {login_type == 10 && <DashboardCard
@@ -37,7 +37,7 @@ const DashboardCards = () => {
                 value={data?.Last15DaysPendingApplications || 0}
                 icon={TrendingDown}
                 //description="5% increase from last week"
-                color="bg-gradient-to-br from-blue-400 to-blue-600"
+                color="blue"
                 link="/last15DaysPending"
             />}
             {login_type == 10 && <DashboardCard
@@ -46,7 +46,7 @@ const DashboardCards = () => {
                 value={data?.EOAccepectButNotStartedVerify || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
-                color="bg-gradient-to-br from-purple-400 to-purple-600"
+                color="purple"
                 link="/eoAcceptedFile"
             />}
             {login_type == 10 && <DashboardCard
@@ -54,7 +54,7 @@ const DashboardCards = () => {
                 value={data?.EOStartedVerify || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-yellow-400 to-yellow-600"
+                color="yellow"
                 link="/pendingVerificatonEO"
             />}
             {login_type == 10 && <DashboardCard
@@ -62,7 +62,7 @@ const DashboardCards = () => {
                 value={data?.EOComplete || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-blue-400 to-blue-600"
+                color="blue"
                 link="/verificationCompletedEO"
             />}
             {login_type == 10 && <DashboardCard
@@ -70,7 +70,7 @@ const DashboardCards = () => {
                 value={data?.OCPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-teal-400 to-teal-600"
+                color="teal"
                 link="/pendingInOC"
             />}
             {login_type == 10 && <DashboardCard
@@ -79,7 +79,7 @@ const DashboardCards = () => {
                 value={data?.OCComplete || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
-                color="bg-gradient-to-br from-purple-400 to-purple-600"
+                color="purple"
                 link="/verificationCompletedEO"
             />}
             {login_type == 10 && <DashboardCard
@@ -87,7 +87,7 @@ const DashboardCards = () => {
                 value={data?.SPPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-purple-400 to-purple-600"
+                color="purple"
                 link="/pendingInSPDIB"
             />}
             {login_type == 10 && <DashboardCard
@@ -95,7 +95,7 @@ const DashboardCards = () => {
                 value={data?.SEPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-green-400 to-green-600"
+                color="green"
                 link="/pendingInEnquiryOfficer"
             />}
 
@@ -106,7 +106,7 @@ const DashboardCards = () => {
                 value={data?.TotalPendingApplications || 0}
                 icon={CircleDashed}
                 //description="10% increase from last month"
-                color="bg-gradient-to-br from-lime-400 to-lime-600"
+                color="lime"
                 link="/totalPending"
             />}
             {login_type == 40 && <DashboardCard
@@ -115,7 +115,7 @@ const DashboardCards = () => {
                 value={data?.EOAccepectButNotStartedVerify || 0}
                 icon={TrendingDown}
                 //description="5% increase from last week"
-                color="bg-gradient-to-br from-blue-400 to-blue-600"
+                color="blue"
                 link="/acceptedAndVerificationPending-eo"
             />}
             {/* {login_type == 40 && <DashboardCard
@@ -124,7 +124,7 @@ const DashboardCards = () => {
                 value={data?.EOStartedVerify || 0}
                 icon={TrendingDown}
                 //description="5% increase from last week"
-                color="bg-gradient-to-br from-blue-400 to-blue-600"
+                color="blue"
                 link="/verificationStartedEO"
             />} */}
             {login_type == 40 && <DashboardCard
@@ -133,7 +133,7 @@ const DashboardCards = () => {
                 value={data?.EOComplete || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
-                color="bg-gradient-to-br from-purple-400 to-purple-600"
+                color="purple"
                 link="/verificationCompletedEO"
             />}
 
@@ -145,7 +145,7 @@ const DashboardCards = () => {
                 value={data?.OCPending || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
-                color="bg-gradient-to-br from-blue-400 to-blue-600"
+                color="blue"
                 link="/allFiles-oc"
             />}
             {login_type == 30 && <DashboardCard
@@ -154,7 +154,7 @@ const DashboardCards = () => {
                 value={data?.OCComplete || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
-                color="bg-gradient-to-br from-purple-400 to-purple-600"
+                color="purple"
                 link="/verificationCompletedEO"
             />}
 
@@ -167,7 +167,7 @@ const DashboardCards = () => {
                 value={data?.TotalPendingApplications || 0}
                 icon={CircleDashed}
                 //description="10% increase from last month"
-                color="bg-gradient-to-br from-lime-400 to-lime-600"
+                color="lime"
                 link="/totalPending"
             />}
             {login_type == 20 && <DashboardCard
@@ -176,7 +176,7 @@ const DashboardCards = () => {
                 value={data?.Last15DaysPendingApplications || 0}
                 icon={TrendingDown}
                 //description="5% increase from last week"
-                color="bg-gradient-to-br from-blue-400 to-blue-600"
+                color="blue"
                 link="/last15DaysPending"
             />}
             {login_type == 20 && <DashboardCard
@@ -185,7 +185,7 @@ const DashboardCards = () => {
                 value={data?.EOAccepectButNotStartedVerify || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
-                color="bg-gradient-to-br from-purple-400 to-purple-600"
+                color="purple"
                 link="/eoAcceptedFile"
             />}
             {login_type == 20 && <DashboardCard
@@ -193,7 +193,7 @@ const DashboardCards = () => {
                 value={data?.EOStartedVerify || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-yellow-400 to-yellow-600"
+                color="yellow"
                 link="/pendingVerificatonEO"
             />}
             {login_type == 20 && <DashboardCard
@@ -201,7 +201,7 @@ const DashboardCards = () => {
                 value={data?.EOComplete || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-blue-400 to-blue-600"
+                color="blue"
                 link="/verificationCompletedEO"
             />}
             {login_type == 20 && <DashboardCard
@@ -209,7 +209,7 @@ const DashboardCards = () => {
                 value={data?.OCPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-teal-400 to-teal-600"
+                color="teal"
                 link="/pendingInOC"
             />}
             {login_type == 20 && <DashboardCard
@@ -218,7 +218,7 @@ const DashboardCards = () => {
                 value={data?.OCComplete || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
-                color="bg-gradient-to-br from-purple-400 to-purple-600"
+                color="purple"
                 link="/verificationCompletedEO"
             />}
             {login_type == 20 && <DashboardCard
@@ -226,7 +226,7 @@ const DashboardCards = () => {
                 value={data?.SPPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-purple-400 to-purple-600"
+                color="purple"
                 link="/pendingInSPDIB"
             />}
             {login_type == 20 && <DashboardCard
@@ -234,7 +234,7 @@ const DashboardCards = () => {
                 value={data?.SPDone || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-green-400 to-green-600"
+                color="green"
                 link="/completed-sp"
             />}
             {login_type == 20 && <DashboardCard
@@ -242,7 +242,7 @@ const DashboardCards = () => {
                 value={data?.SEPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-yellow-400 to-yellow-600"
+                color="yellow"
                 link="/pendingInEnquiryOfficer"
             />}
             {login_type == 20 && <DashboardCard
@@ -250,7 +250,7 @@ const DashboardCards = () => {
                 value={data?.SEComplete || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="bg-gradient-to-br from-orange-400 to-orange-600"
+                color="orange"
                 link="/completed-se"
             />}
 
@@ -262,7 +262,7 @@ const DashboardCards = () => {
                 value={data?.SEPending || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
-                color="bg-gradient-to-br from-blue-400 to-blue-600"
+                color="blue"
                 link="/allFiles-oc"
             />}
             {login_type == 50 && <DashboardCard
@@ -271,7 +271,7 @@ const DashboardCards = () => {
                 value={data?.SEComplete || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
-                color="bg-gradient-to-br from-purple-400 to-purple-600"
+                color="purple"
                 link="/verificationCompletedEO"
             />}
 

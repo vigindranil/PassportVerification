@@ -6,7 +6,7 @@ export const acceptApplication = async (applicationId, citizentype, file) => {
         const locationIp = "115.187.62.100";
         const deviceId = "TEST-39U4HR49N3N9";
         return await postFileRequest("upload/acceptCaseUploadDocument", {
-            applicationId, citizentype, docTypeId: 13, file, macAddress,
+            applicationId, citizentype, DocTypeId: 13, file, macAddress,
             locationIp,
             deviceId
         });
