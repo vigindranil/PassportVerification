@@ -1,7 +1,7 @@
 import { getPoliceStationsByDistrictModel, showDocumentDetailsbyCitizenTypeModel, showSubDocumentbyCitizenTypeModel } from '../models/masterModels.js';
 import { showDistrictModel } from '../models/masterModels.js';
 import {showDesignationModel} from '../models/masterModels.js';
-// import {saveTransactionHistory} from '../models/logModel.js';
+ import {saveTransactionHistory} from '../models/logModel.js';
 import {getDocumentsByCitizenTypeModel} from '../models/masterModels.js';
 import {getCitizenTypesModel} from '../models/masterModels.js';
 import {getDocumentSubTypesByIdModel} from '../models/masterModels.js';
@@ -84,7 +84,7 @@ export const getPoliceStationsByDistrict = async (req, res) => {
             const Latitude = "test";
             const OperationName = "getPoliceStationsByDistrict";
             const json = "{}"
-        // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,EntryUserId)
+        const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,EntryUserId)
     const result = await getPoliceStationsByDistrictModel(districtId);
 
     if (result.length > 0) {
@@ -174,7 +174,7 @@ export const showDistrict = async (req, res) => {
         const Latitude = "test";
         const OperationName = "showDistrict";
         const json = "{}"
-    // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
+    const saveTransaction = await  saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,EntryUserId)
     const result = await showDistrictModel();
 
     if (result.length > 0) {
@@ -231,7 +231,7 @@ export const showDesignation = async (req, res) => {
         const Latitude = "test";
         const OperationName = "showDesignation";
         const json = "{}"
-    // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
+    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,EntryUserId)
       const result = await showDesignationModel();
   
       if (result.length > 0) {

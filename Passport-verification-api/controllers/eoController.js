@@ -35,7 +35,7 @@ export const saveDocumentUpload = async (req, res) => {
     const OperationName = "saveDocumentUpload";
     const json = "{}"
     const result = await saveDocumentUploadModel(ApplicationId, filepath,DocumentRemarks , DocumentTypeId, DeviceId, MacAddress, longitude, latitude, ipaddress, EntryUserId);
-    // await saveTransactionHistory(ipaddress, MacAddress, longitude, latitude, ApplicationId, OperationName, json, EntryUserId)
+    await saveTransactionHistory(ipaddress, MacAddress, longitude, latitude, 0, OperationName, json, EntryUserId)
     switch (result) {
       case 0:
         return res.status(200).json({
@@ -93,7 +93,7 @@ export const getDocumentUploadDetails = async (req, res) => {
     const Latitude = "test";
     const OperationName = "getDocumentUploadDetails";
     const json = "{}"
-    // const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, ApplicationId, OperationName, json, EntryUserId)
+    const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, 0, OperationName, json, EntryUserId)
     const result = await getDocumentUploadDetailsModel(ApplicationId, EntryUserId);
 
     if (result.length > 0) {
@@ -178,7 +178,7 @@ export const saveCaseAssign = async (req, res) => {
 
     console.log("entryUserId", entryUserId);
     
-    // const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, applicationId, OperationName, json, entryUserId)
+     const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, 0, OperationName, json, entryUserId)
 
     const errorCode = await saveCaseAssignModel(
       applicationId,
