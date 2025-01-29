@@ -61,6 +61,15 @@ export async function saveCaseAssignModel(
       ]
     );
 
+console.log('applicationId', applicationId);
+console.log('citizentype', citizentype);
+console.log('DocTypeId', DocTypeId);
+console.log('filepath', filepath);
+console.log('macAddress', macAddress);
+console.log('locationIp', locationIp);
+console.log('deviceId', deviceId);
+console.log('EntryuserId', EntryuserId);
+
     const [result] = await pool.query('SELECT @application_Id AS application_Id, @ErrorCode AS ErrorCode;');
     console.log("save", result[0]);
     return result[0].ErrorCode;
