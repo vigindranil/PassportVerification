@@ -180,6 +180,7 @@ export default function Page({ FileNumber }) {
                         <TableHeader>
                           <TableRow>
                             <TableHead>Full Name</TableHead>
+                            <TableHead>Authority Level</TableHead>
                             <TableHead>Application State</TableHead>
                             <TableHead>Updated Date</TableHead>
                           </TableRow>
@@ -187,7 +188,8 @@ export default function Page({ FileNumber }) {
                         <TableBody>
                           {applicationDetails?.status?.map((stat, index) => (
                             <TableRow key={index}>
-                              <TableCell>{stat?.FullName}</TableCell>
+                              <TableCell>{stat?.UserName}</TableCell>
+                              <TableCell>{stat?.UserRole}</TableCell>
                               <TableCell>{stat?.ApplicationState}</TableCell>
                               <TableCell>{moment(stat?.ApplicationStateUpdatedDateTime).format('DD/MM/YYYY hh:mm:ss')}</TableCell>
                             </TableRow>

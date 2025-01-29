@@ -34,8 +34,10 @@ export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type
         </div>
         <div className="flex justify-center gap-3 pt-5">
           {/* remarks textarea */}
-          <Button onClick={handleAccept} className={`bg-${type == 'approve' ? 'blue' : 'red'}-500 hover:bg-${type == 'approve' ? 'blue' : 'red'}-600`}>
-            {type == 'approve' ? 'Approve' : 'Reject'}
+          <Button
+            onClick={handleAccept}
+            className={`${type === "approve"? "bg-blue-500 hover:bg-blue-600" : type === "reject"? "bg-red-500 hover:bg-red-600" : type === "query"? "bg-green-500 hover:bg-green-600": ""}`}>
+            {type === "approve" ? "Approve" : type === "reject" ? "Reject" :  type === "query"? "Query" :""}
           </Button>
           <Button onClick={onClose} className="bg-gray-500 hover:bg-gray-600">
             Cancel

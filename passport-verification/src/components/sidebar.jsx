@@ -44,7 +44,7 @@ const Sidebar = () => {
 
                         // SP
                         { type_id: 20, icon: Home, label: 'Home', href: '/dashboard-sp'},
-                        { type_id: 20, icon: File, label: 'All Files', href: 'allFiles-oc' },
+                        { type_id: 20, icon: File, label: 'All Files', href: '/allFiles-sp' },
 
                         // SE
                         { type_id: 50, icon: Home, label: 'Home', href: '/dashboard-se' },
