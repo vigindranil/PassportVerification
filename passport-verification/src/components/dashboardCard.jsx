@@ -70,7 +70,7 @@ const DashboardCards = () => {
                 value={data?.OCPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="teal"
+                color="green"
                 link="/pendingInOC"
             />}
             {login_type == 10 && <DashboardCard
@@ -209,7 +209,7 @@ const DashboardCards = () => {
                 value={data?.OCPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="teal"
+                color="blue"
                 link="/pendingInOC"
             />}
             {login_type == 20 && <DashboardCard
@@ -250,7 +250,7 @@ const DashboardCards = () => {
                 value={data?.SEComplete || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="orange"
+                color="blue"
                 link="/completed-se"
             />}
 
