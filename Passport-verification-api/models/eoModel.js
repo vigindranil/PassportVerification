@@ -4,6 +4,8 @@ import pool from '../db.js';
 export async function saveDocumentUploadModel(ApplicationId, DocumentPath, DocumentRemarks ,DocumentTypeId, DeviceId, MacAddress, longitude, latitude, locationIp, EntryuserId) {
   try {
 
+    console.log("DocumentPath", DocumentPath);
+    
     const [rows] = await pool.query(
       'CALL sp_saveDocumentUpload(?, ?, ?,?, ?,?,?,?,?,?, @DocId ,@Errorcode);',
       [ApplicationId, DocumentPath,DocumentRemarks , DocumentTypeId, DeviceId, MacAddress, longitude, latitude, locationIp, EntryuserId]
