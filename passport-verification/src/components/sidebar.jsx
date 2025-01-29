@@ -29,18 +29,27 @@ const Sidebar = () => {
             <nav className="flex-1">
                 <ul className="space-y-2 px-3">
                     {[
+                        // District Nodal
                         { type_id: 10, icon: Home, label: 'Home', href: '/dashboard' },
                         { type_id: 10, icon: Upload, label: 'Upload Data', href: '/upload' },
                         { type_id: 10, icon: CirclePlus, label: 'Create User', href: '/createUserForm' },
+
+                        // EO
                         { type_id: 40, icon: Home, label: 'Home', href: '/dashboard-eo' },
                         { type_id: 40, icon: File, label: 'All Files', href: '/allFiles' },
+
+                        // OC
                         { type_id: 30, icon: Home, label: 'Home', href: '/dashboard-oc' },
-                        { type_id: 30, icon: FileUp, label: 'All Files', href: '/allFiles-oc' },
-                        // { type_id: 10, icon: FileText, label: 'View PDF Count', href: '/settings' },
-                        // { type_id: 10, icon: Files, label: 'Manage Officers', href: '/settings' },
-                        // { type_id: 10, icon: FolderSync, label: 'Re-Submit Files', href: '/settings' },
-                        // { type_id: 10, icon: FileCheck2, label: 'File Complited', href: '/settings' },
-                        // { type_id: 10, icon: Search, label: 'CRS Data Search', href: '/settings' },
+                        { type_id: 30, icon: File, label: 'All Files', href: '/allFiles-oc' },
+
+                        // SP
+                        { type_id: 20, icon: Home, label: 'Home', href: '/dashboard-sp'},
+                        { type_id: 20, icon: File, label: 'All Files', href: 'allFiles-oc' },
+
+                        // SE
+                        { type_id: 50, icon: Home, label: 'Home', href: '/dashboard-se' },
+                        { type_id: 50, icon: File, label: 'All Files', href: '/allFiles-se' },
+
                     ]?.map((item) => (
                         type == item?.type_id &&
                         <li key={item.label}>

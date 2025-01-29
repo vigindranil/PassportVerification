@@ -13,7 +13,7 @@ export default function allFiles() {
         <main className="flex-1 overflow-y-auto p-6">
           <CardContent>
             <Card>
-              <DataTable status={80} />
+              <DataTable heading='Pending In Enquiry Officer' status={80} />
             </Card>
           </CardContent>
         </main>

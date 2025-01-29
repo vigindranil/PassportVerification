@@ -13,7 +13,7 @@ export default function allFiles() {
         <main className="flex-1 overflow-y-auto p-6">
           <CardContent>
             <Card>
-              <DataTable status={2} />
+              <DataTable heading='Accepted File (EO)' status={2} />
             </Card>
           </CardContent>
         </main>

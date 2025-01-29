@@ -13,7 +13,7 @@ export default function allFiles() {
         <main className="flex-1 overflow-y-auto p-6">
           <CardContent>
             <Card>
-              <PendingApplicationDatatable status = {10} />
+              <PendingApplicationDatatable heading='Pending IN OC' status = {10} />
             </Card>
           </CardContent>
         </main>

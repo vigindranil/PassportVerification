@@ -15,7 +15,7 @@ const DocumentTable = ({ documents, docPath }) => {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Document Type ID</TableHead>
+                                <TableHead>Document Type</TableHead>
                                 <TableHead>Latitude</TableHead>
                                 <TableHead>Longitude</TableHead>
                                 <TableHead>IP</TableHead>
@@ -25,7 +25,7 @@ const DocumentTable = ({ documents, docPath }) => {
                         <TableBody>
                             {documents?.map((doc, index) => (
                                 <TableRow key={index}>
-                                    <TableCell>{doc?.DocumentTypeId || '-'}</TableCell>
+                                    <TableCell>{doc?.DocumentTypeName || '-'}</TableCell>
                                     <TableCell>{doc?.Latitude || '-'}</TableCell>
                                     <TableCell>{doc?.Longitude || '-'}</TableCell>
                                     <TableCell>{doc?.LocationIp || '-'}</TableCell>

@@ -166,6 +166,7 @@ export default function Page({ FileNumber }) {
                 <h2 className="text-2xl font-bold text-white">Application Document</h2>
               </div>
               <DocumentTable documents={applicationDetails?.documents} docPath={applicationDetails?.filepath} />
+              
             </div>
             <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden">
               <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">

@@ -11,15 +11,21 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { getApplicationStatus } from "@/app/totalPending/api"
 import moment from "moment"
 import { useRouter } from "next/navigation"
+import { acceptApplication, updateEnquiryStatus } from "@/app/allFiles/api"
+import { toast } from "@/hooks/use-toast"
+import { ToastAction } from "./ui/toast"
+import { FileAcceptModal } from "./approve-reject-modal"
 
-export default function PendingApplicationDatatable() {
+export default function PendingApplicationDatatable({ status }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
-  const [selectedDetails, setSelectedDetails] = useState(null)
+  const [selectedDetails, setSelectedDetails] = useState({})
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
   const itemsPerPage = 6
   const [applicationStatus, setApplicationStatus] = useState(null)
   const [verificationData, setVerificationData] = useState([])
+  const [isFileAcceptModalOpen, setIsFileAcceptModalOpen] = useState(false)
+  const [type, setType] = useState("reject");
   const router = useRouter()
 
   const filteredData = verificationData.filter((row) =>
@@ -28,10 +34,10 @@ export default function PendingApplicationDatatable() {
 
   const fetchApplicationStatus = async () => {
     try {
-      const response = await getApplicationStatus(0, 7)
+      const response = await getApplicationStatus(status, 15)
       setVerificationData(response.data)
     } catch (error) {
-      console.error("Error fetching application status:", error)
+      console.log("Error fetching application status:", error)
     }
   }
 
@@ -72,6 +78,44 @@ export default function PendingApplicationDatatable() {
     windowPrint.close()
   }
 
+  const handleAcceptFile = async (applicationId, type, remarks) => {
+    try{
+      // Implement the logic for accepting the file
+      const response = await updateEnquiryStatus(applicationId, type, remarks);
+      console.log('reponse:', response);
+      
+      if (response?.status == 0) {
+        toast({
+        title: "Successfull!",
+        description: response?.message,
+        action: <ToastAction altText="Try again">Close</ToastAction>,
+      })
+      fetchApplicationStatus();
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Failed to update status!",
+        description: response?.message,
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
+    }
+  }catch (e) {
+    console.log('Error:', e);
+    toast({
+      variant: "destructive",
+      title: "Failed to update status!",
+      description: 'An error occurred',
+      action: <ToastAction altText="Try again">Try again</ToastAction>,
+    })
+  }
+  }
+
+  const handleViewPPAttachment = (fileNumber) => {
+    console.log(`Viewing PP Attachment for file ${fileNumber}`)
+    // Implement the logic for viewing the PP attachment
+    // This could open a new window or modal with the attachment
+  }
+
   useEffect(() => {
     fetchApplicationStatus()
   }, [searchTerm]) // Added searchTerm as a dependency
@@ -80,7 +124,7 @@ export default function PendingApplicationDatatable() {
     <div className="container mx-auto px-0 space-y-8 shadow-2xl">
       <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl overflow-hidden">
         <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
-          <h2 className="text-2xl font-bold text-white">Pending In Enquiry Officer</h2>
+          <h2 className="text-2xl font-bold text-white">Pending Application</h2>
         </div>
       </div>
       <div className="p-6">
@@ -165,27 +209,71 @@ export default function PendingApplicationDatatable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentData.map((row, index) => (
-                <TableRow key={index}>
-                  <TableCell>{row.FileNumber}</TableCell>
-                  <TableCell>{row.ApplicantName}</TableCell>
-                  <TableCell>{row.Ps_Name}</TableCell>
-                  <TableCell>{row.PhoneNo}</TableCell>
-                  <TableCell>{row.DateOfBirth ? moment(row.DateOfBirth).format("DD/MM/YYYY") : "N/A"}</TableCell>
-                  <TableCell>
-                    <div className="flex space-x-1">
-                      <Button
-                        size="sm"
-                        variant="default"
-                        className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1"
-                        onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
-                      >
-                        Details
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {
+                currentData?.length ?
+                  currentData?.map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{row.FileNumber}</TableCell>
+                      <TableCell>{row.ApplicantName}</TableCell>
+                      <TableCell>{row.Ps_Name}</TableCell>
+                      <TableCell>{row.PhoneNo}</TableCell>
+                      <TableCell>{row.DateOfBirth ? moment(row.DateOfBirth).format("DD/MM/YYYY") : "N/A"}</TableCell>
+                      <TableCell>
+                        <div className="flex space-x-1">
+                          <Button
+                            size="sm"
+                            variant="default"
+                            className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1"
+                            onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
+                          >
+                            Details
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="default"
+                            className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-1 py-1"
+                            onClick={() => {
+                              setType('approve')
+                              setIsFileAcceptModalOpen(true)
+                              setSelectedDetails(row.FileNumber)
+                            }}
+                          >
+                            Approve
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="default"
+                            className="bg-red-500 hover:bg-red-600 text-white text-xs px-1 py-1"
+                            onClick={() => {
+                              setType('reject')
+                              setIsFileAcceptModalOpen(true)
+                              setSelectedDetails(row.FileNumber)
+                            }}
+                          >
+                            Reject
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="default"
+                            className="bg-slate-600 hover:bg-slate-700 text-white text-xs px-1 py-1"
+                            onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
+                          >
+                            Query
+                          </Button>
+                          {/* <Button
+                            size="sm"
+                            variant="default"
+                            className="bg-purple-600 hover:bg-purple-700 text-white text-xs px-1 py-1"
+                            onClick={() => handleViewPPAttachment(row.fileNumber)}
+                          >
+                            View PP Attachment
+                          </Button> */}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )) : <TableRow>
+                    <TableCell className="text-center" colSpan={6}>No record found</TableCell>
+                  </TableRow>}
             </TableBody>
           </Table>
         </div>
@@ -222,6 +310,15 @@ export default function PendingApplicationDatatable() {
             </Button>
           </div>
         </div>
+        {isFileAcceptModalOpen && selectedDetails && (
+          <FileAcceptModal
+            isOpen={isFileAcceptModalOpen}
+            onClose={() => setIsFileAcceptModalOpen(false)}
+            applicationId={selectedDetails}
+            onAccept={handleAcceptFile}
+            type={type}
+          />
+        )}
       </div>
     </div>
   )

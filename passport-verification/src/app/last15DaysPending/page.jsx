@@ -13,7 +13,7 @@ export default function allFiles() {
         <main className="flex-1 overflow-y-auto p-6">
           <CardContent>
             <Card>
-              <DataTable status={0} />
+              <DataTable heading='Last 15 Days Pending' status={0} />
             </Card>
           </CardContent>
         </main>

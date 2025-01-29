@@ -75,13 +75,26 @@ const LoginForm = () => {
 
       if (response?.status == 0) {
         const type = Cookies.load('type');
-        if(type == 10){
+        if(type == 10)
+        {
           router.push("/dashboard")
-        }else if(type == 40) {
+        }
+        else if(type == 40) 
+        {
           router.push("/dashboard-eo")
-        }else if(type == 30) {
+        }
+        else if(type == 30)
+        {
           router.push("/dashboard-oc")
         }
+        else if(type == 20) 
+        {
+          router.push("/dashboard-sp")
+        }
+        else if(type == 50) 
+          {
+            router.push("/dashboard-se")
+          }
 
       } else {
         toast({
