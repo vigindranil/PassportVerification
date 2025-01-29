@@ -1,5 +1,6 @@
 import { saveDocumentUploadModel, getDocumentUploadDetailsModel, saveCaseAssignModel } from '../models/eoModel.js';
 import { saveTransactionHistory } from '../models/logModel.js'
+import logger from '../utils/logger.js';
 
 export const saveDocumentUpload = async (req, res) => {
   try {
@@ -10,10 +11,21 @@ export const saveDocumentUpload = async (req, res) => {
     const filepath = req?.file_name;
 
     if (!file) {
+
       return res.status(400).json({ status: 1, message: "No file uploaded" });
     }
 
     if (!ApplicationId || !DocumentRemarks || !DocumentTypeId || !EntryUserId) {
+      logger.debug(
+        JSON.stringify({
+            API: "saveDocumentUpload",
+            REQUEST: { ApplicationId, DocumentRemarks, DocumentTypeId, ipaddress, MacAddress, longitude, latitude, DeviceId },
+            RESPONSE: {
+                    status: 1,
+                    message: 'Invalid input data'
+            },
+        })
+    );
       return res.status(400).json({
         status: 1,
         message: 'Invalid input data',
@@ -60,6 +72,16 @@ export const getDocumentUploadDetails = async (req, res) => {
 
 
     if (!ApplicationId || !EntryUserId) {
+      logger.debug(
+        JSON.stringify({
+            API: "getDocumentUploadDetails",
+            REQUEST: { ApplicationId, EntryUserId },
+            RESPONSE: {
+                    status: 1,
+                    message: 'Invalid input data'
+            },
+        })
+    );
       return res.status(400).json({
         status: 1,
         message: 'Invalid input data',
@@ -75,19 +97,40 @@ export const getDocumentUploadDetails = async (req, res) => {
     const result = await getDocumentUploadDetailsModel(ApplicationId, EntryUserId);
 
     if (result.length > 0) {
+      logger.debug(
+        JSON.stringify({
+            API: "getDocumentUploadDetails",
+            REQUEST: { ApplicationId, EntryUserId },
+            RESPONSE: {
+              status: 0,
+              message: 'Document upload details fetched successfully',
+              data: result
+            },
+        })
+    );
       return res.status(200).json({
         status: 0,
         message: 'Document upload details fetched successfully',
         data: result,
       });
     } else {
+      logger.debug(
+        JSON.stringify({
+            API: "getDocumentUploadDetails",
+            REQUEST: { ApplicationId, EntryUserId },
+            RESPONSE: {
+              status: 1,
+              message: 'No document upload details found'
+            },
+        })
+    );
       return res.status(404).json({
         status: 1,
         message: 'No document upload details found',
       });
     }
   } catch (error) {
-    console.error('Error fetching document upload details:', error);
+    logger.error('Error fetching document upload details:', error);
     return res.status(500).json({
       status: 1,
       message: 'An error occurred while fetching document upload details',
@@ -111,7 +154,9 @@ export const saveCaseAssign = async (req, res) => {
     const file = req.file;
     const filepath = req?.file_name;
 
-    if (!file) {
+    if (!file)
+      
+      {
       return res.status(400).json({ status: 1, message: "No file uploaded" });
     }
 
@@ -149,6 +194,22 @@ export const saveCaseAssign = async (req, res) => {
     console.log("errorCode",errorCode);
 
     if (errorCode == 0) {
+      logger.debug(
+        JSON.stringify({
+            API: "saveCaseAssignModel",
+            REQUEST: { applicationId,
+              citizentype,
+              DocTypeId ,
+              macAddress,
+              locationIp,
+              deviceId ,
+              entryUserId},
+            RESPONSE: {
+              status: 0,
+               message: 'Case assigned successfully' 
+            },
+        })
+    );
       return res.status(200).json({
         status: 0,
         message: 'Case assigned successfully',
@@ -160,13 +221,29 @@ export const saveCaseAssign = async (req, res) => {
         message: 'Logged in user does not have permission to add case',
       });
     } else {
+      logger.debug(
+        JSON.stringify({
+            API: "saveCaseAssignModel",
+            REQUEST: { applicationId,
+              citizentype,
+              DocTypeId ,
+              macAddress,
+              locationIp,
+              deviceId ,
+              entryUserId},
+            RESPONSE: {
+              status: 1,
+             message: 'An error occurred while assigning the case'
+            },
+        })
+    );
       return res.status(500).json({
         status: 1,
         message: 'An error occurred while assigning the case',
       });
     }
   } catch (error) {
-    console.error('Error assigning case:', error);
+    logger.error('Error assigning case:', error);
     return res.status(500).json({
       status: 1,
       message: 'An error occurred while assigning the case',
