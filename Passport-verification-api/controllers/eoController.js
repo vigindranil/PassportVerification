@@ -3,12 +3,17 @@ import { saveTransactionHistory } from '../models/logModel.js'
 
 export const saveDocumentUpload = async (req, res) => {
   try {
-    const { ApplicationId, DocumentPath, DocumentTypeId, ipaddress, MacAddress, longitude, latitude, DeviceId
+    const { ApplicationId, DocumentRemarks, DocumentTypeId, ipaddress, MacAddress, longitude, latitude, DeviceId
     } = req.body;
     const EntryUserId = req.user.UserID;
+    const file = req.file;
+    const filepath = req?.file_name;
 
+    if (!file) {
+      return res.status(400).json({ status: 1, message: "No file uploaded" });
+    }
 
-    if (!ApplicationId || !DocumentPath || !DocumentTypeId || !EntryUserId) {
+    if (!ApplicationId || !DocumentRemarks || !DocumentTypeId || !EntryUserId) {
       return res.status(400).json({
         status: 1,
         message: 'Invalid input data',
@@ -17,7 +22,7 @@ export const saveDocumentUpload = async (req, res) => {
 
     const OperationName = "saveDocumentUpload";
     const json = "{}"
-    const result = await saveDocumentUploadModel(ApplicationId, DocumentPath, DocumentTypeId, DeviceId, MacAddress, longitude, latitude, ipaddress, EntryUserId);
+    const result = await saveDocumentUploadModel(ApplicationId, filepath,DocumentRemarks , DocumentTypeId, DeviceId, MacAddress, longitude, latitude, ipaddress, EntryUserId);
     // await saveTransactionHistory(ipaddress, MacAddress, longitude, latitude, ApplicationId, OperationName, json, EntryUserId)
     switch (result) {
       case 0:

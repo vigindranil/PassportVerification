@@ -91,3 +91,29 @@ export async function showDesignationModel() {
       throw new Error('Database error: ' + error.message);
     }
   }
+
+  export async function showDocumentDetailsbyCitizenTypeModel(citizenType) {
+    try {
+
+      const [rows] = await pool.query(`CALL sp_showDocumentDetailsbyCitizenType(?)`, [citizenType]);
+  
+ 
+      return rows[0]; 
+    } catch (error) {
+      console.error('Error fetching document subtypes:', error.message);
+      throw new Error('Database error: ' + error.message);
+    }
+  }
+
+  export async function showSubDocumentbyCitizenTypeModel(citizensubType) {
+    try {
+      
+      const [rows] = await pool.query(`CALL sp_showSubDocumentbyCitizenType(?, ?)`, [citizensubType, citizensubType]);
+  
+ 
+      return rows[0]; 
+    } catch (error) {
+      console.error('Error fetching document subtypes:', error.message);
+      throw new Error('Database error: ' + error.message);
+    }
+  }
