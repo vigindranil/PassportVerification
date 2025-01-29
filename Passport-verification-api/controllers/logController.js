@@ -17,6 +17,16 @@ export const getLogDetails = async (req, res) => {
   
         // Check if the requested file exists
         if (!fs.existsSync(filePath)) {
+          logger.debug(
+            JSON.stringify({
+                API: "getLogDetails",
+                REQUEST: { file},
+                RESPONSE: {
+                  status: 0,
+                   message: 'Case assigned successfully' 
+                },
+            })
+        );
           return res.status(404).send({ error: `Log file "${file}" not found` });
         }
   
