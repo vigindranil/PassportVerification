@@ -1,4 +1,4 @@
-import { getPoliceStationsByDistrictModel } from '../models/masterModels.js';
+import { getPoliceStationsByDistrictModel, showDocumentDetailsbyCitizenTypeModel, showSubDocumentbyCitizenTypeModel } from '../models/masterModels.js';
 import { showDistrictModel } from '../models/masterModels.js';
 import {showDesignationModel} from '../models/masterModels.js';
 // import {saveTransactionHistory} from '../models/logModel.js';
@@ -330,6 +330,64 @@ export const showDesignation = async (req, res) => {
         return res.status(404).json({
           status: 1,
           message: 'No document types found',
+        });
+      }
+    } catch (error) {
+      console.error('Error in getDocumentTypeListController:', error.message);
+      return res.status(500).json({
+        status: 1,
+        message: 'An error occurred while fetching the document type list',
+        error: error.message,
+      });
+    }
+  };
+
+  export const showDocumentDetailsbyCitizenType = async (req, res) => {
+    try {
+    
+      const { citizenType} = req.body;
+      const data = await showDocumentDetailsbyCitizenTypeModel(citizenType);
+      
+      if (data?.length > 0) {
+        return res.status(200).json({
+          status: 0,
+          message: 'Document type list retrieved successfully',
+          data: data,
+        });
+      } else {
+        return res.status(200).json({
+          status: 1,
+          message: 'No document types found',
+          data: []
+        });
+      }
+    } catch (error) {
+      console.error('Error in getDocumentTypeListController:', error.message);
+      return res.status(500).json({
+        status: 1,
+        message: 'An error occurred while fetching the document type list',
+        error: error.message,
+      });
+    }
+  };
+
+  export const showSubDocumentbyCitizenType = async (req, res) => {
+    try {
+    
+      const { citizensubType } = req.body;
+      const data = await showSubDocumentbyCitizenTypeModel(citizensubType);
+      
+      if (data?.length > 0) {
+        return res.status(200).json({
+          status: 0,
+          message: 'Document sub-type list retrieved successfully',
+          data: data,
+        });
+      } else {
+        return res.status(200).json({
+          status: 1,
+          message: 'No document types found',
+          data: []
         });
       }
     } catch (error) {
