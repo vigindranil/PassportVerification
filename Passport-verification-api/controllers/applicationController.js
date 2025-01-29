@@ -12,6 +12,9 @@ export const getApplicationDetails = async (req, res) => {
             return res.status(400).json({
                 status: 1,
                 message: 'Invalid input data',
+                documents: [],
+                status: [],
+                file_path
             });
         }
 
@@ -40,7 +43,6 @@ export const getApplicationDetails = async (req, res) => {
             },
         });
     } catch (error) {
-        console.error('Error retrieving application details:', error);
         return res.status(500).json({
             status: 1,
             message: 'An error occurred while retrieving the application details',
