@@ -4,7 +4,7 @@ import logger from '../utils/logger.js';
 
 export const saveDocumentUpload = async (req, res) => {
   try {
-    const { ApplicationId, DocumentRemarks, DocumentTypeId, ipaddress, MacAddress, longitude, latitude, DeviceId
+    const { ApplicationId, DocumentRemarks, DocumentTypeId, IdNumber, ipaddress, MacAddress, longitude, latitude, DeviceId
     } = req.body;
     const EntryUserId = req.user.UserID;
     const file = req.file;
@@ -18,14 +18,14 @@ export const saveDocumentUpload = async (req, res) => {
     if (!ApplicationId || !DocumentRemarks || !DocumentTypeId || !EntryUserId) {
       logger.debug(
         JSON.stringify({
-            API: "saveDocumentUpload",
-            REQUEST: { ApplicationId, DocumentRemarks, DocumentTypeId, ipaddress, MacAddress, longitude, latitude, DeviceId },
-            RESPONSE: {
-                    status: 1,
-                    message: 'Invalid input data'
-            },
+          API: "saveDocumentUpload",
+          REQUEST: { ApplicationId,filepath, DocumentRemarks, DocumentTypeId, IdNumber, ipaddress, MacAddress, longitude, latitude, DeviceId, EntryUserId},
+          RESPONSE: {
+            status: 1,
+            message: 'Invalid input data'
+          },
         })
-    );
+      );
       return res.status(400).json({
         status: 1,
         message: 'Invalid input data',
@@ -34,26 +34,61 @@ export const saveDocumentUpload = async (req, res) => {
 
     const OperationName = "saveDocumentUpload";
     const json = "{}"
-    const result = await saveDocumentUploadModel(ApplicationId, filepath,DocumentRemarks , DocumentTypeId, DeviceId, MacAddress, longitude, latitude, ipaddress, EntryUserId);
+    const result = await saveDocumentUploadModel(ApplicationId, filepath, DocumentRemarks, DocumentTypeId,IdNumber, DeviceId, MacAddress, longitude, latitude, ipaddress, EntryUserId);
     // await saveTransactionHistory(ipaddress, MacAddress, longitude, latitude, 0, OperationName, json, EntryUserId)
-    switch (result) {
-      case 0:
-        return res.status(200).json({
-          status: 0,
-          message: 'Document uploaded successfully',
+    if (result == 0) {
+      logger.debug(
+        JSON.stringify({
+          API: "saveDocumentUpload",
+          REQUEST: { ApplicationId, filepath, DocumentRemarks, DocumentTypeId, IdNumber, ipaddress, MacAddress, longitude, latitude, DeviceId, EntryUserId },
+          RESPONSE: {
+            status: 0,
+            message: 'Document uploaded successfully',
+          },
+        })
+      );
 
-        });
-      case 3:
-        return res.status(403).json({
-          status: 1,
-          message: 'User does not have permission to upload documents',
-        });
-      default:
-        return res.status(400).json({
-          status: 1,
-          message: 'Failed to upload document',
-        });
+      return res.status(200).json({
+        status: 0,
+        message: 'Document uploaded successfully',
+      });
     }
+    else if (result == 3) {
+
+      logger.debug(
+        JSON.stringify({
+          API: "saveDocumentUpload",
+          REQUEST: { ApplicationId, DocumentRemarks,filepath,  DocumentTypeId, IdNumber, ipaddress, MacAddress, longitude, latitude, DeviceId, EntryUserId },
+          RESPONSE: {
+            status: 1,
+            message: 'Failed to upload document',
+          },
+        })
+      );
+
+      return res.status(403).json({
+        status: 1,
+        message: 'User does not have permission to upload documents',
+      });
+    } else {
+
+      logger.debug(
+        JSON.stringify({
+          API: "saveDocumentUpload",
+          REQUEST: { ApplicationId, DocumentRemarks, filepath, DocumentTypeId, IdNumber, ipaddress, MacAddress, longitude, latitude, DeviceId, EntryUserId },
+          RESPONSE: {
+            status: 1,
+            message: 'Failed to upload document',
+          },
+        })
+      );
+
+      return res.status(400).json({
+        status: 1,
+        message: 'Failed to upload document',
+      });
+    }
+
   } catch (error) {
     console.error('Error saving document upload:', error);
     return res.status(500).json({
@@ -74,14 +109,14 @@ export const getDocumentUploadDetails = async (req, res) => {
     if (!ApplicationId || !EntryUserId) {
       logger.debug(
         JSON.stringify({
-            API: "getDocumentUploadDetails",
-            REQUEST: { ApplicationId, EntryUserId },
-            RESPONSE: {
-                    status: 1,
-                    message: 'Invalid input data'
-            },
+          API: "getDocumentUploadDetails",
+          REQUEST: { ApplicationId, EntryUserId },
+          RESPONSE: {
+            status: 1,
+            message: 'Invalid input data'
+          },
         })
-    );
+      );
       return res.status(400).json({
         status: 1,
         message: 'Invalid input data',
@@ -99,15 +134,15 @@ export const getDocumentUploadDetails = async (req, res) => {
     if (result.length > 0) {
       logger.debug(
         JSON.stringify({
-            API: "getDocumentUploadDetails",
-            REQUEST: { ApplicationId, EntryUserId },
-            RESPONSE: {
-              status: 0,
-              message: 'Document upload details fetched successfully',
-              data: result
-            },
+          API: "getDocumentUploadDetails",
+          REQUEST: { ApplicationId, EntryUserId },
+          RESPONSE: {
+            status: 0,
+            message: 'Document upload details fetched successfully',
+            data: result
+          },
         })
-    );
+      );
       return res.status(200).json({
         status: 0,
         message: 'Document upload details fetched successfully',
@@ -116,14 +151,14 @@ export const getDocumentUploadDetails = async (req, res) => {
     } else {
       logger.debug(
         JSON.stringify({
-            API: "getDocumentUploadDetails",
-            REQUEST: { ApplicationId, EntryUserId },
-            RESPONSE: {
-              status: 1,
-              message: 'No document upload details found'
-            },
+          API: "getDocumentUploadDetails",
+          REQUEST: { ApplicationId, EntryUserId },
+          RESPONSE: {
+            status: 1,
+            message: 'No document upload details found'
+          },
         })
-    );
+      );
       return res.status(404).json({
         status: 1,
         message: 'No document upload details found',
@@ -146,7 +181,7 @@ export const saveCaseAssign = async (req, res) => {
     const {
       applicationId,
       citizentype,
-      DocTypeId ,
+      DocTypeId,
       macAddress,
       locationIp,
       deviceId } = req.body;
@@ -154,16 +189,14 @@ export const saveCaseAssign = async (req, res) => {
     const file = req.file;
     const filepath = req?.file_name;
 
-    if (!file)
-      
-      {
+    if (!file) {
       return res.status(400).json({ status: 1, message: "No file uploaded" });
     }
 
     if (
       !applicationId ||
-      !citizentype 
-    
+      !citizentype
+
     ) {
       return res.status(400).json({
         status: 1,
@@ -177,13 +210,13 @@ export const saveCaseAssign = async (req, res) => {
     const json = "{}"
 
     console.log("entryUserId", entryUserId);
-    
+
     //  const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, 0, OperationName, json, entryUserId)
 
     const errorCode = await saveCaseAssignModel(
       applicationId,
       citizentype,
-      DocTypeId ,
+      DocTypeId,
       filepath,
       macAddress,
       locationIp,
@@ -191,29 +224,31 @@ export const saveCaseAssign = async (req, res) => {
       entryUserId
     );
 
-    console.log("errorCode",errorCode);
+    console.log("errorCode", errorCode);
 
     if (errorCode == 0) {
       logger.debug(
         JSON.stringify({
-            API: "saveCaseAssignModel",
-            REQUEST: { applicationId,
-              citizentype,
-              DocTypeId ,
-              macAddress,
-              locationIp,
-              deviceId ,
-              entryUserId},
-            RESPONSE: {
-              status: 0,
-               message: 'Case assigned successfully' 
-            },
+          API: "saveCaseAssignModel",
+          REQUEST: {
+            applicationId,
+            citizentype,
+            DocTypeId,
+            macAddress,
+            locationIp,
+            deviceId,
+            entryUserId
+          },
+          RESPONSE: {
+            status: 0,
+            message: 'Case assigned successfully'
+          },
         })
-    );
+      );
       return res.status(200).json({
         status: 0,
         message: 'Case assigned successfully',
-       
+
       });
     } else if (errorCode === 3) {
       return res.status(400).json({
@@ -223,20 +258,22 @@ export const saveCaseAssign = async (req, res) => {
     } else {
       logger.debug(
         JSON.stringify({
-            API: "saveCaseAssignModel",
-            REQUEST: { applicationId,
-              citizentype,
-              DocTypeId ,
-              macAddress,
-              locationIp,
-              deviceId ,
-              entryUserId},
-            RESPONSE: {
-              status: 1,
-             message: 'An error occurred while assigning the case'
-            },
+          API: "saveCaseAssignModel",
+          REQUEST: {
+            applicationId,
+            citizentype,
+            DocTypeId,
+            macAddress,
+            locationIp,
+            deviceId,
+            entryUserId
+          },
+          RESPONSE: {
+            status: 1,
+            message: 'An error occurred while assigning the case'
+          },
         })
-    );
+      );
       return res.status(500).json({
         status: 1,
         message: 'An error occurred while assigning the case',
