@@ -178,7 +178,7 @@ const LoginForm = () => {
     <div className="space-y-4 w-full max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg border border-white/20">
 
       {!showOtp && (
-        <><h2 className="text-2xl font-bold text-center mb-6 text-slate-600">Login</h2>
+        <><h2 className="text-2xl font-bold text-center mb-6 text-slate-600">Welcome Back</h2>
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="username" className="text-slate-500">Username</Label>

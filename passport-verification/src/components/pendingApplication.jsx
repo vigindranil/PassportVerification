@@ -172,7 +172,7 @@ export default function PendingApplicationDatatable({status, heading}) {
                 <TableRow key={index}>
                   <TableCell>{row.FileNumber}</TableCell>
                   <TableCell>{row.ApplicantName}</TableCell>
-                  <TableCell>{row.Ps_Name}</TableCell>
+                  <TableCell>{row.PsName}</TableCell>
                   <TableCell>{row.PhoneNo}</TableCell>
                   <TableCell>{row.DateOfBirth ? moment(row.DateOfBirth).format("DD/MM/YYYY") : "N/A"}</TableCell>
                   <TableCell>

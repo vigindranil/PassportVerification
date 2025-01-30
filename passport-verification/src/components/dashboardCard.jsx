@@ -155,7 +155,7 @@ const DashboardCards = () => {
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
                 color="purple"
-                link="/verificationCompletedEO"
+                link="/completed-oc"
             />}
 
 

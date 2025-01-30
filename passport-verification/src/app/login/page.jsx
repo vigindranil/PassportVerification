@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import LoginForm from "@/components/login-form"
-import BackgroundImage from "@/assets/img.jpg"
+import BackgroundImage from "@/assets/newBcak.webp"
 import Logo from "@/assets/wbplogo.png"
 
 export default function LoginPage() {
