@@ -103,6 +103,7 @@ export default function PendingApplicationDatatable({ status }) {
       })
     }
   }catch (e) {
+    console.log('Error:', e.message);
     toast({
       variant: "destructive",
       title: "Failed to accept file!",
