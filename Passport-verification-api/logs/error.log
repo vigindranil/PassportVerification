@@ -19,3 +19,5 @@
 2025-01-30 14:07:31 | ERROR | Error fetching : Database error: PROCEDURE db_wb_passport_verify.sp_getStatusbyEO does not exist
 2025-01-30 14:07:31 | ERROR | Error fetching : Database error: PROCEDURE db_wb_passport_verify.sp_getStatusbyEO does not exist
 >>>>>>> f0e4fe9990cef93384f2ca9d6ecdda537a77feab
+2025-01-30 19:49:59 | ERROR | Error assigning case: Database error: DocTypeId is not defined
+2025-01-30 19:50:34 | ERROR | Error assigning case: Database error: DocTypeId is not defined
