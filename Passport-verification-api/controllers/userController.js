@@ -400,7 +400,7 @@ export const showuserDetails = async (req, res) => {
             logger.debug(
                 JSON.stringify({
                     API: "showuserDetails",
-                    REQUEST: {EntryuserId },
+                    REQUEST: {EntryuserId: req.user.UserID },
                     RESPONSE: {
                         status: 0,
                         message: "Data fetched successfully",
@@ -417,7 +417,7 @@ export const showuserDetails = async (req, res) => {
             logger.debug(
                 JSON.stringify({
                     API: "showuserDetails",
-                    REQUEST: {EntryuserId },
+                    REQUEST: {EntryuserId: req.user.UserID },
                     RESPONSE: {
                         status: 1,
                         message: "No data found",
@@ -523,7 +523,7 @@ export const getApplicationCountsv1 = async (req, res) => {
             logger.debug(
                 JSON.stringify({
                     API: "getApplicationCountsv1",
-                    REQUEST: {EntryuserId  },
+                    REQUEST: {EntryuserId: req.user.UserID },
                     RESPONSE: {
                         status: 0,
                         message: "Data fetched successfully",
@@ -540,7 +540,7 @@ export const getApplicationCountsv1 = async (req, res) => {
             logger.debug(
                 JSON.stringify({
                     API: "getApplicationCountsv1",
-                    REQUEST: {EntryuserId  },
+                    REQUEST: {EntryuserId : req.user.UserID },
                     RESPONSE: {
                         status: 1,
                         message: "No data found",
@@ -583,7 +583,7 @@ export const logout = async (req, res) => {
             logger.debug(
                 JSON.stringify({
                     API: "logout",
-                    REQUEST: {EntryuserId  },
+                    REQUEST: {EntryuserId : req.user.UserID },
                     RESPONSE: {
                         status: 0,
                         message: "Logout successfully"
@@ -598,7 +598,7 @@ export const logout = async (req, res) => {
             logger.debug(
                 JSON.stringify({
                     API: "logout",
-                    REQUEST: {EntryuserId  },
+                    REQUEST: {EntryuserId : req.user.UserID },
                     RESPONSE: {
                         status: 1,
                         message: "Failed to logout",
