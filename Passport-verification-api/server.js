@@ -42,7 +42,7 @@ app.use(
 const tempStorage = multer.memoryStorage();
 const excelupload = multer({
   tempStorage,
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 20 * 1024 * 1024 },
 });
 
 // for img / pdf and other docs upload
@@ -65,7 +65,7 @@ const storage = multer.diskStorage({
 // Initialize multer
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 2 * 1024 * 1024 }, // 2 MB file size limit
+  limits: { fileSize: 20 * 1024 * 1024 }, // 2 MB file size limit
   fileFilter: (req, file, cb) => {
     const fileTypes = /jpeg|jpg|png|gif|pdf/;
     const extname = fileTypes.test(
