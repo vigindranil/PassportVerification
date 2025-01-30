@@ -75,11 +75,26 @@ const LoginForm = () => {
 
       if (response?.status == 0) {
         const type = Cookies.load('type');
-        if(type == 10){
+        if(type == 10)
+        {
           router.push("/dashboard")
-        }else if(type == 40) {
+        }
+        else if(type == 40) 
+        {
           router.push("/dashboard-eo")
         }
+        else if(type == 30)
+        {
+          router.push("/dashboard-oc")
+        }
+        else if(type == 20) 
+        {
+          router.push("/dashboard-sp")
+        }
+        else if(type == 50) 
+          {
+            router.push("/dashboard-se")
+          }
 
       } else {
         toast({
@@ -163,7 +178,7 @@ const LoginForm = () => {
     <div className="space-y-4 w-full max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg border border-white/20">
 
       {!showOtp && (
-        <><h2 className="text-2xl font-bold text-center mb-6 text-slate-600">Login</h2>
+        <><h2 className="text-2xl font-bold text-center mb-6 text-slate-600">Welcome Back</h2>
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="username" className="text-slate-500">Username</Label>

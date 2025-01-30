@@ -10,6 +10,8 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { Badge } from "./ui/badge";
+import { Dialog } from "@radix-ui/react-dialog";
+import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
 
 export default function DataTable({ data }) {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -17,6 +19,9 @@ export default function DataTable({ data }) {
   const [uploadFile, setUploadFile] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isOpen, setIsOpen] = useState(false)
+  const openDialog = () => setIsOpen(true)
+  const closeDialog = () => setIsOpen(false)
   const itemsPerPage = 10;
 
   const handleAcceptFile = (fileNumber) => {
@@ -103,20 +108,41 @@ export default function DataTable({ data }) {
                   <TableCell>{row['Date of Birth']}</TableCell>
                   <TableCell>
                     <div className="flex space-x-1">
-                      <Button size="sm" variant="default" className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1">Details</Button>
-                      {acceptedFiles?.includes(row['File Number']) && (
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          className="bg-lime-600 hover:bg-lime-700 text-white text-xs px-1 py-1"
-                          onClick={() => setUploadFile({
-                            name: row['Applicant Name'],
-                            fileNumber: row['File Number']
-                          })}
-                        >
-                          Upload Document
-                        </Button>
-                      )}
+                      <Button size="sm" variant="default" className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1" onClick={openDialog}>Details</Button>
+                      <Dialog open={isOpen} onOpenChange={closeDialog}>
+                        <DialogContent className="sm:max-w-[80%]">
+                          <DialogHeader>
+                            <DialogTitle>File Details</DialogTitle>
+                            <DialogDescription>Information</DialogDescription>
+                          </DialogHeader>
+                          <div className="">
+                            <div className="grid grid-cols-2">
+                              <div>Applicant Name: {row['Applicant Name']}</div>
+                              <div>DPHq ID/Name: {row['DPHq ID/Name']}</div>
+                              <div>Date of Birth: {row['Date of Birth']}</div>
+                              <div>E-mail ID: {row['E-mail ID']}</div>
+                              <div>Father's Name: {row["Father's Name"]}</div>
+                              <div>File Number: {row['File Number']}</div>
+                              <div>Gender: {row['Gender']}</div>
+                              <div>PV Initiation Date: {row['PV Initiation Date']}</div>
+                              <div>PV Request ID: {row['PV Request ID']}</div>
+                            </div>
+                            <div className="grid grid-cols-2">
+                              <div>PV Request Status: {row['PV Request Status']}</div>
+                              <div>PV Sequence No.: {row['PV Sequence No.']}</div>
+                              <div>PV Status Date: {row['PV Status Date']}</div>
+                              <div>Phone No.: {row['Phone No.']}</div>
+                              <div>Place of Birth: {row['Place of Birth']}</div>
+                              <div>Police Station: {row['Police Station']}</div>
+                              <div>Spouse Name: {row['Spouse Name']}</div>
+                              <div>Sr. No.: {row['Sr. No.']}</div>
+                              <div>PV Sequence No. :{row['PV Sequence No.'] && row['PV Sequence No.']}</div>
+                              <div>Verification Address: {row['Verification Address']}</div>
+                              <div>Permanent Address: {row['Permanent Address']}</div>
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </TableCell>
                 </TableRow>

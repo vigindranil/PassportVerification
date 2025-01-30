@@ -12,14 +12,14 @@ export function FileAcceptModal({ isOpen, onClose, fileData, onAccept }) {
 
   const handleAccept = () => {
     if (file && citizenType) {
-      onAccept(fileData.fileNumber, citizenType, file);
+      onAccept(fileData.FileNumber, citizenType, file);
       onClose()
     }
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:min-w-[750px]">
         <DialogHeader>
           <DialogTitle>File Accept</DialogTitle>
         </DialogHeader>
@@ -27,11 +27,11 @@ export function FileAcceptModal({ isOpen, onClose, fileData, onAccept }) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Name</Label>
-              <div className="mt-1">{fileData.applicantName}</div>
+              <div className="mt-1">{fileData?.ApplicantName}</div>
             </div>
             <div>
               <Label>File no</Label>
-              <div className="mt-1">{fileData.fileNumber}</div>
+              <div className="mt-1">{fileData?.FileNumber}</div>
             </div>
           </div>
           <div className="space-y-2">

@@ -2,7 +2,7 @@ import React from 'react'
 import Navbar from '@/components/navbar';
 import Sidebar from '@/components/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import DataTable from '@/components/pendingVerification-eo';
+import DataTable from '@/components/pendingApplication';
 
 export default function allFiles() {
   return (
@@ -13,7 +13,7 @@ export default function allFiles() {
         <main className="flex-1 overflow-y-auto p-6">
           <CardContent>
             <Card>
-              <DataTable />
+              <DataTable status={5}/>
             </Card>
           </CardContent>
         </main>
