@@ -40,9 +40,8 @@ export const sendOtp = async (req, res) => {
         const rows = await getUserLoginModel(username, btoa(password));
 
         // const transactionId = await generateOtpAadhaar(atob(rows["AADHAARNo"]), rows["UserID"]);
-        // const transactionId = "---"
+        const transactionId = "---"
         // console.log("transactionId", transactionId);
-console.log("rows",rows);
 
 
         // if (!transactionId) {
