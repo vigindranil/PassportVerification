@@ -1,3 +1,4 @@
 2025-01-30 12:59:08 | ERROR | Error fetching : EntryuserId is not defined
 2025-01-30 12:59:25 | ERROR | Error fetching : EntryuserId is not defined
 2025-01-30 13:19:08 | ERROR | Failed to fetch log files: Unexpected token 'E', "Error fetc"... is not valid JSON
+2025-01-30 14:09:19 | ERROR | Error fetching : Database error: PROCEDURE db_wb_passport_verify.sp_getStatusbyEO does not exist
