@@ -35,3 +35,6 @@
 2025-01-30 11:10:09 | DEBUG | {"API":"getApplicationStatus","REQUEST":{"status_id":"10","periord_id":"7"},"RESPONSE":{"status":1,"message":"No data found"}}
 2025-01-30 11:10:36 | DEBUG | {"API":"getDocumentUploadDetails","REQUEST":{"ApplicationId":"68","EntryUserId":1},"RESPONSE":{"status":1,"message":"No document upload details found"}}
 2025-01-30 11:10:52 | ERROR | Error retrieving application details: saveTransaction is not defined
+2025-01-30 11:37:32 | ERROR | Error fetching : EntryuserId is not defined
+2025-01-30 11:37:32 | ERROR | Error fetching : EntryuserId is not defined
+2025-01-30 11:37:34 | ERROR | Error: EntryuserId is not defined

@@ -13,7 +13,7 @@ const DashboardCards = () => {
 
     const fetchDashboard = async () => {
         const response = await getDistrictNodalDashBoard();
-        setData(response.data);
+        setData(response?.data);
     }
 
     useEffect(() => {
@@ -28,7 +28,7 @@ const DashboardCards = () => {
                 value={data?.TotalPendingApplications || 0}
                 icon={CircleDashed}
                 //description="10% increase from last month"
-                color="lime"
+                color="purple"
                 link="/totalPending"
             />}
             {login_type == 10 && <DashboardCard
@@ -46,7 +46,7 @@ const DashboardCards = () => {
                 value={data?.EOAccepectButNotStartedVerify || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
-                color="purple"
+                color="green"
                 link="/eoAcceptedFile"
             />}
             {login_type == 10 && <DashboardCard
@@ -54,7 +54,7 @@ const DashboardCards = () => {
                 value={data?.EOStartedVerify || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="yellow"
+                color="blue"
                 link="/pendingVerificatonEO"
             />}
             {login_type == 10 && <DashboardCard
@@ -79,7 +79,7 @@ const DashboardCards = () => {
                 value={data?.OCComplete || 0}
                 icon={ArrowRightToLine}
                 //description="15% increase from yesterday"
-                color="purple"
+                color="blue"
                 link="/verificationCompletedEO"
             />}
             {login_type == 10 && <DashboardCard
