@@ -37,11 +37,12 @@ export const sendOtp = async (req, res) => {
             });
         }
 
-        const [rows] = await getUserLoginModel(username, btoa(password));
+        const rows = await getUserLoginModel(username, btoa(password));
 
         // const transactionId = await generateOtpAadhaar(atob(rows["AADHAARNo"]), rows["UserID"]);
-        const transactionId = "---"
-        console.log("transactionId", transactionId);
+        // const transactionId = "---"
+        // console.log("transactionId", transactionId);
+console.log("rows",rows);
 
 
         // if (!transactionId) {
@@ -50,33 +51,41 @@ export const sendOtp = async (req, res) => {
         //         message: "Failed to send OTP",
         //     });
         // }
+        if (!rows || rows.length == 0) {
+            return res.status(400).json({
+                status: 1,
+                message: "Invalid username or password",
+            });
+        }
 
-        if (rows?.length !== 0) {
+        if (rows !== undefined && rows[0]?.length !== 0) {
+            console.log("rows", rows);
+            console.log("UserID", rows[0]["UserID"]);
+            
             const token = jwt.sign(
                 {
-                    UserID: rows["UserID"],
-                    DistrictID: rows["DistrictID"],
-                    DistrictName: rows["DistrictName"],
-                    PoliceStationID: rows["PoliceStationID"],
-                    PoliceStationName: rows["PoliceStationName"],
-                    UserTypeID: rows["UserTypeID"],
-                    UserTypeName: rows["UserTypeName"],
-                    Username: rows["Username"],
-                    UserFullName: rows["UserFullName"],
+                    UserID: rows[0]["UserID"],
+                    DistrictID: rows[0]["DistrictID"],
+                    DistrictName: rows[0]["DistrictName"],
+                    PoliceStationID: rows[0]["PoliceStationID"],
+                    PoliceStationName: rows[0]["PoliceStationName"],
+                    UserTypeID: rows[0]["UserTypeID"],
+                    UserTypeName: rows[0]["UserTypeName"],
+                    Username: rows[0]["Username"],
+                    UserFullName: rows[0]["UserFullName"],
                     TransactionId: transactionId,
                 },
                 JWT_SECRET,
                 { expiresIn: "24h" }
             );
-            console.log("rowsUserID", rows["UserID"]);
 
-            const [result] = await updateAuthToken(rows["UserID"], token, transactionId);
+            const [result] = await updateAuthToken(rows[0]["UserID"], token, transactionId);
 
             res.cookie('data', token);
-            res.cookie('type', rows["UserTypeID"]);
-            res.cookie('name', rows["UserFullName"]);
-            res.cookie('district', rows["DistrictName"]);
-            res.cookie('ps', rows["PoliceStationName"]);
+            res.cookie('type', rows[0]["UserTypeID"]);
+            res.cookie('name', rows[0]["UserFullName"]);
+            res.cookie('district', rows[0]["DistrictName"]);
+            res.cookie('ps', rows[0]["PoliceStationName"]);
 
             console.log("token", token);
 
@@ -87,10 +96,10 @@ export const sendOtp = async (req, res) => {
                     RESPONSE: {
                         status: 0,
                         message: "OTP sent successfully",
-                        type: rows["UserTypeID"],
-                        name: rows["UserFullName"],
-                        district: rows["DistrictName"],
-                        ps: rows["PoliceStationName"],
+                        type: rows[0]["UserTypeID"],
+                        name: rows[0]["UserFullName"],
+                        district: rows[0]["DistrictName"],
+                        ps: rows[0]["PoliceStationName"],
                         token: token,
                     },
                 })
@@ -99,10 +108,10 @@ export const sendOtp = async (req, res) => {
             res.status(200).json({
                 status: 0,
                 message: "OTP sent successfully",
-                type: rows["UserTypeID"],
-                name: rows["UserFullName"],
-                district: rows["DistrictName"],
-                ps: rows["PoliceStationName"],
+                type: rows[0]["UserTypeID"],
+                name: rows[0]["UserFullName"],
+                district: rows[0]["DistrictName"],
+                ps: rows[0]["PoliceStationName"],
                 token: token,
             });
 
@@ -150,6 +159,12 @@ export const verifyOtp = async (req, res) => {
 
 
 
+        
+        // const otpStatus = await verifyOtpAadhaar(otp, req.user.UserID, req.user.TransactionId);
+        const otpStatus = true;
+        console.log('otpStatus', otpStatus);
+        console.log('otpStatus', otpStatus);
+
         if (otp == '999999') {
             logger.debug(
                 JSON.stringify({
@@ -166,27 +181,24 @@ export const verifyOtp = async (req, res) => {
                 message: "OTP has been verified successfully",
             });
         }
-        // const otpStatus = await verifyOtpAadhaar(otp, req.user.UserID, req.user.TransactionId);
-        const otpStatus = true;
-        console.log('otpStatus', otpStatus);
-        console.log('otpStatus', otpStatus);
-
-        if (otpStatus) {
-            logger.debug(
-                JSON.stringify({
-                    API: "verifyOtp",
-                    REQUEST: { otp },
-                    RESPONSE: {
-                        status: 0,
-                        message: "OTP has been verified successfully",
-                    },
-                })
-            );
-            return res.status(200).json({
-                status: 0,
-                message: "OTP has been verified successfully",
-            });
-        } else {
+        // else 
+        // if (otpStatus) {
+        //     logger.debug(
+        //         JSON.stringify({
+        //             API: "verifyOtp",
+        //             REQUEST: { otp },
+        //             RESPONSE: {
+        //                 status: 0,
+        //                 message: "OTP has been verified successfully",
+        //             },
+        //         })
+        //     );
+        //     return res.status(200).json({
+        //         status: 0,
+        //         message: "OTP has been verified successfully",
+        //     });
+        // } 
+        else {
             logger.debug(
                 JSON.stringify({
                     API: "verifyOtp",
