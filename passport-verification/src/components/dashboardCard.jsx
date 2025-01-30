@@ -70,7 +70,7 @@ const DashboardCards = () => {
                 value={data?.OCPending || 0}
                 icon={ArrowRightToLine}
                 //description="Steady growth over the past quarter"
-                color="green"
+                color="yellow"
                 link="/pendingInOC"
             />}
             {login_type == 10 && <DashboardCard

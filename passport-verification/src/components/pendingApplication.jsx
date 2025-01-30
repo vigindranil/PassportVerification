@@ -110,7 +110,7 @@ export default function PendingApplicationDatatable({status, heading}) {
                     <span className="font-bold text-md">Applicant Name:</span> {selectedDetails.ApplicantName}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Police Station:</span> {selectedDetails.Ps_Name}
+                    <span className="font-bold text-md">Police Station:</span> {selectedDetails.PsName}
                   </li>
                   <li className="text-sm">
                     <span className="font-bold text-md">Phone No:</span> {selectedDetails.PhoneNo}
