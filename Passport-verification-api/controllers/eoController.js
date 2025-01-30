@@ -181,7 +181,7 @@ export const saveCaseAssign = async (req, res) => {
     const {
       applicationId,
       citizentype,
-      DocTypeId,
+      jsonTEXT,
       macAddress,
       locationIp,
       deviceId } = req.body;
@@ -216,7 +216,7 @@ export const saveCaseAssign = async (req, res) => {
     const errorCode = await saveCaseAssignModel(
       applicationId,
       citizentype,
-      DocTypeId,
+      jsonTEXT,
       filepath,
       macAddress,
       locationIp,
@@ -233,7 +233,7 @@ export const saveCaseAssign = async (req, res) => {
           REQUEST: {
             applicationId,
             citizentype,
-            DocTypeId,
+            jsonTEXT,
             macAddress,
             locationIp,
             deviceId,
@@ -262,7 +262,7 @@ export const saveCaseAssign = async (req, res) => {
           REQUEST: {
             applicationId,
             citizentype,
-            DocTypeId,
+            jsonTEXT,
             macAddress,
             locationIp,
             deviceId,

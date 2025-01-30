@@ -3,22 +3,10 @@ import pool from '../db.js';
 
 export async function saveDocumentUploadModel(ApplicationId, DocumentPath, DocumentRemarks ,DocumentTypeId,IdNumber , DeviceId, MacAddress, longitude, latitude, locationIp, EntryuserId) {
   try {
-
-    console.log("ApplicationId", ApplicationId)
-console.log("DocumentPath", DocumentPath)
-console.log("DocumentRemarks", DocumentRemarks) 
-console.log("DocumentTypeId", DocumentTypeId)
-console.log("IdNumber", IdNumber) 
-console.log("DeviceId", DeviceId)
-console.log("MacAddress", MacAddress)
-console.log("longitude", longitude)
-console.log("latitude", latitude)
-console.log("locationIp", locationIp)
-console.log("EntryuserId", EntryuserId)
-    
+    const jsonTEXT = "{}";
     const [rows] = await pool.query(
-      'CALL sp_saveDocumentUpload(?, ?, ?,?, ?,?,?,?,?,?,?, @DocId ,@Errorcode);',
-      [ApplicationId, DocumentPath,DocumentRemarks , DocumentTypeId,IdNumber , DeviceId, MacAddress, longitude, latitude, locationIp, EntryuserId]
+      'CALL sp_saveDocumentUpload(?, ?, ?,?, ?, ?,?,?,?,?,?,?, @DocId ,@Errorcode);',
+      [ApplicationId, DocumentPath,DocumentRemarks , DocumentTypeId,IdNumber , DeviceId, MacAddress, longitude, latitude, locationIp,jsonTEXT,  EntryuserId]
     );
     const [result] = await pool.query('SELECT @Errorcode AS Errorcode, @DocId As DocId;');
     console.log("save", result[0]);
@@ -47,7 +35,7 @@ export async function getDocumentUploadDetailsModel(ApplicationId, EntryUserId) 
 export async function saveCaseAssignModel(
   applicationId,
   citizentype,
-  DocTypeId,
+  jsonTEXT,
   filepath,
   macAddress,
   locationIp,
@@ -62,7 +50,7 @@ export async function saveCaseAssignModel(
       [
         applicationId,
         citizentype,
-        DocTypeId ,
+        jsonTEXT,
         filepath,
         macAddress,
         locationIp,
