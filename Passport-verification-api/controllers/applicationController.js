@@ -1,5 +1,6 @@
 import { getApplicationDetailsByApplicationId, getDocumentApplicationDetailsById, getApplicationStatusHistoryById , updateEnquiryStatusModel} from '../models/applicationModel.js';
  import { saveTransactionHistory } from '../models/logModel.js'
+import logger from '../utils/logger.js';
 
 
 export const getApplicationDetails = async (req, res) => {
@@ -9,6 +10,16 @@ export const getApplicationDetails = async (req, res) => {
         console.log("entryUserId", entryUserId);
         const filepath = process.env.FILE_UPLOAD_PATH;
         if (!applicationId || !entryUserId) {
+          logger.debug(
+            JSON.stringify({
+                API: "getApplicationDetails",
+                REQUEST: { applicationId, entryUserId },
+                RESPONSE: {
+                      status: 1,
+                      message: 'Invalid input data'
+                },
+            })
+        );
             return res.status(400).json({
                 status: 1,
                 message: 'Invalid input data',
@@ -30,8 +41,26 @@ export const getApplicationDetails = async (req, res) => {
      const Latitude = "test";
          const OperationName = "getApplicationDetails";
         const json = "{}"
-        // const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, applicationId, OperationName, json, entryUserId)
-
+        
+        const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, 0, OperationName, json, entryUserId)
+        console.log(saveTransaction);
+        
+        logger.debug(
+          JSON.stringify({
+              API: "getApplicationDetails",
+              REQUEST: { applicationId , entryUserId},
+              RESPONSE: {
+                status: 0,
+                message: 'Application details retrieved successfully',
+                data: {
+                    applicationDetails,
+                    documents: documents || [],
+                    status: status || [],
+                    filepath
+                }
+              },
+          })
+      );
         return res.status(200).json({
             status: 0,
             message: 'Application details retrieved successfully',
@@ -43,6 +72,7 @@ export const getApplicationDetails = async (req, res) => {
             },
         });
     } catch (error) {
+        logger.error('Error retrieving application details:', error);
         return res.status(500).json({
             status: 1,
             message: 'An error occurred while retrieving the application details',
@@ -77,11 +107,45 @@ export const updateEnquiryStatus = async (req, res) => {
     );
 
     if (result == 0) {
+      logger.debug(
+        JSON.stringify({
+            API: "updateEnquiryStatus",
+            REQUEST: {
+              ApplicationID,
+              locationIp,
+              macAddress,
+              deviceId,
+              StatusID,
+              StatusText,
+              Remarks,
+        },
+            RESPONSE: {
+                 status: 0,
+                message: "Status has been updated successfully"
+            },
+        })
+    );
       return res.status(200).json({
         status: 0,
         message: "Status has been updated successfully",
       });
     } else {
+      logger.debug(
+        JSON.stringify({
+            API: "updateEnquiryStatus",
+            REQUEST: {   ApplicationID,
+              locationIp,
+              macAddress,
+              deviceId,
+              StatusID,
+              StatusText,
+              Remarks },
+            RESPONSE: {
+                 status: 1,
+                message: 'Failed to update enquiry status'
+            },
+        })
+    );
       return res.status(400).json({
         status: 1,
         message: 'Failed to update enquiry status',
@@ -89,7 +153,7 @@ export const updateEnquiryStatus = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Error in updateEnquiryStatusController:", error.message);
+    logger.error("Error in updateEnquiryStatusController:", error.message);
     return res.status(500).json({
       status: 1,
       message: "An error occurred while updating the enquiry status.",

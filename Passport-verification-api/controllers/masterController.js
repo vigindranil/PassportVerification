@@ -1,11 +1,12 @@
 import { getPoliceStationsByDistrictModel, showDocumentDetailsbyCitizenTypeModel, showSubDocumentbyCitizenTypeModel } from '../models/masterModels.js';
 import { showDistrictModel } from '../models/masterModels.js';
 import {showDesignationModel} from '../models/masterModels.js';
-// import {saveTransactionHistory} from '../models/logModel.js';
+ import {saveTransactionHistory} from '../models/logModel.js';
 import {getDocumentsByCitizenTypeModel} from '../models/masterModels.js';
 import {getCitizenTypesModel} from '../models/masterModels.js';
 import {getDocumentSubTypesByIdModel} from '../models/masterModels.js';
 import {getDocumentTypeListModel} from '../models/masterModels.js';
+import logger from '../utils/logger.js';
 /**
  * @swagger
  * /getPoliceStationsByDistrict:
@@ -61,6 +62,16 @@ export const getPoliceStationsByDistrict = async (req, res) => {
     const { districtId } = req.body;
 
     if (!districtId || isNaN(districtId)) {
+      logger.debug(
+        JSON.stringify({
+            API: "getPoliceStationsByDistrict",
+            REQUEST: {districtId },
+            RESPONSE: {
+              status: 1,
+        message: 'Invalid districtId' 
+            },
+        })
+    );
       return res.status(400).json({
         status: 1,
         message: 'Invalid districtId',
@@ -73,23 +84,44 @@ export const getPoliceStationsByDistrict = async (req, res) => {
             const Latitude = "test";
             const OperationName = "getPoliceStationsByDistrict";
             const json = "{}"
-        // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,EntryUserId)
+        const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,EntryUserId)
     const result = await getPoliceStationsByDistrictModel(districtId);
 
     if (result.length > 0) {
+      logger.debug(
+        JSON.stringify({
+            API: "getPoliceStationsByDistrict",
+            REQUEST: {districtId },
+            RESPONSE: {
+              status: 0,
+              message: 'Police stations fetched successfully',
+              data: result,
+            },
+        })
+    );
       return res.status(200).json({
         status: 0,
         message: 'Police stations fetched successfully',
         data: result,
       });
     } else {
+      logger.debug(
+        JSON.stringify({
+            API: "getPoliceStationsByDistrict",
+            REQUEST: {districtId },
+            RESPONSE: {
+               status: 1,
+               message: 'No police stations found for the given districtId'
+            },
+        })
+    );
       return res.status(404).json({
         status: 1,
         message: 'No police stations found for the given districtId',
       });
     }
   } catch (error) {
-    console.error('Error fetching police stations:', error);
+    logger.error('Error fetching police stations:', error);
     return res.status(500).json({
       status: 1,
       message: 'An error occurred while fetching police stations',
@@ -142,23 +174,44 @@ export const showDistrict = async (req, res) => {
         const Latitude = "test";
         const OperationName = "showDistrict";
         const json = "{}"
-    // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
+    const saveTransaction = await  saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,EntryUserId)
     const result = await showDistrictModel();
 
     if (result.length > 0) {
+      logger.debug(
+        JSON.stringify({
+            API: "showDistrict",
+            REQUEST: {ipaddress,macAddress,Longitude,Latitude,OperationName,json },
+            RESPONSE: {
+              status: 0,
+              message: 'Districts fetched successfully',
+              data: result,
+            },
+        })
+    );
       return res.status(200).json({
         status: 0,
         message: 'Districts fetched successfully',
         data: result,
       });
     } else {
+      logger.debug(
+        JSON.stringify({
+            API: "showDistrict",
+            REQUEST: {ipaddress,macAddress,Longitude,Latitude,OperationName,json },
+            RESPONSE: {
+              status: 1,
+              message: 'No districts found'
+            },
+        })
+    );
       return res.status(404).json({
         status: 1,
         message: 'No districts found',
       });
     }
   } catch (error) {
-    console.error('Error fetching districts:', error);
+    logger.error('Error fetching districts:', error);
     return res.status(500).json({
       status: 1,
       message: 'An error occurred while fetching districts',
@@ -178,23 +231,44 @@ export const showDesignation = async (req, res) => {
         const Latitude = "test";
         const OperationName = "showDesignation";
         const json = "{}"
-    // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , ApplicationId ,OperationName ,json ,EntryUserId)
+    const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,EntryUserId)
       const result = await showDesignationModel();
   
       if (result.length > 0) {
+        logger.debug(
+          JSON.stringify({
+              API: "showDesignation",
+              REQUEST: {ipaddress,macAddress,Longitude,Latitude,OperationName,json },
+              RESPONSE: {
+                status: 0,
+                message: 'Designations fetched successfully',
+                data: result,
+              },
+          })
+      );
         return res.status(200).json({
           status: 0,
           message: 'Designations fetched successfully',
           data: result,
         });
       } else {
+        logger.debug(
+          JSON.stringify({
+              API: "showDesignation",
+              REQUEST: {ipaddress,macAddress,Longitude,Latitude,OperationName,json },
+              RESPONSE: {
+                status: 1,
+                message: 'No designations found',
+              },
+          })
+      );
         return res.status(404).json({
           status: 1,
           message: 'No designations found',
         });
       }
     } catch (error) {
-      console.error('Error fetching designations:', error);
+      logger.error('Error fetching designations:', error);
       return res.status(500).json({
         status: 1,
         message: 'An error occurred while fetching designations',
@@ -224,19 +298,40 @@ export const showDesignation = async (req, res) => {
   
      
       if (documents.length > 0) {
+        logger.debug(
+          JSON.stringify({
+              API: "getDocumentsByCitizenType",
+              REQUEST: {citizenTypeId },
+              RESPONSE: {
+                status: 0,
+                message: 'Documents retrieved successfully',
+                data: documents,
+              },
+          })
+      );
         return res.status(200).json({
           status: 0,
           message: 'Documents retrieved successfully',
           data: documents,
         });
       } else {
+        logger.debug(
+          JSON.stringify({
+              API: "getDocumentsByCitizenType",
+              REQUEST: {citizenTypeId },
+              RESPONSE: {
+                status: 1,
+                message: 'No documents found for the given citizen type',
+              },
+          })
+      );
         return res.status(404).json({
           status: 1,
           message: 'No documents found for the given citizen type',
         });
       }
     } catch (error) {
-      console.error('Error in getDocumentsByCitizenTypeController:', error.message);
+      logger.error('Error in getDocumentsByCitizenTypeController:', error.message);
       return res.status(500).json({
         status: 1,
         message: 'An error occurred while fetching documents',
@@ -253,19 +348,40 @@ export const showDesignation = async (req, res) => {
   
     
       if (citizenTypes.length > 0) {
+        logger.debug(
+          JSON.stringify({
+              API: "getCitizenTypes",
+              REQUEST: {citizenTypes },
+              RESPONSE: {
+                status: 0,
+                message: 'Citizen types retrieved successfully',
+                data: citizenTypes,
+              },
+          })
+      );
         return res.status(200).json({
           status: 0,
           message: 'Citizen types retrieved successfully',
           data: citizenTypes,
         });
       } else {
+        logger.debug(
+          JSON.stringify({
+              API: "getCitizenTypes",
+              REQUEST: {citizenTypes },
+              RESPONSE: {
+                  status: 1,
+                  message: 'No citizen types found'
+              },
+          })
+      );
         return res.status(404).json({
           status: 1,
           message: 'No citizen types found',
         });
       }
     } catch (error) {
-      console.error('Error in getCitizenTypesController:', error.message);
+      logger.error('Error in getCitizenTypesController:', error.message);
       return res.status(500).json({
         status: 1,
         message: 'An error occurred while fetching citizen types',
@@ -281,6 +397,16 @@ export const showDesignation = async (req, res) => {
   
      
       if (!CitizenId || !DocId) {
+        logger.debug(
+          JSON.stringify({
+              API: "getDocumentSubTypes",
+              REQUEST: {CitizenId, DocId },
+              RESPONSE: {
+               status: 1,
+              message: 'CitizenId and DocId are required'
+              },
+          })
+      );
         return res.status(400).json({
           status: 1,
           message: 'CitizenId and DocId are required',
@@ -292,19 +418,40 @@ export const showDesignation = async (req, res) => {
   
      
       if (documentSubTypes.length > 0) {
+        logger.debug(
+          JSON.stringify({
+              API: "getDocumentSubTypes",
+              REQUEST: {CitizenId, DocId },
+              RESPONSE: {
+                status: 0,
+                message: 'Document subtypes retrieved successfully',
+                data: documentSubTypes
+              },
+          })
+      );
         return res.status(200).json({
           status: 0,
           message: 'Document subtypes retrieved successfully',
           data: documentSubTypes,
         });
       } else {
+        logger.debug(
+          JSON.stringify({
+              API: "getDocumentSubTypes",
+              REQUEST: {CitizenId, DocId },
+              RESPONSE: {
+                status: 1,
+                message: 'No document subtypes found for the given criteria'
+              },
+          })
+      );
         return res.status(404).json({
           status: 1,
           message: 'No document subtypes found for the given criteria',
         });
       }
     } catch (error) {
-      console.error('Error in getDocumentSubTypesController:', error.message);
+      logger.error('Error in getDocumentSubTypesController:', error.message);
       return res.status(500).json({
         status: 1,
         message: 'An error occurred while fetching document subtypes',
@@ -321,19 +468,40 @@ export const showDesignation = async (req, res) => {
   
       
       if (documentTypeList.length > 0) {
+        logger.debug(
+          JSON.stringify({
+              API: "getDocumentTypeList",
+              REQUEST: {documentTypeList },
+              RESPONSE: {
+                status: 0,
+                message: 'Document type list retrieved successfully',
+                data: documentTypeList
+              },
+          })
+      );
         return res.status(200).json({
           status: 0,
           message: 'Document type list retrieved successfully',
           data: documentTypeList,
         });
       } else {
+        logger.debug(
+          JSON.stringify({
+              API: "getDocumentTypeList",
+              REQUEST: {documentTypeList },
+              RESPONSE: {
+                status: 1,
+                message: 'No document types found',
+              },
+          })
+      );
         return res.status(404).json({
           status: 1,
           message: 'No document types found',
         });
       }
     } catch (error) {
-      console.error('Error in getDocumentTypeListController:', error.message);
+      logger.error('Error in getDocumentTypeListController:', error.message);
       return res.status(500).json({
         status: 1,
         message: 'An error occurred while fetching the document type list',
@@ -349,12 +517,34 @@ export const showDesignation = async (req, res) => {
       const data = await showDocumentDetailsbyCitizenTypeModel(citizenType);
       
       if (data?.length > 0) {
+        logger.debug(
+          JSON.stringify({
+              API: "showDocumentDetailsbyCitizenType",
+              REQUEST: {citizenType },
+              RESPONSE: {
+                status: 0,
+                message: 'Document type list retrieved successfully',
+                data: data
+              },
+          })
+      );
         return res.status(200).json({
           status: 0,
           message: 'Document type list retrieved successfully',
           data: data,
         });
       } else {
+        logger.debug(
+          JSON.stringify({
+              API: "showDocumentDetailsbyCitizenType",
+              REQUEST: {citizenType },
+              RESPONSE: {
+                status: 1,
+                message: 'No document types found',
+                data: []
+              },
+          })
+      );
         return res.status(200).json({
           status: 1,
           message: 'No document types found',
@@ -362,7 +552,7 @@ export const showDesignation = async (req, res) => {
         });
       }
     } catch (error) {
-      console.error('Error in getDocumentTypeListController:', error.message);
+      logger.error('Error in getDocumentTypeListController:', error.message);
       return res.status(500).json({
         status: 1,
         message: 'An error occurred while fetching the document type list',
@@ -378,12 +568,34 @@ export const showDesignation = async (req, res) => {
       const data = await showSubDocumentbyCitizenTypeModel(citizensubType);
       
       if (data?.length > 0) {
+        logger.debug(
+          JSON.stringify({
+              API: "showSubDocumentbyCitizenType",
+              REQUEST: {citizensubType },
+              RESPONSE: {
+                status: 0,
+                message: 'Document sub-type list retrieved successfully',
+                data: data
+              },
+          })
+      );
         return res.status(200).json({
           status: 0,
           message: 'Document sub-type list retrieved successfully',
           data: data,
         });
       } else {
+        logger.debug(
+          JSON.stringify({
+              API: "showSubDocumentbyCitizenType",
+              REQUEST: {citizensubType },
+              RESPONSE: {
+                status: 1,
+                message: 'No document types found',
+                data: []
+              },
+          })
+      );
         return res.status(200).json({
           status: 1,
           message: 'No document types found',
@@ -391,7 +603,7 @@ export const showDesignation = async (req, res) => {
         });
       }
     } catch (error) {
-      console.error('Error in getDocumentTypeListController:', error.message);
+      logger.error('Error in getDocumentTypeListController:', error.message);
       return res.status(500).json({
         status: 1,
         message: 'An error occurred while fetching the document type list',
