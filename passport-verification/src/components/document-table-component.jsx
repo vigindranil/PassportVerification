@@ -38,10 +38,11 @@ const DocumentTable = ({ documents, docPath }) => {
                                             setType(doc?.FileType);
                                             setIsDetailsModalOpen(true);
                                         }}><Eye className='text-blue-600 mr-2 h-4 w-4' />File</button>
-                                        <button className='flex bg-blue-100 justify-center items-center p-1 m-1 rounded-md hover:bg-blue-200 text-sm' onClick={() => {
-                                            setSelectedLocationDetails(doc?.UserAgent ? JSON.parse(doc?.UserAgent) : "");
+                                        
+                                        {(doc?.DocumentTypeId == 13) && <button className='flex bg-blue-100 justify-center items-center p-1 m-1 rounded-md hover:bg-blue-200 text-sm' onClick={() => {
+                                            setSelectedLocationDetails(isJson(doc?.UserAgent) ? JSON.parse(doc?.UserAgent) : "");
                                             setIsLocationDetailsModalOpen(true);
-                                        }}><MapPin className='text-blue-600 mr-2 h-4 w-4' />Locational Details</button>
+                                        }}><MapPin className='text-blue-600 mr-2 h-4 w-4' />Location</button>}
                                     </TableCell>
                                 </TableRow>
                             ))}
