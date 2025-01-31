@@ -35,7 +35,7 @@ export const getApplicationDetails = async (req, res) => {
          const ipaddress = "test";
          const macAddress = "test";
          const Longitude = "test";
-     const Latitude = "test";
+         const Latitude = "test";
          const OperationName = "getApplicationDetails";
         const json = "{}"
         
