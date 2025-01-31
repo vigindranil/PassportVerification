@@ -15,7 +15,7 @@ export const saveDocumentUpload = async (req, res) => {
       return res.status(400).json({ status: 1, message: "No file uploaded" });
     }
 
-    if (!ApplicationId || !DocumentRemarks || !DocumentTypeId || !EntryUserId) {
+    if (!ApplicationId || !DocumentTypeId || !EntryUserId) {
       logger.debug(
         JSON.stringify({
           API: "saveDocumentUpload",

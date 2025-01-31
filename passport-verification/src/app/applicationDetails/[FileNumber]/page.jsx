@@ -84,42 +84,42 @@ export default function Page({ FileNumber }) {
 
                   <div className="space-y-2">
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium text-gray-500">SpouseName</span>
+                      <span className="text-sm font-medium text-gray-500">Spouse Name</span>
                       <span className="text-base">{applicationDetails?.applicationDetails.SpouseName}</span>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium text-gray-500">FathersName</span>
+                      <span className="text-sm font-medium text-gray-500">Fathers Name</span>
                       <span className="text-base">{applicationDetails?.applicationDetails.FathersName}</span>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium text-gray-500">PVInitiationDate</span>
-                      <span className="text-base">{applicationDetails?.applicationDetails.PVInitiationDate}</span>
+                      <span className="text-sm font-medium text-gray-500">PV Initiation Date</span>
+                      <span className="text-base">{applicationDetails?.applicationDetails.PVInitiationDate ? moment(applicationDetails?.applicationDetails.PVInitiationDate).format('DD/MM/YYYY') : 'N/A'}</span>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium text-gray-500">PVRequestStatus</span>
+                      <span className="text-sm font-medium text-gray-500">PV Request Status</span>
                       <span className="text-base">{applicationDetails?.applicationDetails.PVRequestStatus}</span>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium text-gray-500">PermanentAddress</span>
+                      <span className="text-sm font-medium text-gray-500">Permanent Address</span>
                       <span className="text-base">{applicationDetails?.applicationDetails.PermanentAddress}</span>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium text-gray-500">VerificationAddress</span>
+                      <span className="text-sm font-medium text-gray-500">Verification Address</span>
                       <span className="text-base">{applicationDetails?.applicationDetails.VerificationAddress}</span>
                     </div>
                   </div>
@@ -127,28 +127,28 @@ export default function Page({ FileNumber }) {
 
                   <div className="space-y-2">
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium text-gray-500">PVStatusDate</span>
-                      <span className="text-base">{applicationDetails?.applicationDetails.PVStatusDate}</span>
+                      <span className="text-sm font-medium text-gray-500">PV Status Date</span>
+                      <span className="text-base">{applicationDetails?.applicationDetails.PVStatusDate ? moment(applicationDetails?.applicationDetails.PVStatusDate).format('DD/MM/YYYY') : 'N/A'}</span>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium text-gray-500">PVSequenceNo</span>
+                      <span className="text-sm font-medium text-gray-500">PV Sequence No</span>
                       <span className="text-base">{applicationDetails?.applicationDetails.PVSequenceNo}</span>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium text-gray-500">EmailID</span>
+                      <span className="text-sm font-medium text-gray-500">Email ID</span>
                       <span className="text-base">{applicationDetails?.applicationDetails.EmailID}</span>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium text-gray-500">PhoneNo</span>
+                      <span className="text-sm font-medium text-gray-500">Phone No.</span>
                       <span className="text-base">
                         {applicationDetails?.applicationDetails.PhoneNo}
                       </span>
