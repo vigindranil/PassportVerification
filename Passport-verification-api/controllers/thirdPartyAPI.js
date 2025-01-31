@@ -1,5 +1,6 @@
 import fetch from "node-fetch";
 import dotenv from "dotenv";
+import axios from "axios";
 dotenv.config();
 
 export const generateOtpAadhaar = async (aadhaar_number, user_id) => {
@@ -75,31 +76,92 @@ export const verifyOtpAadhaar = async (otp, user_id, transaction_id) => {
   }
 };
 
-export const getWBSEDCLDetails = async (consumerId, installationNum) => {
-  try {
+export const getBirthCertificateDetails = async (req, res) => {
+  const { CertificateNo, dateofbirth } = req.body;
 
-    console.log('consumerId', consumerId)
-    console.log('installationNum', installationNum)
-
-    const url = "https://portaltest.wbsedcl.in/WBSEDCLPASSPORTENQUIRYWS/FetchBasicConsumerDetails";
-
-    const body = JSON.stringify({
-      consumerId: consumerId,
-      installationNum: installationNum,
-    });
-
-    const response = await fetch(url, {
-      method: "POST",
-      body: body
-    });
-
-    if (response.ok) {
-      return response;
-    } else {
-      return null;
-    }
-
-  } catch (error) {
-    return null;
+  if (!CertificateNo) {
+    return res.status(400).json({ error: "Certificate No. is required." });
+  } else if (!dateofbirth) {
+    return res.status(400).json({ error: "Date of birth is required." });
   }
+
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: `https://janma-mrityutathya.wb.gov.in/api/GetBirthCertificate?CertificateNo=${CertificateNo}&dateofbirth=${dateofbirth}`,
+    headers: {
+      Authorization:
+        "Basic V2JQb2xpY2VEZXB0OjQ3NTc1NGRlLWQ4MmItNTc1NzhnLWFlZDktNGE0NzY1Njc2MTlmOQ==",
+      Cookie: "xehfcdjly=RS_janmamrityu_01",
+    },
+  };
+
+  axios
+    .request(config)
+    .then((response) => {
+      return res
+        .status(200)
+        .json({
+          status: 0,
+          message: "Data fetched successfully",
+          data: response?.data,
+        });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res
+        .status(400)
+        .json({
+          status: 0,
+          message: "Failed to fetched details",
+          data: null,
+        });
+    });
+};
+
+export const getWBSEDCLDetails = async (req, res) => {
+  const { consumerId, installationNum } = req.body;
+
+  if (!consumerId) {
+    return res.status(400).json({ error: "ConsumerId is required." });
+  } else if (!installationNum) {
+    return res.status(400).json({ error: "InstallationNum is required." });
+  }
+
+  let data = JSON.stringify({
+    consumerId: consumerId,
+    installationNum: installationNum,
+  });
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://portaltest.wbsedcl.in/WBSEDCLPASSPORTENQUIRYWS/FetchBasicConsumerDetails",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  axios
+    .request(config)
+    .then((response) => {
+      return res
+        .status(200)
+        .json({
+          status: 0,
+          message: "Data fetched successfully",
+          data: response?.data,
+        });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res
+        .status(400)
+        .json({
+          status: 0,
+          message: "Failed to fetched details",
+          data: null,
+        });
+    });
 };
