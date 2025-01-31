@@ -15,6 +15,7 @@ import eoDocumentUpload from "./routes/eoRoutes.js";
 import getApplicationDetails from "./routes/application.js";
 import uploadRoutes from "./routes/upload.js";
 import logRoutes from "./routes/logs.js";
+import thirdPartyRoutes from "./routes/thirdPartyAPI.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -84,6 +85,7 @@ const upload = multer({
 //public Route
 app.use("/api/", logRoutes);
 app.use("/api/auth/", loginRoutes);
+app.use("/api/third-party/", thirdPartyRoutes);
 
 //private Route
 app.use("/api/auth/", verifyToken, authRoutes);
