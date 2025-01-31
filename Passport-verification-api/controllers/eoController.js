@@ -12,22 +12,48 @@ export const saveDocumentUpload = async (req, res) => {
       ApplicationId,
       DocumentRemarks,
       DocumentTypeId,
-      IdNumber="",
-      IdNumber2="",
-      IdNumber3="",
-      IdNumber4="",
-      IdNumber5="",
+      IdNumber,
+      IdNumber2,
+      IdNumber3,
+      IdNumber4,
+      IdNumber5,
       ipaddress,
       MacAddress,
       longitude,
       latitude,
       DeviceId,
     } = req.body;
+
     const EntryUserId = req.user.UserID;
     const file = req.file;
     const filepath = req?.file_name;
+    console.log(file);
+    
 
     if (!file) {
+      logger.debug(
+        JSON.stringify({
+          API: "saveDocumentUpload",
+          REQUEST: {
+            ApplicationId,
+            filepath,
+            DocumentRemarks,
+            DocumentTypeId,
+            IdNumber,
+            IdNumber2,
+            IdNumber3,
+            IdNumber4,
+            IdNumber5,
+            ipaddress,
+            MacAddress,
+            longitude,
+            latitude,
+            DeviceId,
+            EntryUserId,
+          },
+          RESPONSE: { status: 1, message: "No file uploaded" },
+        })
+      );
       return res.status(400).json({ status: 1, message: "No file uploaded" });
     }
 
@@ -83,7 +109,7 @@ export const saveDocumentUpload = async (req, res) => {
       ipaddress,
       EntryUserId
     );
-    // await saveTransactionHistory(ipaddress, MacAddress, longitude, latitude, 0, OperationName, json, EntryUserId)
+    await saveTransactionHistory(ipaddress, MacAddress, longitude, latitude, 0, OperationName, json, EntryUserId)
     if (result == 0) {
       logger.debug(
         JSON.stringify({

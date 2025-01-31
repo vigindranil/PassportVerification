@@ -18,8 +18,6 @@ export async function saveUserRegistrationModel(
   DistrictID,
   PSID,
   EntryUserID
- 
-
 ) {
   const [rows] = await pool.query(
     "CALL sp_saveUserRegistrationv2(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, @ErrorCode, @ID);",
@@ -38,8 +36,7 @@ export async function saveUserRegistrationModel(
       UserRoleID,
       DistrictID,
       PSID,
-      EntryUserID,
-      FullName
+      EntryUserID
     ]
   );
 
