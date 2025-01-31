@@ -10,7 +10,7 @@ const nextConfig = {
     ];
   },
   images: {
-    domains: ['localhost'], // Add 'localhost' as a valid domain for next/image
+    domains: ['localhost', '13.235.73.233'], // Add 'localhost' as a valid domain for next/image
   },
 };
 
