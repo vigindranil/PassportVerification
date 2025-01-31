@@ -9,8 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 export const sendOtp = async (req, res) => {
     try {
-        const { username, password } = req.body;
-
+        const { username, password, loginType } = req.body;
 
         if (!username) {
             return res.status(400).json({
@@ -39,6 +38,20 @@ export const sendOtp = async (req, res) => {
 
         const rows = await getUserLoginModel(username, btoa(password));
 
+        if (!rows || rows.length == 0) {
+            return res.status(400).json({
+                status: 1,
+                message: "Invalid username or password",
+            });
+        }
+
+        if (loginType == 2 && rows[0]["UserTypeID"] != 40) {
+            return res.status(400).json({
+                status: 1,
+                message: "Invalid user for mobile login",
+            });
+        }
+        
         // const transactionId = await generateOtpAadhaar(atob(rows["AADHAARNo"]), rows["UserID"]);
         const transactionId = "---"
         // console.log("transactionId", transactionId);
@@ -50,18 +63,13 @@ export const sendOtp = async (req, res) => {
         //         message: "Failed to send OTP",
         //     });
         // }
-        if (!rows || rows.length == 0) {
-            return res.status(400).json({
-                status: 1,
-                message: "Invalid username or password",
-            });
-        }
+       
 
         if (rows !== undefined && rows[0]?.length !== 0) {
             console.log("rows", rows);
             console.log("UserID", rows[0]["UserID"]);
             
-            const token = jwt.sign(
+            const jwt_token = jwt.sign(
                 {
                     UserID: rows[0]["UserID"],
                     DistrictID: rows[0]["DistrictID"],
@@ -78,7 +86,9 @@ export const sendOtp = async (req, res) => {
                 { expiresIn: "24h" }
             );
 
-            const [result] = await updateAuthToken(rows[0]["UserID"], token, transactionId);
+            const token = btoa(jwt_token);
+
+            const [result] = await updateAuthToken(rows[0]["UserID"], jwt_token, transactionId);
 
             res.cookie('data', token);
             res.cookie('type', rows[0]["UserTypeID"]);
@@ -86,7 +96,7 @@ export const sendOtp = async (req, res) => {
             res.cookie('district', rows[0]["DistrictName"]);
             res.cookie('ps', rows[0]["PoliceStationName"]);
 
-            console.log("token", token);
+            console.log("token 1", jwt_token);
 
             logger.debug(
                 JSON.stringify({

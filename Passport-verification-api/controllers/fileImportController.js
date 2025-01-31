@@ -4,13 +4,42 @@ import moment from "moment/moment.js";
 
 // Function to trim JSON keys and values
 const trimJsonData = (data) => {
+  const allowedKeys = new Set([
+    "DPHq ID/Name",
+    "Police Station",
+    "File Number",
+    "PV Request ID",
+    "Applicant Name",
+    "Gender",
+    "Date of Birth",
+    "Place of Birth",
+    "Spouse Name",
+    "Father's Name",
+    "PV Initiation Date",
+    "PV Request Status",
+    "PV Status Date",
+    "Verification Address",
+    "Permanent Address",
+    "PV Sequence No.",
+    "E-mail ID",
+    "Phone No.",
+  ]);
+
+  for (const row of data) {
+    // If any key in row is not in allowedKeys, return []
+    if (Object.keys(row).some((key) => !allowedKeys.has(key.trim()))) {
+      return [];
+    }
+  }
+
+  // If all keys are valid, process and return data
   return data.map((row) =>
     Object.fromEntries(
       Object.entries(row).map(([key, value]) => [
-        key?.trim(),
-        key?.trim() == "Date of Birth" ||
-        key?.trim() == "PV Initiation Date" ||
-        key?.trim() == "PV Status Date"
+        key.trim(),
+        ["Date of Birth", "PV Initiation Date", "PV Status Date"].includes(
+          key.trim()
+        )
           ? moment(value?.trim(), "DD-MMM-YYYY", true).format("YYYY/MM/DD")
           : value,
       ])
@@ -32,13 +61,18 @@ export const convertExcelToJson = async (req, res) => {
     const data = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
     // Trim JSON keys and values
-    const jsonData = trimJsonData(data);
+    const jsonData = trimJsonData(data);    
 
-    res.status(200).json({
-      status: 0,
-      message: `${jsonData.length} record(s) have been parsed successfully`,
-      data: jsonData
-    });
+    if(jsonData?.length > 0) {
+      res.status(200).json({
+        status: 0,
+        message: `${jsonData.length} record(s) have been converted successfully`,
+        data: jsonData
+      });
+    }else {
+      res.status(200).json({status: 1, message: "Invalid excel format, Please check the correct format before importing", data: []});
+    }
+
   } catch (error) {
     console.error("Error processing file:", error);
     res.status(500).json({ status: 1, message: "Error processing file", data: null });

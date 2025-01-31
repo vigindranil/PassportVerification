@@ -8,6 +8,7 @@ const SessionExpired = () => {
     // Redirect to login page
     window.location.href = "/login"
   }
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

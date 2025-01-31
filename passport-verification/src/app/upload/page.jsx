@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import DataTable from "@/components/excelParsedDatatable"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { CheckCircle2 } from "lucide-react"
 
 const ExcelUploader = () => {
   const [file, setFile] = useState(null)
@@ -51,7 +52,12 @@ const ExcelUploader = () => {
         setParsedData(response.data)
         setIsImported(true)
         toast({
-          title: "Successful",
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Successfull!</span>
+            </div>
+          ),
           description: response?.message || "File was successfully converted",
           action: <ToastAction altText="close">Close</ToastAction>,
         })
@@ -88,7 +94,12 @@ const ExcelUploader = () => {
       const response = await uploadExcel(parsedData)
       if (response?.status === 0) {
         toast({
-          title: "Successful",
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Successfull!</span>
+            </div>
+          ),
           description: response?.message || "File was successfully uploaded",
           action: <ToastAction altText="close">Close</ToastAction>,
         })
@@ -127,9 +138,7 @@ const ExcelUploader = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar />
         <main className="flex-1 overflow-y-auto p-6">
           <Card className="w-full max-w-3xl mx-auto mb-8">
             <CardHeader>

@@ -25,10 +25,8 @@ export default function Page({ FileNumber }) {
   }, [FileNumber]);
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <Sidebar />
+    <div className="flex bg-gray-100">
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar />
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
           <div className="container mx-auto px-6 py-8">
             <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
@@ -165,7 +163,7 @@ export default function Page({ FileNumber }) {
               <div className="bg-gradient-to-r from-blue-600 to-teal-600 p-6">
                 <h2 className="text-2xl font-bold text-white">Application Document</h2>
               </div>
-              <DocumentTable documents={applicationDetails?.documents} docPath={applicationDetails?.filepath} />
+              <DocumentTable fileNo={FileNumber} documents={applicationDetails?.documents} docPath={applicationDetails?.filepath} />
               
             </div>
             <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden">

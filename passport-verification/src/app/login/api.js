@@ -13,7 +13,7 @@ export const sendOtp = async (username, password) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, loginType: 1 }),
       });
 
     if (!response.ok) {

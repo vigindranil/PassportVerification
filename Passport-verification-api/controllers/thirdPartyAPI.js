@@ -1,6 +1,12 @@
 import fetch from "node-fetch";
 import dotenv from "dotenv";
 import axios from "axios";
+import https from "https";
+import crypto from 'crypto';
+import {
+  savethirdpartyVerifyStatus,
+  setExternelApiLog,
+} from "../models/applicationModel.js";
 dotenv.config();
 
 export const generateOtpAadhaar = async (aadhaar_number, user_id) => {
@@ -89,38 +95,36 @@ export const getBirthCertificateDetails = async (req, res) => {
     method: "get",
     maxBodyLength: Infinity,
     url: `https://janma-mrityutathya.wb.gov.in/api/GetBirthCertificate?CertificateNo=${CertificateNo}&dateofbirth=${dateofbirth}`,
-    headers: {
-      Authorization:
-        "Basic V2JQb2xpY2VEZXB0OjQ3NTc1NGRlLWQ4MmItNTc1NzhnLWFlZDktNGE0NzY1Njc2MTlmOQ==",
-      Cookie: "xehfcdjly=RS_janmamrityu_01",
+    auth: {
+      username: "WbPoliceDept",
+      password: "475754de-d82b-57578g-aed9-4a476567619f9",
     },
+    httpsAgent: new https.Agent({
+      secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+    }),
   };
 
   axios
     .request(config)
     .then((response) => {
-      return res
-        .status(200)
-        .json({
-          status: 0,
-          message: "Data fetched successfully",
-          data: response?.data,
-        });
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: response?.data,
+      });
     })
     .catch((error) => {
       console.log(error);
-      return res
-        .status(400)
-        .json({
-          status: 0,
-          message: "Failed to fetched details",
-          data: null,
-        });
+      return res.status(400).json({
+        status: 0,
+        message: "Failed to fetched details",
+        data: null,
+      });
     });
 };
 
 export const getWBSEDCLDetails = async (req, res) => {
-  const { consumerId, installationNum } = req.body;
+  const { consumerId, installationNum} = req.body;
 
   if (!consumerId) {
     return res.status(400).json({ error: "ConsumerId is required." });
@@ -145,23 +149,20 @@ export const getWBSEDCLDetails = async (req, res) => {
 
   axios
     .request(config)
-    .then((response) => {
-      return res
-        .status(200)
-        .json({
-          status: 0,
-          message: "Data fetched successfully",
-          data: response?.data,
-        });
+    .then(async (response) => {
+      console.log("response", response);
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: response?.data,
+      });
     })
     .catch((error) => {
       console.log(error);
-      return res
-        .status(400)
-        .json({
-          status: 0,
-          message: "Failed to fetched details",
-          data: null,
-        });
+      return res.status(400).json({
+        status: 0,
+        message: "Failed to fetched details",
+        data: null,
+      });
     });
 };

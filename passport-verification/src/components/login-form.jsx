@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { OTPInput } from "@/components/otp-input"
-import { User, Lock, Eye, EyeOff, RotateCcw, LoaderCircle } from 'lucide-react'
+import { User, Lock, Eye, EyeOff, RotateCcw, LoaderCircle, CheckCircle2 } from 'lucide-react'
 import { sendOtp, verifyOtp } from "@/app/login/api"
 import { useToast } from "../hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
@@ -37,7 +37,12 @@ const LoginForm = () => {
       
       if(response){
         toast({
-          title: "OTP sent successfully",
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>OTP sent successfully!</span>
+            </div>
+          ),
           description: "A six digit code was sent to your aadhaar linked phone number",
           action: (
             <ToastAction altText="close">Close</ToastAction>
@@ -130,7 +135,12 @@ const LoginForm = () => {
         setShowOtp(true)
         setResendTimer(60);
         toast({
-          title: "OTP sent successfully",
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>OTP sent successfully!</span>
+            </div>
+          ),
           description: "A six digit code was sent to your aadhaar linked phone number",
           action: (
             <ToastAction altText="close">Close</ToastAction>
@@ -178,7 +188,7 @@ const LoginForm = () => {
     <div className="space-y-4 w-full max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg border border-white/20">
 
       {!showOtp && (
-        <><h2 className="text-2xl font-bold text-center mb-6 text-slate-600">Welcome Back</h2>
+        <><h2 className="text-2xl font-bold text-center mb-6 text-slate-600">Passport Verification Login</h2>
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="username" className="text-slate-500">Username</Label>

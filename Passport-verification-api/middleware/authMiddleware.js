@@ -6,11 +6,14 @@ import { log } from 'console';
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const verifyToken = async(req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Extract token from the "Authorization" header
-  
-  if (!token) {
+  const token_base64 = req.headers.authorization?.split(' ')[1]; // Extract token from the "Authorization" header
+  if (!token_base64) {
     return res.status(401).json({ message: 'Access denied! Unauthorized access.' });
   }
+  const token = atob(token_base64); // Extract
+  console.log("extracting token", token);
+  
+  
 
   try {
     
