@@ -67,8 +67,8 @@ const DocumentTable = ({ documents, docPath }) => {
                     {(doc?.DocumentTypeId == 13) && <button
                       className="flex bg-blue-100 justify-center items-center p-1 m-1 rounded-md hover:bg-blue-200 text-sm"
                       onClick={() => {
-                        // setSelectedLocationDetails(doc?.UserAgent ? JSON.parse(doc?.UserAgent) : {})
-                        setSelectedLocationDetails(doc?.UserAgent)
+                        setSelectedLocationDetails(doc?.UserAgent ? JSON.parse(doc?.UserAgent) : {})
+                        // setSelectedLocationDetails(doc?.UserAgent)
                         setIsLocationDetailsModalOpen(true)
                       }}
                     >
@@ -135,6 +135,9 @@ const DocumentTable = ({ documents, docPath }) => {
           {isLocationDetailsModalOpen && (
             <Dialog open={isLocationDetailsModalOpen} onOpenChange={setIsLocationDetailsModalOpen}>
               <DialogContent className="w-full">
+              <VisuallyHidden>
+                  <DialogTitle>Locational Details</DialogTitle>
+                </VisuallyHidden>
                 <div className="space-y-2 h-full w-full">
                   {selectedLocationDetails &&
                     <div>
