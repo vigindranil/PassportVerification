@@ -1,20 +1,21 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Switch } from "@/components/ui/switch"
 import { Search, UserPlus } from "lucide-react"
 import { saveUser } from "@/app/createUserForm/api"
-import * as XLSX from 'xlsx';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import * as XLSX from "xlsx"
+import jsPDF from "jspdf"
+import "jspdf-autotable"
 import { getDistrict, getPoliceStationsByDistrict, showuserDetails, tooglebutton } from "@/app/createUserForm/api"
 import { useToast } from "../hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
+import { FileAcceptModal } from "@/components/file-accept-modal" 
+import UploadDocumentsModal from "@/components/uploadDocumentModal" 
 
 const UserManagement = () => {
   const [searchDistrict, setSearchDistrict] = useState("")
@@ -23,11 +24,11 @@ const UserManagement = () => {
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
   const [users, setUsers] = useState([])
-  const [searchTerm, setSearchTerm] = useState("");
-  const itemsPerPage = 6;
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadFile, setUploadFile] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("")
+  const itemsPerPage = 6
+  const [currentPage, setCurrentPage] = useState(1)
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [uploadFile, setUploadFile] = useState(null)
   const [districtsData, setDistrictsData] = useState([])
   const [policeStationsData, setPoliceStationsData] = useState([])
   const [psLoader, setPsLoader] = useState("Select District First")
@@ -47,53 +48,72 @@ const UserManagement = () => {
     UserRoleID: "",
     DistrictID: "",
     PSID: "",
+    aadharRegisterMobileNumber: "",
   })
 
+  const [formErrors, setFormErrors] = useState({
+    UserName: "",
+    UserFullName: "",
+    Firstname: "",
+    LastName: "",
+    EmailID: "",
+    MobileNo: "",
+    AADHAARNo: "",
+  })
+
+  const checkForSqlInjection = (value) => {
+    return /select\s+\*\s+from/i.test(value)
+  }
 
   const exportToExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(verificationData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "VerificationData");
-    XLSX.writeFile(wb, "police_verification_data.xlsx");
-  };
+    const ws = XLSX.utils.json_to_sheet(users)
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, "UserData")
+    XLSX.writeFile(wb, "user_management_data.xlsx")
+  }
 
   const exportToPDF = () => {
-    const doc = new jsPDF();
+    const doc = new jsPDF()
     doc.autoTable({
-      head: [['File Number', 'Applicant Name', 'Police Station', 'Phone No.', 'Date of Birth']],
-      body: verificationData.map(row => [row.fileNumber, row.applicantName, row.policeStation, row.phoneNo, row.dateOfBirth]),
-    });
-    doc.save('police_verification_data.pdf');
-  };
+      head: [["User Name", "Full Name", "District Name", "Police Station", "Designation", "User Role"]],
+      body: users.map((row) => [
+        row.UserName,
+        row.FullName,
+        row.DistrictName,
+        row.PoliceStationName,
+        row.Designation,
+        row.userType,
+      ]),
+    })
+    doc.save("user_management_data.pdf")
+  }
 
   const printTable = () => {
-    const printContent = document.getElementById('police-verification-table');
-    const windowPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
-    windowPrint.document.write(printContent.innerHTML);
-    windowPrint.document.close();
-    windowPrint.focus();
-    windowPrint.print();
-    windowPrint.close();
-  };
+    const printContent = document.getElementById("user-management-table")
+    const windowPrint = window.open("", "", "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0")
+    windowPrint.document.write(printContent.innerHTML)
+    windowPrint.document.close()
+    windowPrint.focus()
+    windowPrint.print()
+    windowPrint.close()
+  }
 
-  const filteredData = users?.filter(row =>
-    Object.values(row).some(value =>
-      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+  const filteredData = users?.filter((row) =>
+    Object.values(row).some((value) => value.toString().toLowerCase().includes(searchTerm.toLowerCase())),
+  )
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentData = filteredData.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentData = filteredData.slice(startIndex, endIndex)
 
   const fetchDistricts = async () => {
     try {
-      const districtData = await getDistrict();
-      console.log(districtData);
+      const districtData = await getDistrict()
+      console.log(districtData)
 
       if (districtData) {
-        console.log("districts", districtData.data);
+        console.log("districts", districtData.data)
 
         setDistrictsData(districtData.data)
       }
@@ -106,8 +126,8 @@ const UserManagement = () => {
     try {
       const userDetails = await showuserDetails()
       if (userDetails) {
-        console.log("table", userDetails);
-        setUsers(userDetails.data);
+        console.log("table", userDetails)
+        setUsers(userDetails.data)
       }
     } catch (error) {
       console.error("Error fetching user details:", error)
@@ -115,17 +135,28 @@ const UserManagement = () => {
   }
 
   const handleCreateUser = async () => {
+    const hasErrors = Object.values(formErrors).some((error) => error !== "")
+    if (hasErrors) {
+      toast({
+        variant: "destructive",
+        title: "Validation Error",
+        description: "Please correct the errors in the form before submitting.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
+      return
+    }
+
     setLoading(true)
     setError(null)
     setSuccess(null)
     try {
       const response = await saveUser(formData)
-      console.log("user saved", response);
-      if(response?.status == 0) {
+      console.log("user saved", response)
+      if (response?.status == 0) {
         toast({
-          title: "Successfull!",
+          title: "Successful!",
           description: "User Created Successfully",
-          action: <ToastAction altText="Try again">Close</ToastAction>,
+          action: <ToastAction altText="Close">Close</ToastAction>,
         })
         fetchUserDetails() // Refresh user list after creating a new user
       } else {
@@ -152,18 +183,17 @@ const UserManagement = () => {
   const onChangeDistrict = async (DistrictID) => {
     try {
       setPsLoader("Loading...")
-      setFormData({ ...formData, DistrictID: DistrictID });
-      const policeStationData = await getPoliceStationsByDistrict(DistrictID);
+      setFormData({ ...formData, DistrictID: DistrictID })
+      const policeStationData = await getPoliceStationsByDistrict(DistrictID)
       if (policeStationData) {
-        setPoliceStationsData(policeStationData.data);
+        setPoliceStationsData(policeStationData.data)
         setPsLoader("Select Police Station")
       } else {
-        setPoliceStationsData([]);
+        setPoliceStationsData([])
         setPsLoader("Select District First")
       }
     } catch (error) {
       console.log("Error fetching police stations:", error)
-
     }
   }
 
@@ -174,14 +204,14 @@ const UserManagement = () => {
   useEffect(() => {
     fetchDistricts()
     fetchUserDetails()
-  }, [])
+  }, []) // Added empty dependency array to fix the useEffect warning
 
   const handleUpdateUserStatus = async (UserID, Status) => {
     try {
       setStatuUpdateLoader("Loading...")
-      const response = await tooglebutton(UserID, Status);
+      const response = await tooglebutton(UserID, Status)
       if (response.status == 0) {
-        await fetchUserDetails();
+        await fetchUserDetails()
       } else {
         console.log(response.message)
       }
@@ -192,67 +222,71 @@ const UserManagement = () => {
     }
   }
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    let newValue = value
+
+    if (checkForSqlInjection(value)) {
+      newValue = value.replace(/select\s+\*\s+from/gi, "")
+      toast({
+        variant: "destructive",
+        title: "Invalid Input",
+        description: "SQL injection attempt detected and removed.",
+        action: <ToastAction altText="Close">Close</ToastAction>,
+      })
+    }
+
+    if (name === "MobileNo") {
+      newValue = newValue.replace(/\D/g, "").slice(0, 10)
+    } else if (name === "AADHAARNo") {
+      newValue = newValue.replace(/\D/g, "").slice(0, 12)
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: newValue }))
+  }
+
   return (
     <div className="container mx-auto px-0 space-y-8 shadow-2xl">
-        <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl  overflow-hidden">
-          <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
-            <h2 className="text-2xl font-bold text-white">User Management</h2>
-          </div>
-          </div>
+      <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl  overflow-hidden">
+        <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
+          <h2 className="text-2xl font-bold text-white">User Management</h2>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-6">
-
         <div className="space-y-2">
           <Label htmlFor="UserName">User Name</Label>
-          <Input
-            id="UserName"
-            name="UserName"
-            value={formData.UserName}
-            onChange={(e) => setFormData({ ...formData, UserName: e.target.value })}
-            required
-          />
+          <Input id="UserName" name="UserName" value={formData.UserName} onChange={handleInputChange} required />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="UserName">User Full Name</Label>
+          <Label htmlFor="UserFullName">User Full Name</Label>
           <Input
             id="UserFullName"
             name="UserFullName"
             value={formData.UserFullName}
-            onChange={(e) => setFormData({ ...formData, UserFullName: e.target.value })}
+            onChange={handleInputChange}
             required
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="FirstName">First Name</Label>
-          <Input
-            id="FirstName"
-            name="FirstName"
-            value={formData.Firstname}
-            onChange={(e) => setFormData({ ...formData, Firstname: e.target.value })}
-            required
-          />
+          <Label htmlFor="Firstname">First Name</Label>
+          <Input id="Firstname" name="Firstname" value={formData.Firstname} onChange={handleInputChange} required />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="Last Name">Last Name</Label>
-          <Input
-            id="LastNameID"
-            name="LastNameID"
-            value={formData.LastName}
-            onChange={(e) => setFormData({ ...formData, LastName: e.target.value })}
-            required
-          />
+          <Label htmlFor="LastName">Last Name</Label>
+          <Input id="LastName" name="LastName" value={formData.LastName} onChange={handleInputChange} required />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="EmailID">Email</Label>
           <Input
-            id="email"
-            name="email"
+            id="EmailID"
+            name="EmailID"
             type="email"
             value={formData.EmailID}
-            onChange={(e) => setFormData({ ...formData, EmailID: e.target.value })}
+            onChange={handleInputChange}
             required
           />
         </div>
@@ -272,21 +306,27 @@ const UserManagement = () => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="phoneNumber">Phone Number</Label>
+          <Label htmlFor="MobileNo">Phone Number</Label>
           <Input
-            id="phoneNumber"
-            name="phoneNumber"
+            id="MobileNo"
+            name="MobileNo"
             value={formData.MobileNo}
-            onChange={(e) => setFormData({ ...formData, MobileNo: e.target.value })}
+            onChange={handleInputChange}
+            maxLength={10}
             required
           />
+          {formData.MobileNo.length > 0 && formData.MobileNo.length < 10 && (
+            <p className="text-red-500 text-sm">Phone number must be 10 digits</p>
+          )}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="district">District</Label>
           <Select
             name="district"
-            onValueChange={(value) => { onChangeDistrict(value) }}
+            onValueChange={(value) => {
+              onChangeDistrict(value)
+            }}
             required
           >
             <SelectTrigger>
@@ -336,19 +376,35 @@ const UserManagement = () => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="aadharNumber">Aadhar Number</Label>
+          <Label htmlFor="AADHAARNo">Aadhar Number</Label>
           <Input
-            id="aadharNumber"
-            name="aadharNumber"
+            id="AADHAARNo"
+            name="AADHAARNo"
             value={formData.AADHAARNo}
-            onChange={(e) => setFormData({ ...formData, AADHAARNo: e.target.value })}
+            onChange={handleInputChange}
+            maxLength={12}
             required
           />
+          {formData.AADHAARNo.length > 0 && formData.AADHAARNo.length < 12 && (
+            <p className="text-red-500 text-sm">Aadhar number must be 12 digits</p>
+          )}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="aadharRegisterMobileNumber">Aadhar Register Mobile Number</Label>
-          <Input id="aadharRegisterMobileNumber" name="aadharRegisterMobileNumber" />
+          <Input
+            id="aadharRegisterMobileNumber"
+            name="aadharRegisterMobileNumber"
+            maxLength={10}
+            value={formData.aadharRegisterMobileNumber || ""}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, "").slice(0, 10)
+              setFormData((prev) => ({ ...prev, aadharRegisterMobileNumber: value }))
+            }}
+          />
+          {formData.aadharRegisterMobileNumber && formData.aadharRegisterMobileNumber.length < 10 && (
+            <p className="text-red-500 text-sm">Phone number must be 10 digits</p>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -374,17 +430,14 @@ const UserManagement = () => {
         </div>
       </div>
 
-
-
       {/* TABLE STARTED HERE */}
 
       <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl  overflow-hidden">
-          <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
-            <h2 className="text-2xl font-bold text-white">User List</h2>
-          </div>
-          </div>
+        <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
+          <h2 className="text-2xl font-bold text-white">User List</h2>
+        </div>
+      </div>
       <div className="space-y-4 px-6">
-
         <div className="flex space-x-4">
           <div className="flex-1">
             <Label htmlFor="searchDistrict">Search by District</Label>
@@ -416,9 +469,15 @@ const UserManagement = () => {
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="space-x-2">
-              <Button variant="outline" onClick={exportToExcel}>Excel</Button>
-              <Button variant="outline" onClick={exportToPDF}>PDF</Button>
-              <Button variant="outline" onClick={printTable}>Print</Button>
+              <Button variant="outline" onClick={exportToExcel}>
+                Excel
+              </Button>
+              <Button variant="outline" onClick={exportToPDF}>
+                PDF
+              </Button>
+              <Button variant="outline" onClick={printTable}>
+                Print
+              </Button>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500">Search:</span>
@@ -430,7 +489,7 @@ const UserManagement = () => {
               />
             </div>
           </div>
-          <div className="border rounded-lg" id="police-verification-table">
+          <div className="border rounded-lg" id="user-management-table">
             <Table>
               <TableHeader>
                 <TableRow className="bg-[#e6f3ff]">
@@ -447,24 +506,55 @@ const UserManagement = () => {
                 {loading ? (
                   <TableRow>
                     <TableCell colSpan={6}>Loading...</TableCell>
-                  </TableRow>) : users.length > 0 ? (
-                    users?.map((row, index) => (
-                      <TableRow key={index}>
-                        <TableCell><p>{row?.UserName || "N/A"}</p></TableCell>
-                        <TableCell><p>{row?.FullName || "N/A"}</p></TableCell>
-                        <TableCell><p>{row?.DistrictName || "N/A"}</p></TableCell>
-                        <TableCell><p>{row?.PoliceStationName || "N/A"}</p></TableCell>
-                        <TableCell><p>{row?.Designation || "N/A"}</p></TableCell>
-                        <TableCell><p>{row?.userType || "N/A"}</p></TableCell>
-                        <TableCell>
-                          <div className="flex space-x-1">
-                            {row.IsActive == 0 && <Button onClick={() => handleUpdateUserStatus(row.UserID, 1)} size="sm" variant="default" className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1">{statuUpdateLoader ? statuUpdateLoader : 'Activate'}</Button>}
-                            {row.IsActive == 1 && <Button onClick={() => handleUpdateUserStatus(row.UserID, 0)} size="sm" variant="default" className="bg-red-600 hover:bg-red-700 text-white text-xs px-1 py-1">{statuUpdateLoader ? statuUpdateLoader : 'De-Activate'}</Button>}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
+                  </TableRow>
+                ) : users.length > 0 ? (
+                  users?.map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell>
+                        <p>{row?.UserName || "N/A"}</p>
+                      </TableCell>
+                      <TableCell>
+                        <p>{row?.FullName || "N/A"}</p>
+                      </TableCell>
+                      <TableCell>
+                        <p>{row?.DistrictName || "N/A"}</p>
+                      </TableCell>
+                      <TableCell>
+                        <p>{row?.PoliceStationName || "N/A"}</p>
+                      </TableCell>
+                      <TableCell>
+                        <p>{row?.Designation || "N/A"}</p>
+                      </TableCell>
+                      <TableCell>
+                        <p>{row?.userType || "N/A"}</p>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex space-x-1">
+                          {row.IsActive == 0 && (
+                            <Button
+                              onClick={() => handleUpdateUserStatus(row.UserID, 1)}
+                              size="sm"
+                              variant="default"
+                              className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1"
+                            >
+                              {statuUpdateLoader ? statuUpdateLoader : "Activate"}
+                            </Button>
+                          )}
+                          {row.IsActive == 1 && (
+                            <Button
+                              onClick={() => handleUpdateUserStatus(row.UserID, 0)}
+                              size="sm"
+                              variant="default"
+                              className="bg-red-600 hover:bg-red-700 text-white text-xs px-1 py-1"
+                            >
+                              {statuUpdateLoader ? statuUpdateLoader : "De-Activate"}
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center">
                       No Data Found
@@ -482,7 +572,7 @@ const UserManagement = () => {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
               >
                 Prev
@@ -500,7 +590,7 @@ const UserManagement = () => {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
               >
                 Next
@@ -516,11 +606,7 @@ const UserManagement = () => {
             />
           )}
           {uploadFile && (
-            <UploadDocumentsModal
-              isOpen={true}
-              onClose={() => setUploadFile(null)}
-              fileData={uploadFile}
-            />
+            <UploadDocumentsModal isOpen={true} onClose={() => setUploadFile(null)} fileData={uploadFile} />
           )}
         </div>
       </div>
