@@ -28,6 +28,8 @@ import {
 import Link from "next/link";
 import Cookies from "react-cookies";
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import PoliceMan from "@/assets/policeman.png";
 
 export function NavUser() {
   const name = Cookies.load("name");
@@ -60,8 +62,8 @@ export function NavUser() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground w-auto ml-auto"
             >
-              <div className="bg-slate-300 rounded-full p-2">
-                <UserRound className="size-4 bg-slate-300 text-white" />
+              <div className="bg-slate-300 rounded-full p-1">
+                <Image className="size-10 bg-slate-300 rounded-full" src={PoliceMan} alt="P"/>
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
