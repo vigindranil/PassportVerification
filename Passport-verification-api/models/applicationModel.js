@@ -115,18 +115,20 @@ export async function updateAADHAARInfo(
   ApplicationID,
   AadhaarName,
   AadhaarDOB,
+  AadharVerifiedStatus,
   AadhaarFatherName,
   AadhaarGender,
   AadhaarAddress,
-  EntryUserID
+  EntryUserID,
 ) {
   try {
     const [rows] = await pool.query(
-      `CALL sp_updateAADHAARInfo(?, ?, ?, ?, ?, ?, ?, @ErrorCode)`,
+      `CALL sp_updateAADHAARInfoV1(?, ?, ?, ?, ?, ?, ?, ?, @ErrorCode)`,
       [
         ApplicationID,
         AadhaarName,
         AadhaarDOB,
+        AadharVerifiedStatus,
         AadhaarFatherName,
         AadhaarGender,
         AadhaarAddress,
