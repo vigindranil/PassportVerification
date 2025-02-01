@@ -1,4 +1,5 @@
 /node_modules
 .env
-./logs
+/logs/debug.log
+/logs/error.log
 /uploads

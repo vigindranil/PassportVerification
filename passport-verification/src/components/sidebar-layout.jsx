@@ -14,6 +14,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { NavUser } from "@/components/nav-user";
+import Link from "next/link";
 
 export default function SidebarLayout({
   breadcrumb = [{ href: "#", name: "Authority" }],
@@ -36,9 +37,7 @@ export default function SidebarLayout({
                         index == breadcrumb.length - 1 && "text-blue-500"
                       }`}
                     >
-                      <BreadcrumbLink href={item.href}>
-                        {item.name}
-                      </BreadcrumbLink>
+                      <Link href={item.href}>{item.name}</Link>
                     </BreadcrumbItem>
                     {index !== breadcrumb.length - 1 && (
                       <BreadcrumbSeparator className="hidden md:block text-stone-700" />
