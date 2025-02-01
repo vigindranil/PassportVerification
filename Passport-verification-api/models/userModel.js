@@ -19,6 +19,22 @@ export async function saveUserRegistrationModel(
   PSID,
   EntryUserID
 ) {
+  console.log('UserID:',UserID)
+  console.log('UserName:',UserName)
+  console.log('FullName:',FullName)
+  console.log('UserPassword:',UserPassword)
+  console.log('Firstname:',Firstname)
+  console.log('LastName:',LastName)
+  console.log('MobileNo:',MobileNo)
+  console.log('EmailID:',EmailID)
+  console.log('Gender:',Gender)
+  console.log('AADHAARNo:',AADHAARNo)
+  console.log('Designation:',Designation)
+  console.log('UserRoleID:',UserRoleID)
+  console.log('DistrictID:',DistrictID)
+  console.log('PSID:',PSID)
+  console.log('EntryUserID:',EntryUserID)
+  
   const [rows] = await pool.query(
     "CALL sp_saveUserRegistrationv2(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, @ErrorCode, @ID);",
     [

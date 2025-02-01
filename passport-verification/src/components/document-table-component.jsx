@@ -375,17 +375,17 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                 <VisuallyHidden>
                   <DialogTitle>Locational Details</DialogTitle>
                 </VisuallyHidden>
-                <div className="space-y-2 h-full w-full">
-                  <h1 className="text-center text-slate-500 font-bold text-xl">Locational Details</h1>
+                <div className="space-y-2 h-full w-full px-5">
+                  <h1 className="text-center text-slate-500 font-bold text-xl mb-10 underline">Locational Details</h1>
                   {selectedLocationDetails &&
                     <div>
-                      {selectedLocationDetails?.ip && <p><span className='font-bold'>IP Address:</span> {selectedLocationDetails?.ip}</p>}
-                      {selectedLocationDetails?.city && <p><span className='font-bold'>City:</span> {selectedLocationDetails?.city}</p>}
-                      {selectedLocationDetails?.region && <p><span className='font-bold'>Region:</span> {selectedLocationDetails?.region}</p>}
-                      {selectedLocationDetails?.country && <p><span className='font-bold'>Country:</span> {selectedLocationDetails?.country}</p>}
-                      {selectedLocationDetails?.postal && <p><span className='font-bold'>Postal:</span> {selectedLocationDetails?.postal}</p>}
-                      {selectedLocationDetails?.timezone && <p><span className='font-bold'>Timezone:</span> {selectedLocationDetails?.timezone}</p>}
-                      {selectedLocationDetails?.MacAddress && <p><span className='font-bold'>Mac-Address:</span> {selectedLocationDetails?.MacAddress}</p>}
+                      {selectedLocationDetails?.ip && <div className="flex"><span className='font-bold'>IP Address:</span> <span>{selectedLocationDetails?.ip}</span></div>}
+                      {selectedLocationDetails?.city && <div className="flex"><span className='font-bold'>City:</span> <span>{selectedLocationDetails?.city}</span></div>}
+                      {selectedLocationDetails?.region && <div className="flex"><span className='font-bold'>Region:</span> <span>{selectedLocationDetails?.region}</span></div>}
+                      {selectedLocationDetails?.country && <div className="flex"><span className='font-bold'>Country:</span> <span>{selectedLocationDetails?.country}</span></div>}
+                      {selectedLocationDetails?.postal && <div className="flex"><span className='font-bold'>Postal:</span> <span>{selectedLocationDetails?.postal}</span></div>}
+                      {selectedLocationDetails?.timezone && <div className="flex"><span className='font-bold'>Timezone:</span> <span>{selectedLocationDetails?.timezone}</span></div>}
+                      {selectedLocationDetails?.MacAddress && <div className="flex"><span className='font-bold'>Mac-Address:</span> <span>{selectedLocationDetails?.MacAddress}</span></div>}
 
                       <div><span className='font-bold'>Lat-Long:</span> {selectedLocationDetails?.loc}</div>
                       <div><span className='font-bold'>Map:</span> <a className='text-blue-500 underline' href={`https://www.google.co.in/maps/@${selectedLocationDetails?.loc}`}>view in map</a></div>
