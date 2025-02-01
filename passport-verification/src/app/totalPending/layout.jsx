@@ -30,7 +30,7 @@ const Layout = () => {
 
   const breadcrumb = [
     { href: dashboard, name: "Dashboard" },
-    { href: "#", name: "Pending Applications" },
+    { href: "#", name: "Application Details" },
   ];
 
   return (

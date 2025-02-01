@@ -103,7 +103,6 @@ export const saveUserRegistration = async (req, res) => {
             UserRoleID,
             DistrictID,
             PSID,
-
             req.user.UserID); // change aadhar token
 
         console.log('askodgjklmv', result);

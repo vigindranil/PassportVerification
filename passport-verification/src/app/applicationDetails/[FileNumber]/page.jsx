@@ -10,15 +10,27 @@ import moment, { isMoment } from "moment"
 import DocumentTable from "@/components/document-table-component"
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
+import ApplicationStatusHistory from "@/components/application-status-history"
 
 export default function Page({ FileNumber }) {
   const [applicationDetails, setApplicationDetails] = useState(null);
+  const [isLoadingStatusHistrory, setIsLoadingStatusHistrory] = useState(true)
+  const [isLoadingDocumentTable, setIsLoadingDocumentTable] = useState(true);
   const { toast } = useToast()
 
   const fetchData = async (ApplicationId) => {
-    const response = await getDetailsApplicationId(ApplicationId);
-    console.log("Application Details Data:", response);
-    setApplicationDetails(response?.data);
+    try {
+      setIsLoadingStatusHistrory(true)
+      setIsLoadingDocumentTable(true)
+      const response = await getDetailsApplicationId(ApplicationId);
+      console.log("Application Details Data:", response);
+      setApplicationDetails(response?.data);
+    }catch (e) {
+      console.log("Error fetching application details:", e);
+    } finally {
+      setIsLoadingStatusHistrory(false)
+      setIsLoadingDocumentTable(false)
+    }
   }
 
   useEffect(() => {
@@ -165,42 +177,10 @@ export default function Page({ FileNumber }) {
               <div className="bg-gradient-to-r from-blue-600 to-teal-600 p-6">
                 <h2 className="text-2xl font-bold text-white">Application Document</h2>
               </div>
-              <DocumentTable fileNo={FileNumber} documents={applicationDetails?.documents} docPath={applicationDetails?.filepath} />
+              <DocumentTable fileNo={FileNumber} documents={applicationDetails?.documents} docPath={applicationDetails?.filepath} isLoadingDocumentTable={isLoadingDocumentTable}/>
               
             </div>
-            <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden">
-              <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
-                <h2 className="text-2xl font-bold text-white">Application Status</h2>
-              </div>
-              <div className="m-6">
-                <Card>
-                  <CardContent>
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Full Name</TableHead>
-                            <TableHead>Authority Level</TableHead>
-                            <TableHead>Application State</TableHead>
-                            <TableHead>Updated Date</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {applicationDetails?.status?.map((stat, index) => (
-                            <TableRow key={index}>
-                              <TableCell>{stat?.UserName}</TableCell>
-                              <TableCell>{stat?.UserRole}</TableCell>
-                              <TableCell>{stat?.ApplicationState}</TableCell>
-                              <TableCell>{moment(stat?.ApplicationStateUpdatedDateTime).format('DD/MM/YYYY hh:mm:ss')}</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
+            <ApplicationStatusHistory status={applicationDetails?.status} isLoadingStatusHistrory={isLoadingStatusHistrory}/>
           </div>
         </main>
       </div>
