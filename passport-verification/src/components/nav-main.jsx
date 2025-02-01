@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useEffect, useState } from "react";
 import Cookies from "react-cookies";
+import Link from "next/link";
 
 export function NavMain({ items }) {
   const type_id = Cookies.load("type");
@@ -57,9 +58,9 @@ export function NavMain({ items }) {
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
-                            <a href={subItem.url}>
+                            <Link href={subItem.url}>
                               <span className="text-xs">{subItem.title}</span>
-                            </a>
+                            </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}

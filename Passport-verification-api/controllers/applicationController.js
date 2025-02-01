@@ -204,10 +204,11 @@ export const completeVerificationForEO = async (req, res) => {
       ApplicationID,
       AadhaarName,
       AadhaarDOB,
+      1,
       AadhaarFatherName,
       AadhaarGender,
       AadhaarAddress,
-      EntryUserID
+      EntryUserID,
     );
 
     if (resultUpdateAadhaarEnquiry == 0 && resultUpdateEnquiry == 0) {
