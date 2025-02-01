@@ -8,6 +8,8 @@ import Image from "next/image"
 import { VisuallyHidden } from "@/components/ui/visually-hidden"
 import { getBirthCertificateDetails, getWBSEDCLDetails, verifyApplication } from "@/app/applicationDetails/[FileNumber]/api"
 import Cookies from "react-cookies";
+import { useToast } from "@/hooks/use-toast"
+import { ToastAction } from "@/components/ui/toast"
 
 const DocumentTable = ({ documents, docPath, fileNo }) => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
@@ -22,6 +24,7 @@ const DocumentTable = ({ documents, docPath, fileNo }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [userType, setUserType] = useState(null);
   const userTypeCookies = Cookies.load("type");
+  const { toast } = useToast()
 
 
   const [type, setType] = useState("")
@@ -241,8 +244,8 @@ const DocumentTable = ({ documents, docPath, fileNo }) => {
                   </div>
 
                   {/* Electricity Bill */}
-                  {/* {(userType == 30 && docType == 1) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}> */}
-                  {(userType == 30) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}>
+                  {(userType == 30 && docType == 1) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}>
+                  {/* {(userType == 30) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}> */}
                     <div className="px-5">
                       <h1 className="text-center font-bold text-2xl my-3 mb-10 underline">Verify Electricity Document</h1>
                       <p className="text-slate-600">
@@ -283,8 +286,8 @@ const DocumentTable = ({ documents, docPath, fileNo }) => {
                   </div>}
 
                   {/* Birth Certificate */}
-                  {(userType == 30 && docType == 8) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}>
-                    {/* {(userType == 30) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}> */}
+                  {/* {(userType == 30 && docType == 8) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}> */}
+                    {(userType == 30) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}>
                     <div className="px-5">
                       <h1 className="text-center font-bold text-2xl my-3 mb-10 underline">Verify Birth Certificate</h1>
                       <p className="text-slate-600">

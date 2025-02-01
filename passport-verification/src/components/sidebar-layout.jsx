@@ -23,8 +23,8 @@ export default function SidebarLayout({
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex justify-between h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 bg-zinc-100">
-          <div className="flex items-center gap-2 px-4">
+        <header className="flex justify-between h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 bg-zinc-200">
+          <div className="flex items-center gap-2 px-4 w-full">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
@@ -33,7 +33,7 @@ export default function SidebarLayout({
                   <React.Fragment key={index}>
                     <BreadcrumbItem
                       className={`hidden md:block ${
-                        index == breadcrumb.length - 1 && "text-primary"
+                        index == breadcrumb.length - 1 && "text-blue-500"
                       }`}
                     >
                       <BreadcrumbLink href={item.href}>
@@ -41,7 +41,7 @@ export default function SidebarLayout({
                       </BreadcrumbLink>
                     </BreadcrumbItem>
                     {index !== breadcrumb.length - 1 && (
-                      <BreadcrumbSeparator className="hidden md:block" />
+                      <BreadcrumbSeparator className="hidden md:block text-stone-700" />
                     )}
                   </React.Fragment>
                 ))}

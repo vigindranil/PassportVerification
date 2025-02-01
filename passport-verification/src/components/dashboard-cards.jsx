@@ -7,13 +7,17 @@ const DashboardCard = ({ title, value, icon: Icon, description, color, link }) =
   <Link href={link}>
     <Card
       className={clsx(
-        'text-white bg-gradient-to-br',
+        `text-white bg-gradient-to-br hover:shadow-xl`,
         {
-          'from-purple-600 to-purple-400': color === 'purple',
-          'from-blue-600 to-blue-400': color === 'blue',
-          'from-green-600 to-green-400': color === 'green',
-          'from-yellow-600 to-yellow-400': color === 'yellow',
-          'from-lime-600 to-lime-400': color === 'lime',
+          'from-purple-700 to-purple-300': color === 'purple',
+          'from-blue-700 to-blue-300': color === 'blue',
+          'from-green-700 to-green-300': color === 'green',
+          'from-yellow-700 to-yellow-300': color === 'yellow',
+          'from-lime-700 to-lime-300': color === 'lime',
+          'from-red-700 to-red-300': color === 'red',
+          'from-teal-700 to-teal-300': color === 'teal',
+          'from-orange-700 to-orange-300': color === 'orange',
+          'from-pink-700 to-pink-300': color === 'pink',
         }
       )}
     >

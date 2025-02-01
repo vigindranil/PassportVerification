@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import { getUserVerifyToken } from '../models/authModels.js';
-import { log } from 'console';
 
 // Secret key for JWT
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -10,8 +9,9 @@ const verifyToken = async(req, res, next) => {
   if (!token_base64) {
     return res.status(401).json({ message: 'Access denied! Unauthorized access.' });
   }
+  console.log("token_base64", token_base64);
   const token = atob(token_base64); // Extract
-  console.log("extracting token", token);
+  // const token = token_base64; // Extract
   
   
 
@@ -21,7 +21,8 @@ const verifyToken = async(req, res, next) => {
     // sp for check session token
     
     const [rows] = await getUserVerifyToken(decoded.UserID);
-    console.log("rows",rows);
+    console.log("local token",token);
+    console.log("db token",rows?.JWTToken);
     
     if (new Date() > rows?.TokenValidUpto) {
       return res.status(401).json({status: 1, message: 'Token expired! Please Login again to continue.' });

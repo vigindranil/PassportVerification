@@ -111,6 +111,36 @@ export async function updateEnquiryStatusModel(
   }
 }
 
+export async function updateAADHAARInfo(
+  ApplicationID,
+  AadhaarName,
+  AadhaarDOB,
+  AadhaarFatherName,
+  AadhaarGender,
+  AadhaarAddress,
+  EntryUserID
+) {
+  try {
+    const [rows] = await pool.query(
+      `CALL sp_updateAADHAARInfo(?, ?, ?, ?, ?, ?, ?, @ErrorCode)`,
+      [
+        ApplicationID,
+        AadhaarName,
+        AadhaarDOB,
+        AadhaarFatherName,
+        AadhaarGender,
+        AadhaarAddress,
+        EntryUserID,
+      ]
+    );
+
+    const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
+    return result[0].ErrorCode;
+  } catch (error) {
+    throw new Error("Database error: " + error.message);
+  }
+}
+
 export async function setExternelApiLog(
   APITypeId,
   ApplicationId,
@@ -130,15 +160,13 @@ export async function setExternelApiLog(
         APIRequest,
         APIResponse,
         EntryUserID,
-        Remarks
+        Remarks,
       ]
     );
 
     const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
     return result[0].ErrorCode;
-
   } catch (error) {
-    console.error("Error updating enquiry status:", error.message);
     throw new Error("Database error: " + error.message);
   }
 }
@@ -153,20 +181,12 @@ export async function savethirdpartyVerifyStatus(
   try {
     const [rows] = await pool.query(
       `CALL sp_savethirdpartyVerifyStatus(?, ?, ?, ?, ?, @ErrorCode)`,
-      [
-        ApplicationId,
-        DocumentID,
-        VerifyStatus,
-        ApiResponse,
-        EntryuserId
-      ]
+      [ApplicationId, DocumentID, VerifyStatus, ApiResponse, EntryuserId]
     );
 
     const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
     return result[0].ErrorCode;
-
   } catch (error) {
-    console.error("Error updating enquiry status:", error.message);
     throw new Error("Database error: " + error.message);
   }
 }

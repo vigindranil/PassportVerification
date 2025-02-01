@@ -33,6 +33,7 @@ export function NavUser() {
   const name = Cookies.load("name");
   const ps = Cookies.load("ps");
   const district = Cookies.load("district");
+  const type = Cookies.load("type");
   const [user, setUser] = useState(null);
 
   const { isMobile } = useSidebar();
@@ -43,6 +44,7 @@ export function NavUser() {
         name,
         ps,
         district,
+        type
       });
     } catch (error) {
       setUser({});
@@ -63,7 +65,7 @@ export function NavUser() {
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {user?.name}
+                  {user?.name} {user?.type == 10 ? '(District Nodal)' : user?.type == 40 ? '(EO)' : user?.type == 30 ? '(OC)' : user?.type == 20 ? '(SP)' : user?.type == 40 ? '(EO)' : user?.type == 50 ? '(SE)' : ''}
                 </span>
                 <span className="truncate text-xs">
                   District: {user?.district}

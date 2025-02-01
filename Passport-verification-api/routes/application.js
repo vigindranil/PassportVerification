@@ -1,5 +1,5 @@
 import express from 'express';
-import { getApplicationDetails ,getDocumentsApplicationDetailsByFileNo,updateEnquiryStatus, verifyApplication} from '../controllers/applicationController.js';
+import { completeVerificationForEO, getApplicationDetails ,getDocumentsApplicationDetailsByFileNo,updateEnquiryStatus, verifyApplication} from '../controllers/applicationController.js';
 
 const router = express.Router();
 
@@ -29,6 +29,7 @@ const router = express.Router();
 
 router.post('/detailsapplicationId', getApplicationDetails);
 router.post('/updateEnquiryStatus', updateEnquiryStatus);
+router.post('/completeVerificationForEO', completeVerificationForEO);
 router.post('/verifyApplication', verifyApplication);
 router.post('/getDocumentsApplicationDetailsByFileNo', getDocumentsApplicationDetailsByFileNo);
 export default router;

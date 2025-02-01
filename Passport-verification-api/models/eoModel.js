@@ -18,21 +18,7 @@ export async function saveDocumentUploadModel(
   EntryuserId
 ) {
   try {
-console.log("ApplicationId",ApplicationId)
-console.log("DocumentPath",DocumentPath)
-console.log("DocumentRemarks",DocumentRemarks)
-console.log("DocumentTypeId",DocumentTypeId)
-console.log("IdNumber",IdNumber)
-console.log("IdNumber2",IdNumber2)
-console.log("IdNumber3",IdNumber3)
-console.log("IdNumber4",IdNumber4)
-console.log("IdNumber5",IdNumber5)
-console.log("DeviceId",DeviceId)
-console.log("MacAddress",MacAddress)
-console.log("longitude",longitude)
-console.log("latitude",latitude)
-console.log("locationIp",locationIp)
-console.log("EntryuserId",EntryuserId)
+
     const jsonTEXT = "{}";
     const [rows] = await pool.query(
       "CALL sp_saveDocumentUpload(?, ?, ?,?, ?,?,?,?,?, ?,?,?,?,?,?,?, @DocId ,@Errorcode);",

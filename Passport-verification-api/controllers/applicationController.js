@@ -5,6 +5,7 @@ import {
   updateEnquiryStatusModel,
   setExternelApiLog,
   savethirdpartyVerifyStatus,
+  updateAADHAARInfo,
 } from "../models/applicationModel.js";
 import { saveTransactionHistory } from "../models/logModel.js";
 import logger from "../utils/logger.js";
@@ -150,6 +151,108 @@ export const updateEnquiryStatus = async (req, res) => {
             StatusID,
             StatusText,
             Remarks,
+          },
+          RESPONSE: {
+            status: 1,
+            message: "Failed to update enquiry status",
+          },
+        })
+      );
+      return res.status(400).json({
+        status: 1,
+        message: "Failed to update enquiry status",
+      });
+    }
+  } catch (error) {
+    logger.error("Error in updateEnquiryStatusController:", error.message);
+    return res.status(500).json({
+      status: 1,
+      message: "An error occurred while updating the enquiry status.",
+      error: error.message,
+    });
+  }
+};
+
+export const completeVerificationForEO = async (req, res) => {
+  try {
+    const {
+      ApplicationID,
+      AadhaarName,
+      AadhaarDOB,
+      AadhaarFatherName,
+      AadhaarGender,
+      AadhaarAddress,
+      locationIp,
+      macAddress,
+      deviceId,
+      Remarks,
+    } = req.body;
+    const EntryUserID = req.user.UserID;
+
+    const resultUpdateEnquiry = await updateEnquiryStatusModel(
+      ApplicationID,
+      locationIp,
+      macAddress,
+      deviceId,
+      10,
+      "Verification Complete (EO)",
+      Remarks,
+      EntryUserID
+    );
+
+    const resultUpdateAadhaarEnquiry = await updateAADHAARInfo(
+      ApplicationID,
+      AadhaarName,
+      AadhaarDOB,
+      AadhaarFatherName,
+      AadhaarGender,
+      AadhaarAddress,
+      EntryUserID
+    );
+
+    if (resultUpdateAadhaarEnquiry == 0 && resultUpdateEnquiry == 0) {
+      logger.debug(
+        JSON.stringify({
+          API: "completeVerificationForEO",
+          REQUEST: {
+            ApplicationID,
+            AadhaarName,
+            AadhaarDOB,
+            AadhaarFatherName,
+            AadhaarGender,
+            AadhaarAddress,
+            locationIp,
+            macAddress,
+            deviceId,
+            Remarks,
+            EntryUserID
+          },
+          RESPONSE: {
+            status: 0,
+            message: "Status has been updated successfully",
+          },
+        })
+      );
+      return res.status(200).json({
+        status: 0,
+        message: "Status has been updated successfully",
+      });
+    } else {
+      logger.debug(
+        JSON.stringify({
+          API: "completeVerificationForEO",
+          REQUEST: {
+            ApplicationID,
+            AadhaarName,
+            AadhaarDOB,
+            AadhaarFatherName,
+            AadhaarGender,
+            AadhaarAddress,
+            locationIp,
+            macAddress,
+            deviceId,
+            Remarks,
+            EntryUserID
           },
           RESPONSE: {
             status: 1,

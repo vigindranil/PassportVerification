@@ -87,6 +87,7 @@ export const sendOtp = async (req, res) => {
             );
 
             const token = btoa(jwt_token);
+            // const token = jwt_token;
 
             const [result] = await updateAuthToken(rows[0]["UserID"], jwt_token, transactionId);
 
@@ -160,18 +161,15 @@ export const verifyOtp = async (req, res) => {
                     },
                 })
             );
+            const [result] = await updateAuthToken(req.user.UserID, "", "");
             return res.status(400).json({
                 status: 1,
                 message: "Invalid OTP"
             });
         }
-
-
-
         
         // const otpStatus = await verifyOtpAadhaar(otp, req.user.UserID, req.user.TransactionId);
         const otpStatus = true;
-        console.log('otpStatus', otpStatus);
         console.log('otpStatus', otpStatus);
 
         if (otp == '999999') {
@@ -190,23 +188,6 @@ export const verifyOtp = async (req, res) => {
                 message: "OTP has been verified successfully",
             });
         }
-        // else 
-        // if (otpStatus) {
-        //     logger.debug(
-        //         JSON.stringify({
-        //             API: "verifyOtp",
-        //             REQUEST: { otp },
-        //             RESPONSE: {
-        //                 status: 0,
-        //                 message: "OTP has been verified successfully",
-        //             },
-        //         })
-        //     );
-        //     return res.status(200).json({
-        //         status: 0,
-        //         message: "OTP has been verified successfully",
-        //     });
-        // } 
         else {
             logger.debug(
                 JSON.stringify({
@@ -218,6 +199,7 @@ export const verifyOtp = async (req, res) => {
                     },
                 })
             );
+            const [result] = await updateAuthToken(req.user.UserID, "", "");
             return res.status(400).json({
                 status: 1,
                 message: "Failed to verify OTP",
@@ -226,7 +208,7 @@ export const verifyOtp = async (req, res) => {
 
     } catch (error) {
         logger.error(error.message);
-
+        const [result] = await updateAuthToken(req.user.UserID, "", "");
         return res.status(500).json({
             status: 1,
             message: "An error occurred, Please try again",

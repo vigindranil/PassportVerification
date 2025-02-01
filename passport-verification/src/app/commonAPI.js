@@ -2,11 +2,11 @@ import Cookies from "react-cookies";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export const postRequest = async (url, request_body) => {
+export const postRequest = async (url, request_body = {}) => {
   try {
     const authToken = Cookies.load("data");
     console.log();
-    
+
     const HEADERS = {
       Authorization: `Bearer ${authToken}`,
       "Content-Type": "application/json",
@@ -23,7 +23,12 @@ export const postRequest = async (url, request_body) => {
     console.log(response);
 
     if (response?.status === 401) {
-      window.location.href = '/session-expired';
+      Cookies.remove("data");
+      Cookies.remove("type");
+      Cookies.remove("name");
+      Cookies.remove("ps");
+      Cookies.remove("district");
+      window.location.href = "/session-expired";
     } else if (!response.ok) {
       throw new Error(response);
     } else {
@@ -55,16 +60,36 @@ export const logout = async () => {
     console.log(response);
 
     if (response?.status === 401) {
-      window.location.href = '/session-expired';
+      Cookies.remove("data");
+      Cookies.remove("type");
+      Cookies.remove("name");
+      Cookies.remove("ps");
+      Cookies.remove("district");
+      window.location.href = "/session-expired";
     } else if (!response.ok) {
-      return null;
+      Cookies.remove("data");
+      Cookies.remove("type");
+      Cookies.remove("name");
+      Cookies.remove("ps");
+      Cookies.remove("district");
+      window.location.href = "/";
     } else {
       const result = await response.json(); // Assuming the API returns JSON
-      return result;
+      Cookies.remove("data");
+      Cookies.remove("type");
+      Cookies.remove("name");
+      Cookies.remove("ps");
+      Cookies.remove("district");
+      window.location.href = "/";
     }
   } catch (error) {
     console.log(error);
-    return result;
+    Cookies.remove("data");
+    Cookies.remove("type");
+    Cookies.remove("name");
+    Cookies.remove("ps");
+    Cookies.remove("district");
+    window.location.href = "/";
   }
 };
 
@@ -84,10 +109,15 @@ export const getRequest = async (url) => {
     const response = await fetch(`${BASE_URL}${url}`, requestOptions);
 
     if (response.status === 401) {
-      window.location.href = '/session-expired';
+      Cookies.remove("data");
+      Cookies.remove("type");
+      Cookies.remove("name");
+      Cookies.remove("ps");
+      Cookies.remove("district");
+      window.location.href = "/session-expired";
     } else if (!response.ok) {
       throw new Error(response);
-    }else{ 
+    } else {
       const result = await response.json(); // Assuming the API returns JSON
       return result;
     }
@@ -119,9 +149,13 @@ export const postFileRequest = async (url, request_body) => {
 
     const response = await fetch(`${BASE_URL}${url}`, requestOptions);
 
-
     if (response?.status === 401) {
-      window.location.href = '/session-expired';
+      Cookies.remove("data");
+      Cookies.remove("type");
+      Cookies.remove("name");
+      Cookies.remove("ps");
+      Cookies.remove("district");
+      window.location.href = "/session-expired";
     } else if (!response.ok) {
       throw new Error(response);
     } else {

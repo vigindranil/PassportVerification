@@ -39,7 +39,7 @@ const data = {
       {
         "title": "EO Operations",
         "url": "/",
-        "icon": "Home",
+        "icon": LayoutGrid,
         "isActive": true,
         "type": 40,
         "items": [
@@ -51,7 +51,7 @@ const data = {
       {
         "title": "OC Operations",
         "url": "/",
-        "icon": "Home",
+        "icon": LayoutGrid,
         "isActive": true,
         "type": 30,
         "items": [
@@ -63,7 +63,7 @@ const data = {
       {
         "title": "SP Operations",
         "url": "/",
-        "icon": "Home",
+        "icon": LayoutGrid,
         "isActive": true,
         "type": 20,
         "items": [
@@ -75,7 +75,7 @@ const data = {
       {
         "title": "SE Operations",
         "url": "/",
-        "icon": "Home",
+        "icon": LayoutGrid,
         "isActive": true,
         "type": 50,
         "items": [

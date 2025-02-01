@@ -8,10 +8,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { getDetailsApplicationId } from "./api"
 import moment, { isMoment } from "moment"
 import DocumentTable from "@/components/document-table-component"
-
+import { useToast } from "@/hooks/use-toast"
+import { ToastAction } from "@/components/ui/toast"
 
 export default function Page({ FileNumber }) {
   const [applicationDetails, setApplicationDetails] = useState(null);
+  const { toast } = useToast()
 
   const fetchData = async (ApplicationId) => {
     const response = await getDetailsApplicationId(ApplicationId);
