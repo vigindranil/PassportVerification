@@ -83,7 +83,7 @@ const DashboardCards = () => {
         ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 {[...Array(8)].map((_, index) => (
-                    <Skeleton key={index} className="h-[125px] w-[30%] rounded-xl bg-slate-300 p-5 m-2s">
+                    <Skeleton key={index} className="h-[125px] w-[230px] rounded-xl bg-slate-300 p-5 m-2s">
                         <div className='flex items-center justify-between gap-4'>
                             <Skeleton className="h-4 w-[80%] bg-slate-100" />
                             <Skeleton className="h-[28px] w-[30px] p-0 m-0 rounded-full bg-slate-100" />
