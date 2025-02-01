@@ -20,7 +20,7 @@ const dashboardConfig = {
         { title: "Pending IN Enquiry Officer", key: "SEPending", icon: CircleDashed, color: "pink", link: "/pendingInEnquiryOfficer" },
     ],
     40: [
-        { title: "Verify Pending (PS)", key: "TotalPendingApplications", icon: CircleDashed, color: "lime", link: "/totalPending" },
+        { title: "Verify Pending (PS)", key: "TotalPendingApplications", icon: CircleDashed, color: "lime", link: "/allFiles" },
         { title: "Accept & Verify Pending (EO)", key: "EOAccepectButNotStartedVerify", icon: TrendingDown, color: "blue", link: "/acceptedAndVerificationPending-eo" },
         { title: "Verify Completed (EO)", key: "EOComplete", icon: ArrowRightToLine, color: "purple", link: "/verificationCompletedEO" },
     ],
@@ -36,7 +36,7 @@ const dashboardConfig = {
         { title: "Verification Completed (EO)", key: "EOComplete", icon: ArrowRightToLine, color: "lime", link: "/verificationCompletedEO" },
         { title: "Pending IN OC", key: "OCPending", icon: ArrowRightToLine, color: "red", link: "/pendingInOC" },
         { title: "Completed By OC", key: "OCComplete", icon: ArrowRightToLine, color: "teal", link: "/verificationCompletedEO" },
-        { title: "Pending IN SP/DIB", key: "SPPending", icon: ArrowRightToLine, color: "orange", link: "/pendingInSPDIB" },
+        { title: "Pending IN SP/DIB", key: "SPPending", icon: ArrowRightToLine, color: "orange", link: "/allFiles-sp" },
         { title: "Complete IN SP/DIB", key: "SPDone", icon: ArrowRightToLine, color: "pink", link: "/completed-sp" },
         { title: "Pending IN Enquiry Officer", key: "SEPending", icon: ArrowRightToLine, color: "yellow", link: "/pendingInEnquiryOfficer" },
         { title: "Complete IN Enquiry Officer", key: "SEComplete", icon: ArrowRightToLine, color: "blue", link: "/completed-se" },
