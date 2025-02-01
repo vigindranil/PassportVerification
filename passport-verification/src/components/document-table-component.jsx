@@ -11,7 +11,7 @@ import Cookies from "react-cookies";
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 
-const DocumentTable = ({ documents, docPath, fileNo }) => {
+const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [isLocationDetailsModalOpen, setIsLocationDetailsModalOpen] = useState(false)
   const [selectedDoc, setSelectedDoc] = useState("")
@@ -25,9 +25,8 @@ const DocumentTable = ({ documents, docPath, fileNo }) => {
   const [userType, setUserType] = useState(null);
   const userTypeCookies = Cookies.load("type");
   const { toast } = useToast()
-
-
   const [type, setType] = useState("")
+
 
   const verifyElectricityBill = async (
     consumerId,
@@ -138,7 +137,7 @@ const DocumentTable = ({ documents, docPath, fileNo }) => {
           ),
         })
         setVerified(true);
-      }else {
+      } else {
         toast({
           variant: "destructive",
           title: "Failure!",
@@ -163,6 +162,21 @@ const DocumentTable = ({ documents, docPath, fileNo }) => {
     setUserType(userTypeCookies);
   }, [userTypeCookies])
 
+  const SkeletonLoader = () => (
+    <>
+      {[...Array(3)].map((_, index) => (
+        <TableRow key={index}>
+          <TableCell><div className="h-4 bg-gray-300 rounded w-24 animate-pulse"></div></TableCell>
+          <TableCell><div className="h-4 bg-gray-300 rounded w-32 animate-pulse"></div></TableCell>
+          <TableCell><div className="h-4 bg-gray-300 rounded w-40 animate-pulse"></div></TableCell>
+          <TableCell><div className="h-4 bg-gray-300 rounded w-28 animate-pulse"></div></TableCell>
+          <TableCell><div className="h-4 bg-gray-300 rounded w-40 animate-pulse"></div></TableCell>
+          <TableCell><div className="h-4 bg-gray-300 rounded w-28 animate-pulse"></div></TableCell>
+        </TableRow>
+      ))}
+    </>
+  )
+
   return (
     <Card className="m-5">
       <CardContent>
@@ -179,43 +193,58 @@ const DocumentTable = ({ documents, docPath, fileNo }) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {documents?.map((doc, index) => (
-                <TableRow key={index}>
-                  <TableCell>{doc?.DocumentTypeName || "-"}</TableCell>
-                  <TableCell>{doc?.FileType || "-"}</TableCell>
-                  <TableCell>{doc?.IdNumber || "-"}</TableCell>
-                  <TableCell>{doc?.IdNumber2 || "-"}</TableCell>
-                  <TableCell>{doc?.LocationIp || "-"}</TableCell>
-                  <TableCell className="flex">
-                    <button
-                      className="flex bg-blue-100 justify-center items-center p-1 m-1 rounded-md hover:bg-blue-200 text-sm"
-                      onClick={() => {
-                        setVerifiedResponse(null)
-                        setSelectedDoc(`${docPath}${doc?.DocumentPath}`)
-                        setType(doc?.FileType)
-                        setIsDetailsModalOpen(true)
-                        setDocType(doc?.DocumentTypeId)
-                        setSelectedImage(doc)
-                        setVerified(doc?.Isverified)
-                      }}
-                    >
-                      <Eye className="text-blue-600 mr-2 h-4 w-4" />
-                      View
-                    </button>
-                    {(doc?.DocumentTypeId == 13) && <button
-                      className="flex bg-blue-100 justify-center items-center p-1 m-1 rounded-md hover:bg-blue-200 text-sm"
-                      onClick={() => {
-                        setSelectedLocationDetails(doc?.UserAgent ? JSON.parse(doc?.UserAgent) : {})
-                        // setSelectedLocationDetails(doc?.UserAgent)
-                        setIsLocationDetailsModalOpen(true)
-                      }}
-                    >
-                      <MapPin className="text-blue-600 mr-2 h-4 w-4" />
-                      Location
-                    </button>}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {isLoadingDocumentTable ? <SkeletonLoader /> :
+                documents?.length > 0 ?
+                  documents?.map((doc, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{doc?.DocumentTypeName || "-"}</TableCell>
+                      <TableCell>{doc?.FileType || "-"}</TableCell>
+                      <TableCell>{doc?.IdNumber || "-"}</TableCell>
+                      <TableCell>{doc?.IdNumber2 || "-"}</TableCell>
+                      <TableCell>{doc?.LocationIp || "-"}</TableCell>
+                      <TableCell className="flex">
+                        <button
+                          className="flex bg-blue-100 justify-center items-center p-1 m-1 rounded-md hover:bg-blue-200 text-sm"
+                          onClick={() => {
+                            setVerifiedResponse(null)
+                            setSelectedDoc(`${docPath}${doc?.DocumentPath}`)
+                            setType(doc?.FileType)
+                            setIsDetailsModalOpen(true)
+                            setDocType(doc?.DocumentTypeId)
+                            setSelectedImage(doc)
+                            setVerified(doc?.Isverified)
+                          }}
+                        >
+                          <Eye className="text-blue-600 mr-2 h-4 w-4" />
+                          View
+                        </button>
+                        {(doc?.DocumentTypeId == 13) ? <button
+                          className="flex bg-blue-100 justify-center items-center p-1 m-1 rounded-md hover:bg-blue-200 text-sm"
+                          onClick={() => {
+                            setSelectedLocationDetails(doc?.UserAgent ? JSON.parse(doc?.UserAgent) : {})
+                            setIsLocationDetailsModalOpen(true)
+                          }}
+                        >
+                          <MapPin className="text-blue-600 mr-2 h-4 w-4" />
+                          Location
+                        </button> :
+                          <button
+                            className="flex bg-blue-100 justify-center items-center p-1 m-1 rounded-md hover:bg-blue-200 text-sm"
+                            onClick={() => {
+                              setSelectedLocationDetails({ip: doc?.LocationIp, MacAddress: doc?.MacAddress, loc: doc?.Latitude+","+doc?.Longitude})
+                              setIsLocationDetailsModalOpen(true)
+                            }}
+                          >
+                            <MapPin className="text-blue-600 mr-2 h-4 w-4" />
+                            Location
+                          </button>}
+                      </TableCell>
+                    </TableRow>
+                  )) :
+                  <TableRow>
+                    <TableCell className="text-center" colSpan={6}>No documents found</TableCell>
+                  </TableRow>
+              }
             </TableBody>
           </Table>
           {isDetailsModalOpen && (
@@ -225,7 +254,7 @@ const DocumentTable = ({ documents, docPath, fileNo }) => {
                   <DialogTitle>Document Preview</DialogTitle>
                 </VisuallyHidden>
                 <div className="flex h-full">
-                  <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full flex items-center justify-center bg-gray-100`}>
+                  <div className={`${(docType != 1 && docType != 8) ? 'w-full p-5' : 'w-1/2'} h-full flex items-center justify-center bg-gray-100`}>
                     {type == "jpg" ? (
                       <Image
                         className="w-auto h-[95vh]"
@@ -245,7 +274,7 @@ const DocumentTable = ({ documents, docPath, fileNo }) => {
 
                   {/* Electricity Bill */}
                   {(userType == 30 && docType == 1) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}>
-                  {/* {(userType == 30) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}> */}
+                    {/* {(userType == 30) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}> */}
                     <div className="px-5">
                       <h1 className="text-center font-bold text-2xl my-3 mb-10 underline">Verify Electricity Document</h1>
                       <p className="text-slate-600">
@@ -286,8 +315,8 @@ const DocumentTable = ({ documents, docPath, fileNo }) => {
                   </div>}
 
                   {/* Birth Certificate */}
-                  {/* {(userType == 30 && docType == 8) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}> */}
-                    {(userType == 30) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}>
+                  {(userType == 30 && docType == 8) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}>
+                    {/* {(userType == 30) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}> */}
                     <div className="px-5">
                       <h1 className="text-center font-bold text-2xl my-3 mb-10 underline">Verify Birth Certificate</h1>
                       <p className="text-slate-600">
@@ -347,26 +376,17 @@ const DocumentTable = ({ documents, docPath, fileNo }) => {
                   <DialogTitle>Locational Details</DialogTitle>
                 </VisuallyHidden>
                 <div className="space-y-2 h-full w-full">
+                  <h1 className="text-center text-slate-500 font-bold text-xl">Locational Details</h1>
                   {selectedLocationDetails &&
                     <div>
-                      <p>
-                        <span className='font-bold'>IP Address:</span> {selectedLocationDetails?.ip}
-                      </p>
-                      <p>
-                        <span className='font-bold'>City:</span> {selectedLocationDetails?.city}
-                      </p>
-                      <p>
-                        <span className='font-bold'>Region:</span> {selectedLocationDetails?.region}
-                      </p>
-                      <p>
-                        <span className='font-bold'>Country:</span> {selectedLocationDetails?.country}
-                      </p>
-                      <p>
-                        <span className='font-bold'>Postal:</span> {selectedLocationDetails?.postal}
-                      </p>
-                      <p>
-                        <span className='font-bold'>Timezone:</span> {selectedLocationDetails?.timezone}
-                      </p>
+                      {selectedLocationDetails?.ip && <p><span className='font-bold'>IP Address:</span> {selectedLocationDetails?.ip}</p>}
+                      {selectedLocationDetails?.city && <p><span className='font-bold'>City:</span> {selectedLocationDetails?.city}</p>}
+                      {selectedLocationDetails?.region && <p><span className='font-bold'>Region:</span> {selectedLocationDetails?.region}</p>}
+                      {selectedLocationDetails?.country && <p><span className='font-bold'>Country:</span> {selectedLocationDetails?.country}</p>}
+                      {selectedLocationDetails?.postal && <p><span className='font-bold'>Postal:</span> {selectedLocationDetails?.postal}</p>}
+                      {selectedLocationDetails?.timezone && <p><span className='font-bold'>Timezone:</span> {selectedLocationDetails?.timezone}</p>}
+                      {selectedLocationDetails?.MacAddress && <p><span className='font-bold'>Mac-Address:</span> {selectedLocationDetails?.MacAddress}</p>}
+
                       <div><span className='font-bold'>Lat-Long:</span> {selectedLocationDetails?.loc}</div>
                       <div><span className='font-bold'>Map:</span> <a className='text-blue-500 underline' href={`https://www.google.co.in/maps/@${selectedLocationDetails?.loc}`}>view in map</a></div>
                     </div>

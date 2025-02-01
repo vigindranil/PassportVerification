@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Page from "./page";
 import Loading from "./loading";
 import SidebarLayout from "@/components/sidebar-layout";
@@ -30,7 +30,7 @@ const Layout = () => {
 
   const breadcrumb = [
     { href: dashboard, name: "Dashboard" },
-    { href: "#", name: "Pending Applications" },
+    { href: "#", name: "Application Details" },
   ];
 
   return (
