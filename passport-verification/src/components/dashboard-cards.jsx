@@ -22,8 +22,8 @@ const DashboardCard = ({ title, value, icon: Icon, description, color, link }) =
       )}
     >
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <Icon className="h-6 w-6" />
+        <CardTitle className="text-sm font-medium whitespace-pre-wrap">{title}</CardTitle>
+        <Icon className={`h-8 w-8 bg-slate-900/15 p-[6px] rounded-full`} />
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{value}</div>

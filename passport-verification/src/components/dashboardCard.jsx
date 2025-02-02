@@ -3,21 +3,21 @@
 import { useEffect, useState } from 'react';
 import Cookies from "react-cookies";
 import { getDistrictNodalDashBoard } from '@/app/dashboard/api';
-import { CircleDashed, TrendingDown, ArrowRightToLine } from 'lucide-react';
+import { CircleDashed, TrendingDown, ArrowRightToLine, Clock, CalendarClock, CircleCheckBig, FileClock, FileCheck2, ClockAlert, CircleCheck } from 'lucide-react';
 import DashboardCard from './dashboard-cards';
 import { Skeleton } from "@/components/ui/skeleton";
 
 const dashboardConfig = {
     10: [
-        { title: "Total Pending Applications", key: "TotalPendingApplications", icon: CircleDashed, color: "purple", link: "/totalPending" },
-        { title: "Last 15 Days Pending", key: "Last15DaysPendingApplications", icon: TrendingDown, color: "blue", link: "/last15DaysPending" },
-        { title: "EO Accepted", key: "EOAccepectButNotStartedVerify", icon: ArrowRightToLine, color: "green", link: "/eoAcceptedFile" },
-        { title: "Pending Verification (EO)", key: "EOStartedVerify", icon: ArrowRightToLine, color: "yellow", link: "/pendingVerificatonEO" },
-        { title: "Verification Completed (EO)", key: "EOComplete", icon: CircleDashed, color: "lime", link: "/verificationCompletedEO" },
-        { title: "Pending IN OC", key: "OCPending", icon: CircleDashed, color: "red", link: "/pendingInOC" },
-        { title: "Completed By OC", key: "OCComplete", icon: CircleDashed, color: "teal", link: "/verificationCompletedEO" },
-        { title: "Pending IN SP/DIB", key: "SPPending", icon: CircleDashed, color: "orange", link: "/pendingInSPDIB" },
-        { title: "Pending IN Enquiry Officer", key: "SEPending", icon: CircleDashed, color: "pink", link: "/pendingInEnquiryOfficer" },
+        { title: "Total Pending Applications", key: "TotalPendingApplications", icon: Clock, color: "purple", link: "/totalPending" },
+        { title: "Last 15 Days Pending", key: "Last15DaysPendingApplications", icon: CalendarClock, color: "blue", link: "/last15DaysPending" },
+        { title: "EO Accepted", key: "EOAccepectButNotStartedVerify", icon: CircleCheckBig, color: "green", link: "/eoAcceptedFile" },
+        { title: "Verification Pending (EO)", key: "EOStartedVerify", icon: FileClock, color: "yellow", link: "/pendingVerificatonEO" },
+        { title: "Verified by EO", key: "EOComplete", icon: FileCheck2, color: "lime", link: "/verificationCompletedEO" },
+        { title: "Verification Pending (OC)", key: "OCPending", icon: ClockAlert, color: "red", link: "/pendingInOC" },
+        { title: "Verified By OC", key: "OCComplete", icon: CircleCheck, color: "teal", link: "/verificationCompletedEO" },
+        { title: "Verification Pending \n(SP/DIB)", key: "SPPending", icon: Clock, color: "orange", link: "/pendingInSPDIB" },
+        { title: "Verification Pending \n(Enquiry Officer)", key: "SEPending", icon: Clock, color: "pink", link: "/pendingInEnquiryOfficer" },
     ],
     40: [
         { title: "Verify Pending (PS)", key: "TotalPendingApplications", icon: CircleDashed, color: "lime", link: "/allFiles" },
@@ -25,25 +25,25 @@ const dashboardConfig = {
         { title: "Verify Completed (EO)", key: "EOComplete", icon: ArrowRightToLine, color: "purple", link: "/verificationCompletedEO" },
     ],
     30: [
-        { title: "Pending In OC", key: "OCPending", icon: ArrowRightToLine, color: "yellow", link: "/allFiles-oc" },
-        { title: "Completed By OC", key: "OCComplete", icon: ArrowRightToLine, color: "blue", link: "/completed-oc" },
+        { title: "Verification Pending (OC)", key: "OCPending", icon: ArrowRightToLine, color: "yellow", link: "/allFiles-oc" },
+        { title: "Verified By OC", key: "OCComplete", icon: ArrowRightToLine, color: "blue", link: "/completed-oc" },
     ],
     20: [
         { title: "Total Pending Applications", key: "TotalPendingApplications", icon: CircleDashed, color: "purple", link: "/totalPending" },
         { title: "Last 15 Days Pending", key: "Last15DaysPendingApplications", icon: TrendingDown, color: "blue", link: "/last15DaysPending" },
-        { title: "EO Accepted", key: "EOAccepectButNotStartedVerify", icon: ArrowRightToLine, color: "green", link: "/eoAcceptedFile" },
-        { title: "Pending Verification (EO)", key: "EOStartedVerify", icon: ArrowRightToLine, color: "yellow", link: "/pendingVerificatonEO" },
-        { title: "Verification Completed (EO)", key: "EOComplete", icon: ArrowRightToLine, color: "lime", link: "/verificationCompletedEO" },
-        { title: "Pending IN OC", key: "OCPending", icon: ArrowRightToLine, color: "red", link: "/pendingInOC" },
-        { title: "Completed By OC", key: "OCComplete", icon: ArrowRightToLine, color: "teal", link: "/verificationCompletedEO" },
-        { title: "Pending IN SP/DIB", key: "SPPending", icon: ArrowRightToLine, color: "orange", link: "/allFiles-sp" },
-        { title: "Complete IN SP/DIB", key: "SPDone", icon: ArrowRightToLine, color: "pink", link: "/completed-sp" },
-        { title: "Pending IN Enquiry Officer", key: "SEPending", icon: ArrowRightToLine, color: "yellow", link: "/pendingInEnquiryOfficer" },
-        { title: "Complete IN Enquiry Officer", key: "SEComplete", icon: ArrowRightToLine, color: "blue", link: "/completed-se" },
+        { title: "Accepted by EO", key: "EOAccepectButNotStartedVerify", icon: ArrowRightToLine, color: "green", link: "/eoAcceptedFile" },
+        { title: "Verification Pending (EO)", key: "EOStartedVerify", icon: ArrowRightToLine, color: "yellow", link: "/pendingVerificatonEO" },
+        { title: "Verified by EO", key: "EOComplete", icon: ArrowRightToLine, color: "lime", link: "/verificationCompletedEO" },
+        { title: "Verification Pending (OC)", key: "OCPending", icon: ArrowRightToLine, color: "red", link: "/pendingInOC" },
+        { title: "Verified By OC", key: "OCComplete", icon: ArrowRightToLine, color: "teal", link: "/verificationCompletedEO" },
+        { title: "Verification Pending (SP/DIB)", key: "SPPending", icon: ArrowRightToLine, color: "orange", link: "/allFiles-sp" },
+        { title: "Verified By SP/DIB", key: "SPDone", icon: ArrowRightToLine, color: "pink", link: "/completed-sp" },
+        { title: "Verification Pending \n(Enquiry Officer)", key: "SEPending", icon: ArrowRightToLine, color: "yellow", link: "/pendingInEnquiryOfficer" },
+        { title: "Verified by Enquiry Officer", key: "SEComplete", icon: ArrowRightToLine, color: "blue", link: "/completed-se" },
     ],
     50: [
-        { title: "Pending In SE", key: "SEPending", icon: ArrowRightToLine, color: "purple", link: "/allFiles-oc" },
-        { title: "Completed By SE", key: "SEComplete", icon: ArrowRightToLine, color: "lime", link: "/verificationCompletedEO" },
+        { title: "Verification Pending (SE)", key: "SEPending", icon: ArrowRightToLine, color: "purple", link: "/allFiles-oc" },
+        { title: "Verified By (SE)", key: "SEComplete", icon: ArrowRightToLine, color: "lime", link: "/verificationCompletedEO" },
     ],
 };
 
@@ -85,9 +85,10 @@ const DashboardCards = () => {
                 {[...Array(8)].map((_, index) => (
                     <Skeleton key={index} className="h-[125px] w-[230px] rounded-xl bg-slate-300 p-5 m-2s">
                         <div className='flex items-center justify-between gap-4'>
-                            <Skeleton className="h-4 w-[80%] bg-slate-100" />
+                            <Skeleton className="h-3 w-[80%] bg-slate-100" />
                             <Skeleton className="h-[28px] w-[30px] p-0 m-0 rounded-full bg-slate-100" />
                         </div>
+                        <Skeleton className="h-2 w-[60%] bg-slate-100" />
                         <Skeleton className="h-6 w-[20%] bg-slate-100 mt-5" />
                     </Skeleton>
                 ))}

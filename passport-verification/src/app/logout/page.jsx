@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react'
 import Cookies from "react-cookies";
 import { logout } from '../commonAPI';
+import { Loader2 } from 'lucide-react';
 
 const page = () => {
 
@@ -24,8 +25,8 @@ const page = () => {
   }, []);
 
   return (
-    <div>
-      Loading...
+    <div className='h-screen w-screen bg-slate-200/50 flex justify-center items-center text-center'>
+      <Loader2 size={30} className='animate-spin'/>
     </div>
   )
 }

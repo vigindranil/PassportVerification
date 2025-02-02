@@ -1,3 +1,0 @@
-2025-02-01 09:14:38 | ERROR | Database error: Incorrect number of arguments for PROCEDURE db_wb_passport_verify.sp_setExternelApiLog; expected 8, got 9
-2025-02-01 11:27:16 | ERROR | Error in updateEnquiryStatusController:
-2025-02-01 11:54:24 | ERROR | Database error: Incorrect number of arguments for PROCEDURE db_wb_passport_verify.sp_setExternelApiLog; expected 8, got 9

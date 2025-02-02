@@ -1,6 +1,5 @@
 import Cookies from "react-cookies";
-import { encrypt } from "../../utils/crypto";
-import { postRequest } from "../commonAPI";
+import { postRequest } from "@/app/commonAPI";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 

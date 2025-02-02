@@ -24,12 +24,12 @@ const verifyToken = async(req, res, next) => {
     console.log("local token",token);
     console.log("db token",rows?.JWTToken);
     
-    if (new Date() > rows?.TokenValidUpto) {
-      return res.status(401).json({status: 1, message: 'Token expired! Please Login again to continue.' });
-    } else
-    if(rows?.JWTToken != token){
-      return res.status(401).json({status: 1, message: 'Access denied! Unauthorized access.' });
-    }
+    // if (new Date() > rows?.TokenValidUpto) {
+    //   return res.status(401).json({status: 1, message: 'Token expired! Please Login again to continue.' });
+    // } else
+    // if(rows?.JWTToken != token){
+    //   return res.status(401).json({status: 1, message: 'Access denied! Unauthorized access.' });
+    // }
     req.user = decoded; // Attach user info to the request
     
     next(); // Proceed to the next middleware or route handler
