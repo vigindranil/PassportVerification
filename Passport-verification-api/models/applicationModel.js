@@ -91,20 +91,18 @@ export async function updateEnquiryStatusModel(
       ]
     );
 
-    const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
-    console.log("gsysgh", result[0].ErrorCode);
-    return result[0].ErrorCode;
-    //   const [result] = await pool.query(`SELECT @ErrorCode AS ErrorCode;`);
-    //   const errorCode = result[0]?.ErrorCode ?? null;
+    console.log('ApplicationID', ApplicationID);
+    console.log('locationIp', locationIp);
+    console.log('macAddress', macAddress);
+    console.log('deviceId', deviceId);
+    console.log('StatusID', StatusID);
+    console.log('StatusText', StatusText);
+    console.log('Remarks', Remarks);
+    console.log('EntryUserID', EntryUserID);
 
-    //   return {
-    //     success: errorCode === 0,
-    //     errorCode,
-    //     message:
-    //       errorCode === 0
-    //         ? "Enquiry status updated successfully."
-    //         : "Failed to update enquiry status.",
-    //   };
+    const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
+    console.log("updateEnqueryStatusv2", result[0].ErrorCode);
+    return result[0].ErrorCode;
   } catch (error) {
     console.error("Error updating enquiry status:", error.message);
     throw new Error("Database error: " + error.message);
@@ -137,6 +135,7 @@ export async function updateAADHAARInfo(
     );
 
     const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
+    console.log("aadhaar update", result[0].ErrorCode);
     return result[0].ErrorCode;
   } catch (error) {
     throw new Error("Database error: " + error.message);
@@ -186,7 +185,15 @@ export async function savethirdpartyVerifyStatus(
       [ApplicationId, DocumentID, VerifyStatus, ApiResponse, EntryuserId]
     );
 
+    console.log('sp_savethirdpartyVerifyStatus');
+    console.log('ApplicationId', ApplicationId);
+    console.log('DocumentID', DocumentID);
+    console.log('VerifyStatus', VerifyStatus);
+    console.log('ApiResponse', ApiResponse);
+    console.log('EntryuserId', EntryuserId);
+    
     const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
+    console.log('ErrorCode', result[0].ErrorCode);
     return result[0].ErrorCode;
   } catch (error) {
     throw new Error("Database error: " + error.message);

@@ -72,11 +72,11 @@ export function NavUser() {
                 <span className="truncate text-xs">
                   District: {user?.district}
                 </span>
-                <span className="truncate text-xs">
-                  Police Station: {user?.district}
-                </span>
+                {(user?.type != 10 && user?.type != 20)  && <span className="truncate text-xs">
+                  Police Station: {user?.ps}
+                </span>}
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              {/* <ChevronsUpDown className="ml-auto size-4" /> */}
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -95,7 +95,7 @@ export function NavUser() {
                     District: {user?.district}
                   </span>
                   <span className="truncate text-xs">
-                    Police Station: {user?.district}
+                    Police Station: {user?.ps}
                   </span>
                 </div>
               </div>

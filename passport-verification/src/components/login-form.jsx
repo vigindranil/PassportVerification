@@ -28,14 +28,14 @@ const LoginForm = () => {
   const { toast } = useToast()
 
   const handleSendOtp = async () => {
-    
+
     setError("")
     setLoadingOtpSend(true)
     try {
       const response = await sendOtp(username, password)
       console.log("sendOtp", response)
-      
-      if(response){
+
+      if (response) {
         toast({
           title: (
             <div className="flex items-center gap-2">
@@ -49,7 +49,7 @@ const LoginForm = () => {
           ),
         })
         setShowOtp(true)
-      }else {
+      } else {
         toast({
           variant: "destructive",
           title: "Failed to Send OTP!",
@@ -80,26 +80,21 @@ const LoginForm = () => {
 
       if (response?.status == 0) {
         const type = Cookies.load('type');
-        if(type == 10)
-        {
+        if (type == 10) {
           router.push("/dashboard")
         }
-        else if(type == 40) 
-        {
+        else if (type == 40) {
           router.push("/dashboard-eo")
         }
-        else if(type == 30)
-        {
+        else if (type == 30) {
           router.push("/dashboard-oc")
         }
-        else if(type == 20) 
-        {
+        else if (type == 20) {
           router.push("/dashboard-sp")
         }
-        else if(type == 50) 
-          {
-            router.push("/dashboard-se")
-          }
+        else if (type == 50) {
+          router.push("/dashboard-se")
+        }
 
       } else {
         toast({
@@ -112,7 +107,7 @@ const LoginForm = () => {
       }
     } catch (error) {
       console.log(error.message);
-      
+
       toast({
         variant: "destructive",
         title: "Failed to Verify OTP!",
@@ -131,7 +126,7 @@ const LoginForm = () => {
     try {
       const response = await sendOtp(username, password)
       setMessage(`OTP sent successfully`)
-      if(response){
+      if (response) {
         setShowOtp(true)
         setResendTimer(60);
         toast({
@@ -146,7 +141,7 @@ const LoginForm = () => {
             <ToastAction altText="close">Close</ToastAction>
           ),
         })
-      }else {
+      } else {
         toast({
           variant: "destructive",
           title: "Failed to Send OTP!",
@@ -227,8 +222,8 @@ const LoginForm = () => {
                 </button>
               </div>
             </div>
-            <Button onClick={() => handleSendOtp()} className="w-full bg-blue-600 hover:bg-blue-700 text-white" disabled={loadingOtpSend}>
-              {loadingOtpSend ? <>Logging in <LoaderCircle className="animate-spin"/></> : "Login"}
+            <Button onClick={() => handleSendOtp()} className="w-[150px] flex justify-center self-center mx-auto bg-blue-600 hover:bg-blue-700 text-white" disabled={loadingOtpSend}>
+              {loadingOtpSend ? <>Logging in <LoaderCircle className="animate-spin" /></> : "Login"}
             </Button>
           </div>
         </>
@@ -245,15 +240,18 @@ const LoginForm = () => {
               <Label htmlFor="otp" className="text-white">Enter 6-digit OTP</Label>
               <OTPInput onComplete={(completedOtp) => setOtp(completedOtp)} />
             </div>
-            <Button onClick={handleVerifyOtp} className="w-full bg-green-600 hover:bg-green-700 text-white" disabled={loadingOtpVerify}>
-              {loadingOtpVerify ? <>Verifying <LoaderCircle className="animate-spin"/></> : "Verify OTP"}
+            <Button onClick={handleVerifyOtp} className="w-[150px] mx-auto flex bg-green-600 hover:bg-green-700 text-white" disabled={loadingOtpVerify}>
+              {loadingOtpVerify ? <>Verifying <LoaderCircle className="animate-spin" /></> : "Verify OTP"}
             </Button>
-            <Button onClick={handleResend} className={`w-full text-white ${resendTimer === 0
-                ? "bg-blue-600 hover:bg-blue-700"
-                : "bg-blue-500 hover:bg-blue-500"
-              }`} disabled={resendTimer === 0 ? false : true}>
-              {loadingResendOtp ? <>Loading <LoaderCircle className="animate-spin"/></> : <><RotateCcw /> Resend OTP</>} {resendTimer !== 0 && `after ${resendTimer} seconds`}
-            </Button>
+            <p className="whitespace-pre-wrap text-center text-sm">{resendTimer !== 0 ?
+              `Didn't receive the OTP? \nYou can resend in ${resendTimer} seconds.` :
+              <>
+              Didn't receive the OTP?
+              <Button variant="link" onClick={handleResend} className={`text-blue-500 font-bold px-1`} disabled={resendTimer === 0 ? false : true}>
+                {loadingResendOtp ? <>Please wait...<LoaderCircle className="animate-spin" /></> : <> Resend OTP</>}
+              </Button>
+              </>}
+            </p>
 
           </div>
         </>

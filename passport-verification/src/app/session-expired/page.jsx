@@ -2,13 +2,9 @@
 import React from "react"
 import { Button } from "@/components/ui/button"
 import { TriangleAlert } from "lucide-react"
+import Link from "next/link"
 
 const SessionExpired = () => {
-  const handleLogin = () => {
-    // Redirect to login page
-    window.location.href = "/login"
-  }
-  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -18,9 +14,9 @@ const SessionExpired = () => {
         <p className="text-gray-600 mb-6">
           Your session has expired due to inactivity. Please log in again to continue.
         </p>
-        <Button onClick={handleLogin} className="w-full">
-          Log In Again
-        </Button>
+        <Link href='/login' className="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
+          Login Again
+        </Link>
       </div>
     </div>
   )

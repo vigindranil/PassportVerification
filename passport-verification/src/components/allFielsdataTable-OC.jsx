@@ -15,6 +15,7 @@ import { toast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import { FileAcceptModal } from "./approve-reject-modal"
 import { updateEnquiryStatus } from "@/app/allFiles-oc/api"
+import { CheckCircle2, Eye, FileCheck, FileUser, FileX2 } from "lucide-react"
 
 export default function PendingApplicationDatatable({ status }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
@@ -29,7 +30,7 @@ export default function PendingApplicationDatatable({ status }) {
   const router = useRouter()
 
   const filteredData = verificationData.filter((row) =>
-    Object.values(row).some((value) => value.toString().toLowerCase().includes(searchTerm.toLowerCase())),
+    Object.values(row).some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())),
   )
 
   const fetchApplicationStatus = async () => {
@@ -60,7 +61,7 @@ export default function PendingApplicationDatatable({ status }) {
       body: verificationData.map((row) => [
         row.FileNumber,
         row.ApplicantName,
-        row.Ps_Name,
+        row.PsName,
         row.PhoneNo,
         row.DateOfBirth,
       ]),
@@ -79,35 +80,35 @@ export default function PendingApplicationDatatable({ status }) {
   }
 
   const handleAcceptFile = async (applicationId, type, remarks) => {
-    try{
+    try {
       // Implement the logic for accepting the file
       const response = await updateEnquiryStatus(applicationId, type, remarks);
       console.log('reponse:', response);
-      
+
       if (response?.status == 0) {
         toast({
-        title: "Successfull!",
-        description: response?.message,
-        action: <ToastAction altText="Try again">Close</ToastAction>,
-      })
-      fetchApplicationStatus();
-    } else {
+          title: "Successfull!",
+          description: response?.message,
+          action: <ToastAction altText="Try again">Close</ToastAction>,
+        })
+        fetchApplicationStatus();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Failed to update status!",
+          description: response?.message,
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
+      }
+    } catch (e) {
+      console.log('Error:', e);
       toast({
         variant: "destructive",
         title: "Failed to update status!",
-        description: response?.message,
+        description: 'An error occurred',
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
     }
-  }catch (e) {
-    console.log('Error:', e);
-    toast({
-      variant: "destructive",
-      title: "Failed to update status!",
-      description: 'An error occurred',
-      action: <ToastAction altText="Try again">Try again</ToastAction>,
-    })
-  }
   }
 
   const handleViewPPAttachment = (fileNumber) => {
@@ -121,10 +122,10 @@ export default function PendingApplicationDatatable({ status }) {
   }, [searchTerm]) // Added searchTerm as a dependency
 
   return (
-    <div className="container mx-auto px-0 space-y-8 shadow-2xl">
+    <div className="container mx-auto px-0 space-y-8 shadow-md">
       <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl overflow-hidden">
-        <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
-          <h2 className="text-2xl font-bold text-white">Pending Application</h2>
+        <div className="bg-gradient-to-r from-green-600 to-teal-600 px-6 py-3">
+          <h2 className="text-2xl font-bold text-white">Pending Applications</h2>
         </div>
       </div>
       <div className="p-6">
@@ -152,7 +153,7 @@ export default function PendingApplicationDatatable({ status }) {
                     <span className="font-bold text-md">Applicant Name:</span> {selectedDetails.ApplicantName}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Police Station:</span> {selectedDetails.Ps_Name}
+                    <span className="font-bold text-md">Police Station:</span> {selectedDetails.PsName}
                   </li>
                   <li className="text-sm">
                     <span className="font-bold text-md">Phone No:</span> {selectedDetails.PhoneNo}
@@ -215,43 +216,60 @@ export default function PendingApplicationDatatable({ status }) {
                     <TableRow key={index}>
                       <TableCell>{row.FileNumber}</TableCell>
                       <TableCell>{row.ApplicantName}</TableCell>
-                      <TableCell>{row.Ps_Name}</TableCell>
+                      <TableCell>{row.PsName}</TableCell>
                       <TableCell>{row.PhoneNo}</TableCell>
                       <TableCell>{row.DateOfBirth ? moment(row.DateOfBirth).format("DD/MM/YYYY") : "N/A"}</TableCell>
                       <TableCell>
                         <div className="flex space-x-1">
-                          <Button
-                            size="sm"
-                            variant="default"
-                            className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1"
-                            onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
-                          >
-                            Details
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="default"
-                            className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-1 py-1"
-                            onClick={() => {
-                              setType('approve')
-                              setIsFileAcceptModalOpen(true)
-                              setSelectedDetails(row.FileNumber)
-                            }}
-                          >
-                            Approve
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="default"
-                            className="bg-red-500 hover:bg-red-600 text-white text-xs px-1 py-1"
-                            onClick={() => {
-                              setType('reject')
-                              setIsFileAcceptModalOpen(true)
-                              setSelectedDetails(row.FileNumber)
-                            }}
-                          >
-                            Reject
-                          </Button>
+                          <div className="relative group">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-blue-700 hover:bg-blue-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
+                            >
+                              <FileUser className="m-0 p-0" />
+                            </Button>
+                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                              View Application
+                            </span>
+                          </div>
+
+                          <div className="relative group">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-green-700 hover:bg-green-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              onClick={() => {
+                                setType('approve')
+                                setIsFileAcceptModalOpen(true)
+                                setSelectedDetails(row.FileNumber)
+                              }}
+                            >
+                              <FileCheck className="mx-0 px-0" />
+                            </Button>
+                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                              Approve Application
+                            </span>
+                          </div>
+
+                          <div className="relative group">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-red-600 hover:bg-red-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              onClick={() => {
+                                setType('reject')
+                                setIsFileAcceptModalOpen(true)
+                                setSelectedDetails(row.FileNumber)
+                              }}
+                            >
+                              <FileX2 className="mx-0 px-0" />
+                            </Button>
+                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                              Reject Application
+                            </span>
+                          </div>
                           {/* <Button
                             size="sm"
                             variant="default"

@@ -298,6 +298,8 @@ export const verifyApplication = async (req, res) => {
       EntryUserID,
       Remarks
     );
+    console.log("setExternelApiLog", externelApiLogresponse);
+    
     const statusUpdateResponse = await savethirdpartyVerifyStatus(
       ApplicationId,
       DocumentID,
@@ -305,6 +307,7 @@ export const verifyApplication = async (req, res) => {
       APIResponse,
       EntryUserID
     );
+    console.log("savethirdpartyVerifyStatus", statusUpdateResponse);
 
     if (externelApiLogresponse == 0 && statusUpdateResponse == 0) {
       logger.debug(
