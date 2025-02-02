@@ -27,6 +27,7 @@ const page = () => {
   return (
     <div className='h-screen w-screen bg-slate-200/50 flex justify-center items-center text-center'>
       <Loader2 size={30} className='animate-spin'/>
+      <h1 className='text-3xl font-bold text-gray-900 text-center mx-auto'>Logging Out...</h1>
     </div>
   )
 }
