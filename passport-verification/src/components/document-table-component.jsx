@@ -165,19 +165,19 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
   }, [userTypeCookies])
 
   // calling third party apis' if alredy verified
-  useEffect(() => {
-    if (!selectedImage?.verified && selectedImage?.DocumentTypeId == 1) {
-      verifyElectricityBill(
-        selectedImage?.IdNumber,
-        selectedImage?.IdNumber2
-      );
-    } else if (selectedImage?.verified && selectedImage?.DocumentTypeId == 8) {
-      verifyBirthCertificate(
-        selectedImage?.IdNumber,
-        selectedImage?.IdNumber2
-      );
-    }
-  }, [selectedImage])
+  // useEffect(() => {
+  //   if (!selectedImage?.verified && selectedImage?.DocumentTypeId == 1) {
+  //     verifyElectricityBill(
+  //       selectedImage?.IdNumber,
+  //       selectedImage?.IdNumber2
+  //     );
+  //   } else if (selectedImage?.verified && selectedImage?.DocumentTypeId == 8) {
+  //     verifyBirthCertificate(
+  //       selectedImage?.IdNumber,
+  //       selectedImage?.IdNumber2
+  //     );
+  //   }
+  // }, [selectedImage])
 
   const SkeletonLoader = () => (
     <>
@@ -309,11 +309,11 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                           <button
                             className={`${verified && 'cursor-not-allowed'} flex bg-${verified ? 'green' : 'gray'}-500 text-slate-200 justify-center items-center p-1 m-1 px-3 rounded-md hover:bg-${verified ? 'green' : 'gray'}-500 mx-auto`}
                             onClick={() => handleVerifyApplication(1, 'getWBSEDCLDetails', fileNo, selectedImage?.DocumentId, { IdNumber: selectedImage?.IdNumber, IdNumber2: selectedImage?.IdNumber2 }, verifiedResponse)}
-                            disabled={verifyApplicationLoading}
+                            disabled={selectedImage?.Isverified || verifyApplicationLoading}
                           >
                             {(verifyApplicationLoading) ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Approving</span> : verified ? <><CheckCircle2Icon className="h-4 w-4 mr-1" /> <span>Document Verifed</span></> : <><span>Approve The Document</span></>}
                           </button>
-                          {selectedImage?.Isverified ? <p>Verified by: {selectedImage?.verifyBy ? selectedImage?.verifyBy : 'N/A'}</p> : null}
+                          {selectedImage?.Isverified ? <p><span className="font-bold">Verified by:</span> {selectedImage?.verifyBy ? selectedImage?.verifyBy : 'N/A'}</p> : null}
                         </>
                         :
                         <button
@@ -323,7 +323,21 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                           {verifyElectricityLoading ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Verifying</span> : <><Search className="h-4 w-4 mx-1" /> <span>Verify Electricity Bill</span></>}
                         </button>
                       }
-                      {verifiedResponse && <div className="w-full h-[300px]">
+
+                      {/* already verified data */}
+                      {(selectedImage?.Isverified && selectedImage?.UserAgent) && <div className="w-full h-[300px]">
+                        <hr className="my-5" />
+                        <h1 className="text-center font-bold font-mono underline">Fetched Data</h1>
+                        <p>
+                          <span className="font-bold">Consumer Name:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.consumerName}
+                        </p>
+                        <p>
+                          <span className="font-bold">Consumer Address:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.consumerAddress}
+                        </p>
+                      </div>}
+
+                      {/* current verification data */}
+                      {(!selectedImage?.Isverified && verifiedResponse) && <div className="w-full h-[300px]">
                         <hr className="my-5" />
                         <h1 className="text-center font-bold font-mono underline">Fetched Data</h1>
                         <p>
@@ -333,6 +347,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                           <span className="font-bold">Consumer Address:</span> {verifiedResponse?.data?.consumerAddress}
                         </p>
                       </div>}
+
                     </div>
                   </div>}
 
@@ -366,7 +381,37 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                         >
                           {verifyElectricityLoading ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Verifying</span> : <><Search className="h-4 w-4 mr-1" /> <span>Verify Birth Certificate</span></>}
                         </button>}
-                      {verifiedResponse && <div className="w-full h-full">
+
+                      {/* already verified data */}
+                      {(selectedImage?.Isverified && selectedImage?.UserAgent) && <div className="w-full h-[300px]">
+                        <hr className="my-5" />
+                        <h1 className="text-center font-bold font-mono underline">Fetched Data</h1>
+                        <p>
+                          <span className="font-bold">Consumer Name:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.consumerName}
+                        </p>
+                        <p>
+                          <span className="font-bold">Consumer Address:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.consumerAddress}
+                        </p>
+
+                        <p><span className="font-bold">Name</span> {JSON.parse(selectedImage?.UserAgent)?.data?.ChNamae}</p>
+                        <p><span className="font-bold">Gender</span> {JSON.parse(selectedImage?.UserAgent)?.data?.ChGender}</p>
+                        <p><span className="font-bold">Date of Birth</span> {JSON.parse(selectedImage?.UserAgent)?.data?.ChDob}</p>
+                        <p><span className="font-bold">Place of Birth</span> {JSON.parse(selectedImage?.UserAgent)?.data?.PlaceOfBirth}</p>
+                        <p><span className="font-bold">Mother Name</span> {JSON.parse(selectedImage?.UserAgent)?.data?.MotherName}</p>
+                        <p><span className="font-bold">Monther Identity Proof</span> {JSON.parse(selectedImage?.UserAgent)?.data?.MontherIdentityProof}</p>
+                        <p><span className="font-bold">Father Name</span> {JSON.parse(selectedImage?.UserAgent)?.data?.FatherName}</p>
+                        <p><span className="font-bold">Father Identity Proof</span> {JSON.parse(selectedImage?.UserAgent)?.data?.FatherIdentityProof}</p>
+                        <p><span className="font-bold">Certificate No.</span> {JSON.parse(selectedImage?.UserAgent)?.data?.CertificateNO}</p>
+                        <p><span className="font-bold">Date of Registration</span> {JSON.parse(selectedImage?.UserAgent)?.data?.DateOfRegistration}</p>
+                        <p><span className="font-bold">SUhid</span> {JSON.parse(selectedImage?.UserAgent)?.data?.SUhid}</p>
+                        <p><span className="font-bold">Date of Issue</span> {JSON.parse(selectedImage?.UserAgent)?.data?.DateOfIssue}</p>
+                        <p><span className="font-bold">Issuing Auth</span> {JSON.parse(selectedImage?.UserAgent)?.data?.IssuingAuth}</p>
+                        <p><span className="font-bold mt-2 flex">Present Address:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.PresentAdd}</p>
+                        <p><span className="font-bold mt-2 flex">Permanent Address:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.PermanentAdd}</p>
+                      </div>}
+
+                      {/* current verification data */}
+                      {(!selectedImage?.Isverified && verifiedResponse) && <div className="w-full h-full">
                         <hr className="my-5" />
                         <h1 className="text-center font-bold font-mono underline">Fetched Data</h1>
                         <div className="w-full h-[300px] overflow-y-auto text-sm">
@@ -382,7 +427,6 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                           <p><span className="font-bold">Date of Registration</span> {verifiedResponse?.DateOfRegistration}</p>
                           <p><span className="font-bold">SUhid</span> {verifiedResponse?.SUhid}</p>
                           <p><span className="font-bold">Date of Issue</span> {verifiedResponse?.DateOfIssue}</p>
-                          {/* <p><span className="font-bold">UpdatedOn</span> {verifiedResponse?.UpdatedOn}</p> */}
                           <p><span className="font-bold">Issuing Auth</span> {verifiedResponse?.IssuingAuth}</p>
                           <p><span className="font-bold mt-2 flex">Present Address:</span> {verifiedResponse?.PresentAdd}</p>
                           <p><span className="font-bold mt-2 flex">Permanent Address:</span> {verifiedResponse?.PermanentAdd}</p>
