@@ -12,7 +12,7 @@ export default function Header() {
           <ul className="flex space-x-4">
             <li>
               <Link href="#features" className="text-gray-600 hover:text-blue-600">
-                Services
+                Service
               </Link>
             </li>
             <li>

@@ -295,7 +295,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                   {(userType == 30 && docType == 1) && <div className={`w-1/2 p-10 h-full`}>
                     {/* {(userType == 30) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}> */}
                     <div className="px-5">
-                      <h1 className="text-center font-bold text-2xl my-3 mb-10 underline">Fetch Data</h1>
+                      <h1 className="text-center font-bold text-2xl my-3 mb-10 underline">Verify Electricity Document</h1>
                       <p className="text-slate-600">
                         Please verify the uploaded document by clicking the "Verify Electricity Bill" button.
                       </p>
@@ -413,7 +413,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                       {/* current verification data */}
                       {(!selectedImage?.Isverified && verifiedResponse) && <div className="w-full h-full">
                         <hr className="my-5" />
-                        <h1 className="text-center font-bold font-mono underline">Data fetched from janma-mrityutathya portal</h1>
+                        <h1 className="text-center font-bold font-mono underline">Fetched Data</h1>
                         <div className="w-full h-[300px] overflow-y-auto text-sm">
                           <p><span className="font-bold">Name</span> {verifiedResponse?.ChNamae}</p>
                           <p><span className="font-bold">Gender</span> {verifiedResponse?.ChGender}</p>

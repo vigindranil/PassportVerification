@@ -98,8 +98,8 @@ export default function PendingApplicationDatatable({ status, heading, period })
           />
           <div className="space-x-2">
             <Button variant={'outline'} onClick={handleExportExcel}>Export Excel</Button>
-            <Button variant={'outline'} onClick={handleExportPDF}>Export PDF</Button>
-            <Button variant={'outline'} onClick={handlePrint}>Print</Button>
+            {/* <Button variant={'outline'} onClick={handleExportPDF}>Export PDF</Button>
+            <Button variant={'outline'} onClick={handlePrint}>Print</Button> */}
           </div>
         </div>
         <div className="border rounded-lg" id="police-verification-table">
@@ -177,7 +177,7 @@ export default function PendingApplicationDatatable({ status, heading, period })
         </div>
         <div className="flex items-center justify-between mt-4 text-sm">
           <div>
-            Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of {filteredData.length} entries
+            Showing {startIndex + 1} to {Math.min(endIndex, filteredData?.length)} of {filteredData?.length} entries
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -188,7 +188,7 @@ export default function PendingApplicationDatatable({ status, heading, period })
             >
               Prev
             </Button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            {Array?.from({ length: totalPages }, (_, i) => i + 1)?.map((page) => (
               <Button
                 key={page}
                 variant={currentPage === page ? "default" : "outline"}

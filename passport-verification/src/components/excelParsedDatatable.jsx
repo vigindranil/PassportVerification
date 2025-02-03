@@ -70,8 +70,8 @@ export default function DataTable({ data }) {
       <div className="flex items-center justify-between mb-6">
         <div className="space-x-2">
           <Button variant="outline" onClick={exportToExcel}>Excel</Button>
-          <Button variant="outline" onClick={exportToPDF}>PDF</Button>
-          <Button variant="outline" onClick={printTable}>Print</Button>
+          {/* <Button variant="outline" onClick={exportToPDF}>PDF</Button>
+          <Button variant="outline" onClick={printTable}>Print</Button> */}
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-500">Search:</span>
