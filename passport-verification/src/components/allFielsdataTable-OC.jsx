@@ -29,8 +29,8 @@ export default function PendingApplicationDatatable({ status }) {
   const [type, setType] = useState("reject");
   const router = useRouter()
 
-  const filteredData = verificationData.filter((row) =>
-    Object.values(row).some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())),
+  const filteredData = verificationData?.filter((row) =>
+    Object?.values(row).some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())),
   )
 
   const fetchApplicationStatus = async () => {
@@ -180,12 +180,12 @@ export default function PendingApplicationDatatable({ status }) {
             <Button variant="outline" onClick={exportToExcel}>
               Excel
             </Button>
-            <Button variant="outline" onClick={exportToPDF}>
+            {/* <Button variant="outline" onClick={exportToPDF}>
               PDF
             </Button>
             <Button variant="outline" onClick={printTable}>
               Print
-            </Button>
+            </Button> */}
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-500">Search:</span>

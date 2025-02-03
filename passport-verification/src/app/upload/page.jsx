@@ -4,8 +4,6 @@ import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import Navbar from "@/components/navbar"
-import Sidebar from "@/components/sidebar"
 import { convertExcelToJson, uploadExcel } from "./api"
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
@@ -111,7 +109,7 @@ const ExcelUploader = () => {
         throw new Error(response?.message)
       }
     } catch (e) {
-      console.error(e)
+      console.log(e)
       setError(e.message || "Failed to upload file. Please try again.")
       toast({
         variant: "destructive",
@@ -155,7 +153,7 @@ const ExcelUploader = () => {
                         onChange={handleFileChange}
                         disabled={importing || isImported}
                         ref={fileInputRef}
-                        className="cursor-pointer"
+                        className="cursor-pointer bg-gray-200" // Added light gray background
                       />
                     </TooltipTrigger>
                     <TooltipContent>

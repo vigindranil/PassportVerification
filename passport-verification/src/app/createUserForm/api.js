@@ -9,7 +9,7 @@ export const saveUser = async (userData) => {
       "UserID": 0,
       "UserName": userData.UserName,
       "UserPassword": "admin@123",
-      "UserFullName": userData.UserFullName,
+      "FullName": userData.FullName,
       "Firstname": userData.Firstname,
       "LastName": userData.LastName,
       "MobileNo": userData.MobileNo,
