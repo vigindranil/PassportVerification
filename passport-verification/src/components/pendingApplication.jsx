@@ -11,8 +11,9 @@ import "jspdf-autotable"
 import { getApplicationStatus } from "@/app/totalPending/api"
 import moment from "moment"
 import { useRouter } from "next/navigation"
+import { FileUser } from "lucide-react"
 
-export default function PendingApplicationDatatable({ status, heading }) {
+export default function PendingApplicationDatatable({ status, heading, period }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [selectedDetails, setSelectedDetails] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
@@ -29,7 +30,7 @@ export default function PendingApplicationDatatable({ status, heading }) {
   const fetchApplicationStatus = async () => {
     try {
       setIsLoading(true)
-      const response = await getApplicationStatus(status, 15)
+      const response = await getApplicationStatus(status, period || 30)
       setVerificationData(response?.data)
     } catch (error) {
       console.error("Error fetching application status:", error)
@@ -57,13 +58,13 @@ export default function PendingApplicationDatatable({ status, heading }) {
   const handleExportPDF = () => {
     const doc = new jsPDF()
     doc.autoTable({
-      head: [["File Number", "Applicant Name", "Police Station", "Phone No.", "Date of Birth"]],
-      body: filteredData.map((row) => [
-        row.FileNumber,
-        row.ApplicantName,
-        row.PsName,
-        row.PhoneNo,
-        moment(row.DateOfBirth).format("DD/MM/YYYY"),
+      head: [["File Number", "Applicant Name", "Police Station", "Phone No.", "Verification Address"]],
+      body: filteredData?.map((row) => [
+        row?.FileNumber,
+        row?.ApplicantName,
+        row?.PsName,
+        row?.PhoneNo,
+        row?.VerificationAddress,
       ]),
     })
     doc.save("applications.pdf")
@@ -80,9 +81,9 @@ export default function PendingApplicationDatatable({ status, heading }) {
   }
 
   return (
-    <div className="container mx-auto px-0 space-y-8 shadow-2xl">
-      <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl overflow-hidden">
-        <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
+    <div className="mx-auto px-0 space-y-8 shadow-md">
+      <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-lg overflow-hidden">
+        <div className={`bg-gradient-to-r ${(status == 0 || status == 5) ? 'from-yellow-600' : 'from-green-600'} ${(status == 0 || status == 5) ? 'to-yellow-400' : 'to-teal-600'} px-6 py-3`}>
           <h2 className="text-2xl font-bold text-white">{heading}</h2>
         </div>
       </div>
@@ -96,9 +97,9 @@ export default function PendingApplicationDatatable({ status, heading }) {
             className="w-64"
           />
           <div className="space-x-2">
-            <Button onClick={handleExportExcel}>Export Excel</Button>
-            <Button onClick={handleExportPDF}>Export PDF</Button>
-            <Button onClick={handlePrint}>Print</Button>
+            <Button variant={'outline'} onClick={handleExportExcel}>Export Excel</Button>
+            <Button variant={'outline'} onClick={handleExportPDF}>Export PDF</Button>
+            <Button variant={'outline'} onClick={handlePrint}>Print</Button>
           </div>
         </div>
         <div className="border rounded-lg" id="police-verification-table">
@@ -109,7 +110,7 @@ export default function PendingApplicationDatatable({ status, heading }) {
                 <TableHead className="font-semibold">Applicant Name</TableHead>
                 <TableHead className="font-semibold">Police Station</TableHead>
                 <TableHead className="font-semibold">Phone No.</TableHead>
-                <TableHead className="font-semibold whitespace-nowrap">Date of Birth</TableHead>
+                <TableHead className="font-semibold whitespace-nowrap">Verification Address</TableHead>
                 <TableHead className="font-semibold text-center">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -140,21 +141,26 @@ export default function PendingApplicationDatatable({ status, heading }) {
               ) : currentData?.length > 0 ? (
                 currentData?.map((row, index) => (
                   <TableRow key={index}>
-                    <TableCell>{row.FileNumber}</TableCell>
-                    <TableCell>{row.ApplicantName}</TableCell>
-                    <TableCell>{row.PsName}</TableCell>
-                    <TableCell>{row.PhoneNo}</TableCell>
-                    <TableCell>{row.DateOfBirth ? moment(row.DateOfBirth).format("DD/MM/YYYY") : "N/A"}</TableCell>
+                    <TableCell>{row?.FileNumber || 'N/A'}</TableCell>
+                    <TableCell>{row?.ApplicantName || 'N/A'}</TableCell>
+                    <TableCell>{row?.PsName || 'N/A'}</TableCell>
+                    <TableCell>{row?.PhoneNo || 'N/A'}</TableCell>
+                    <TableCell>{row?.VerificationAddress || 'N/A'}</TableCell>
                     <TableCell>
                       <div className="flex space-x-1">
-                        <Button
-                          size="sm"
-                          variant="default"
-                          className="bg-green-600 hover:bg-green-700 text-white text-xs px-2 py-1"
-                          onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
-                        >
-                          Details
-                        </Button>
+                        <div className="relative group">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="bg-stone-100 ring-[0.5px] ring-slate-300 text-blue-700 hover:bg-blue-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                            onClick={() => router.push(`/applicationDetails/${row?.FileNumber}`)}
+                          >
+                            <FileUser className="m-0 p-0" />
+                          </Button>
+                          <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                            View Application
+                          </span>
+                        </div>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -169,18 +175,32 @@ export default function PendingApplicationDatatable({ status, heading }) {
             </TableBody>
           </Table>
         </div>
-        <div className="flex justify-between items-center mt-4">
+        <div className="flex items-center justify-between mt-4 text-sm">
           <div>
-            Showing {startIndex + 1} to {Math.min(endIndex, filteredData?.length)} of {filteredData?.length} entries
+            Showing {startIndex + 1} to {Math.min(endIndex, filteredData?.length) || 0} of {filteredData?.length || 0} entries
           </div>
-          <div className="space-x-2">
-            <Button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
-              Previous
-            </Button>
-            <span>
-              {currentPage} of {totalPages}
-            </span>
+          <div className="flex items-center gap-2">
             <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              Prev
+            </Button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <Button
+                key={page}
+                variant={currentPage === page ? "default" : "outline"}
+                size="sm"
+                onClick={() => setCurrentPage(page)}
+              >
+                {page}
+              </Button>
+            ))}
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
             >

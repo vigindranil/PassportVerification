@@ -99,7 +99,7 @@ const UserManagement = () => {
   }
 
   const filteredData = users?.filter((row) =>
-    Object.values(row).some((value) => value.toString().toLowerCase().includes(searchTerm.toLowerCase())),
+    Object.values(row).some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())),
   )
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage)
@@ -206,6 +206,11 @@ const UserManagement = () => {
     fetchUserDetails()
   }, []) // Added empty dependency array to fix the useEffect warning
 
+  // useEffect(()=> {
+  //   console.log("users", users);
+    
+  // }, [users])
+
   const handleUpdateUserStatus = async (UserID, Status) => {
     try {
       setStatuUpdateLoader("Loading...")
@@ -247,9 +252,9 @@ const UserManagement = () => {
 
   return (
     <div className="container mx-auto px-0 space-y-8 shadow-2xl">
-      <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl  overflow-hidden">
-        <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
-          <h2 className="text-2xl font-bold text-white">User Management</h2>
+      <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl overflow-hidden">
+        <div className="bg-gradient-to-r to-purple-600 from-indigo-600 px-6 py-3">
+          <h2 className="text-2xl font-bold text-white">User Registration</h2>
         </div>
       </div>
 
@@ -432,9 +437,9 @@ const UserManagement = () => {
 
       {/* TABLE STARTED HERE */}
 
-      <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl  overflow-hidden">
+      <div className="mt-0 bg-white dark:bg-gray-800  overflow-hidden">
         <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
-          <h2 className="text-2xl font-bold text-white">User List</h2>
+          <h2 className="text-2xl font-bold text-white text-center">All Authority User List</h2>
         </div>
       </div>
       <div className="space-y-4 px-6">
@@ -507,8 +512,8 @@ const UserManagement = () => {
                   <TableRow>
                     <TableCell colSpan={6}>Loading...</TableCell>
                   </TableRow>
-                ) : users.length > 0 ? (
-                  users?.map((row, index) => (
+                ) : currentData?.length > 0 ? (
+                  currentData?.map((row, index) => (
                     <TableRow key={index}>
                       <TableCell>
                         <p>{row?.UserName || "N/A"}</p>

@@ -43,17 +43,17 @@ const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
   }, [status])
 
   return (
-    <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden">
-      <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
+    <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+      <div className="bg-gradient-to-r from-green-600 to-teal-600 px-6 py-3">
         <h2 className="text-2xl font-bold text-white">Application Status History</h2>
       </div>
       <div className="m-6">
         <Card>
-          <CardContent>
+          <CardContent className="p-0">
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow>
+                  <TableRow className="bg-slate-100 hover:bg-slate-100">
                     <TableHead>Full Name</TableHead>
                     <TableHead>Authority Level</TableHead>
                     <TableHead>Application State</TableHead>
@@ -68,8 +68,8 @@ const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
                       <TableRow key={index}>
                         <TableCell>{stat?.UserName}</TableCell>
                         <TableCell>{stat?.UserRole}</TableCell>
-                        <TableCell>{stat?.ApplicationState}</TableCell>
-                        <TableCell>{moment(stat?.ApplicationStateUpdatedDateTime).format("DD/MM/YYYY hh:mm:ss")}</TableCell>
+                        <TableCell>{stat?.ApplicationState == "EoAccept" ? "Application Accepted By EO" : stat?.ApplicationState == "EoStartVerify" ? "Document Uploaded By EO" : stat?.ApplicationState}</TableCell>
+                        <TableCell>{moment(stat?.ApplicationStateUpdatedDateTime).format("DD/MM/YYYY | hh:mm a")}</TableCell>
                       </TableRow>
                     ))
                   ) : (

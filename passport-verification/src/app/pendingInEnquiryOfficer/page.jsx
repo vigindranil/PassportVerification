@@ -6,12 +6,12 @@ import DataTable from '@/components/pendingApplication';
 
 export default function allFiles() {
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-full bg-gray-100">
       <div className="flex-1 flex flex-col overflow-hidden">
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 p-6">
           <CardContent>
             <Card>
-              <DataTable heading='Pending In Enquiry Officer' status={80} />
+              <DataTable heading='Verification Pending (Special Enquiry Officer)' status={80} />
             </Card>
           </CardContent>
         </main>

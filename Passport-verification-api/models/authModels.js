@@ -27,6 +27,9 @@ export async function updateAuthToken(
         ]
     );
 
+    console.log("");
+    
+
     return await pool.query("SELECT @ErrorCode AS ErrorCode;");
 
 }

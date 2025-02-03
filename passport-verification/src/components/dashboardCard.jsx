@@ -3,30 +3,30 @@
 import { useEffect, useState } from 'react';
 import Cookies from "react-cookies";
 import { getDistrictNodalDashBoard } from '@/app/dashboard/api';
-import { CircleDashed, TrendingDown, ArrowRightToLine, Clock, CalendarClock, CircleCheckBig, FileClock, FileCheck2, ClockAlert, CircleCheck } from 'lucide-react';
+import { CircleDashed, TrendingDown, ArrowRightToLine, Clock, CalendarClock, CircleCheckBig, FileClock, FileCheck2, ClockAlert, CircleCheck, CheckCheck, BadgeCheck } from 'lucide-react';
 import DashboardCard from './dashboard-cards';
 import { Skeleton } from "@/components/ui/skeleton";
 
 const dashboardConfig = {
     10: [
         { title: "Total Pending Applications", key: "TotalPendingApplications", icon: Clock, color: "purple", link: "/totalPending" },
-        { title: "Last 15 Days Pending", key: "Last15DaysPendingApplications", icon: CalendarClock, color: "blue", link: "/last15DaysPending" },
-        { title: "EO Accepted", key: "EOAccepectButNotStartedVerify", icon: CircleCheckBig, color: "green", link: "/eoAcceptedFile" },
-        { title: "Verification Pending (EO)", key: "EOStartedVerify", icon: FileClock, color: "yellow", link: "/pendingVerificatonEO" },
-        { title: "Verified by EO", key: "EOComplete", icon: FileCheck2, color: "lime", link: "/verificationCompletedEO" },
-        { title: "Verification Pending (OC)", key: "OCPending", icon: ClockAlert, color: "red", link: "/pendingInOC" },
-        { title: "Verified By OC", key: "OCComplete", icon: CircleCheck, color: "teal", link: "/verificationCompletedEO" },
+        { title: "Last 15 Days Pending\nApplications", key: "Last15DaysPendingApplications", icon: CalendarClock, color: "blue", link: "/last15DaysPending" },
+        { title: "Applications Accepted\nby EO", key: "EOAccepectButNotStartedVerify", icon: CircleCheckBig, color: "green", link: "/eoAcceptedFile" },
+        { title: "Verification Pending \n(EO)", key: "EOStartedVerify", icon: FileClock, color: "yellow", link: "/pendingVerificatonEO" },
+        { title: "Verified by EO\n ", key: "EOComplete", icon: FileCheck2, color: "lime", link: "/verificationCompletedEO" },
+        { title: "Verification Pending \n(OC)", key: "OCPending", icon: ClockAlert, color: "red", link: "/pendingInOC" },
+        { title: "Verified By OC\n ", key: "OCComplete", icon: BadgeCheck, color: "teal", link: "/verificationCompletedEO" },
         { title: "Verification Pending \n(SP/DIB)", key: "SPPending", icon: Clock, color: "orange", link: "/pendingInSPDIB" },
         { title: "Verification Pending \n(Enquiry Officer)", key: "SEPending", icon: Clock, color: "pink", link: "/pendingInEnquiryOfficer" },
     ],
     40: [
-        { title: "Verify Pending (PS)", key: "TotalPendingApplications", icon: CircleDashed, color: "lime", link: "/allFiles" },
-        { title: "Accept & Verify Pending (EO)", key: "EOAccepectButNotStartedVerify", icon: TrendingDown, color: "blue", link: "/acceptedAndVerificationPending-eo" },
-        { title: "Verify Completed (EO)", key: "EOComplete", icon: ArrowRightToLine, color: "purple", link: "/verificationCompletedEO" },
+        { title: "Verification Pending \n(at Police Station)", key: "TotalPendingApplications", icon: Clock, color: "yellow", link: "/allFiles" },
+        { title: "Applications Accepted\nBy EO", key: "EOAccepectButNotStartedVerify", icon: CheckCheck, color: "blue", link: "/acceptedAndVerificationPending-eo" },
+        { title: "Verification Completed\nBy EO", key: "EOComplete", icon: BadgeCheck, color: "purple", link: "/verificationCompletedEO" },
     ],
     30: [
-        { title: "Verification Pending (OC)", key: "OCPending", icon: ArrowRightToLine, color: "yellow", link: "/allFiles-oc" },
-        { title: "Verified By OC", key: "OCComplete", icon: ArrowRightToLine, color: "blue", link: "/completed-oc" },
+        { title: "Verification Pending", key: "OCPending", icon: Clock, color: "yellow", link: "/allFiles-oc" },
+        { title: "Verified Applications", key: "OCComplete", icon: BadgeCheck, color: "purple", link: "/completed-oc" },
     ],
     20: [
         { title: "Total Pending Applications", key: "TotalPendingApplications", icon: CircleDashed, color: "purple", link: "/totalPending" },

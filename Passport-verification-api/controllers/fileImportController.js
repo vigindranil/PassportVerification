@@ -5,6 +5,7 @@ import moment from "moment/moment.js";
 // Function to trim JSON keys and values
 const trimJsonData = (data) => {
   const allowedKeys = new Set([
+    "Sr. No.",
     "DPHq ID/Name",
     "Police Station",
     "File Number",

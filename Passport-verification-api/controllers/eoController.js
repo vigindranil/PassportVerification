@@ -21,6 +21,7 @@ export const saveDocumentUpload = async (req, res) => {
       MacAddress,
       longitude,
       latitude,
+      appDocId,
       DeviceId,
     } = req.body;
 
@@ -49,6 +50,7 @@ export const saveDocumentUpload = async (req, res) => {
             longitude,
             latitude,
             DeviceId,
+            appDocId,
             EntryUserId,
           },
           RESPONSE: { status: 1, message: "No file uploaded" },
@@ -76,6 +78,7 @@ export const saveDocumentUpload = async (req, res) => {
             longitude,
             latitude,
             DeviceId,
+            appDocId, 
             EntryUserId,
           },
           RESPONSE: {
@@ -107,6 +110,7 @@ export const saveDocumentUpload = async (req, res) => {
       longitude,
       latitude,
       ipaddress,
+      appDocId,
       EntryUserId
     );
     await saveTransactionHistory(ipaddress, MacAddress, longitude, latitude, 0, OperationName, json, EntryUserId)
@@ -129,6 +133,7 @@ export const saveDocumentUpload = async (req, res) => {
             longitude,
             latitude,
             DeviceId,
+            appDocId,
             EntryUserId,
           },
           RESPONSE: {
@@ -161,6 +166,7 @@ export const saveDocumentUpload = async (req, res) => {
             longitude,
             latitude,
             DeviceId,
+            appDocId,
             EntryUserId,
           },
           RESPONSE: {
@@ -193,6 +199,7 @@ export const saveDocumentUpload = async (req, res) => {
             longitude,
             latitude,
             DeviceId,
+            appDocId,
             EntryUserId,
           },
           RESPONSE: {

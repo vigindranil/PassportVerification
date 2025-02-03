@@ -29,7 +29,7 @@ export default function PendingApplicationDatatable({ status }) {
   const router = useRouter()
 
   const filteredData = verificationData.filter((row) =>
-    Object.values(row).some((value) => value.toString().toLowerCase().includes(searchTerm.toLowerCase())),
+    Object?.values(row)?.some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())),
   )
 
   const fetchApplicationStatus = async () => {

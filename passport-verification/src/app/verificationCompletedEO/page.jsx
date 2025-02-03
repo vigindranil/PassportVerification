@@ -6,12 +6,12 @@ import PendingApplicationDatatable from '@/components/pendingApplication';
 
 export default function allFiles() {
   return (
-    <div className="flex h-screen bg-gray-100">
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <main className="flex-1 overflow-y-auto p-6">
+    <div className="flex h-full bg-gray-100">
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 p-6">
           <CardContent>
             <Card>
-              <PendingApplicationDatatable  heading='Verification Completed' status={10}/>
+              <PendingApplicationDatatable  heading='Total Applications Verified by EO' status={10}/>
             </Card>
           </CardContent>
         </main>

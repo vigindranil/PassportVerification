@@ -9,7 +9,7 @@ const layout = async ({ params }) => {
     const type = Cookies.load('type');
 
     const breadcrumb = [
-        { href: type === 10 ? "/dashboard" : type === 40 ? "/dashboard-eo" : type === 30 ? "/dashboard-oc" : type === 20 ? "/dashboard-sp" : type === 50 ? "/dashboard-se" : "#", name: "Dashboard" },
+        { href: type == 10 ? "/dashboard" : type == 40 ? "/dashboard-eo" : type == 30 ? "/dashboard-oc" : type == 20 ? "/dashboard-sp" : type == 50 ? "/dashboard-se" : "#", name: "Dashboard" },
         { href: "#", name: "Application Details" },
     ];
 

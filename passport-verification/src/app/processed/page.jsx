@@ -6,9 +6,9 @@ import DataTable from '@/components/proceed';
 
 export default function allFiles() {
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-full bg-gray-100">
       <div className="flex-1 flex flex-col overflow-hidden">
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 p-6">
           <CardContent>
             <h3 className='text-2xl text-slate-600'>Processed Application</h3>
             <Card>

@@ -32,7 +32,7 @@ const data = {
         "type": 10,
         "items": [
           { "title": "Home", "url": "/dashboard" },
-          { "title": "Upload Data", "url": "/upload" },
+          { "title": "Upload Applications", "url": "/upload" },
           { "title": "Create User", "url": "/createUserForm" },
           { "title": "Logout", "url": "/logout" }
         ]
@@ -46,7 +46,7 @@ const data = {
         "items": [
           { "title": "Total Pending Applications", "url": "/totalPending" },
           { "title": "Last 15 Days Pending", "url": "/last15DaysPending" },
-          { "title": "EO Accepted", "url": "/eoAcceptedFile" },
+          { "title": "Applications Accepted by EO", "url": "/eoAcceptedFile" },
           { "title": "Pending Verification (EO)", "url": "/pendingVerificatonEO" },
           { "title": "Verification Completed (EO)", "url": "/verificationCompletedEO" },
           { "title": "Pending IN OC", "url": "/pendingInOC" },

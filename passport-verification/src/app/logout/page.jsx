@@ -17,7 +17,7 @@ const page = () => {
         Cookies.remove("ps");
         Cookies.remove("district");
         console.log("Error saving user:", error);
-        window.location.href = "/";
+        window.location.href = "/login";
       }
     };
 
@@ -25,8 +25,9 @@ const page = () => {
   }, []);
 
   return (
-    <div className='h-screen w-screen bg-slate-200/50 flex justify-center items-center text-center'>
-      <Loader2 size={30} className='animate-spin'/>
+    <div className='h-screen w-screen bg-slate-200/50 flex flex-col justify-center items-center text-center'>
+      <Loader2 size={30} className='animate-spin text-blue-500'/>
+      <h1 className='text-xl font-bold text-gray-600 text-center mx-auto'>Logging Out...</h1>
     </div>
   )
 }
