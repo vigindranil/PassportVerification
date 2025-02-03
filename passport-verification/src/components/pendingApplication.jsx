@@ -65,6 +65,12 @@ export default function PendingApplicationDatatable({ status, heading, period })
         row.PsName,
         row.PhoneNo,
         row.VerificationAddress,
+      body: filteredData.map((row) => [
+        row.FileNumber,
+        row.ApplicantName,
+        row.PsName,
+        row.PhoneNo,
+        row.VerificationAddress,
       ]),
     })
     doc.save("applications.pdf")
@@ -153,7 +159,7 @@ export default function PendingApplicationDatatable({ status, heading, period })
                             size="sm"
                             variant="outline"
                             className="bg-stone-100 ring-[0.5px] ring-slate-300 text-blue-700 hover:bg-blue-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
-                            onClick={() => router.push(`/applicationDetails/${row?.FileNumber}`)}
+                            onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
                           >
                             <FileUser className="m-0 p-0" />
                           </Button>
