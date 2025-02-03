@@ -292,7 +292,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                   </div>
 
                   {/* Electricity Bill */}
-                  {(userType == 40 && docType == 1) && <div className={`w-1/2 p-10 h-full`}>
+                  {(userType == 30 && docType == 1) && <div className={`w-1/2 p-10 h-full`}>
                     {/* {(userType == 30) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}> */}
                     <div className="px-5">
                       <h1 className="text-center font-bold text-2xl my-3 mb-10 underline">Verify Electricity Document</h1>

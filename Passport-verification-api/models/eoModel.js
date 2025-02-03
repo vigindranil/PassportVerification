@@ -15,13 +15,14 @@ export async function saveDocumentUploadModel(
   longitude,
   latitude,
   locationIp,
+  appDocId,
   EntryuserId
 ) {
   try {
 
     const jsonTEXT = "{}";
     const [rows] = await pool.query(
-      "CALL sp_saveDocumentUpload(?, ?, ?,?, ?,?,?,?,?, ?,?,?,?,?,?,?, @DocId ,@Errorcode);",
+      "CALL sp_saveDocumentUploadv1(?, ?, ?,?, ?,?,?,?,?,?, ?,?,?,?,?,?,?, @DocId ,@Errorcode);",
       [
         ApplicationId,
         DocumentPath,
@@ -38,6 +39,7 @@ export async function saveDocumentUploadModel(
         latitude,
         locationIp,
         jsonTEXT,
+        appDocId,
         EntryuserId,
       ]
     );

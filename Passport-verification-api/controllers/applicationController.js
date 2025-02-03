@@ -303,7 +303,7 @@ export const verifyApplication = async (req, res) => {
     const statusUpdateResponse = await savethirdpartyVerifyStatus(
       ApplicationId,
       DocumentID,
-      10,
+      1,
       APIResponse,
       EntryUserID
     );
