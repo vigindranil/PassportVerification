@@ -40,6 +40,7 @@ const dashboardConfig = {
         { title: "Verified By SP/DIB", key: "SPDone", icon: ArrowRightToLine, color: "pink", link: "/completed-sp" },
         { title: "Verification Pending \n(Enquiry Officer)", key: "SEPending", icon: ArrowRightToLine, color: "yellow", link: "/pendingInEnquiryOfficer" },
         { title: "Verified by Enquiry Officer", key: "SEComplete", icon: ArrowRightToLine, color: "blue", link: "/completed-se" },
+        // { title: "re", key: "SEComplete", icon: ArrowRightToLine, color: "blue", link: "/completed-se" },
     ],
     50: [
         { title: "Verification Pending (SE)", key: "SEPending", icon: ArrowRightToLine, color: "purple", link: "/allFiles-oc" },
