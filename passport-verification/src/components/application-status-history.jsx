@@ -57,7 +57,7 @@ const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
                     <TableHead>Full Name</TableHead>
                     <TableHead>Role</TableHead>
                     <TableHead>Application State</TableHead>
-                    <TableHead>Updated Date</TableHead>
+                    <TableHead>Updated Date (DD/MM/YYYY hh:mm:ss)</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -69,7 +69,7 @@ const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
                         <TableCell>{stat?.FullName}</TableCell>
                         <TableCell>{stat?.UserRole}</TableCell>
                         <TableCell>{stat?.ApplicationState == "EoAccept" ? "Application Accepted By EO" : stat?.ApplicationState == "EoStartVerify" ? "Document Uploaded By EO" : stat?.ApplicationState}</TableCell>
-                        <TableCell>{moment(stat?.ApplicationStateUpdatedDateTime).format("DD/MM/YYYY | hh:mm a")}</TableCell>
+                        <TableCell>{moment(stat?.ApplicationStateUpdatedDateTime).format("DD/MM/YYYY hh:mm:ss")}</TableCell>
                       </TableRow>
                     ))
                   ) : (
