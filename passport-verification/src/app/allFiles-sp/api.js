@@ -11,7 +11,7 @@ export const updateEnquiryStatus = async (applicationId, type, remarks) => {
             "macAddress": "test-s4dn-3aos-dn338",
             "deviceId": "123#df",
             "StatusID": "80",
-            "StatusText": type == 'accept' ? 'SP APPROVED' : 'SP NOT APPROVE',
+            "StatusText": type == 'approve' ? 'SP APPROVED' : 'SP NOT APPROVE',
             "Remarks": remarks
         });
     } catch (error) {

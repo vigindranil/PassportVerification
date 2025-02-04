@@ -21,6 +21,7 @@ export default function PendingApplicationDatatable({ status }) {
   const [selectedDetails, setSelectedDetails] = useState({})
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
+  const [refreshFlag, setRefreshFlag] = useState(false);
   const itemsPerPage = 6
   const [applicationStatus, setApplicationStatus] = useState(null)
   const [verificationData, setVerificationData] = useState([])
@@ -90,7 +91,7 @@ export default function PendingApplicationDatatable({ status }) {
         description: response?.message,
         action: <ToastAction altText="Try again">Close</ToastAction>,
       })
-      fetchApplicationStatus();
+      setRefreshFlag(prev => !prev);
     } else {
       toast({
         variant: "destructive",
@@ -118,7 +119,7 @@ export default function PendingApplicationDatatable({ status }) {
 
   useEffect(() => {
     fetchApplicationStatus()
-  }, [searchTerm]) // Added searchTerm as a dependency
+  }, [searchTerm,refreshFlag]) // Added searchTerm as a dependency
 
   return (
     <div className="container mx-auto px-0 space-y-8 shadow-2xl">
