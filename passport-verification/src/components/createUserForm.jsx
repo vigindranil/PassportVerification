@@ -46,8 +46,8 @@ const UserManagement = () => {
     AADHAARNo: "",
     Designation: "",
     UserRoleID: "",
-    DistrictID: "",
-    PSID: "",
+    DistrictID: "0",
+    PSID: "0",
     aadharRegisterMobileNumber: "",
   })
 

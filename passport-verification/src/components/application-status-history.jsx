@@ -55,7 +55,7 @@ const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
                 <TableHeader>
                   <TableRow className="bg-slate-100 hover:bg-slate-100">
                     <TableHead>Full Name</TableHead>
-                    <TableHead>Authority Level</TableHead>
+                    <TableHead>Role</TableHead>
                     <TableHead>Application State</TableHead>
                     <TableHead>Updated Date</TableHead>
                   </TableRow>
@@ -66,7 +66,7 @@ const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
                   ) : currentData?.length > 0 ? (
                     currentData.map((stat, index) => (
                       <TableRow key={index}>
-                        <TableCell>{stat?.UserName}</TableCell>
+                        <TableCell>{stat?.FullName}</TableCell>
                         <TableCell>{stat?.UserRole}</TableCell>
                         <TableCell>{stat?.ApplicationState == "EoAccept" ? "Application Accepted By EO" : stat?.ApplicationState == "EoStartVerify" ? "Document Uploaded By EO" : stat?.ApplicationState}</TableCell>
                         <TableCell>{moment(stat?.ApplicationStateUpdatedDateTime).format("DD/MM/YYYY | hh:mm a")}</TableCell>

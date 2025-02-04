@@ -266,20 +266,18 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
           </Table>
           {isDetailsModalOpen && (
             <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
-              <DialogContent className="w-screen h-screen max-w-full m-0 p-0">
+              <DialogContent className="w-[95vw] h-[95vh] max-w-full m-0 p-3">
                 <VisuallyHidden>
                   <DialogTitle>Document Preview</DialogTitle>
                 </VisuallyHidden>
                 <div className="flex h-full">
-                  <div className={`${(docType != 1 && docType != 8) ? 'w-full p-5' : 'w-1/2'} h-full flex items-center justify-center bg-gray-100`}>
+                  <div className={`${(selectedImage?.DocumentTypeId == 1 || selectedImage?.DocumentTypeId == 8) && (userType != 40 && userType != 10) ? 'w-1/2' : 'w-full p-5'} h-full flex items-center justify-center bg-gray-100 rounded-md`}>
                     {type == "jpg" ? (
                       <div className="relative w-full h-full overflow-hidden mx-auto" onClick={() => setZoom(!zoom)}>
-                        <motion.div animate={{ scale: zoom ? 1.7 : 1 }} transition={{ duration: 0.3 }}>
-                          <Image
-                            className="w-auto h-[95vh] mx-auto cursor-zoom-in"
+                        <motion.div className="mx-auto" animate={{ scale: zoom ? 1.7 : 1 }} transition={{ duration: 0.3 }}>
+                          <img
+                            className="w-auto h-[90vh] rounded-md mx-auto cursor-zoom-in"
                             src={selectedDoc || "/placeholder.svg"}
-                            width='100'
-                            height='100'
                             alt="Document preview"
                           />
                         </motion.div>
