@@ -11,7 +11,7 @@ export default function allFiles() {
         <main className="flex-1 overflow-y-auto p-6">
           <CardContent>
             <Card>
-              <PendingApplicationDatatable heading='Accept & Verification Pending (EO)' status={2}/>
+              <PendingApplicationDatatable heading='Application(s) Accepted but Verification Pending (EO)' status={2}/>
             </Card>
           </CardContent>
         </main>

@@ -49,10 +49,10 @@ const data = {
           { "title": "Applications Accepted by EO", "url": "/eoAcceptedFile" },
           { "title": "Pending Verification (EO)", "url": "/pendingVerificatonEO" },
           { "title": "Verification Completed (EO)", "url": "/verificationCompletedEO" },
-          { "title": "Pending IN OC", "url": "/pendingInOC" },
+          { "title": "Pending in OC", "url": "/pendingInOC" },
           { "title": "Completed By OC", "url": "/verificationCompletedEO" },
-          { "title": "Pending IN SP/DIB", "url": "/pendingInSPDIB" },
-          { "title": "Pending IN Enquiry Officer", "url": "/pendingInEnquiryOfficer" },
+          { "title": "Pending in SP/DIB", "url": "/pendingInSPDIB" },
+          { "title": "Pending in Enquiry Officer", "url": "/pendingInEnquiryOfficer" },
         ]
       },
 
@@ -77,7 +77,7 @@ const data = {
         "type": 40,
         "items": [
           { "title": "Verify Pending (PS)", "url": "/allFiles" },
-          { "title": "Accept & Verify Pending (EO)", "url": "/acceptedAndVerificationPending-eo" },
+          { "title": "Accepted but Verification Pending (EO)", "url": "/acceptedAndVerificationPending-eo" },
           { "title": "Verify Completed (EO)", "url": "/verificationCompletedEO" },
         ]
       },
@@ -132,12 +132,12 @@ const data = {
           { "title": "EO Accepted", "url": "/eoAcceptedFile" },
           { "title": "Pending Verification (EO)", "url": "/pendingVerificatonEO" },
           { "title": "Verification Completed (EO)", "url": "/verificationCompletedEO" },
-          { "title": "Pending IN OC", "url": "/pendingInOC" },
+          { "title": "Pending in OC", "url": "/pendingInOC" },
           { "title": "Completed By OC", "url": "/verificationCompletedEO" },
-          { "title": "Pending IN SP/DIB", "url": "/allFiles-sp" },
-          { "title": "Complete IN SP/DIB", "url": "/completed-sp" },
-          { "title": "Pending IN Enquiry Officer", "url": "/pendingInEnquiryOfficer" },
-          { "title": "Complete IN Enquiry Officer", "url": "/completed-se" },
+          { "title": "Pending in SP/DIB", "url": "/allFiles-sp" },
+          { "title": "Complete in SP/DIB", "url": "/completed-sp" },
+          { "title": "Pending in Enquiry Officer", "url": "/pendingInEnquiryOfficer" },
+          { "title": "Complete in Enquiry Officer", "url": "/completed-se" },
         ]
       },
 

@@ -158,6 +158,22 @@ const UserManagement = () => {
           description: "User Created Successfully",
           action: <ToastAction altText="Close">Close</ToastAction>,
         })
+
+        setFormData({
+          UserName: "",
+          FullName: "",
+          Firstname: "",
+          LastName: "",
+          MobileNo: "",
+          EmailID: "",
+          Gender: "",
+          AADHAARNo: "",
+          Designation: "",
+          UserRoleID: "",
+          DistrictID: "0",
+          PSID: "0",
+          aadharRegisterMobileNumber: "",
+        });
         fetchUserDetails() // Refresh user list after creating a new user
       } else {
         toast({
@@ -178,6 +194,21 @@ const UserManagement = () => {
     } finally {
       setLoading(false)
     }
+
+    const requiredFields = ["UserName", "FullName", "Firstname", "LastName", "MobileNo", "EmailID", "Gender", "AADHAARNo", "Designation"];
+
+    let errors = {};
+    requiredFields.forEach((field) => {
+      if (!formData[field]) {
+        errors[field] = "This field is required.";
+      }
+    });
+  
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+  
   }
 
   const onChangeDistrict = async (DistrictID) => {
@@ -236,6 +267,18 @@ const UserManagement = () => {
       })
     }
 
+    const textPattern = /^[a-zA-Z0-9@]*$/;
+
+    if (["UserName", "FullName", "Firstname", "LastName"].includes(name) && !textPattern.test(value)) {
+      setFormErrors({
+        ...formErrors,
+        [name]: "Only letters, numbers, and '@' are allowed.",
+      });
+      return;
+    } else {
+      setFormErrors({ ...formErrors, [name]: "" });
+    }
+
     if (name === "MobileNo") {
       newValue = newValue.replace(/\D/g, "")?.slice(0, 10)
     } else if (name === "AADHAARNo") {
@@ -271,6 +314,8 @@ const UserManagement = () => {
             value={formData?.UserName}
             onChange={handleInputChange}
             required
+            pattern="^[a-zA-Z0-9@]+$"
+            title="Only letters, numbers, and '@' are allowed."
           />
         </div>
 
@@ -402,7 +447,7 @@ const UserManagement = () => {
           <Select
             name="policeStation"
             onValueChange={(value) => setFormData({ ...formData, PSID: value })}
-            
+
             disabled={formData.UserRoleID === "20" || formData.UserRoleID === "10"}
           >
             <SelectTrigger>

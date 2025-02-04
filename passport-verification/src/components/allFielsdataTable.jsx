@@ -93,6 +93,7 @@ export default function PendingApplicationDatatable({ status }) {
 
       if (response?.status == 0) {
         setRefreshFlag(prev =>!prev);
+        await fetchApplicationStatus();
         toast({
           title: (
             <div className="flex items-center gap-2">
