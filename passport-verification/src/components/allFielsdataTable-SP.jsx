@@ -221,14 +221,21 @@ export default function PendingApplicationDatatable({ status }) {
                       <TableCell>{row?.DateOfBirth ? moment(row.DateOfBirth).format("DD/MM/YYYY") : "N/A"}</TableCell>
                       <TableCell>
                         <div className="flex space-x-1">
+                        <div className="relative group">
                           <Button
                             size="sm"
                             variant="default"
                             className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1"
                             onClick={() => router.push(`/applicationDetails/${row?.FileNumber}`)}
                           >
-                            Details
+                           <FileUser className="m-0 p-0" />
                           </Button>
+                          <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                              View Application
+                            </span>
+                          </div>
+
+                          <div className="relative group">
                           <Button
                             size="sm"
                             variant="default"
@@ -239,8 +246,14 @@ export default function PendingApplicationDatatable({ status }) {
                               setSelectedDetails(row?.FileNumber)
                             }}
                           >
-                            Approve
+                            <FileCheck className="mx-0 px-0" />
                           </Button>
+                          <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                              Approve Application
+                            </span>
+                        </div>
+
+                          <div className="relative group">
                           <Button
                             size="sm"
                             variant="default"
@@ -251,8 +264,13 @@ export default function PendingApplicationDatatable({ status }) {
                               setSelectedDetails(row?.FileNumber)
                             }}
                           >
-                            Reject
+                              <FileX2 className="mx-0 px-0" />
                           </Button>
+                          <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                              Reject Application
+                            </span>
+                            </div>
+
                           <Button
                             size="sm"
                             variant="default"
