@@ -1,1 +1,7 @@
 2025-02-04 13:51:38 | ERROR | Server shutdown in progress
+2025-02-04 16:16:32 | ERROR | Error assigning case: Database error: pool is not defined
+2025-02-04 16:47:39 | ERROR | Database error: Incorrect number of arguments for PROCEDURE db_wb_passport_verify.sp_setExternelApiLog; expected 8, got 9
+2025-02-04 16:47:47 | ERROR | Database error: Incorrect number of arguments for PROCEDURE db_wb_passport_verify.sp_setExternelApiLog; expected 8, got 9
+2025-02-04 17:07:30 | ERROR | Error assigning case: Database error: pool is not defined
+2025-02-04 17:08:43 | ERROR | Error assigning case: Database error: pool is not defined
+2025-02-04 17:08:59 | ERROR | Error assigning case: Database error: pool is not defined
