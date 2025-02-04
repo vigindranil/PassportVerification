@@ -4,3 +4,18 @@
 2025-01-30 14:09:19 | ERROR | Error fetching : Database error: PROCEDURE db_wb_passport_verify.sp_getStatusbyEO does not exist
 2025-01-30 19:49:59 | ERROR | Error assigning case: Database error: DocTypeId is not defined
 2025-01-30 19:50:34 | ERROR | Error assigning case: Database error: DocTypeId is not defined
+2025-01-31 12:49:48 | ERROR | Error fetching : (intermediate value) is not iterable
+2025-01-31 12:51:57 | ERROR | Error fetching : (intermediate value) is not iterable
+2025-01-31 17:49:10 | ERROR | Error retrieving application details: documents is not defined
+2025-01-31 17:52:09 | ERROR | Error retrieving application details: documents is not defined
+2025-01-31 17:53:10 | ERROR | Error retrieving application details: documents is not defined
+2025-01-31 17:53:27 | ERROR | Error retrieving application details: documents is not defined
+2025-01-31 17:53:58 | ERROR | Error retrieving application details: documents is not defined
+2025-02-03 13:16:47 | ERROR | Error fetching state information: Incorrect integer value: 'OC' for column 'Designation' at row 1
+2025-02-03 13:17:08 | ERROR | Error fetching state information: Incorrect integer value: 'OC' for column 'Designation' at row 1
+2025-02-03 13:33:18 | ERROR | Error fetching state information: Incorrect integer value: 'OC' for column 'Designation' at row 1
+2025-02-03 13:33:59 | ERROR | Error fetching state information: Incorrect integer value: 'OC' for column 'Designation' at row 1
+2025-02-03 13:35:25 | ERROR | Error fetching state information: Incorrect integer value: 'sp' for column 'Designation' at row 1
+2025-02-03 13:35:42 | ERROR | Error fetching state information: Incorrect integer value: 'OC' for column 'Designation' at row 1
+2025-02-03 13:35:50 | ERROR | Error fetching state information: Incorrect integer value: 'OC' for column 'Designation' at row 1
+2025-02-03 15:31:12 | ERROR | Error fetching state information: Incorrect integer value: 'OC' for column 'Designation' at row 1

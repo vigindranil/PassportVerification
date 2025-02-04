@@ -25,7 +25,7 @@ export async function getDocumentApplicationDetailsById(applicationId, entryUser
     try {
       
       const [rows] = await pool.query(
-        `CALL sp_getApplicationDocumentDetailsByapplicationId(?, ?)`,
+        `CALL getApplicationDocumentDetailsByapplicationId(?, ?)`,
         [applicationId, entryUserId]
       );
   

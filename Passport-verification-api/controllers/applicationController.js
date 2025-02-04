@@ -29,7 +29,7 @@ export const getApplicationDetails = async (req, res) => {
         const applicationDetails = await getApplicationDetailsByApplicationId(applicationId, entryUserId);
 
 
-        const documents = await getDocumentApplicationDetailsById(applicationId, entryUserId);
+        // const documents = await getDocumentApplicationDetailsById(applicationId, entryUserId);
         const status = await getApplicationStatusHistoryById(applicationId, entryUserId);
 
          const ipaddress = "test";
@@ -208,3 +208,32 @@ export const updateEnquiryStatus = async (req, res) => {
 //       });
 //     }
 //   };
+
+
+export const getApplicationDocumentsController = async (req, res) => {
+  const { ApplicationId, EntryUserId } = req.body;
+
+  try {
+    if (!ApplicationId || !EntryUserId) {
+      return res.status(400).json({
+        status: 1,
+        message: 'Missing required fields.',
+      });
+    }
+
+    const result = await getDocumentApplicationDetailsById(ApplicationId, EntryUserId);
+
+    return res.status(200).json({
+      status: 0,
+      message: result.message,
+      documents: result.documents,
+    });
+  } catch (error) {
+    console.error('Error in getApplicationDocumentsController:', error.message);
+    return res.status(500).json({
+      status: 1,
+      message: 'Internal server error',
+      error: error.message,
+    });
+  }
+};
