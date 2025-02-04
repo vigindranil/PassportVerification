@@ -353,7 +353,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                   {((userType != 40 && userType != 10) && docType == 8) && <div className={`w-1/2 p-10 h-full`}>
                     {/* {(userType == 30) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}> */}
                     <div className="px-5">
-                      <h1 className="text-center font-bold text-2xl my-3 mb-10 underline">Verify Birth Certificate</h1>
+                      <h1 className="text-center font-bold text-2xl my-3 mb-10 underline">Fetch Birth Certificate Data</h1>
                       <p className="text-slate-600">
                         Please verify the uploaded document by clicking the "Verify Birth Certificate" button.
                       </p>
