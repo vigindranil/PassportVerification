@@ -24,7 +24,6 @@ export default function PendingApplicationDatatable({ status }) {
   const [searchTerm, setSearchTerm] = useState("")
   const itemsPerPage = 6
   const [refreshFlag, setRefreshFlag] = useState(false);
-  const [applicationStatus, setApplicationStatus] = useState(null)
   const [verificationData, setVerificationData] = useState([])
   const [isFileAcceptModalOpen, setIsFileAcceptModalOpen] = useState(false)
   const [type, setType] = useState("reject");
@@ -110,12 +109,6 @@ export default function PendingApplicationDatatable({ status }) {
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
     }
-  }
-
-  const handleViewPPAttachment = (fileNumber) => {
-    console.log(`Viewing PP Attachment for file ${fileNumber}`)
-    // Implement the logic for viewing the PP attachment
-    // This could open a new window or modal with the attachment
   }
 
   useEffect(() => {
@@ -292,7 +285,7 @@ export default function PendingApplicationDatatable({ status }) {
           <div>
             Showing {startIndex + 1} to {Math.min(endIndex, filteredData?.length)} of {filteredData?.length} entries
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button
               variant="outline"
               size="sm"

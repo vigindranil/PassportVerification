@@ -27,8 +27,8 @@ export const updateEnquiryStatus = async (applicationId, type, remarks) => {
         return await postRequest("application/updateEnquiryStatus", {
             "ApplicationID": applicationId,
             "locationIp": "115.187.62.100",
-            "macAddress": "test-s4dn-3aos-dn338",
-            "deviceId": "123#df",
+            "macAddress": "t23d-s4dn-3aos-dn338",
+            "deviceId": "98nf39937mp2eq",
             "StatusID": "50",
             "StatusText": type == 'approve' ? 'OC APPROVED' : 'OC NOT APPROVE',
             "Remarks": remarks

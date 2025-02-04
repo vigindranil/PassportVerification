@@ -87,9 +87,26 @@ export default function PendingApplicationDatatable({ status }) {
       console.log(`applicationId: ${applicationId}`)
       console.log(`citizentype: ${citizentype}`)
       console.log(`file: ${file}`)
+      if (!citizentype){
+        toast({
+          variant: "destructive",
+          title: "Select Citizen Type!",
+          description: "Please select citizen type and then try again",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
+      }
+      if (!file){
+        toast({
+          variant: "destructive",
+          title: "Select File!",
+          description: "Please select a file and then try again",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
+      }
+
       // Implement the logic for accepting the file
       const response = await acceptApplication(applicationId, citizentype, file);
-      console.log('reponse:', response);
+      
 
       if (response?.status == 0) {
         setRefreshFlag(prev =>!prev);
@@ -290,7 +307,7 @@ export default function PendingApplicationDatatable({ status }) {
           <div>
             Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of {filteredData.length} entries
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button
               variant="outline"
               size="sm"
