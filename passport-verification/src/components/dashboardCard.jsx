@@ -11,8 +11,8 @@ const dashboardConfig = {
     10: [
         { title: "Total Pending Applications", key: "TotalPendingApplications", icon: Clock, color: "purple", link: "/totalPending" },
         { title: "Last 15 Days Pending\nApplications", key: "Last15DaysPendingApplications", icon: CalendarClock, color: "blue", link: "/last15DaysPending" },
-        { title: "Applications Accepted\nby EO", key: "EOAccepectButNotStartedVerify", icon: CircleCheckBig, color: "green", link: "/eoAcceptedFile" },
-        { title: "Verification Pending \n(EO)", key: "EOStartedVerify", icon: FileClock, color: "yellow", link: "/pendingVerificatonEO" },
+        { title: "Accepted but Verification Pending (EO)", key: "EOAccepectButNotStartedVerify", icon: CircleCheckBig, color: "green", link: "/eoAcceptedFile" },
+        // { title: "Verification Pending \n(EO)", key: "EOStartedVerify", icon: FileClock, color: "yellow", link: "/pendingVerificatonEO" },
         { title: "Verified by EO\n ", key: "EOComplete", icon: FileCheck2, color: "lime", link: "/verificationCompletedEO" },
         { title: "Verification Pending \n(OC)", key: "OCPending", icon: ClockAlert, color: "red", link: "/pendingInOC" },
         { title: "Verified By OC\n ", key: "OCComplete", icon: BadgeCheck, color: "teal", link: "/verificationCompletedEO" },
@@ -21,7 +21,7 @@ const dashboardConfig = {
     ],
     40: [
         { title: "Verification Pending \n(at Police Station)", key: "TotalPendingApplications", icon: Clock, color: "yellow", link: "/allFiles" },
-        { title: "Applications Accepted\nBy EO", key: "EOAccepectButNotStartedVerify", icon: CheckCheck, color: "blue", link: "/acceptedAndVerificationPending-eo" },
+        { title: "Applications Accepted\nbut Verifiaction Pending", key: "EOAccepectButNotStartedVerify", icon: CheckCheck, color: "blue", link: "/acceptedAndVerificationPending-eo" },
         { title: "Verification Completed\nBy EO", key: "EOComplete", icon: BadgeCheck, color: "purple", link: "/verificationCompletedEO" },
     ],
     30: [
@@ -32,7 +32,7 @@ const dashboardConfig = {
         { title: "Total Pending Applications", key: "TotalPendingApplications", icon: CircleDashed, color: "purple", link: "/totalPending" },
         { title: "Last 15 Days Pending", key: "Last15DaysPendingApplications", icon: TrendingDown, color: "blue", link: "/last15DaysPending" },
         { title: "Accepted by EO", key: "EOAccepectButNotStartedVerify", icon: ArrowRightToLine, color: "green", link: "/eoAcceptedFile" },
-        { title: "Verification Pending (EO)", key: "EOStartedVerify", icon: ArrowRightToLine, color: "yellow", link: "/pendingVerificatonEO" },
+        // { title: "Verification Pending (EO)", key: "EOStartedVerify", icon: ArrowRightToLine, color: "yellow", link: "/pendingVerificatonEO" },
         { title: "Verified by EO", key: "EOComplete", icon: ArrowRightToLine, color: "lime", link: "/verificationCompletedEO" },
         { title: "Verification Pending (OC)", key: "OCPending", icon: ArrowRightToLine, color: "red", link: "/pendingInOC" },
         { title: "Verified By OC", key: "OCComplete", icon: ArrowRightToLine, color: "teal", link: "/verificationCompletedEO" },

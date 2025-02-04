@@ -11,7 +11,7 @@ export default function allFiles() {
         <main className="flex-1 p-6">
           <CardContent>
             <Card>
-              <DataTable status={5} heading="Total Verification Pending (EO)"/>
+              <DataTable status={2} heading="Total Verification Pending (EO)"/>
             </Card>
           </CardContent>
         </main>
