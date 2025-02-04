@@ -36,8 +36,8 @@ export default function Footer() {
           </div>
           <div>
             <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
-            <p className="text-sm text-gray-400">Email: info@passportverify.com</p>
-            <p className="text-sm text-gray-400">Phone: +1 (555) 123-4567</p>
+            <p className="text-sm text-gray-400">Email:</p>
+            <p className="text-sm text-gray-400">Phone:</p>
           </div>
         </div>
         <div
