@@ -67,40 +67,6 @@ export const assignApplication = async (req, res) => {
 };
 
 
-export const getStatusbySE = async (req, res) => {
-    try {
-      const { userId , status , period  } = req.body;
-      const EntryuserId  = req.user.UserID; // Extract logged-in user ID
-  
-      if (!applicationId || !assignTo || !macAddress || !locationIp || !deviceId || !EntryuserId ) {
-        return res.status(400).json({
-          status: 1,
-          message: 'Invalid input data. All fields are required.',
-        });
-      }
-  
-      const result = await getStatusbySEModal(applicationId, assignTo, macAddress, locationIp, deviceId, EntryuserId );
-  
-      if (result==0) {
-        return res.status(200).json({
-          status: 0,
-          message: "Assigned Successfully",
-        });
-      } else {
-        return res.status(400).json({
-          status: 1,
-          message: "Failed to assign",
-        });
-      }
-    } catch (error) {
-      console.error('Error in assignApplicationController:', error.message);
-      return res.status(500).json({
-        status: 1,
-        message: 'An error occurred while assigning the application.',
-        error: error.message,
-      });
-    }
-  };
 
 
   export const getApplicationStatus = async (req, res) => {
