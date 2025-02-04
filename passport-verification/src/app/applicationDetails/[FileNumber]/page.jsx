@@ -16,6 +16,7 @@ export default function Page({ FileNumber }) {
   const [applicationDetails, setApplicationDetails] = useState(null);
   const [isLoadingStatusHistrory, setIsLoadingStatusHistrory] = useState(true)
   const [isLoadingDocumentTable, setIsLoadingDocumentTable] = useState(true);
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
   const { toast } = useToast()
 
   const fetchData = async (ApplicationId) => {
@@ -36,7 +37,7 @@ export default function Page({ FileNumber }) {
   useEffect(() => {
     console.log("FileNumber:", FileNumber);
     FileNumber && fetchData(FileNumber);
-  }, [FileNumber]);
+  }, [FileNumber, verificationSuccess]);
 
   return (
     <div className="flex bg-gray-100">
@@ -177,7 +178,7 @@ export default function Page({ FileNumber }) {
               <div className="bg-gradient-to-r from-blue-600 to-teal-600 px-6 py-3">
                 <h2 className="text-2xl font-bold text-white">Document(s) Uploaded for the Application</h2>
               </div>
-              <DocumentTable fileNo={FileNumber} documents={applicationDetails?.documents} docPath={applicationDetails?.filepath} isLoadingDocumentTable={isLoadingDocumentTable}/>
+              <DocumentTable fileNo={FileNumber} documents={applicationDetails?.documents} docPath={applicationDetails?.filepath} isLoadingDocumentTable={isLoadingDocumentTable} verificationSuccess={setVerificationSuccess}/>
               
             </div>
             <ApplicationStatusHistory status={applicationDetails?.status} isLoadingStatusHistrory={isLoadingStatusHistrory}/>

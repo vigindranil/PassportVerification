@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import { motion } from "framer-motion";
 
-const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) => {
+const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, verificationSuccess }) => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [isLocationDetailsModalOpen, setIsLocationDetailsModalOpen] = useState(false)
   const [selectedDoc, setSelectedDoc] = useState("")
@@ -126,6 +126,8 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
       );
       console.log(response);
       if (response.status == 0) {
+        verificationSuccess(prev => !prev);
+        setIsDetailsModalOpen(false);
         toast({
           title: (
             <div className="flex items-center gap-2">
@@ -271,12 +273,12 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                   <DialogTitle>Document Preview</DialogTitle>
                 </VisuallyHidden>
                 <div className="flex h-full">
-                  <div className={`${(selectedImage?.DocumentTypeId == 1 || selectedImage?.DocumentTypeId == 8) && (userType != 40 && userType != 10) ? 'w-1/2' : 'w-full p-5'} h-full flex items-center justify-center bg-gray-100 rounded-md`}>
+                  <div className={`${(selectedImage?.DocumentTypeId == 1 || selectedImage?.DocumentTypeId == 8) && (userType != 40 && userType != 10) ? 'w-1/2' : 'w-full p-5'} max-h-[90vh] flex items-center justify-center bg-gray-100 rounded-md`}>
                     {type == "jpg" ? (
                       <div className="relative w-full h-full overflow-hidden mx-auto" onClick={() => setZoom(!zoom)}>
-                        <motion.div className="mx-auto" animate={{ scale: zoom ? 1.7 : 1 }} transition={{ duration: 0.3 }}>
+                        <motion.div className="mx-auto h-full" animate={{ scale: zoom ? 1.7 : 1 }} transition={{ duration: 0.3 }}>
                           <img
-                            className="w-auto h-[90vh] rounded-md mx-auto cursor-zoom-in"
+                            className="w-auto h-full max-h-[90vh] rounded-md mx-auto cursor-zoom-in"
                             src={selectedDoc || "/placeholder.svg"}
                             alt="Document preview"
                           />
@@ -318,13 +320,13 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                           className="flex bg-blue-500 text-slate-200 justify-center items-center p-1 m-1 px-3 rounded-md hover:bg-blue-600 mx-auto"
                           onClick={() => verifyElectricityBill(selectedImage?.IdNumber, selectedImage?.IdNumber2)}
                         >
-                          {verifyElectricityLoading ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Verifying</span> : <><span>Fetch Data from WBSEDCL</span></>}
+                          {verifyElectricityLoading ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Fetching</span> : <><span>Fetch Data from WBSEDCL</span></>}
                         </button>
                       }
 
                       {/* already verified data */}
-                      {(selectedImage?.Isverified && selectedImage?.UserAgent) && <div className="w-full h-[300px]">
-                        <hr className="my-5" />
+                      {(selectedImage?.Isverified == 1) && <div className="w-full h-[200px] max-h-[200px]">
+                        <hr className="my-2" />
                         <h1 className="text-center font-bold font-mono underline">Data from WBSEDCL</h1>
                         <p>
                           <span className="font-bold">Consumer Name:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.consumerName}
@@ -335,8 +337,8 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                       </div>}
 
                       {/* current verification data */}
-                      {(!selectedImage?.Isverified && verifiedResponse) && <div className="w-full h-[300px]">
-                        <hr className="my-5" />
+                      {(!selectedImage?.Isverified && verifiedResponse) && <div className="w-full h-[200px] max-h-[200px]">
+                        <hr className="my-1" />
                         <h1 className="text-center font-bold font-mono underline">Data from WBSEDCL</h1>
                         <p>
                           <span className="font-bold">Consumer Name:</span> {verifiedResponse?.data?.consumerName}
@@ -353,7 +355,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                   {((userType != 40 && userType != 10) && docType == 8) && <div className={`w-1/2 p-10 h-full`}>
                     {/* {(userType == 30) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}> */}
                     <div className="px-5">
-                      <h1 className="text-center font-bold text-2xl my-3 mb-10 underline">Fetch Birth Certificate Data</h1>
+                      <h1 className="text-center font-bold text-2xl my-3 mb-10 underline">Verify Birth Certificate Document</h1>
                       <p className="text-slate-600">
                         Please verify the uploaded document by clicking the "Verify Birth Certificate" button.
                       </p>
@@ -365,8 +367,8 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                         <>
                           <button
                             className={`${verified && 'cursor-not-allowed'} flex bg-${verified ? 'green' : 'gray'}-500 text-slate-200 justify-center items-center p-1 m-1 px-3 rounded-md hover:bg-${verified ? 'green' : 'gray'}-500 mx-auto`}
-                            onClick={() => handleVerifyApplication(1, 'getWBSEDCLDetails', { IdNumber: selectedImage?.IdNumber, IdNumber2: selectedImage?.IdNumber2 }, verifiedResponse)}
-                            disabled={verifyApplicationLoading}
+                            onClick={() => handleVerifyApplication(1, 'getWBSEDCLDetails', fileNo, selectedImage?.DocumentId, { IdNumber: selectedImage?.IdNumber, IdNumber2: selectedImage?.IdNumber2 }, verifiedResponse)}
+                            disabled={verified || verifyApplicationLoading}
                           >
                             {(verifyApplicationLoading) ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Approving</span> : verified ? <><CheckCircle2Icon className="h-4 w-4 mr-1" /> <span>Document Verifed</span></> : <><span>Approve The Document</span></>}
                           </button>
@@ -377,42 +379,39 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                           className='flex bg-blue-500 text-slate-200 justify-center items-center p-1 m-1 px-3 rounded-md hover:bg-blue-600 mx-auto'
                           onClick={() => verifyBirthCertificate(selectedImage?.IdNumber, selectedImage?.IdNumber2)}
                         >
-                          {verifyElectricityLoading ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Verifying</span> : <><span>Verify Birth Certificate</span></>}
+                          {verifyElectricityLoading ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Fetching...</span> : <><span>Fetch Birth Certificate Data</span></>}
                         </button>}
 
                       {/* already verified data */}
-                      {(selectedImage?.Isverified && selectedImage?.UserAgent) && <div className="w-full h-[300px]">
-                        <hr className="my-5" />
+                      {(selectedImage?.Isverified && selectedImage?.UserAgent) && <div className="w-full h-[200px] max-h-[200px]">
+                        <hr className="my-2" />
                         <h1 className="text-center font-bold font-mono underline">Data from Janma Mrityutathya Portal of WB Gov.</h1>
-                        <p>
-                          <span className="font-bold">Consumer Name:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.consumerName}
-                        </p>
-                        <p>
-                          <span className="font-bold">Consumer Address:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.consumerAddress}
-                        </p>
 
-                        <p><span className="font-bold">Name</span> {JSON.parse(selectedImage?.UserAgent)?.data?.ChNamae}</p>
-                        <p><span className="font-bold">Gender</span> {JSON.parse(selectedImage?.UserAgent)?.data?.ChGender}</p>
-                        <p><span className="font-bold">Date of Birth</span> {JSON.parse(selectedImage?.UserAgent)?.data?.ChDob}</p>
-                        <p><span className="font-bold">Place of Birth</span> {JSON.parse(selectedImage?.UserAgent)?.data?.PlaceOfBirth}</p>
-                        <p><span className="font-bold">Mother Name</span> {JSON.parse(selectedImage?.UserAgent)?.data?.MotherName}</p>
-                        <p><span className="font-bold">Monther Identity Proof</span> {JSON.parse(selectedImage?.UserAgent)?.data?.MontherIdentityProof}</p>
-                        <p><span className="font-bold">Father Name</span> {JSON.parse(selectedImage?.UserAgent)?.data?.FatherName}</p>
-                        <p><span className="font-bold">Father Identity Proof</span> {JSON.parse(selectedImage?.UserAgent)?.data?.FatherIdentityProof}</p>
-                        <p><span className="font-bold">Certificate No.</span> {JSON.parse(selectedImage?.UserAgent)?.data?.CertificateNO}</p>
-                        <p><span className="font-bold">Date of Registration</span> {JSON.parse(selectedImage?.UserAgent)?.data?.DateOfRegistration}</p>
-                        <p><span className="font-bold">SUhid</span> {JSON.parse(selectedImage?.UserAgent)?.data?.SUhid}</p>
-                        <p><span className="font-bold">Date of Issue</span> {JSON.parse(selectedImage?.UserAgent)?.data?.DateOfIssue}</p>
-                        <p><span className="font-bold">Issuing Auth</span> {JSON.parse(selectedImage?.UserAgent)?.data?.IssuingAuth}</p>
-                        <p><span className="font-bold mt-2 flex">Present Address:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.PresentAdd}</p>
-                        <p><span className="font-bold mt-2 flex">Permanent Address:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.PermanentAdd}</p>
-                      </div>}
+                        <div className="w-full h-[200px] overflow-y-auto text-sm">
+                          <p><span className="font-bold">Name</span> {JSON.parse(selectedImage?.UserAgent)?.ChNamae}</p>
+                          <p><span className="font-bold">Gender</span> {JSON.parse(selectedImage?.UserAgent)?.ChGender}</p>
+                          <p><span className="font-bold">Date of Birth</span> {JSON.parse(selectedImage?.UserAgent)?.ChDob}</p>
+                          <p><span className="font-bold">Place of Birth</span> {JSON.parse(selectedImage?.UserAgent)?.PlaceOfBirth}</p>
+                          <p><span className="font-bold">Mother Name</span> {JSON.parse(selectedImage?.UserAgent)?.MotherName}</p>
+                          <p><span className="font-bold">Monther Identity Proof</span> {JSON.parse(selectedImage?.UserAgent)?.MontherIdentityProof}</p>
+                          <p><span className="font-bold">Father Name</span> {JSON.parse(selectedImage?.UserAgent)?.FatherName}</p>
+                          <p><span className="font-bold">Father Identity Proof</span> {JSON.parse(selectedImage?.UserAgent)?.FatherIdentityProof}</p>
+                          <p><span className="font-bold">Certificate No.</span> {JSON.parse(selectedImage?.UserAgent)?.CertificateNO}</p>
+                          <p><span className="font-bold">Date of Registration</span> {JSON.parse(selectedImage?.UserAgent)?.DateOfRegistration}</p>
+                          <p><span className="font-bold">SUhid</span> {JSON.parse(selectedImage?.UserAgent)?.SUhid}</p>
+                          <p><span className="font-bold">Date of Issue</span> {JSON.parse(selectedImage?.UserAgent)?.DateOfIssue}</p>
+                          <p><span className="font-bold">Issuing Auth</span> {JSON.parse(selectedImage?.UserAgent)?.IssuingAuth}</p>
+                          <p><span className="font-bold mt-2 flex">Present Address:</span> {JSON.parse(selectedImage?.UserAgent)?.PresentAdd}</p>
+                          <p><span className="font-bold mt-2 flex">Permanent Address:</span> {JSON.parse(selectedImage?.UserAgent)?.PermanentAdd}</p>
+                        </div>
+                      </div>
+                      }
 
                       {/* current verification data */}
                       {(!selectedImage?.Isverified && verifiedResponse) && <div className="w-full h-full">
-                        <hr className="my-5" />
+                        <hr className="my-2" />
                         <h1 className="text-center font-bold font-mono underline">Data from Janma Mrityutathya Portal of WB Gov.</h1>
-                        <div className="w-full h-[300px] overflow-y-auto text-sm">
+                        <div className="w-full h-[200px] overflow-y-auto text-sm">
                           <p><span className="font-bold">Name</span> {verifiedResponse?.ChNamae}</p>
                           <p><span className="font-bold">Gender</span> {verifiedResponse?.ChGender}</p>
                           <p><span className="font-bold">Date of Birth</span> {verifiedResponse?.ChDob}</p>
