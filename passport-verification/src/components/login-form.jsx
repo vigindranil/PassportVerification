@@ -136,7 +136,7 @@ const LoginForm = () => {
               <span>OTP sent successfully!</span>
             </div>
           ),
-          description: "A six digit code was sent to your aadhaar linked phone number",
+          description: "A six digit code was sent to your AADHAAR linked phone number",
           action: (
             <ToastAction altText="close">Close</ToastAction>
           ),
@@ -233,7 +233,7 @@ const LoginForm = () => {
         <>
           <h2 className="text-2xl font-bold text-center mb-6 text-slate-600">Verify OTP</h2>
           <span className="text-sm text-slate-500">
-            A six digit secret code has been sent to your AADHAR linked phone number.
+            A six digit secret code has been sent to your AADHAAR linked phone number.
           </span>
           <div className="space-y-4 mt-6">
             <div className="space-y-2">
