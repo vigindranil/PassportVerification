@@ -318,7 +318,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                           className="flex bg-blue-500 text-slate-200 justify-center items-center p-1 m-1 px-3 rounded-md hover:bg-blue-600 mx-auto"
                           onClick={() => verifyElectricityBill(selectedImage?.IdNumber, selectedImage?.IdNumber2)}
                         >
-                          {verifyElectricityLoading ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Verifying</span> : <><span>Fetch Data from WBSEDCL</span></>}
+                          {verifyElectricityLoading ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Fetching</span> : <><span>Fetch Data from WBSEDCL</span></>}
                         </button>
                       }
 
@@ -353,7 +353,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                   {((userType != 40 && userType != 10) && docType == 8) && <div className={`w-1/2 p-10 h-full`}>
                     {/* {(userType == 30) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}> */}
                     <div className="px-5">
-                      <h1 className="text-center font-bold text-2xl my-3 mb-10 underline">Fetch Birth Certificate Data</h1>
+                      <h1 className="text-center font-bold text-2xl my-3 mb-10 underline">Verify Birth Certificate Document</h1>
                       <p className="text-slate-600">
                         Please verify the uploaded document by clicking the "Verify Birth Certificate" button.
                       </p>
@@ -377,11 +377,11 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                           className='flex bg-blue-500 text-slate-200 justify-center items-center p-1 m-1 px-3 rounded-md hover:bg-blue-600 mx-auto'
                           onClick={() => verifyBirthCertificate(selectedImage?.IdNumber, selectedImage?.IdNumber2)}
                         >
-                          {verifyElectricityLoading ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Verifying</span> : <><span>Verify Birth Certificate</span></>}
+                          {verifyElectricityLoading ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Fetching...</span> : <><span>Fetch Birth Certificate Data</span></>}
                         </button>}
 
                       {/* already verified data */}
-                      {(selectedImage?.Isverified && selectedImage?.UserAgent) && <div className="w-full h-[300px]">
+                      {(selectedImage?.Isverified && selectedImage?.UserAgent) && <div className="w-full h-[40vh]">
                         <hr className="my-5" />
                         <h1 className="text-center font-bold font-mono underline">Data from Janma Mrityutathya Portal of WB Gov.</h1>
                         <p>
