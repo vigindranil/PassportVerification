@@ -23,6 +23,7 @@ export default function PendingApplicationDatatable({ status }) {
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
   const itemsPerPage = 6
+  const [refreshFlag, setRefreshFlag] = useState(false);
   const [applicationStatus, setApplicationStatus] = useState(null)
   const [verificationData, setVerificationData] = useState([])
   const [isFileAcceptModalOpen, setIsFileAcceptModalOpen] = useState(false)
@@ -91,7 +92,7 @@ export default function PendingApplicationDatatable({ status }) {
           description: response?.message,
           action: <ToastAction altText="Try again">Close</ToastAction>,
         })
-        fetchApplicationStatus();
+        setRefreshFlag(prev => !prev);
       } else {
         toast({
           variant: "destructive",
@@ -119,7 +120,7 @@ export default function PendingApplicationDatatable({ status }) {
 
   useEffect(() => {
     fetchApplicationStatus()
-  }, [searchTerm]) // Added searchTerm as a dependency
+  }, [searchTerm,refreshFlag]) // Added searchTerm as a dependency
 
   return (
     <div className="container mx-auto px-0 space-y-8 shadow-md">
@@ -141,34 +142,34 @@ export default function PendingApplicationDatatable({ status }) {
               <div className="space-y-2">
                 <ul>
                   <li className="text-sm">
-                    <span className="font-bold text-md">PV Sequence:</span> {selectedDetails.PVSequenceNo}
+                    <span className="font-bold text-md">PV Sequence:</span> {selectedDetails?.PVSequenceNo}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">File Number:</span> {selectedDetails.FileNumber}
+                    <span className="font-bold text-md">File Number:</span> {selectedDetails?.FileNumber}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Email ID:</span> {selectedDetails.EmailID}
+                    <span className="font-bold text-md">Email ID:</span> {selectedDetails?.EmailID}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Applicant Name:</span> {selectedDetails.ApplicantName}
+                    <span className="font-bold text-md">Applicant Name:</span> {selectedDetails?.ApplicantName}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Police Station:</span> {selectedDetails.PsName}
+                    <span className="font-bold text-md">Police Station:</span> {selectedDetails?.PsName}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Phone No:</span> {selectedDetails.PhoneNo}
+                    <span className="font-bold text-md">Phone No:</span> {selectedDetails?.PhoneNo}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Spouse Name:</span> {selectedDetails.SpouseName}
+                    <span className="font-bold text-md">Spouse Name:</span> {selectedDetails?.SpouseName}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Address:</span> {selectedDetails.VerificationAddress}
+                    <span className="font-bold text-md">Address:</span> {selectedDetails?.VerificationAddress}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Gender:</span> {selectedDetails.Gender}
+                    <span className="font-bold text-md">Gender:</span> {selectedDetails?.Gender}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Place Of Birth:</span> {selectedDetails.PlaceOfBirth}
+                    <span className="font-bold text-md">Place Of Birth:</span> {selectedDetails?.PlaceOfBirth}
                   </li>
                 </ul>
               </div>
@@ -289,7 +290,7 @@ export default function PendingApplicationDatatable({ status }) {
         </div>
         <div className="flex items-center justify-between mt-4 text-sm">
           <div>
-            Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of {filteredData.length} entries
+            Showing {startIndex + 1} to {Math.min(endIndex, filteredData?.length)} of {filteredData?.length} entries
           </div>
           <div className="flex items-center gap-2">
             <Button
