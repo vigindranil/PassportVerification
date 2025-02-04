@@ -338,7 +338,7 @@ const UserManagement = () => {
               setFormData({ ...formData, UserRoleID: value })
               // Reset PSID if SP or DYSP is selected
               if (value === "20" || value === "10" || value === "50") {
-                setFormData((prev) => ({ ...prev, PSID: "" }))
+                setFormData((prev) => ({ ...prev, PSID: "0" }))
               }
             }}
             required
@@ -548,7 +548,7 @@ const UserManagement = () => {
                               variant="default"
                               className="bg-red-600 hover:bg-red-700 text-white text-xs px-1 py-1"
                             >
-                              {statuUpdateLoader ? statuUpdateLoader : "DeActivate"}
+                              {statuUpdateLoader ? statuUpdateLoader : "Deactivate"}
                             </Button>
                           )}
                         </div>
