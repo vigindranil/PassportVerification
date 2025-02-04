@@ -2,7 +2,7 @@ import React from 'react'
 import Navbar from '@/components/navbar';
 import Sidebar from '@/components/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import DataTable from '@/components/allFielsdataTable-OC';
+import DataTable from '@/components/allFielsdataTable-SE';
 
 export default function allFiles() {
   return (

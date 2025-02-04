@@ -19,3 +19,14 @@ export const updateEnquiryStatus = async (applicationId, type, remarks) => {
         return null;
     }
 }
+
+
+
+export const getSpecialEnquiryOfficers = async () => {
+    try {
+        return await postRequest("enquiryOfficers/getSpecialEnquiryOfficers");
+    } catch (error) {
+        console.log("Error:", error);
+        return null;
+    }
+}
