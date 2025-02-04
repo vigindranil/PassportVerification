@@ -30,3 +30,12 @@ export const getSpecialEnquiryOfficers = async () => {
         return null;
     }
 }
+
+export const getApplicationStatus = async () => {
+    try {
+        return await postRequest("enquiryOfficers/getApplicationStatus");
+    } catch (error) {
+        console.log("Error:", error);
+        return null;
+    }
+}
