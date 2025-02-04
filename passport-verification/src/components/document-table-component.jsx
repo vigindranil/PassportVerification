@@ -370,7 +370,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable }) =
                           >
                             {(verifyApplicationLoading) ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Approving</span> : verified ? <><CheckCircle2Icon className="h-4 w-4 mr-1" /> <span>Document Verifed</span></> : <><span>Approve The Document</span></>}
                           </button>
-                          {selectedImage?.Isverified ? <p>Verified by: {selectedImage?.verifyBy ? selectedImage?.verifyBy : 'N/A'}</p> : null}
+                          {selectedImage?.Isverified == 1 ? <p>Verified by: {selectedImage?.verifyBy ? selectedImage?.verifyBy : 'N/A'}</p> : null}
                         </>
                         :
                         <button
