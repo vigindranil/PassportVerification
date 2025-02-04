@@ -548,7 +548,7 @@ const UserManagement = () => {
                               variant="default"
                               className="bg-red-600 hover:bg-red-700 text-white text-xs px-1 py-1"
                             >
-                              {statuUpdateLoader ? statuUpdateLoader : "De-Activate"}
+                              {statuUpdateLoader ? statuUpdateLoader : "Deactivate"}
                             </Button>
                           )}
                         </div>
