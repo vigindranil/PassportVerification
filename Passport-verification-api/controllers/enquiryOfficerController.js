@@ -1,7 +1,7 @@
-import { getSpecialEnquiryOfficers } from '../models/enquiryOfficerModel.js';
+import { getSpecialEnquiryOfficersModel ,assignApplicationToSEModel} from '../models/enquiryOfficerModel.js';
 
-export const getSpecialEnquiryOfficersController = async (req, res) => {
-  const EntryUserID = req.user.UserID; // Extracting from logged-in user
+export const getSpecialEnquiryOfficers = async (req, res) => {
+  const EntryUserID = req.user.UserID; 
 
   try {
     if (!EntryUserID) {
@@ -11,12 +11,12 @@ export const getSpecialEnquiryOfficersController = async (req, res) => {
       });
     }
 
-    const result = await getSpecialEnquiryOfficers(EntryUserID);
+    const result = await getSpecialEnquiryOfficersModel(EntryUserID);
 
     return res.status(200).json({
       status: 0,
-      message: result.message,
-      officers: result.officers,
+      message: "data fetch susccfully",
+      data: result || [],
     });
   } catch (error) {
     console.error('Error in getSpecialEnquiryOfficersController:', error.message);
@@ -27,3 +27,43 @@ export const getSpecialEnquiryOfficersController = async (req, res) => {
     });
   }
 };
+
+
+
+
+export const assignApplication = async (req, res) => {
+  try {
+    const { applicationId, assignTo, macAddress, locationIp, deviceId } = req.body;
+    const EntryuserId  = req.user.UserID; // Extract logged-in user ID
+
+    if (!applicationId || !assignTo || !macAddress || !locationIp || !deviceId || !EntryuserId ) {
+      return res.status(400).json({
+        status: 1,
+        message: 'Invalid input data. All fields are required.',
+      });
+    }
+
+    const result = await assignApplicationToSEModel(applicationId, assignTo, macAddress, locationIp, deviceId, EntryuserId );
+
+    if (result.success) {
+      return res.status(200).json({
+        status: 0,
+        message: result.message,
+      });
+    } else {
+      return res.status(403).json({
+        status: 1,
+        message: result.message,
+      });
+    }
+  } catch (error) {
+    console.error('Error in assignApplicationController:', error.message);
+    return res.status(500).json({
+      status: 1,
+      message: 'An error occurred while assigning the application.',
+      error: error.message,
+    });
+  }
+};
+
+
