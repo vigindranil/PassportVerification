@@ -16,7 +16,7 @@ export const getSpecialEnquiryOfficers = async (req, res) => {
     return res.status(200).json({
       status: 0,
       message: "data fetch susccfully",
-      officers: result || [],
+      data: result || [],
     });
   } catch (error) {
     console.error('Error in getSpecialEnquiryOfficersController:', error.message);
@@ -34,16 +34,16 @@ export const getSpecialEnquiryOfficers = async (req, res) => {
 export const assignApplication = async (req, res) => {
   try {
     const { applicationId, assignTo, macAddress, locationIp, deviceId } = req.body;
-    const entryUserId = req.user.UserID; // Extract logged-in user ID
+    const EntryuserId  = req.user.UserID; // Extract logged-in user ID
 
-    if (!applicationId || !assignTo || !macAddress || !locationIp || !deviceId || !entryUserId) {
+    if (!applicationId || !assignTo || !macAddress || !locationIp || !deviceId || !EntryuserId ) {
       return res.status(400).json({
         status: 1,
         message: 'Invalid input data. All fields are required.',
       });
     }
 
-    const result = await assignApplicationToSEModel(applicationId, assignTo, macAddress, locationIp, deviceId, entryUserId);
+    const result = await assignApplicationToSEModel(applicationId, assignTo, macAddress, locationIp, deviceId, EntryuserId );
 
     if (result.success) {
       return res.status(200).json({

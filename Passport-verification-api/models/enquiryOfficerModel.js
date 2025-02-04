@@ -30,13 +30,13 @@ export async function getSpecialEnquiryOfficersModel(
     macAddress,
     locationIp,
     deviceId,
-    entryUserId,
+    EntryuserId ,
     
   ) {
     try {
       // Call the stored procedure with input parameters
       const [rows] = await pool.query(
-        `CALL sp_saveApplicationDetails(
+        `CALL sp_saveapplicationassigntoSE(
           ?, ?, ?, ?, ?, ?, @ErrorCode
         );`,
         [
@@ -45,7 +45,7 @@ export async function getSpecialEnquiryOfficersModel(
             macAddress,
             locationIp,
             deviceId,
-            entryUserId,
+            EntryuserId ,
          
         ]
       );
