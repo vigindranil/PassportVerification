@@ -117,28 +117,28 @@ export default function DataTable({ data }) {
                           </DialogHeader>
                           <div className="">
                             <div className="grid grid-cols-2">
-                              <div>Applicant Name: {row['Applicant Name']}</div>
-                              <div>DPHq ID/Name: {row['DPHq ID/Name']}</div>
-                              <div>Date of Birth: {row['Date of Birth']}</div>
-                              <div>E-mail ID: {row['E-mail ID']}</div>
-                              <div>Father's Name: {row["Father's Name"]}</div>
-                              <div>File Number: {row['File Number']}</div>
-                              <div>Gender: {row['Gender']}</div>
-                              <div>PV Initiation Date: {row['PV Initiation Date']}</div>
-                              <div>PV Request ID: {row['PV Request ID']}</div>
+                              <div><b>Applicant Name:</b> {row['Applicant Name']}</div>
+                              <div><b>DPHq ID/Name:</b> {row['DPHq ID/Name']}</div>
+                              <div><b>Date of Birth:</b> {row['Date of Birth']}</div>
+                              <div><b>E-mail ID:</b> {row['E-mail ID']}</div>
+                              <div><b>Father's Name:</b> {row["Father's Name"]}</div>
+                              <div><b>File Number:</b> {row['File Number']}</div>
+                              <div><b>Gender:</b> {row['Gender']}</div>
+                              <div><b>PV Initiation Date:</b> {row['PV Initiation Date']}</div>
+                              <div><b>PV Request ID:</b> {row['PV Request ID']}</div>
                             </div>
                             <div className="grid grid-cols-2">
-                              <div>PV Request Status: {row['PV Request Status']}</div>
-                              <div>PV Sequence No.: {row['PV Sequence No.']}</div>
-                              <div>PV Status Date: {row['PV Status Date']}</div>
-                              <div>Phone No.: {row['Phone No.']}</div>
-                              <div>Place of Birth: {row['Place of Birth']}</div>
-                              <div>Police Station: {row['Police Station']}</div>
-                              <div>Spouse Name: {row['Spouse Name']}</div>
-                              <div>Sr. No.: {row['Sr. No.']}</div>
-                              <div>PV Sequence No. :{row['PV Sequence No.'] && row['PV Sequence No.']}</div>
-                              <div>Verification Address: {row['Verification Address']}</div>
-                              <div>Permanent Address: {row['Permanent Address']}</div>
+                              <div><b>PV Request Status:</b> {row['PV Request Status']}</div>
+                              <div><b>PV Sequence No.:</b> {row['PV Sequence No.']}</div>
+                              <div><b>PV Status Date:</b> {row['PV Status Date']}</div>
+                              <div><b>Phone No.:</b> {row['Phone No.']}</div>
+                              <div><b>Place of Birth:</b> {row['Place of Birth']}</div>
+                              <div><b>Police Station:</b> {row['Police Station']}</div>
+                              <div><b>Spouse Name:</b> {row['Spouse Name']}</div>
+                              <div><b>Sr. No.:</b> {row['Sr. No.']}</div>
+                              <div><b>PV Sequence No. :</b>{row['PV Sequence No.'] && row['PV Sequence No.']}</div>
+                              <div><b>Verification Address:</b> {row['Verification Address']}</div>
+                              <div><b>Permanent Address:</b> {row['Permanent Address']}</div>
                             </div>
                           </div>
                         </DialogContent>
