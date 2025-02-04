@@ -305,7 +305,7 @@ const UserManagement = () => {
           <Label htmlFor="userRole">Gender <span className="text-red-500">*</span></Label>
           <Select name="userRole" onValueChange={(value) => setFormData({ ...formData, Gender: value })} required>
             <SelectTrigger>
-              <SelectValue placeholder="Select role" />
+              <SelectValue placeholder="Select Gender" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="male">Male</SelectItem>
