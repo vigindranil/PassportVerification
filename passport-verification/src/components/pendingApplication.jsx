@@ -65,12 +65,6 @@ export default function PendingApplicationDatatable({ status, heading, period })
         row.PsName,
         row.PhoneNo,
         row.VerificationAddress,
-      body: filteredData.map((row) => [
-        row.FileNumber,
-        row.ApplicantName,
-        row.PsName,
-        row.PhoneNo,
-        row.VerificationAddress,
       ]),
     })
     doc.save("applications.pdf")
