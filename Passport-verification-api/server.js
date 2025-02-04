@@ -18,6 +18,7 @@ import logRoutes from "./routes/logs.js";
 import thirdPartyRoutes from "./routes/thirdPartyAPI.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import getSpecialEnquiryOfficers from "./routes/enquiryOfficer.js";
 
 const app = express();
 const port = 3003;
@@ -94,6 +95,7 @@ app.use("/api/master", verifyToken, masterRoutes);
 app.use("/api/eo", verifyToken, eoDocumentUpload);
 app.use("/api/application", verifyToken, getApplicationDetails);
 app.use("/api/fileUpload", verifyToken, fileImportRoutes);
+app.use("/api/enquiryOfficers", verifyToken, getSpecialEnquiryOfficers)
 app.use("/api/upload", verifyToken, upload.single("file"), uploadRoutes);
 app.use(
   "/api/fileImport",
