@@ -61,6 +61,22 @@ const UserManagement = () => {
     AADHAARNo: "",
   })
 
+  const [invalidInput, setInvalidInput] = useState({
+    UserName: "",
+    FullName: "",
+    Firstname: "",
+    LastName: "",
+    MobileNo: "",
+    EmailID: "",
+    Gender: "",
+    AADHAARNo: "",
+    Designation: "",
+    UserRoleID: "",
+    DistrictID: "",
+    PSID: "",
+    aadharRegisterMobileNumber: ""
+  })
+
   const checkForSqlInjection = (value) => {
     return /select\s+\*\s+from/i.test(value)
   }
@@ -139,11 +155,11 @@ const UserManagement = () => {
     if (hasErrors) {
       toast({
         variant: "destructive",
-        title: "Validation Error",
-        description: "Please correct the errors in the form before submitting.",
+        title: "Failed to create user",
+        description: "Please fill the all required fields before submitting.",
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
-      return
+      return null;
     }
 
     setLoading(true)
@@ -198,17 +214,28 @@ const UserManagement = () => {
     const requiredFields = ["UserName", "FullName", "Firstname", "LastName", "MobileNo", "EmailID", "Gender", "AADHAARNo", "Designation"];
 
     let errors = {};
-    requiredFields.forEach((field) => {
+    requiredFields?.forEach((field) => {
       if (!formData[field]) {
         errors[field] = "This field is required.";
+        setInvalidInput((prev) => ({
+          ...prev,
+          [field]: `Invalid ${field} input`,
+        }));
+      } else {
+        errors[field] = "";
+        setInvalidInput((prev) => ({
+          ...prev,
+          [field]: "",
+        }));
       }
     });
-  
+
+
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
-  
+
   }
 
   const onChangeDistrict = async (DistrictID) => {
@@ -316,12 +343,15 @@ const UserManagement = () => {
             required
             pattern="^[a-zA-Z0-9@]+$"
             title="Only letters, numbers, and '@' are allowed."
+            className={`${invalidInput['UserName'] && 'border-[1.4px] border-red-400'}`}
           />
+          {invalidInput['UserName'] && <p className="text-red-500 text-xs">{invalidInput['UserName']}</p>}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="FullName">User Full Name <span className="text-red-500">*</span></Label>
-          <Input id="FullName" name="FullName" value={formData?.FullName} onChange={handleInputChange} required />
+          <Input id="FullName" className={`${invalidInput['FullName'] && 'border-[1.4px] border-red-400'}`} name="FullName" value={formData?.FullName} onChange={handleInputChange} required />
+          {invalidInput['FullName'] && <p className="text-red-500 text-xs">{invalidInput['FullName']}</p>}
         </div>
 
         <div className="space-y-2">
