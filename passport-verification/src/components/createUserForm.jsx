@@ -356,12 +356,14 @@ const UserManagement = () => {
 
         <div className="space-y-2">
           <Label htmlFor="Firstname">First Name <span className="text-red-500">*</span></Label>
-          <Input id="Firstname" name="Firstname" value={formData?.Firstname} onChange={handleInputChange} required />
+          <Input id="Firstname" className={`${invalidInput['Firstname'] && 'border-[1.4px] border-red-400'}`} name="Firstname" value={formData?.Firstname} onChange={handleInputChange} required />
+          {invalidInput['Firstname'] && <p className="text-red-500 text-xs">{invalidInput['Firstname']}</p>}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="LastName">Last Name <span className="text-red-500">*</span></Label>
-          <Input id="LastName" name="LastName" value={formData?.LastName} onChange={handleInputChange} required />
+          <Input id="LastName" className={`${invalidInput['LastName'] && 'border-[1.4px] border-red-400'}`} name="LastName" value={formData?.LastName} onChange={handleInputChange} required />
+          {invalidInput['LastName'] && <p className="text-red-500 text-xs">{invalidInput['LastName']}</p>}
         </div>
 
         <div className="space-y-2">
@@ -369,11 +371,13 @@ const UserManagement = () => {
           <Input
             id="EmailID"
             name="EmailID"
+            className={`${invalidInput['EmailID'] && 'border-[1.4px] border-red-400'}`}
             type="email"
             value={formData?.EmailID}
             onChange={handleInputChange}
             required
           />
+           {invalidInput['EmailID'] && <p className="text-red-500 text-xs">{invalidInput['EmailID']}</p>}
         </div>
 
         <div className="space-y-2">
@@ -395,18 +399,20 @@ const UserManagement = () => {
           <Input
             id="MobileNo"
             name="MobileNo"
+            className={`${invalidInput['MobileNo'] && 'border-[1.4px] border-red-400'}`}
             value={formData?.MobileNo}
             onChange={handleInputChange}
             maxLength={10}
             required
           />
+           {invalidInput['MobileNo'] && <p className="text-red-500 text-xs">{invalidInput['MobileNo']}</p>}
           {formData.MobileNo.length > 0 && formData.MobileNo.length < 10 && (
             <p className="text-red-500 text-sm">Phone number must be 10 digits</p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="userRole">User Role <span className="text-red-500">*</span></Label>
+          <Label htmlFor="userRole" className={`${invalidInput['userRole'] && 'border-[1.4px] border-red-400'}`}>User Role <span className="text-red-500">*</span></Label>
           <Select
             name="userRole"
             onValueChange={(value) => {
@@ -429,10 +435,11 @@ const UserManagement = () => {
               <SelectItem value="50">Spl.Enquiry Officer</SelectItem>
             </SelectContent>
           </Select>
+          {invalidInput['userRole'] && <p className="text-red-500 text-xs">{invalidInput['userRole']}</p>}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="userRole">Designation <span className="text-red-500">*</span></Label>
+          <Label htmlFor="userRole" className={`${invalidInput['userRole'] && 'border-[1.4px] border-red-400'}`}>Designation <span className="text-red-500">*</span></Label>
           <Select name="userRole" onValueChange={(value) => setFormData({ ...formData, Designation: value })} required>
             <SelectTrigger>
               <SelectValue placeholder="Select Designation" />
@@ -447,10 +454,11 @@ const UserManagement = () => {
               <SelectItem value="600">CP</SelectItem>
             </SelectContent>
           </Select>
+          {invalidInput['userRole'] && <p className="text-red-500 text-xs">{invalidInput['userRole']}</p>}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="district">District <span className="text-red-500">*</span></Label>
+          <Label htmlFor="district"className={`${invalidInput['district'] && 'border-[1.4px] border-red-400'}`}>District <span className="text-red-500">*</span></Label>
           <Select
             name="district"
             onValueChange={(value) => {
@@ -470,10 +478,11 @@ const UserManagement = () => {
                 ))}
             </SelectContent>
           </Select>
+          {invalidInput['district'] && <p className="text-red-500 text-xs">{invalidInput['district']}</p>}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="policeStation">Police Station <span className="text-red-500">*</span></Label>
+          <Label htmlFor="policeStation" className={`${invalidInput['policeStation'] && 'border-[1.4px] border-red-400'}`}>Police Station <span className="text-red-500">*</span></Label>
           <Select
             name="policeStation"
             onValueChange={(value) => setFormData({ ...formData, PSID: value })}
@@ -491,10 +500,11 @@ const UserManagement = () => {
               ))}
             </SelectContent>
           </Select>
+          {invalidInput['policeStation'] && <p className="text-red-500 text-xs">{invalidInput['policeStation']}</p>}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="AADHAARNo">Aadhar Number <span className="text-red-500">*</span></Label>
+          <Label htmlFor="AADHAARNo" className={`${invalidInput['AADHAARNo'] && 'border-[1.4px] border-red-400'}`}>Aadhar Number <span className="text-red-500">*</span></Label>
           <Input
             id="AADHAARNo"
             name="AADHAARNo"
@@ -503,13 +513,14 @@ const UserManagement = () => {
             maxLength={12}
             required
           />
+           {invalidInput['AADHAARNo'] && <p className="text-red-500 text-xs">{invalidInput['AADHAARNo']}</p>}
           {formData?.AADHAARNo?.length > 0 && formData?.AADHAARNo?.length < 12 && (
             <p className="text-red-500 text-sm">Aadhar number must be 12 digits</p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="aadharRegisterMobileNumber">Aadhar Register Mobile Number <span className="text-red-500">*</span></Label>
+          <Label htmlFor="aadharRegisterMobileNumber" className={`${invalidInput['aadharRegisterMobileNumber'] && 'border-[1.4px] border-red-400'}`}>Aadhar Register Mobile Number <span className="text-red-500">*</span></Label>
           <Input
             id="aadharRegisterMobileNumber"
             name="aadharRegisterMobileNumber"
@@ -521,13 +532,14 @@ const UserManagement = () => {
             }}
             required
           />
+           {invalidInput['AADHAARNo'] && <p className="text-red-500 text-xs">{invalidInput['AADHAARNo']}</p>}
           {formData?.aadharRegisterMobileNumber && formData.aadharRegisterMobileNumber?.length < 10 && (
             <p className="text-red-500 text-sm">Phone number must be 10 digits</p>
           )}
         </div>
 
         <div className="md:col-span-2 lg:col-span-3 flex justify-center">
-          <Button onClick={handleCreateUser} disabled={loading} className="px-6">
+          <Button onClick={handleCreateUser} disabled={loading} className="px-6 bg-blue-600">
             <UserPlus className="mr-2 h-4 w-4" /> Create User
           </Button>
         </div>
