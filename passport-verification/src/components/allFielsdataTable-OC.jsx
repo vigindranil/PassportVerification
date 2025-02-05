@@ -87,11 +87,16 @@ export default function PendingApplicationDatatable({ status }) {
 
       if (response?.status == 0) {
         toast({
-          title: "Successfull!",
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Successfull!</span>
+            </div>
+          ),
           description: response?.message,
           action: <ToastAction altText="Try again">Close</ToastAction>,
         })
-        setRefreshFlag(prev => !prev);
+        await fetchApplicationStatus();
       } else {
         toast({
           variant: "destructive",

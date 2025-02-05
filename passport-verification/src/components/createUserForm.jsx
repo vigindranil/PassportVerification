@@ -296,15 +296,15 @@ const UserManagement = () => {
 
     const textPattern = /^[a-zA-Z0-9@]*$/;
 
-    if (["UserName", "FullName", "Firstname", "LastName"].includes(name) && !textPattern.test(value)) {
-      setFormErrors({
-        ...formErrors,
-        [name]: "Only letters, numbers, and '@' are allowed.",
-      });
-      return;
-    } else {
-      setFormErrors({ ...formErrors, [name]: "" });
-    }
+    // if (["UserName", "FullName", "Firstname", "LastName"].includes(name) && !textPattern.test(value)) {
+    //   setFormErrors({
+    //     ...formErrors,
+    //     [name]: "Only letters, numbers, and '@' are allowed.",
+    //   });
+    //   return;
+    // } else {
+    //   setFormErrors({ ...formErrors, [name]: "" });
+    // }
 
     if (name === "MobileNo") {
       newValue = newValue.replace(/\D/g, "")?.slice(0, 10)
