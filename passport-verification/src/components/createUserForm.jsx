@@ -323,7 +323,7 @@ const UserManagement = () => {
   }
 
   return (
-    <div className="container mx-auto px-0 space-y-8 shadow-2xl">
+    <div className="container mx-auto px-0 space-y-8 shadow-md">
       <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl overflow-hidden">
         <div className="bg-gradient-to-r to-purple-600 from-indigo-600 px-6 py-3">
           <h2 className="text-2xl font-bold text-white">User Registration</h2>
