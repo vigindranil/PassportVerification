@@ -17,3 +17,5 @@
 2025-02-06 14:46:07 | ERROR | Error in updateEnquiryStatusController:
 2025-02-06 14:46:47 | ERROR | Error in updateEnquiryStatusController:
 2025-02-06 14:47:34 | ERROR | Error in updateEnquiryStatusController:
+2025-02-06 14:49:24 | ERROR | Error in updateEnquiryStatusController:
+2025-02-06 14:50:23 | DEBUG | {"API":"sendOtp","REQUEST":{"username":"akasheo","password":"admin@123"},"RESPONSE":{"status":0,"message":"OTP sent successfully","type":40,"name":"akasheo","district":"Kolkata Police Commissionerate","ps":"Ultadanga","token":"ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SlZjMlZ5U1VRaU9qa3NJa1JwYzNSeWFXTjBTVVFpT2pJNExDSkVhWE4wY21samRFNWhiV1VpT2lKTGIyeHJZWFJoSUZCdmJHbGpaU0JEYjIxdGFYTnphVzl1WlhKaGRHVWlMQ0pRYjJ4cFkyVlRkR0YwYVc5dVNVUWlPalExTlN3aVVHOXNhV05sVTNSaGRHbHZiazVoYldVaU9pSlZiSFJoWkdGdVoyRWlMQ0pWYzJWeVZIbHdaVWxFSWpvME1Dd2lWWE5sY2xSNWNHVk9ZVzFsSWpvaVJVOGlMQ0pWYzJWeWJtRnRaU0k2SW1GcllYTm9aVzhpTENKVmMyVnlSblZzYkU1aGJXVWlPaUpoYTJGemFHVnZJaXdpVkhKaGJuTmhZM1JwYjI1SlpDSTZJaTB0TFNJc0ltbGhkQ0k2TVRjek9EZ3pNell5TXl3aVpYaHdJam94TnpNNE9USXdNREl6ZlEuZlFwWFBoUER6eklLek9xRGhIUDJKYjMzTE9UNUY5eXNXTHZoeGFUd2huTQ=="}}

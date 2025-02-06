@@ -477,6 +477,7 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
     try {
       const {
         ApplicationID,
+        AadharNumber,
         AadhaarName ,
         AadhaarDOB ,
         AadharVerifiedStatus ,
@@ -488,6 +489,7 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
   
       const result = await updateAADHAARInfoModel(
         ApplicationID,
+        AadharNumber,
         AadhaarName,
         AadhaarDOB,
         AadharVerifiedStatus,
