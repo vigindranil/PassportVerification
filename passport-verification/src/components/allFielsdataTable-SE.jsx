@@ -88,11 +88,16 @@ export default function PendingApplicationDatatable({ status }) {
 
       if (response?.status == 0) {
         toast({
-          title: "Successfull!",
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Successfull!</span>
+            </div>
+          ),
           description: response?.message,
           action: <ToastAction altText="Try again">Close</ToastAction>,
         })
-        setRefreshFlag(prev => !prev);
+        await fetchApplicationStatus();
       } else {
         toast({
           variant: "destructive",
@@ -271,14 +276,6 @@ export default function PendingApplicationDatatable({ status }) {
                               Reject Application
                             </span>
                           </div>
-                          {/* <Button
-                            size="sm"
-                            variant="default"
-                            className="bg-purple-600 hover:bg-purple-700 text-white text-xs px-1 py-1"
-                            onClick={() => handleViewPPAttachment(row.fileNumber)}
-                          >
-                            View PP Attachment
-                          </Button> */}
                         </div>
                       </TableCell>
                     </TableRow>

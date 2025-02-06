@@ -296,15 +296,15 @@ const UserManagement = () => {
 
     const textPattern = /^[a-zA-Z0-9@]*$/;
 
-    if (["UserName", "FullName", "Firstname", "LastName"].includes(name) && !textPattern.test(value)) {
-      setFormErrors({
-        ...formErrors,
-        [name]: "Only letters, numbers, and '@' are allowed.",
-      });
-      return;
-    } else {
-      setFormErrors({ ...formErrors, [name]: "" });
-    }
+    // if (["UserName", "FullName", "Firstname", "LastName"].includes(name) && !textPattern.test(value)) {
+    //   setFormErrors({
+    //     ...formErrors,
+    //     [name]: "Only letters, numbers, and '@' are allowed.",
+    //   });
+    //   return;
+    // } else {
+    //   setFormErrors({ ...formErrors, [name]: "" });
+    // }
 
     if (name === "MobileNo") {
       newValue = newValue.replace(/\D/g, "")?.slice(0, 10)
@@ -323,7 +323,7 @@ const UserManagement = () => {
   }
 
   return (
-    <div className="container mx-auto px-0 space-y-8 shadow-2xl">
+    <div className="container mx-auto px-0 space-y-8 shadow-md">
       <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl overflow-hidden">
         <div className="bg-gradient-to-r to-purple-600 from-indigo-600 px-6 py-3">
           <h2 className="text-2xl font-bold text-white">User Registration</h2>
@@ -539,7 +539,7 @@ const UserManagement = () => {
         </div>
 
         <div className="md:col-span-2 lg:col-span-3 flex justify-center">
-          <Button onClick={handleCreateUser} disabled={loading} className="px-6 bg-blue-600">
+          <Button onClick={handleCreateUser} disabled={loading} className="px-6 bg-blue-600 hover:bg-blue-700">
             <UserPlus className="mr-2 h-4 w-4" /> Create User
           </Button>
         </div>
