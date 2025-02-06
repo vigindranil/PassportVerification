@@ -109,8 +109,9 @@ export async function updateEnquiryStatusModel(
   }
 }
 
-export async function updateAADHAARInfo(
+export async function updateAADHAARInfoModel(
   ApplicationID,
+  AadharNumber,
   AadhaarName,
   AadhaarDOB,
   AadharVerifiedStatus,
@@ -121,9 +122,10 @@ export async function updateAADHAARInfo(
 ) {
   try {
     const [rows] = await pool.query(
-      `CALL sp_updateAADHAARInfoV1(?, ?, ?, ?, ?, ?, ?, ?, @ErrorCode)`,
+      `CALL sp_updateAADHAARInfoV1(?,?,?, ?, ?, ?, ?, ?, ?, @ErrorCode)`,
       [
         ApplicationID,
+        btoa(AadharNumber),
         AadhaarName,
         AadhaarDOB,
         AadharVerifiedStatus,
@@ -197,5 +199,28 @@ export async function savethirdpartyVerifyStatus(
     return result[0].ErrorCode;
   } catch (error) {
     throw new Error("Database error: " + error.message);
+  }
+}
+
+
+export async function getAadharDetailsByapplicationIdModel(
+  ApplicationId ,
+  EntryuserId 
+) {
+  try {
+      console.log("userId",ApplicationId )
+      console.log("status",EntryuserId )
+      
+    const [rows] = await pool.query('CALL sp_getAadharDetailsByapplicationId(?,?);',
+      [
+        ApplicationId,
+        EntryuserId
+      ]
+    );
+    console.log("getApplicationStatus", rows);
+    
+    return rows[0];
+  } catch (error) {
+    throw new Error('Database error: ' + error.message);
   }
 }

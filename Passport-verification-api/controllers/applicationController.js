@@ -5,7 +5,9 @@ import {
   updateEnquiryStatusModel,
   setExternelApiLog,
   savethirdpartyVerifyStatus,
-  updateAADHAARInfo,
+  getAadharDetailsByapplicationIdModel,
+  updateAADHAARInfoModel
+ 
 } from "../models/applicationModel.js";
 import { saveTransactionHistory } from "../models/logModel.js";
 import logger from "../utils/logger.js";
@@ -173,108 +175,108 @@ export const updateEnquiryStatus = async (req, res) => {
   }
 };
 
-export const completeVerificationForEO = async (req, res) => {
-  try {
-    const {
-      ApplicationID,
-      AadhaarName,
-      AadhaarDOB,
-      AadhaarFatherName,
-      AadhaarGender,
-      AadhaarAddress,
-      locationIp,
-      macAddress,
-      deviceId,
-      Remarks,
-    } = req.body;
-    const EntryUserID = req.user.UserID;
+// export const completeVerificationForEO = async (req, res) => {
+//   try {
+//     const {
+//       ApplicationID,
+//       AadhaarName,
+//       AadhaarDOB,
+//       AadhaarFatherName,
+//       AadhaarGender,
+//       AadhaarAddress,
+//       locationIp,
+//       macAddress,
+//       deviceId,
+//       Remarks,
+//     } = req.body;
+//     const EntryUserID = req.user.UserID;
 
-    const resultUpdateEnquiry = await updateEnquiryStatusModel(
-      ApplicationID,
-      locationIp,
-      macAddress,
-      deviceId,
-      10,
-      "Verification Complete (EO)",
-      Remarks,
-      EntryUserID
-    );
+//     const resultUpdateEnquiry = await updateEnquiryStatusModel(
+//       ApplicationID,
+//       locationIp,
+//       macAddress,
+//       deviceId,
+//       10,
+//       "Verification Complete (EO)",
+//       Remarks,
+//       EntryUserID
+//     );
 
-    const resultUpdateAadhaarEnquiry = await updateAADHAARInfo(
-      ApplicationID,
-      AadhaarName,
-      AadhaarDOB,
-      1,
-      AadhaarFatherName,
-      AadhaarGender,
-      AadhaarAddress,
-      EntryUserID,
-    );
+//     const resultUpdateAadhaarEnquiry = await updateAADHAARInfo(
+//       ApplicationID,
+//       AadhaarName,
+//       AadhaarDOB,
+//       1,
+//       AadhaarFatherName,
+//       AadhaarGender,
+//       AadhaarAddress,
+//       EntryUserID,
+//     );
 
-    if (resultUpdateAadhaarEnquiry == 0 && resultUpdateEnquiry == 0) {
-      logger.debug(
-        JSON.stringify({
-          API: "completeVerificationForEO",
-          REQUEST: {
-            ApplicationID,
-            AadhaarName,
-            AadhaarDOB,
-            AadhaarFatherName,
-            AadhaarGender,
-            AadhaarAddress,
-            locationIp,
-            macAddress,
-            deviceId,
-            Remarks,
-            EntryUserID
-          },
-          RESPONSE: {
-            status: 0,
-            message: "Status has been updated successfully",
-          },
-        })
-      );
-      return res.status(200).json({
-        status: 0,
-        message: "Status has been updated successfully",
-      });
-    } else {
-      logger.debug(
-        JSON.stringify({
-          API: "completeVerificationForEO",
-          REQUEST: {
-            ApplicationID,
-            AadhaarName,
-            AadhaarDOB,
-            AadhaarFatherName,
-            AadhaarGender,
-            AadhaarAddress,
-            locationIp,
-            macAddress,
-            deviceId,
-            Remarks,
-            EntryUserID
-          },
-          RESPONSE: {
-            status: 1,
-            message: "Failed to update enquiry status",
-          },
-        })
-      );
-      return res.status(400).json({
-        status: 1,
-        message: "Failed to update enquiry status",
-      });
-    }
-  } catch (error) {
-    logger.error("Error in updateEnquiryStatusController:", error.message);
-    return res.status(500).json({
-      status: 1,
-      message: "An error occurred while updating the enquiry status.",
-      error: error.message,
-    });
-  }
-};
+//     if (resultUpdateAadhaarEnquiry == 0 && resultUpdateEnquiry == 0) {
+//       logger.debug(
+//         JSON.stringify({
+//           API: "completeVerificationForEO",
+//           REQUEST: {
+//             ApplicationID,
+//             AadhaarName,
+//             AadhaarDOB,
+//             AadhaarFatherName,
+//             AadhaarGender,
+//             AadhaarAddress,
+//             locationIp,
+//             macAddress,
+//             deviceId,
+//             Remarks,
+//             EntryUserID
+//           },
+//           RESPONSE: {
+//             status: 0,
+//             message: "Status has been updated successfully",
+//           },
+//         })
+//       );
+//       return res.status(200).json({
+//         status: 0,
+//         message: "Status has been updated successfully",
+//       });
+//     } else {
+//       logger.debug(
+//         JSON.stringify({
+//           API: "completeVerificationForEO",
+//           REQUEST: {
+//             ApplicationID,
+//             AadhaarName,
+//             AadhaarDOB,
+//             AadhaarFatherName,
+//             AadhaarGender,
+//             AadhaarAddress,
+//             locationIp,
+//             macAddress,
+//             deviceId,
+//             Remarks,
+//             EntryUserID
+//           },
+//           RESPONSE: {
+//             status: 1,
+//             message: "Failed to update enquiry status",
+//           },
+//         })
+//       );
+//       return res.status(400).json({
+//         status: 1,
+//         message: "Failed to update enquiry status",
+//       });
+//     }
+//   } catch (error) {
+//     logger.error("Error in updateEnquiryStatusController:", error.message);
+//     return res.status(500).json({
+//       status: 1,
+//       message: "An error occurred while updating the enquiry status.",
+//       error: error.message,
+//     });
+//   }
+// };
 
 export const verifyApplication = async (req, res) => {
   try {
@@ -436,3 +438,124 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
     });
   }
 };
+
+
+
+  export const getAadharDetailsByapplicationId = async (req, res) => {
+    try {
+      const { ApplicationId  } = req.body;
+      const EntryuserId  = req.user.UserID; // Extract logged-in user ID
+  
+      if (!ApplicationId || !EntryuserId) {
+        return res.status(400).json({
+          status: 1,
+          message: 'Invalid input data. All fields are required.',
+        });
+      }
+  
+      const applicationStatuses = await getAadharDetailsByapplicationIdModel(ApplicationId , EntryuserId );
+  
+      return res.status(200).json({
+        status: 0,
+        message: 'Application statuses retrieved successfully',
+        data: applicationStatuses,
+      });
+    } catch (error) {
+      console.error('Error in getApplicationStatusController:', error.message);
+      return res.status(500).json({
+        status: 1,
+        message: 'An error occurred while retrieving application statuses.',
+        error: error.message,
+      });
+    }
+  };
+
+
+
+
+  export const updateAADHAARInfo = async (req, res) => {
+    try {
+      const {
+        ApplicationID,
+        AadharNumber,
+        AadhaarName ,
+        AadhaarDOB ,
+        AadharVerifiedStatus ,
+        AadhaarFatherName ,
+        AadhaarGender ,
+        AadhaarAddress
+
+      } = req.body;
+  
+      const result = await updateAADHAARInfoModel(
+        ApplicationID,
+        AadharNumber,
+        AadhaarName,
+        AadhaarDOB,
+        AadharVerifiedStatus,
+        AadhaarFatherName,
+        AadhaarGender,
+        AadhaarAddress,
+        req.user.UserID
+      );
+  
+      if (result == 0) {
+        logger.debug(
+          JSON.stringify({
+            API: "updateAADHAARInfo",
+            REQUEST: {
+              ApplicationID,
+              AadhaarName,
+              AadharNumber,
+              AadhaarName ,
+              AadhaarDOB,
+              AadharVerifiedStatus,
+              AadhaarFatherName,
+              AadhaarGender,
+              AadhaarAddress,
+            },
+            RESPONSE: {
+              status: 0,
+              message: "Status has been updated successfully",
+            },
+          })
+        );
+        return res.status(200).json({
+          status: 0,
+          message: "Status has been updated successfully",
+        });
+      } else {
+        logger.debug(
+          JSON.stringify({
+            API: "updateAADHAARInfo",
+            REQUEST: {
+              ApplicationID,
+              AadhaarName,
+              AadharNumber,
+              AadhaarName,
+              AadhaarDOB,
+              AadharVerifiedStatus,
+              AadhaarFatherName,
+              AadhaarGender,
+              AadhaarAddress,
+            },
+            RESPONSE: {
+              status: 1,
+              message: "Failed to update enquiry status",
+            },
+          })
+        );
+        return res.status(400).json({
+          status: 1,
+          message: "Failed to update enquiry status",
+        });
+      }
+    } catch (error) {
+      logger.error("Error in updateEnquiryStatusController:", error.message);
+      return res.status(500).json({
+        status: 1,
+        message: "An error occurred while updating the enquiry status.",
+        error: error.message,
+      });
+    }
+  };
