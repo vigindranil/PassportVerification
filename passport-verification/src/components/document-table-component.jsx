@@ -274,7 +274,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                   <DialogTitle>Document Preview</DialogTitle>
                 </VisuallyHidden>
                 <div className="flex h-full">
-                  <div className={`${(selectedImage?.DocumentTypeId == 1 || selectedImage?.DocumentTypeId == 8) && (userType != 40 && userType != 10) ? 'w-1/2' : 'w-full p-5'} max-h-[90vh] flex items-center justify-center bg-gray-100 rounded-md`}>
+                  <div className={`${(selectedImage?.DocumentTypeId == 1 || selectedImage?.DocumentTypeId == 8) && (userType != 10) ? 'w-1/2' : 'w-full p-5'} max-h-[90vh] flex items-center justify-center bg-gray-100 rounded-md`}>
                     {type == "jpg" ? (
                       <div className="relative w-full h-full overflow-hidden mx-auto" onClick={() => setZoom(!zoom)}>
                         <motion.div className="mx-auto h-full" animate={{ scale: zoom ? 1.7 : 1 }} transition={{ duration: 0.3 }}>
@@ -293,7 +293,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                   </div>
 
                   {/* Electricity Bill */}
-                  {((userType != 40 && userType != 10) && docType == 1) && <div className={`w-1/2 p-10 h-full`}>
+                  {((userType != 10) && docType == 1) && <div className={`w-1/2 p-10 h-full`}>
                     {/* {(userType == 30) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}> */}
                     <div className="px-2">
                       <h1 className="text-center font-bold text-xl my-3 mb-5 underline">Verify Electricity Document</h1>
@@ -352,7 +352,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                   </div>}
 
                   {/* Birth Certificate */}
-                  {((userType != 40 && userType != 10) && docType == 8) && <div className={`w-1/2 p-10 h-full`}>
+                  {((userType != 10) && docType == 8) && <div className={`w-1/2 p-10 h-full`}>
                     {/* {(userType == 30) && <div className={`${(docType == 13) ? 'w-full p-10' : 'w-1/2'} h-full`}> */}
                     <div className="px-2">
                       <h1 className="text-center font-bold text-xl my-3 mb-5 underline">Verify Birth Certificate Document</h1>
