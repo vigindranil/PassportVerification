@@ -8,7 +8,7 @@ const Layout = () => {
   useEffect(() => {}, []);
 
   const breadcrumb = [
-    { href: "#", name: "Licensing Authority" },
+    { href: "#", name: "SP Authority" },
     { href: "/dashboard", name: "Dashboard" },
   ];
 

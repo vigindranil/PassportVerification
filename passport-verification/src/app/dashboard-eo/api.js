@@ -2,10 +2,10 @@ import { postRequest } from "../commonAPI";
 
 
 
-export const getDistrictNodalDashBoard = async () => {
+export const getCountEO = async () => {
   try {
 
-    return await postRequest("user/getApplicationCountsV1");
+    return await postRequest("eo/getCountEO");
   } catch (error) {
     console.log("Error saving user:", error);
     return null;

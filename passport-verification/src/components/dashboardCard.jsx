@@ -6,6 +6,7 @@ import { getDistrictNodalDashBoard } from '@/app/dashboard/api';
 import { CircleDashed, TrendingDown, ArrowRightToLine, Clock, CalendarClock, CircleCheckBig, FileClock, FileCheck2, ClockAlert, CircleCheck, CheckCheck, BadgeCheck } from 'lucide-react';
 import DashboardCard from './dashboard-cards';
 import { Skeleton } from "@/components/ui/skeleton";
+import { getCountEO } from '@/app/dashboard-eo/api';
 
 const dashboardConfig = {
     10: [
@@ -43,7 +44,7 @@ const dashboardConfig = {
         // { title: "re", key: "SEComplete", icon: ArrowRightToLine, color: "blue", link: "/completed-se" },
     ],
     50: [
-        { title: "Verification Pending (SE)", key: "SEPending", icon: ArrowRightToLine, color: "purple", link: "/allFiles-oc" },
+        { title: "Verification Pending (SE)", key: "SEPending", icon: ArrowRightToLine, color: "purple", link: "/allFiles-se" },
         { title: "Verified By (SE)", key: "SEComplete", icon: ArrowRightToLine, color: "lime", link: "/verificationCompletedEO" },
     ],
 };
@@ -58,14 +59,42 @@ const DashboardCards = () => {
         setIsClient(true);
     }, []);
 
-    useEffect(() => {
-        const fetchDashboard = async () => {
-            const response = await getDistrictNodalDashBoard();
-            setData(response?.data);
-        };
-        fetchDashboard();
-        setLogin_type(auth_type);
-    }, [login_type]);
+    // // for other users
+    // useEffect(() => {
+    //     const fetchDashboard = async () => {
+    //         const response = await getDistrictNodalDashBoard();
+    //         setData(response?.data);
+    //     };
+    //     console.log("auth_type",auth_type);
+        
+    //     auth_type !== 40 && fetchDashboard();
+    //     setLogin_type(auth_type);
+    // }, [login_type]);
+
+    // // only for eo user
+    // useEffect(() => {
+    //     const fetchDashboardEO = async () => {
+    //         const response = await getCountEO();
+    //         setData(response?.data);
+    //     };
+    //     auth_type == 40 && fetchDashboardEO();
+    //     setLogin_type(auth_type);
+    // }, [login_type]);
+
+    
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      if (auth_type === "40") {
+        const response = await getCountEO()
+        setData(response?.data)
+      } else {
+        const response = await getDistrictNodalDashBoard()
+        setData(response?.data)
+      }
+    }
+
+    fetchDashboard()
+  }, [auth_type])
 
     return (
         data ? (
