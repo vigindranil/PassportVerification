@@ -44,7 +44,7 @@ export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type
         if (!enquiryOfficer) {
           throw new Error("Please select an enquiry officer.");
         }
-
+  
         const response = await assignApplication({
           applicationId,
           assignTo: enquiryOfficer,
@@ -52,9 +52,7 @@ export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type
           locationIp: "127", // You might want to get this dynamically
           deviceId: "123#df" // You might want to get this dynamically
         });
-
-        console.log("API Response:", response); // Log the entire response for debugging
-
+  
         if (response && response.status === 0) {
           console.log("Application assigned successfully:", response?.message);
           toast({

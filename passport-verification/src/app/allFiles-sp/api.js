@@ -40,11 +40,17 @@ export const getApplicationStatus = async () => {
     }
 }
 
-export const assignApplication = async () => {
+export const assignApplication = async ({ applicationId, assignTo, macAddress, locationIp, deviceId }) => {
     try {
-        return await postRequest("enquiryOfficers/assignApplication");
+      return await postRequest("enquiryOfficers/assignApplication", {
+        applicationId,
+        assignTo,
+        macAddress,
+        locationIp,
+        deviceId
+      });
     } catch (error) {
-        console.log("Error:", error);
-        return null;
+      console.log("Error:", error);
+      return null;
     }
-}
+  }

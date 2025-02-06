@@ -43,7 +43,7 @@ const dashboardConfig = {
         // { title: "re", key: "SEComplete", icon: ArrowRightToLine, color: "blue", link: "/completed-se" },
     ],
     50: [
-        { title: "Verification Pending (SE)", key: "SEPending", icon: ArrowRightToLine, color: "purple", link: "/allFiles-oc" },
+        { title: "Verification Pending (SE)", key: "SEPending", icon: ArrowRightToLine, color: "purple", link: "/allFiles-se" },
         { title: "Verified By (SE)", key: "SEComplete", icon: ArrowRightToLine, color: "lime", link: "/verificationCompletedEO" },
     ],
 };
