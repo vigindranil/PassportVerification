@@ -176,8 +176,8 @@ export default function Page({ FileNumber }) {
               </Card>
             </div>
             
-            {applicationDetails?.applicationDetails?.AadharVerifiedstatus !==0 && <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3">
+            {(applicationDetails?.applicationDetails?.AadharVerifiedstatus !== null && applicationDetails?.applicationDetails?.AadharVerifiedstatus !== 0) && <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+              <div className="bg-gradient-to-r from-yellow-600 to-yellow-300 px-6 py-3">
                 <h2 className="text-2xl font-bold text-white">AADHAAR Details</h2>
               </div>
 
@@ -187,34 +187,34 @@ export default function Page({ FileNumber }) {
 
                     <div className="space-y-2 my-2">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-500">Aadhar Number</span>
+                        <span className="text-sm font-medium text-gray-500">Aadhaar Number</span>
                         <span className="text-base">{applicationDetails?.applicationDetails?.AadharNumber ? "XXXXXXXX"+atob(applicationDetails?.applicationDetails?.AadharNumber).slice(-4) : 'N/A'}</span>
                       </div>
                     </div>
                     <div className="space-y-2 my-2">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-500">Aadhar Name</span>
+                        <span className="text-sm font-medium text-gray-500">Aadhaar Name</span>
                         <span className="text-base">{applicationDetails?.applicationDetails?.AadharName || 'N/A'}</span>
                       </div>
                     </div>
 
                     <div className="space-y-2 my-2">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-500">Aadhar Father Name</span>
+                        <span className="text-sm font-medium text-gray-500">Aadhaar Father Name</span>
                         <span className="text-base">{applicationDetails?.applicationDetails?.AadharFathername || 'N/A'}</span>
                       </div>
                     </div>
 
                     <div className="space-y-2 my-2">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-500">Aadhar Address</span>
+                        <span className="text-sm font-medium text-gray-500">Aadhaar Address</span>
                         <span className="text-base">{applicationDetails?.applicationDetails?.AadharAddress || 'N/A'}</span>
                       </div>
                     </div>
 
                     <div className="space-y-2">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-500">Aadhar Gender</span>
+                        <span className="text-sm font-medium text-gray-500">Aadhaar Gender</span>
                         <span className="text-base">{applicationDetails?.applicationDetails?.AadharGender || 'N/A'}</span>
                       </div>
                     </div>
@@ -228,15 +228,14 @@ export default function Page({ FileNumber }) {
 
                     <div className="space-y-2">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-500">Aadhar Verified Status</span>
+                        <span className="text-sm font-medium text-gray-500">Aadhaar Verified Status</span>
                         <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedstatus == 1 ? <Badge className="bg-emerald-400 hover:bg-emerald-400">matched</Badge> : <Badge className="bg-red-500 hover:bg-red-500">not machted</Badge>}</span>
                       </div>
                     </div>
                     <div className="space-y-2">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-500">Aadhar Verified By</span>
-                        {/* <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedby}</span> */}
-                        <span className="text-base">akasheo</span>
+                        <span className="text-sm font-medium text-gray-500">Aadhaar Verified By</span>
+                        <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedby}</span>
                       </div>
                     </div>
                   </div>

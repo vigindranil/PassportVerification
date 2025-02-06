@@ -58,7 +58,7 @@ const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
                     <TableHead>Role</TableHead>
                     <TableHead>Application State</TableHead>
                     <TableHead>Remarks</TableHead>
-                    <TableHead>Updated Date (DD/MM/YYYY hh:mm:ss)</TableHead>
+                    <TableHead>Updated Date <small>(DD/MM/YYYY hh:mm:ss)</small></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
