@@ -32,4 +32,5 @@ router.post('/updateEnquiryStatus', updateEnquiryStatus);
 router.post('/completeVerificationForEO', completeVerificationForEO);
 router.post('/verifyApplication', verifyApplication);
 router.post('/getDocumentsApplicationDetailsByFileNo', getDocumentsApplicationDetailsByFileNo);
+
 export default router;

@@ -5,7 +5,7 @@ import {
   updateEnquiryStatusModel,
   setExternelApiLog,
   savethirdpartyVerifyStatus,
-  updateAADHAARInfo,
+ 
 } from "../models/applicationModel.js";
 import { saveTransactionHistory } from "../models/logModel.js";
 import logger from "../utils/logger.js";
@@ -436,3 +436,4 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
     });
   }
 };
+
