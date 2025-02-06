@@ -137,8 +137,28 @@ export async function getStatusByEOModel(
       period,
     ]
   );
-  console.log(rows);
   
+  console.log(rows);
+    return rows[0];
+    
+  } catch (error) {
+    throw new Error("Database error: " + error.message);
+  }
+}
+
+
+
+export async function getCountEOModel(
+  userId ,
+) {
+  try {
+    const [rows] = await pool.query("CALL sp_getCountEO(?);", 
+      [
+      userId,
+    ]
+  );
+  
+  console.log(rows);
     return rows[0];
     
   } catch (error) {

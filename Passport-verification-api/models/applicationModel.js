@@ -111,6 +111,7 @@ export async function updateEnquiryStatusModel(
 
 export async function updateAADHAARInfoModel(
   ApplicationID,
+  AadharNumber,
   AadhaarName,
   AadhaarDOB,
   AadharVerifiedStatus,
@@ -121,9 +122,10 @@ export async function updateAADHAARInfoModel(
 ) {
   try {
     const [rows] = await pool.query(
-      `CALL sp_updateAADHAARInfoV1(?, ?, ?, ?, ?, ?, ?, ?, @ErrorCode)`,
+      `CALL sp_updateAADHAARInfoV1(?,?,?, ?, ?, ?, ?, ?, ?, @ErrorCode)`,
       [
         ApplicationID,
+        btoa(AadharNumber),
         AadhaarName,
         AadhaarDOB,
         AadharVerifiedStatus,

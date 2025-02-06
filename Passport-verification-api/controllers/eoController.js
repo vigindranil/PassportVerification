@@ -3,6 +3,7 @@ import {
   getDocumentUploadDetailsModel,
   saveCaseAssignModel,
   getStatusByEOModel,
+  getCountEOModel,
 } from "../models/eoModel.js";
 import { saveTransactionHistory } from "../models/logModel.js";
 import logger from "../utils/logger.js";
@@ -454,3 +455,35 @@ export const getStatusByEO = async (req, res) => {
     });
   }
 };
+
+
+
+
+ export const getCountEO = async (req, res) => {
+    try {
+     
+      const userId = req.user.UserID; // Extract logged-in user ID
+  
+      if (!userId ) {
+        return res.status(400).json({
+          status: 1,
+          message: 'Invalid input data. All fields are required.',
+        });
+      }
+  
+      const applicationStatuses = await getCountEOModel(userId);
+  
+      return res.status(200).json({
+        status: 0,
+        message: 'Application statuses retrieved successfully',
+        data: applicationStatuses,
+      });
+    } catch (error) {
+      console.error('Error in getApplicationStatusController:', error.message);
+      return res.status(500).json({
+        status: 1,
+        message: 'An error occurred while retrieving application statuses.',
+        error: error.message,
+      });
+    }
+  };

@@ -76,7 +76,7 @@ const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center">No Data Found</TableCell>
+                      <TableCell colSpan={5} className="text-center">No Data Found</TableCell>
                     </TableRow>
                   )}
                 </TableBody>
