@@ -39,3 +39,12 @@ export const getApplicationStatus = async () => {
         return null;
     }
 }
+
+export const assignApplication = async () => {
+    try {
+        return await postRequest("enquiryOfficers/assignApplication");
+    } catch (error) {
+        console.log("Error:", error);
+        return null;
+    }
+}

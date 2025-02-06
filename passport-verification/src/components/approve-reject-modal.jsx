@@ -5,25 +5,31 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { getSpecialEnquiryOfficers } from "@/app/allFiles-sp/api";
-import { CircleHelp, Eye } from "lucide-react";
+import { assignApplication, getSpecialEnquiryOfficers } from "@/app/allFiles-sp/api";
+import { CircleHelp, Eye } from 'lucide-react';
+import { toast } from "@/hooks/use-toast"; // Assuming you have a toast component
 
 export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type }) {
   const [remarks, setRemarks] = useState("");
-  const [enquiryOfficer, setEnquiryOfficer] = useState("0");
+  const [enquiryOfficer, setEnquiryOfficer] = useState("");
   const [officers, setOfficers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchEnquiryOfficers = async () => {
       try {
         const response = await getSpecialEnquiryOfficers()
-
         if (response?.data) {
           console.log(response.data);
           setOfficers(response?.data || []);
         }
       } catch (error) {
         console.error("Error fetching enquiry officers:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch enquiry officers. Please try again.",
+          variant: "destructive",
+        });
       }
     };
     if (isOpen) {
@@ -31,9 +37,51 @@ export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type
     }
   }, [isOpen]);
 
+  const handleAccept = async () => {
+    if (type === "query") {
+      setIsLoading(true);
+      try {
+        if (!enquiryOfficer) {
+          throw new Error("Please select an enquiry officer.");
+        }
 
-  const handleAccept = () => {
-    onAccept(applicationId, type, remarks);
+        const response = await assignApplication({
+          applicationId,
+          assignTo: enquiryOfficer,
+          macAddress: "test", // You might want to get this dynamically
+          locationIp: "127", // You might want to get this dynamically
+          deviceId: "123#df" // You might want to get this dynamically
+        });
+
+        console.log("API Response:", response); // Log the entire response for debugging
+
+        if (response && response.status === 0) {
+          console.log("Application assigned successfully:", response?.message);
+          toast({
+            title: "Success",
+            description: response?.message || "Application assigned successfully.",
+          });
+        } else {
+          console.log("Failed to assign application:", response?.message);
+          toast({
+            title: "Error",
+            description: response?.message || "Failed to assign application. Please try again.",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.log("Error assigning application:", error);
+        toast({
+          title: "Error",
+          description: error.message || "An error occurred while assigning the application.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      onAccept(applicationId, type, remarks);
+    }
     onClose();
   };
 
@@ -70,7 +118,6 @@ export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type
                   )}
                 </SelectContent>
               </Select>
-
             </div>
           )}
           <Label htmlFor="remarks">Remarks <span className="text-slate-400">(optional)</span>:</Label>
@@ -87,10 +134,11 @@ export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type
           <Button
             onClick={handleAccept}
             className={`${type === "approve" ? "bg-blue-500 hover:bg-blue-600" : type === "reject" ? "bg-red-500 hover:bg-red-600" : type === "query" ? "bg-green-500 hover:bg-green-600" : ""}`}
+            disabled={(type === "query" && !enquiryOfficer) || isLoading}
           >
-            {type === "approve" ? "Yes, Proceed" : type === "reject" ? "Yes, Proceed" : type === "query" ? "Query" : ""}
+            {isLoading ? "Processing..." : type === "approve" ? "Yes, Proceed" : type === "reject" ? "Yes, Proceed" : type === "query" ? "Assign" : ""}
           </Button>
-          <Button onClick={onClose} variant="secondary" className="hover:bg-zinc-200">
+          <Button onClick={onClose} variant="secondary" className="hover:bg-zinc-200" disabled={isLoading}>
             Cancel
           </Button>
         </div>
