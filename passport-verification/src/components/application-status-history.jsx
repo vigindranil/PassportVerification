@@ -69,7 +69,7 @@ const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
                         <TableCell>{stat?.FullName}</TableCell>
                         <TableCell>{stat?.UserRole}</TableCell>
                         <TableCell>{stat?.ApplicationState == "EoAccept" ? "Application Accepted By EO" : stat?.ApplicationState == "EoStartVerify" ? "Document Uploaded By EO" : stat?.ApplicationState}</TableCell>
-                        <TableCell>{moment.tz(stat?.ApplicationStateUpdatedDateTime, "Asia/Kolkata").format("DD/MM/YYYY hh:mm:ss A")}</TableCell>
+                        <TableCell>{stat?.ApplicationStateUpdatedDateTime ? moment(stat?.ApplicationStateUpdatedDateTime).format("DD/MM/YYYY hh:mm:ss A") : 'N/A'}</TableCell>
                       </TableRow>
                     ))
                   ) : (

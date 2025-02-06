@@ -539,7 +539,7 @@ const UserManagement = () => {
         </div>
 
         <div className="md:col-span-2 lg:col-span-3 flex justify-center">
-          <Button onClick={handleCreateUser} disabled={loading} className="px-6 bg-blue-600">
+          <Button onClick={handleCreateUser} disabled={loading} className="px-6 bg-blue-600 hover:bg-blue-700">
             <UserPlus className="mr-2 h-4 w-4" /> Create User
           </Button>
         </div>

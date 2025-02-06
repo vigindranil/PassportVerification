@@ -15,7 +15,7 @@ import { toast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import { FileAcceptModal } from "./approve-reject-modal"
 import { updateEnquiryStatus } from "@/app/allFiles-sp/api"
-import { FileCheck, FileQuestion, FileUser, FileX2 } from "lucide-react"
+import { CheckCircle2, FileCheck, FileQuestion, FileUser, FileX2 } from "lucide-react"
 
 export default function PendingApplicationDatatable({ status }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
