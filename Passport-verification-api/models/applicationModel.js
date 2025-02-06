@@ -109,7 +109,7 @@ export async function updateEnquiryStatusModel(
   }
 }
 
-export async function updateAADHAARInfo(
+export async function updateAADHAARInfoModel(
   ApplicationID,
   AadhaarName,
   AadhaarDOB,
@@ -201,3 +201,24 @@ export async function savethirdpartyVerifyStatus(
 }
 
 
+export async function getAadharDetailsByapplicationIdModel(
+  ApplicationId ,
+  EntryuserId 
+) {
+  try {
+      console.log("userId",ApplicationId )
+      console.log("status",EntryuserId )
+      
+    const [rows] = await pool.query('CALL sp_getAadharDetailsByapplicationId(?,?);',
+      [
+        ApplicationId,
+        EntryuserId
+      ]
+    );
+    console.log("getApplicationStatus", rows);
+    
+    return rows[0];
+  } catch (error) {
+    throw new Error('Database error: ' + error.message);
+  }
+}
