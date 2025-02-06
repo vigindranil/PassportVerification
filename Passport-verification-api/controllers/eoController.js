@@ -11,6 +11,7 @@ import logger from "../utils/logger.js";
 export const saveDocumentUpload = async (req, res) => {
   try {
     const {
+      DocDetailsID,
       ApplicationId,
       DocumentRemarks,
       DocumentTypeId,
@@ -53,6 +54,7 @@ export const saveDocumentUpload = async (req, res) => {
         JSON.stringify({
           API: "saveDocumentUpload",
           REQUEST: {
+            DocDetailsID,
             ApplicationId,
             filepath,
             DocumentRemarks,
@@ -81,6 +83,7 @@ export const saveDocumentUpload = async (req, res) => {
         JSON.stringify({
           API: "saveDocumentUpload",
           REQUEST: {
+            DocDetailsID,
             ApplicationId,
             filepath,
             DocumentRemarks,
@@ -113,6 +116,7 @@ export const saveDocumentUpload = async (req, res) => {
     const OperationName = "saveDocumentUpload";
     const json = "{}";
     const result = await saveDocumentUploadModel(
+      DocDetailsID,
       ApplicationId,
       filepath,
       DocumentRemarks,
@@ -352,6 +356,7 @@ export const saveCaseAssign = async (req, res) => {
     //  const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, 0, OperationName, json, entryUserId)
 
     const errorCode = await saveCaseAssignModel(
+      DocDetailsID,
       applicationId,
       citizentype,
       jsonTEXT,
@@ -369,6 +374,7 @@ export const saveCaseAssign = async (req, res) => {
         JSON.stringify({
           API: "saveCaseAssignModel",
           REQUEST: {
+            DocDetailsID,
             applicationId,
             citizentype,
             jsonTEXT,
@@ -397,6 +403,7 @@ export const saveCaseAssign = async (req, res) => {
         JSON.stringify({
           API: "saveCaseAssignModel",
           REQUEST: {
+            DocDetailsID,
             applicationId,
             citizentype,
             jsonTEXT,
@@ -476,7 +483,7 @@ export const getStatusByEO = async (req, res) => {
       return res.status(200).json({
         status: 0,
         message: 'Application statuses retrieved successfully',
-        data: applicationStatuses,
+        data: applicationStatuses[0],
       });
     } catch (error) {
       console.error('Error in getApplicationStatusController:', error.message);

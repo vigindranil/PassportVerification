@@ -2,6 +2,7 @@
 import pool from '../db.js';
 
 export async function saveDocumentUploadModel(
+  DocDetailsID,
   ApplicationId,
   DocumentPath,
   DocumentRemarks,
@@ -21,6 +22,8 @@ export async function saveDocumentUploadModel(
 ) {
   try {
 
+    const jsonTEXT = "{}";
+    console.log("DocDetailsID", DocDetailsID)
     console.log("ApplicationId", ApplicationId)
     console.log("DocumentPath", DocumentPath)
     console.log("DocumentRemarks", DocumentRemarks)
@@ -38,10 +41,10 @@ export async function saveDocumentUploadModel(
     console.log("jsonTEXT", jsonTEXT)
     console.log("appDocId", appDocId)
     console.log("EntryuserId", EntryuserId)
-    const jsonTEXT = "{}";
     const [rows] = await pool.query(
-      "CALL sp_saveDocumentUploadv1(?, ?, ?,?, ?,?,?,?,?,?, ?,?,?,?,?,?,?, @DocId ,@Errorcode);",
+      "CALL sp_saveDocumentUpload(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, @DocId ,@Errorcode);",
       [
+        DocDetailsID,
         ApplicationId,
         DocumentPath,
         DocumentRemarks,
@@ -99,7 +102,7 @@ export async function saveCaseAssignModel(
 ) {
   try {
     const [rows] = await pool.query(
-      "CALL sp_saveapplicationassign( ?, ?, ?, ?, ?, ?, ?,?, @application_Id, @ErrorCode);",
+      "CALL sp_saveapplicationassign( ?, ?, ?, ?, ?, ?, ?,?,@application_Id, @ErrorCode);",
       [
         applicationId,
         citizentype,
