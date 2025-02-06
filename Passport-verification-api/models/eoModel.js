@@ -1,4 +1,5 @@
-import pool from "../db.js";
+
+import pool from '../db.js';
 
 export async function saveDocumentUploadModel(
   ApplicationId,
@@ -20,6 +21,23 @@ export async function saveDocumentUploadModel(
 ) {
   try {
 
+    console.log("ApplicationId", ApplicationId)
+    console.log("DocumentPath", DocumentPath)
+    console.log("DocumentRemarks", DocumentRemarks)
+    console.log("DocumentTypeId", DocumentTypeId)
+    console.log("IdNumber", IdNumber)
+    console.log("IdNumber2", IdNumber2)
+    console.log("IdNumber3", IdNumber3)
+    console.log("IdNumber4", IdNumber4)
+    console.log("IdNumber5", IdNumber5)
+    console.log("DeviceId", DeviceId)
+    console.log("MacAddress", MacAddress)
+    console.log("longitude", longitude)
+    console.log("latitude", latitude)
+    console.log("locationIp", locationIp)
+    console.log("jsonTEXT", jsonTEXT)
+    console.log("appDocId", appDocId)
+    console.log("EntryuserId", EntryuserId)
     const jsonTEXT = "{}";
     const [rows] = await pool.query(
       "CALL sp_saveDocumentUploadv1(?, ?, ?,?, ?,?,?,?,?,?, ?,?,?,?,?,?,?, @DocId ,@Errorcode);",
@@ -99,6 +117,30 @@ export async function saveCaseAssignModel(
     );
     console.log("save", result[0]);
     return result[0].ErrorCode;
+  } catch (error) {
+    throw new Error("Database error: " + error.message);
+  }
+}
+
+
+
+export async function getStatusByEOModel(
+  userId ,
+  status,
+  period,
+) {
+  try {
+    const [rows] = await pool.query("CALL sp_getStatusbyEOv1(?,?,?);", 
+      [
+      userId,
+      status,
+      period,
+    ]
+  );
+  console.log(rows);
+  
+    return rows[0];
+    
   } catch (error) {
     throw new Error("Database error: " + error.message);
   }

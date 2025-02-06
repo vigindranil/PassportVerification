@@ -2,6 +2,7 @@ import {
   saveDocumentUploadModel,
   getDocumentUploadDetailsModel,
   saveCaseAssignModel,
+  getStatusByEOModel,
 } from "../models/eoModel.js";
 import { saveTransactionHistory } from "../models/logModel.js";
 import logger from "../utils/logger.js";
@@ -29,6 +30,21 @@ export const saveDocumentUpload = async (req, res) => {
     const file = req.file;
     const filepath = req?.file_name;
     console.log(file);
+
+    console.log("ApplicationId", ApplicationId)
+    console.log("DocumentRemarks", DocumentRemarks)
+    console.log("DocumentTypeId", DocumentTypeId)
+    console.log("IdNumber", IdNumber)
+    console.log("IdNumber2", IdNumber2)
+    console.log("IdNumber3", IdNumber3)
+    console.log("IdNumber4", IdNumber4)
+    console.log("IdNumber5", IdNumber5)
+    console.log("DeviceId", DeviceId)
+    console.log("MacAddress", MacAddress)
+    console.log("longitude", longitude)
+    console.log("latitude", latitude)
+    console.log("appDocId", appDocId)
+    console.log("EntryuserId", EntryUserId)
     
 
     if (!file) {
@@ -404,6 +420,36 @@ export const saveCaseAssign = async (req, res) => {
     return res.status(500).json({
       status: 1,
       message: "An error occurred while assigning the case",
+      error: error.message,
+    });
+  }
+};
+
+
+
+export const getStatusByEO = async (req, res) => {
+  try {
+    const { status, period } = req.body;
+    const userId = req.user.UserID;
+    if (!userId || !status|| !period) {
+      return res.status(400).json({ status: 1, message: "Invalid input data" });
+    }
+
+    const result = await getStatusByEOModel(userId, status, period);
+
+    if (result == 0) {
+      return res.status(200).json({
+        status: 0,
+        message: "Status fetched successfully",
+        data: result,
+      });
+    } else {
+      return res.status(404).json({ status: 1, message: "No records found" });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      status: 1,
+      message: "An error occurred while fetching status",
       error: error.message,
     });
   }
