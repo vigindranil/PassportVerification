@@ -503,6 +503,8 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
             API: "updateAADHAARInfo",
             REQUEST: {
               ApplicationID,
+              AadhaarName,
+              AadharNumber,
               AadhaarName ,
               AadhaarDOB,
               AadharVerifiedStatus,
@@ -526,6 +528,8 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
             API: "updateAADHAARInfo",
             REQUEST: {
               ApplicationID,
+              AadhaarName,
+              AadharNumber,
               AadhaarName,
               AadhaarDOB,
               AadharVerifiedStatus,
