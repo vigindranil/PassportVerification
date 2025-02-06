@@ -11,7 +11,12 @@ import "jspdf-autotable"
 import { getApplicationStatus } from "@/app/totalPending/api"
 import moment from "moment"
 import { useRouter } from "next/navigation"
-import { FileUser } from "lucide-react"
+import { CheckCircle2, CircleCheckBig, FileUser } from "lucide-react"
+import { toast } from "@/hooks/use-toast"
+import { ToastAction } from "./ui/toast"
+import Cookies from "react-cookies";
+import { FileAcceptModal } from "./approve-reject-modal"
+import { updateEnquiryStatus } from "@/app/acceptedAndVerificationPending-eo/api"
 
 export default function PendingApplicationDatatable({ status, heading, period }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
@@ -22,6 +27,9 @@ export default function PendingApplicationDatatable({ status, heading, period })
   const [isLoading, setIsLoading] = useState(true)
   const [verificationData, setVerificationData] = useState([])
   const router = useRouter()
+  const user_role = Cookies.load('type');
+  const [isFileAcceptModalOpen, setIsFileAcceptModalOpen] = useState(false)
+  const [type, setType] = useState("reject");
 
   const filteredData = verificationData?.filter((row) =>
     Object.values(row)?.some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm.toLowerCase())),
@@ -36,6 +44,43 @@ export default function PendingApplicationDatatable({ status, heading, period })
       console.error("Error fetching application status:", error)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleCompleteVerification = async (applicationId, remarks) => {
+    try {
+      // Implement the logic for accepting the file
+      const response = await updateEnquiryStatus(applicationId, remarks);
+      console.log('reponse:', response);
+
+      if (response?.status == 0) {
+        await fetchApplicationStatus();
+        toast({
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Successfull!</span>
+            </div>
+          ),
+          description: response?.message,
+          action: <ToastAction altText="Try again">Close</ToastAction>,
+        })
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Failed to update status!",
+          description: response?.message,
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
+      }
+    } catch (e) {
+      console.log('Error:', e);
+      toast({
+        variant: "destructive",
+        title: "Failed to update status!",
+        description: 'An error occurred',
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
     }
   }
 
@@ -161,6 +206,23 @@ export default function PendingApplicationDatatable({ status, heading, period })
                             View Application
                           </span>
                         </div>
+                        {user_role == 40 && <div className="relative group">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="bg-stone-100 ring-[0.5px] ring-slate-300 text-green-700 hover:bg-green-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                            onClick={() => {
+                              setType('approve')
+                              setIsFileAcceptModalOpen(true)
+                              setSelectedDetails(row.FileNumber)
+                            }}
+                          >
+                            <CircleCheckBig className="mx-0 px-0" />
+                          </Button>
+                          <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                            Complete Verification
+                          </span>
+                        </div>}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -208,6 +270,15 @@ export default function PendingApplicationDatatable({ status, heading, period })
             </Button>
           </div>
         </div>
+        {isFileAcceptModalOpen && selectedDetails && (
+          <FileAcceptModal
+            isOpen={isFileAcceptModalOpen}
+            onClose={() => setIsFileAcceptModalOpen(false)}
+            applicationId={selectedDetails}
+            onAccept={handleCompleteVerification}
+            type={type}
+          />
+        )}
       </div>
     </div>
   )

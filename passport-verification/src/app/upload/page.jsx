@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,7 +9,9 @@ import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import DataTable from "@/components/excelParsedDatatable"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { CheckCircle2 } from "lucide-react"
+import { CheckCircle2, Loader2 } from "lucide-react"
+import { Progress } from "@/components/ui/progress"
+
 
 const ExcelUploader = () => {
   const [file, setFile] = useState(null)
@@ -18,6 +20,7 @@ const ExcelUploader = () => {
   const [parsedData, setParsedData] = useState([])
   const [message, setMessage] = useState("")
   const [error, setError] = useState("")
+  const [progress, setProgress] = useState(0)
   const [isImported, setIsImported] = useState(false)
   const { toast } = useToast()
   const fileInputRef = useRef(null)
@@ -79,6 +82,7 @@ const ExcelUploader = () => {
     e.preventDefault()
     setUploading(true)
     setError("")
+    setProgress(1)
     try {
       if (!parsedData || parsedData.length === 0) {
         toast({
@@ -89,6 +93,7 @@ const ExcelUploader = () => {
         })
         return
       }
+
       const response = await uploadExcel(parsedData)
       if (response?.status === 0) {
         toast({
@@ -108,6 +113,8 @@ const ExcelUploader = () => {
       } else {
         throw new Error(response?.message)
       }
+
+      
     } catch (e) {
       console.log(e)
       setError(e.message || "Failed to upload file. Please try again.")
@@ -119,6 +126,7 @@ const ExcelUploader = () => {
       })
     } finally {
       setUploading(false)
+      setProgress(0)
     }
   }
 
@@ -133,6 +141,20 @@ const ExcelUploader = () => {
     }
     fileInputRef.current?.click()
   }
+
+  useEffect(()=>{
+    if (progress) {
+      const timer = setInterval(() => {
+        if (progress > 0) {
+          setProgress(progress + 1);
+        } else {
+          clearInterval(timer);
+        }
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  },[progress])
+
 
   return (
     <div className="flex h-full bg-gray-100">
@@ -185,7 +207,7 @@ const ExcelUploader = () => {
                         onClick={handleUpload}
                         disabled={uploading || !isImported}
                       >
-                        {uploading ? "Uploading..." : "Upload Excel"}
+                        {uploading ? <div className="flex justify-center items-center">Uploading <Loader2 className="animate-spin"/></div> : "Upload Excel"}
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -227,6 +249,13 @@ const ExcelUploader = () => {
                   </p>
                 )}
                 {error && <p className="text-sm text-center text-red-500">{error}</p>}
+                {progress != 0 &&
+                  <div>
+                    <Progress value={progress} />
+                    <p className="text-sm text-center">Progress: {progress}%</p>
+                    <p className="text-sm text-center font-bold">Note: This process might take some time, please do not refresh or close this page</p>
+                  </div>
+                }
               </form>
             </CardContent>
           </Card>
