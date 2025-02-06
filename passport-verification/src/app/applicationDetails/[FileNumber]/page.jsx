@@ -33,11 +33,19 @@ export default function Page({ FileNumber }) {
       setIsLoadingDocumentTable(false)
     }
   }
+ 
 
   useEffect(() => {
     console.log("FileNumber:", FileNumber);
-    FileNumber && fetchData(FileNumber);
+    FileNumber && fetchData(FileNumber); 
   }, [FileNumber, verificationSuccess]);
+
+
+  const encryptedAadhar = applicationDetails?.applicationDetails?.AadharNumber || '';
+  const decryptedAadhar = encryptedAadhar ? atob(encryptedAadhar) : 'N/A';
+  
+  console.log(decryptedAadhar);
+
 
   return (
     <div className="flex bg-gray-100">
@@ -227,6 +235,12 @@ export default function Page({ FileNumber }) {
                       <div className="flex flex-col">
                         <span className="text-sm font-medium text-gray-500">Aadhar Verified Status</span>
                         <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedstatus}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium text-gray-500">Aadhar Verified By</span>
+                        <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedby}</span>
                       </div>
                     </div>
                   </div>
