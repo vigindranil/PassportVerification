@@ -11,6 +11,7 @@ import DocumentTable from "@/components/document-table-component"
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import ApplicationStatusHistory from "@/components/application-status-history"
+import { Badge } from "@/components/ui/badge"
 
 export default function Page({ FileNumber }) {
   const [applicationDetails, setApplicationDetails] = useState(null);
@@ -39,12 +40,6 @@ export default function Page({ FileNumber }) {
     console.log("FileNumber:", FileNumber);
     FileNumber && fetchData(FileNumber); 
   }, [FileNumber, verificationSuccess]);
-
-
-  const encryptedAadhar = applicationDetails?.applicationDetails?.AadharNumber || '';
-  const decryptedAadhar = encryptedAadhar ? atob(encryptedAadhar) : 'N/A';
-  
-  console.log(decryptedAadhar);
 
 
   return (
@@ -193,7 +188,7 @@ export default function Page({ FileNumber }) {
                     <div className="space-y-2 my-2">
                       <div className="flex flex-col">
                         <span className="text-sm font-medium text-gray-500">Aadhar Number</span>
-                        <span className="text-base">{applicationDetails?.applicationDetails?.AadharNumber || 'N/A'}</span>
+                        <span className="text-base">{applicationDetails?.applicationDetails?.AadharNumber ? "XXXXXXXX"+atob(applicationDetails?.applicationDetails?.AadharNumber).slice(-4) : 'N/A'}</span>
                       </div>
                     </div>
                     <div className="space-y-2 my-2">
@@ -234,13 +229,14 @@ export default function Page({ FileNumber }) {
                     <div className="space-y-2">
                       <div className="flex flex-col">
                         <span className="text-sm font-medium text-gray-500">Aadhar Verified Status</span>
-                        <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedstatus}</span>
+                        <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedstatus == 1 ? <Badge className="bg-emerald-400 hover:bg-emerald-400">matched</Badge> : <Badge className="bg-red-500 hover:bg-red-500">not machted</Badge>}</span>
                       </div>
                     </div>
                     <div className="space-y-2">
                       <div className="flex flex-col">
                         <span className="text-sm font-medium text-gray-500">Aadhar Verified By</span>
-                        <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedby}</span>
+                        {/* <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedby}</span> */}
+                        <span className="text-base">akasheo</span>
                       </div>
                     </div>
                   </div>
