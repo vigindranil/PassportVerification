@@ -125,7 +125,7 @@ export async function updateAADHAARInfoModel(
       `CALL sp_updateAADHAARInfoV1(?,?,?, ?, ?, ?, ?, ?, ?, @ErrorCode)`,
       [
         ApplicationID,
-        AadharNumber,
+        btoa(AadharNumber),
         AadhaarName,
         AadhaarDOB,
         AadharVerifiedStatus,
