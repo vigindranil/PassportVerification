@@ -29,7 +29,7 @@ export const updateEnquiryStatus = async (applicationId, type, remarks) => {
             "locationIp": "115.187.62.100",
             "macAddress": "test-s4dn-3aos-dn338",
             "deviceId": "123#df",
-            "StatusID": "80",
+            "StatusID": "100",
             "StatusText": type == 'approve' ? 'SE APPROVED' : 'SE NOT APPROVE',
             "Remarks": remarks
         });

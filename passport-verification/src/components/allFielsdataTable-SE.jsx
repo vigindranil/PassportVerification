@@ -14,8 +14,8 @@ import { useRouter } from "next/navigation"
 import { toast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import { FileAcceptModal } from "./approve-reject-modal"
-import { updateEnquiryStatus } from "@/app/allFiles-oc/api"
 import { CheckCircle2, Eye, FileCheck, FileUser, FileX2 } from "lucide-react"
+import { updateEnquiryStatus } from "@/app/allFiles-se/api"
 
 export default function PendingApplicationDatatable({ status }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
