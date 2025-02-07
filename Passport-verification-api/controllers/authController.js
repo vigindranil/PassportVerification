@@ -121,6 +121,7 @@ export const sendOtp = async (req, res) => {
                 type: rows[0]["UserTypeID"],
                 name: rows[0]["UserFullName"],
                 district: rows[0]["DistrictName"],
+                DistrictID: rows[0]["DistrictID"],
                 ps: rows[0]["PoliceStationName"],
                 token: token,
             });
