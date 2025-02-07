@@ -75,7 +75,10 @@ export async function showDesignationModel() {
     } catch (error) {
       console.error('Error fetching document subtypes:', error.message);
       throw new Error('Database error: ' + error.message);
-    }
+    }finally {
+      // releasing resources
+      pool.destroy();
+    }
   }
 
 
@@ -89,7 +92,10 @@ export async function showDesignationModel() {
     } catch (error) {
       console.error('Error fetching document type list:', error.message);
       throw new Error('Database error: ' + error.message);
-    }
+    }finally {
+      // releasing resources
+      pool.destroy();
+    }
   }
 
   export async function showDocumentDetailsbyCitizenTypeModel(citizenType) {
@@ -102,7 +108,10 @@ export async function showDesignationModel() {
     } catch (error) {
       console.error('Error fetching document subtypes:', error.message);
       throw new Error('Database error: ' + error.message);
-    }
+    }finally {
+      // releasing resources
+      pool.destroy();
+    }
   }
 
   export async function showSubDocumentbyCitizenTypeModel(citizensubType) {
@@ -115,5 +124,8 @@ export async function showDesignationModel() {
     } catch (error) {
       console.error('Error fetching document subtypes:', error.message);
       throw new Error('Database error: ' + error.message);
-    }
+    }finally {
+      // releasing resources
+      pool.destroy();
+    }
   }

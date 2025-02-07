@@ -1,0 +1,12 @@
+2025-02-07 11:10:31 | ERROR | pool.destroy is not a function
+2025-02-07 11:10:41 | ERROR | pool.destroy is not a function
+2025-02-07 11:11:02 | ERROR | pool.destroy is not a function
+2025-02-07 11:11:36 | ERROR | pool.destroy is not a function
+2025-02-07 11:13:03 | ERROR | pool.destroy is not a function
+2025-02-07 11:26:36 | ERROR | pool.destroy is not a function
+2025-02-07 11:26:44 | ERROR | pool.destroy is not a function
+2025-02-07 11:38:08 | ERROR | pool.destroy is not a function
+2025-02-07 11:38:37 | ERROR | pool.quit is not a function
+2025-02-07 11:39:34 | ERROR | pool.close is not a function
+2025-02-07 11:45:20 | ERROR | connection is not defined
+2025-02-07 11:45:24 | ERROR | connection is not defined

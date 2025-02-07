@@ -13,7 +13,10 @@ export async function getSpecialEnquiryOfficersModel(
     } catch (error) {
         console.log("error", error);
         throw new Error("Database error: " + error.message);
-    }
+    }finally {
+        // releasing resources
+        pool.destroy();
+      }
 }
 
 
@@ -85,5 +88,8 @@ export async function getStatusbySEModal(
       return rows[0];
     } catch (error) {
       throw new Error('Database error: ' + error.message);
-    }
+    }finally {
+        // releasing resources
+        pool.destroy();
+      }
   }
