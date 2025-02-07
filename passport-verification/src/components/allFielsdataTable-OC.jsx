@@ -242,7 +242,7 @@ export default function PendingApplicationDatatable({ status }) {
                               onClick={() => {
                                 setType('approve')
                                 setIsFileAcceptModalOpen(true)
-                                setSelectedDetails(row.FileNumber)
+                                setSelectedDetails(row?.FileNumber)
                               }}
                             >
                               <FileCheck className="mx-0 px-0" />

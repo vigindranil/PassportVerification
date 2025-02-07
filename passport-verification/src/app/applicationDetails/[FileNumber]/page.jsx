@@ -5,19 +5,23 @@ import Sidebar from '@/components/sidebar'
 import Navbar from '@/components/navbar'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { getDetailsApplicationId } from "./api"
+import { getDetailsApplicationId, getPccCrimeDetails } from "./api"
 import moment, { isMoment } from "moment"
 import DocumentTable from "@/components/document-table-component"
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import ApplicationStatusHistory from "@/components/application-status-history"
 import { Badge } from "@/components/ui/badge"
+import CrimeAcivityTablePCC from "@/components/crime-activity-verification-pcc"
+import CrimeAcivityTableKolkataPolice from "@/components/crime-activity-verification-kolkata-police"
+import { Button } from "@/components/ui/button"
 
 export default function Page({ FileNumber }) {
   const [applicationDetails, setApplicationDetails] = useState(null);
   const [isLoadingStatusHistrory, setIsLoadingStatusHistrory] = useState(true)
   const [isLoadingDocumentTable, setIsLoadingDocumentTable] = useState(true);
   const [verificationSuccess, setVerificationSuccess] = useState(false);
+
   const { toast } = useToast()
 
   const fetchData = async (ApplicationId) => {
@@ -28,17 +32,17 @@ export default function Page({ FileNumber }) {
       console.log("Application Details Data:", response);
       setApplicationDetails(response?.data);
     } catch (e) {
-      console.log("Error fetching application details:", e);
+      console.log("Error:", e);
     } finally {
       setIsLoadingStatusHistrory(false)
       setIsLoadingDocumentTable(false)
     }
   }
- 
+
 
   useEffect(() => {
     console.log("FileNumber:", FileNumber);
-    FileNumber && fetchData(FileNumber); 
+    FileNumber && fetchData(FileNumber);
   }, [FileNumber, verificationSuccess]);
 
 
@@ -175,9 +179,9 @@ export default function Page({ FileNumber }) {
                 </CardContent>
               </Card>
             </div>
-            
-            {applicationDetails?.applicationDetails?.AadharVerifiedstatus !==0 && <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3">
+
+            {(applicationDetails?.applicationDetails?.AadharVerifiedstatus !== null && applicationDetails?.applicationDetails?.AadharVerifiedstatus !== 0) && <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+              <div className="bg-gradient-to-r from-yellow-600 to-yellow-300 px-6 py-3">
                 <h2 className="text-2xl font-bold text-white">AADHAAR Details</h2>
               </div>
 
@@ -187,34 +191,34 @@ export default function Page({ FileNumber }) {
 
                     <div className="space-y-2 my-2">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-500">Aadhar Number</span>
-                        <span className="text-base">{applicationDetails?.applicationDetails?.AadharNumber ? "XXXXXXXX"+atob(applicationDetails?.applicationDetails?.AadharNumber).slice(-4) : 'N/A'}</span>
+                        <span className="text-sm font-medium text-gray-500">Aadhaar Number</span>
+                        <span className="text-base">{applicationDetails?.applicationDetails?.AadharNumber ? "XXXXXXXX" + atob(applicationDetails?.applicationDetails?.AadharNumber).slice(-4) : 'N/A'}</span>
                       </div>
                     </div>
                     <div className="space-y-2 my-2">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-500">Aadhar Name</span>
+                        <span className="text-sm font-medium text-gray-500">Aadhaar Name</span>
                         <span className="text-base">{applicationDetails?.applicationDetails?.AadharName || 'N/A'}</span>
                       </div>
                     </div>
 
                     <div className="space-y-2 my-2">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-500">Aadhar Father Name</span>
+                        <span className="text-sm font-medium text-gray-500">Aadhaar Father Name</span>
                         <span className="text-base">{applicationDetails?.applicationDetails?.AadharFathername || 'N/A'}</span>
                       </div>
                     </div>
 
                     <div className="space-y-2 my-2">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-500">Aadhar Address</span>
+                        <span className="text-sm font-medium text-gray-500">Aadhaar Address</span>
                         <span className="text-base">{applicationDetails?.applicationDetails?.AadharAddress || 'N/A'}</span>
                       </div>
                     </div>
 
                     <div className="space-y-2">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-500">Aadhar Gender</span>
+                        <span className="text-sm font-medium text-gray-500">Aadhaar Gender</span>
                         <span className="text-base">{applicationDetails?.applicationDetails?.AadharGender || 'N/A'}</span>
                       </div>
                     </div>
@@ -228,15 +232,14 @@ export default function Page({ FileNumber }) {
 
                     <div className="space-y-2">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-500">Aadhar Verified Status</span>
+                        <span className="text-sm font-medium text-gray-500">Aadhaar Verified Status</span>
                         <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedstatus == 1 ? <Badge className="bg-emerald-400 hover:bg-emerald-400">matched</Badge> : <Badge className="bg-red-500 hover:bg-red-500">not machted</Badge>}</span>
                       </div>
                     </div>
                     <div className="space-y-2">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-500">Aadhar Verified By</span>
-                        {/* <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedby}</span> */}
-                        <span className="text-base">akasheo</span>
+                        <span className="text-sm font-medium text-gray-500">Aadhaar Verified By</span>
+                        <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedby}</span>
                       </div>
                     </div>
                   </div>
@@ -246,12 +249,40 @@ export default function Page({ FileNumber }) {
 
 
             <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 to-teal-600 px-6 py-3">
+              <div className="bg-gradient-to-r from-cyan-600 to-violet-600 px-6 py-3">
                 <h2 className="text-2xl font-bold text-white">Document(s) Uploaded for the Application</h2>
               </div>
               <DocumentTable fileNo={FileNumber} documents={applicationDetails?.documents} docPath={applicationDetails?.filepath} isLoadingDocumentTable={isLoadingDocumentTable} verificationSuccess={setVerificationSuccess} />
-
             </div>
+
+            {/* Crime Activity Verification */}
+            <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+              <div className="bg-gradient-to-r from-violet-600 to-amber-600 px-6 py-3">
+                <h2 className="text-2xl font-bold text-white">Crime Activity Verification</h2>
+              </div>
+
+              {/* PCC Criminal Records */}
+              <CrimeAcivityTablePCC />
+
+              {/* Kolkata Police Crime Records */}
+              <CrimeAcivityTableKolkataPolice />
+
+              <div className="flex justify-center px-5 py-5 gap-2">
+                <Button className="bg-amber-600 hover:bg-amber-700 text-white font-bold
+                text-sm py-2 px-3 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+                  onClick={() => console.log('test')
+                  }>
+                  Criminal Record Found
+                </Button>
+                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold
+                text-sm py-2 px-3 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+                  onClick={() => console.log('test')
+                  }>
+                  Criminal Record Not Found
+                </Button>
+              </div>
+            </div>
+
             <ApplicationStatusHistory status={applicationDetails?.status} isLoadingStatusHistrory={isLoadingStatusHistrory} />
           </div>
         </main>

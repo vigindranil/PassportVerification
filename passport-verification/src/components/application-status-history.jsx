@@ -45,7 +45,7 @@ const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
   return (
     <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
       <div className="bg-gradient-to-r from-green-600 to-teal-600 px-6 py-3">
-        <h2 className="text-2xl font-bold text-white">Application Status History</h2>
+        <h2 className="text-2xl font-bold text-white">Application Timeline</h2>
       </div>
       <div className="m-6">
         <Card>
@@ -58,7 +58,7 @@ const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
                     <TableHead>Role</TableHead>
                     <TableHead>Application State</TableHead>
                     <TableHead>Remarks</TableHead>
-                    <TableHead>Updated Date (DD/MM/YYYY hh:mm:ss)</TableHead>
+                    <TableHead>Updated Date <small>(DD/MM/YYYY hh:mm:ss)</small></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

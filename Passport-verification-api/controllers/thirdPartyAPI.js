@@ -2,11 +2,12 @@ import fetch from "node-fetch";
 import dotenv from "dotenv";
 import axios from "axios";
 import https from "https";
-import crypto from 'crypto';
+import crypto from "crypto";
 import {
   savethirdpartyVerifyStatus,
   setExternelApiLog,
 } from "../models/applicationModel.js";
+import qs from "qs";
 dotenv.config();
 
 export const generateOtpAadhaar = async (aadhaar_number, user_id) => {
@@ -124,7 +125,7 @@ export const getBirthCertificateDetails = async (req, res) => {
 };
 
 export const getWBSEDCLDetails = async (req, res) => {
-  const { consumerId, installationNum} = req.body;
+  const { consumerId, installationNum } = req.body;
 
   if (!consumerId) {
     return res.status(400).json({ error: "ConsumerId is required." });
@@ -151,6 +152,111 @@ export const getWBSEDCLDetails = async (req, res) => {
     .request(config)
     .then(async (response) => {
       console.log("response", response);
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: response?.data,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res.status(400).json({
+        status: 0,
+        message: "Failed to fetched details",
+        data: null,
+      });
+    });
+};
+
+export const getKolkataPoliceCriminalRecordSearchv4 = async (req, res) => {
+  const {
+    name_accused,
+    criminal_aliases_name,
+    address,
+    father_accused,
+    age_accused,
+    from_date,
+    to_date,
+    case_yr,
+    policestations,
+    pageno,
+  } = req.body;
+
+  // Create FormData instance
+  let formData = new FormData();
+  formData.append("name_accused", name_accused || "");
+  formData.append("criminal_aliases_name", criminal_aliases_name || "");
+  formData.append("address", address || "");
+  formData.append("father_accused", father_accused || "");
+  formData.append("age_accused", age_accused || "");
+  formData.append("from_date", from_date || "");
+  formData.append("to_date", to_date || "");
+  formData.append("case_yr", case_yr || "");
+  formData.append("policestations", policestations || "");
+  formData.append("pageno", pageno || "");
+  formData.append("identitycategory", "");
+  formData.append("crimecategory", "");
+  formData.append("moduslist", "");
+  formData.append("brief_keyword", "");
+  formData.append("class", "");
+  formData.append("subclass", "");
+  formData.append("user_id", "");
+  formData.append("own_jurisdiction", "");
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://api.kolkatapolice.org/crimebabuapp/Api/criminalSearchv4",
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    data: formData,
+  };
+
+  axios
+    .request(config)
+    .then(async (response) => {
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: response?.data,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res.status(400).json({
+        status: 0,
+        message: "Failed to fetched details",
+        data: null,
+      });
+    });
+};
+
+export const getPCCCrimeRecordSearch = async (req, res) => {
+  const { fname, lname } = req.body;
+
+  let data = qs.stringify({
+    authToken: "PCC@Pd@26062024",
+    fname: fname,
+    lname: lname,
+  });
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://sitrep-cid.wb.gov.in/Api/pccApi",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    data: data,
+    httpsAgent: new https.Agent({
+      secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+    }),
+  };
+
+  axios
+    .request(config)
+    .then(async (response) => {
       return res.status(200).json({
         status: 0,
         message: "Data fetched successfully",

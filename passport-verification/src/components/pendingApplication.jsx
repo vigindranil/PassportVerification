@@ -18,7 +18,7 @@ import Cookies from "react-cookies";
 import { FileAcceptModal } from "./approve-reject-modal"
 import { updateEnquiryStatus } from "@/app/acceptedAndVerificationPending-eo/api"
 
-export default function PendingApplicationDatatable({ status, heading, period }) {
+export default function PendingApplicationDatatable({ status, heading, period, flag }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [selectedDetails, setSelectedDetails] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
@@ -206,7 +206,7 @@ export default function PendingApplicationDatatable({ status, heading, period })
                             View Application
                           </span>
                         </div>
-                        {user_role == 40 && <div className="relative group">
+                        {(user_role == 40 && flag == "eo-accepted-file") && <div className="relative group">
                           <Button
                             size="sm"
                             variant="outline"
