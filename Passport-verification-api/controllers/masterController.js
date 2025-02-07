@@ -59,9 +59,9 @@ import logger from '../utils/logger.js';
  */
 export const getPoliceStationsByDistrict = async (req, res) => {
   try {
-    const { districtId } = req.body;
+    const { districtId } = req.user.UserID;
 
-    if (!districtId || isNaN(districtId)) {
+    if (!districtId) {
       logger.debug(
         JSON.stringify({
             API: "getPoliceStationsByDistrict",
