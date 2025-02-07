@@ -224,7 +224,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                       <TableCell>{doc?.LocationIp || "-"}</TableCell>
                       <TableCell className="flex">
                         <button
-                          className="flex bg-blue-100 justify-center items-center p-1 m-1 rounded-md hover:bg-blue-200 text-sm"
+                          className="flex bg-blue-100 justify-center items-center p-1 m-1 px-2 rounded-md hover:bg-blue-200 text-sm"
                           onClick={() => {
                             setVerifiedResponse(null)
                             setSelectedDoc(`${docPath}${doc?.DocumentPath}`)
@@ -239,7 +239,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                           View
                         </button>
                         {(doc?.DocumentTypeId == 13) ? <button
-                          className="flex bg-blue-100 justify-center items-center p-1 m-1 rounded-md hover:bg-blue-200 text-sm"
+                          className="flex bg-blue-100 justify-center items-center p-1 m-1 px-2 rounded-md hover:bg-blue-200 text-sm"
                           onClick={() => {
                             setSelectedLocationDetails(doc?.UserAgent ? JSON.parse(doc?.UserAgent) : {})
                             setIsLocationDetailsModalOpen(true)
@@ -249,7 +249,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                           Location
                         </button> :
                           <button
-                            className="flex bg-blue-100 justify-center items-center p-1 m-1 rounded-md hover:bg-blue-200 text-sm"
+                            className="flex bg-blue-100 justify-center items-center p-1 m-1 px-2 rounded-md hover:bg-blue-200 text-sm"
                             onClick={() => {
                               setSelectedLocationDetails({ ip: doc?.LocationIp, MacAddress: doc?.MacAddress, loc: doc?.Latitude + "," + doc?.Longitude })
                               setIsLocationDetailsModalOpen(true)

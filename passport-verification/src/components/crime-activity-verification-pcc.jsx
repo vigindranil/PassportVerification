@@ -2,16 +2,19 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button";
 import { Input } from "./ui/input";
 import moment from "moment";
 import { getPccCrimeDetails } from "@/app/applicationDetails/[FileNumber]/api";
+import { Eye, MapPin } from "lucide-react";
+import { VisuallyHidden } from "./ui/visually-hidden";
 
 const SkeletonLoader = () => (
   <>
     {[...Array(3)].map((_, index) => (
       <TableRow key={index}>
-        {[...Array(6)].map((_, i) => (
+        {[...Array(7)].map((_, i) => (
           <TableCell key={i}>
             <div className="h-4 bg-gray-300 rounded w-24 animate-pulse"></div>
           </TableCell>
@@ -25,7 +28,8 @@ const CrimeAcivityTablePCC = () => {
   const [crimeData, setCrimeData] = useState([]);
   const [isLoadingPccRecords, setIsLoadingPccRecords] = useState(false);
   const [pccInput, setPccInput] = useState({ fname: "", lname: "" });
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDetails, setSelectedDetails] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -88,6 +92,7 @@ const CrimeAcivityTablePCC = () => {
                     <TableHead>District</TableHead>
                     <TableHead>Police Station</TableHead>
                     <TableHead>Case Ref. No.</TableHead>
+                    <TableHead>Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -102,15 +107,56 @@ const CrimeAcivityTablePCC = () => {
                         <TableCell>{crimeDetail?.distName || 'N/A'}</TableCell>
                         <TableCell>{crimeDetail?.psName || 'N/A'}</TableCell>
                         <TableCell>{crimeDetail?.case_ref_id || 'N/A'}</TableCell>
+                        <TableCell>
+                          <button
+                            className="flex bg-blue-100 justify-center items-center p-1 m-1 px-2 rounded-md hover:bg-blue-200 text-sm"
+                            onClick={() => {
+                              setSelectedDetails(crimeDetail)
+                              setIsModalOpen(true)
+                            }}
+                          >
+                            <Eye className="text-blue-600 mr-2 h-4 w-4" />
+                            View
+                          </button>
+                        </TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center">No Record(s) Found</TableCell>
+                      <TableCell colSpan={7} className="text-center">No Record(s) Found</TableCell>
                     </TableRow>
                   )}
                 </TableBody>
               </Table>
+              {isModalOpen && (
+                <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                  <DialogContent className="w-full">
+                    <VisuallyHidden>
+                      <DialogTitle>Case Details</DialogTitle>
+                    </VisuallyHidden>
+                    <div className="space-y-2 h-full w-full px-5">
+                      <h1 className="text-center text-slate-500 font-bold text-xl mb-10 underline">Case Details</h1>
+                      {selectedDetails &&
+                        <div>
+                          {selectedDetails?.FirstName && <div><span className='font-bold'>First Name:</span> <span>{selectedDetails?.FirstName}</span></div>}
+                          {selectedDetails?.LastName && <div><span className='font-bold'>Last Name:</span> <span>{selectedDetails?.LastName}</span></div>}
+                          {selectedDetails?.Gender && <div><span className='font-bold'>Gender:</span> <span>{selectedDetails?.Gender}</span></div>}
+                          {selectedDetails?.gurdainName && <div><span className='font-bold'>Gurdain Name:</span> <span>{selectedDetails?.gurdainName}</span></div>}
+                          {selectedDetails?.alias && <div><span className='font-bold'>Nickname(alias):</span> <span>{selectedDetails?.alias}</span></div>}
+                          {selectedDetails?.locality && <div><span className='font-bold'>Locality:</span> <span>{selectedDetails?.locality}</span></div>}
+                          {selectedDetails?.psName && <div><span className='font-bold'>Police Station:</span> <span>{selectedDetails?.psName}</span></div>}
+                          {selectedDetails?.distName && <div><span className='font-bold'>District:</span> <span>{selectedDetails?.distName}</span></div>}
+                          {selectedDetails?.arrestDate && <div><span className='font-bold'>Arrest Date:</span> <span>{selectedDetails?.arrestDate}</span></div>}
+                          {selectedDetails?.caseDetails && <div><span className='font-bold'>Case Details:</span> <span>{selectedDetails?.caseDetails}</span></div>}
+                          {selectedDetails?.case_ref_id && <div><span className='font-bold'>Case Ref. ID:</span> <span>{selectedDetails?.case_ref_id}</span></div>}
+                          {selectedDetails?.case_no && <div><span className='font-bold'>Case No.:</span> <span>{selectedDetails?.case_no}</span></div>}
+                          {selectedDetails?.case_year && <div><span className='font-bold'>Case Year:</span> <span>{selectedDetails?.case_year}</span></div>}
+                        </div>
+                      }
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
             </div>
 
             {!isLoadingPccRecords && totalPages > 1 && (
