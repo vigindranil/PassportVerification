@@ -356,7 +356,6 @@ export const saveCaseAssign = async (req, res) => {
     //  const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, 0, OperationName, json, entryUserId)
 
     const errorCode = await saveCaseAssignModel(
-      DocDetailsID,
       applicationId,
       citizentype,
       jsonTEXT,
@@ -374,7 +373,6 @@ export const saveCaseAssign = async (req, res) => {
         JSON.stringify({
           API: "saveCaseAssignModel",
           REQUEST: {
-            DocDetailsID,
             applicationId,
             citizentype,
             jsonTEXT,
@@ -403,7 +401,6 @@ export const saveCaseAssign = async (req, res) => {
         JSON.stringify({
           API: "saveCaseAssignModel",
           REQUEST: {
-            DocDetailsID,
             applicationId,
             citizentype,
             jsonTEXT,
