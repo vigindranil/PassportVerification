@@ -13,6 +13,7 @@ import { ToastAction } from "@/components/ui/toast"
 import ApplicationStatusHistory from "@/components/application-status-history"
 import { Badge } from "@/components/ui/badge"
 import CrimeAcivityTablePCC from "@/components/crime-activity-verification-pcc"
+import CrimeAcivityTableKolkataPolice from "@/components/crime-activity-verification-kolkata-police"
 
 export default function Page({ FileNumber }) {
   const [applicationDetails, setApplicationDetails] = useState(null);
@@ -263,7 +264,7 @@ export default function Page({ FileNumber }) {
               <CrimeAcivityTablePCC />
 
               {/* Kolkata Police Crime Records */}
-              <CrimeAcivityTablePCC />
+              <CrimeAcivityTableKolkataPolice />
             </div>
 
             <ApplicationStatusHistory status={applicationDetails?.status} isLoadingStatusHistrory={isLoadingStatusHistrory} />

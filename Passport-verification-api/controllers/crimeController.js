@@ -9,7 +9,7 @@ export const updateCriminalInfo = async (req, res) => {
         PSName,
         CriminalStatus ,
         CriminalStatusRemarks ,
-        
+        CriminalRecordType,
       } = req.body;
   
       const result = await updateCriminalInfoModel(
@@ -18,7 +18,7 @@ export const updateCriminalInfo = async (req, res) => {
         PSName,
         CriminalStatus,
         CriminalStatusRemarks,
-        
+        CriminalRecordType,
         req.user.UserID
       );
   
@@ -32,7 +32,7 @@ export const updateCriminalInfo = async (req, res) => {
                 PSName ,
                 CriminalStatus,
                 CriminalStatusRemarks ,
-             
+                CriminalRecordType,
             },
             RESPONSE: {
               status: 0,
@@ -54,7 +54,7 @@ export const updateCriminalInfo = async (req, res) => {
                 PSName ,
                 CriminalStatus ,
                 CriminalStatusRemarks ,
-              
+                CriminalRecordType,
             },
             RESPONSE: {
               status: 1,

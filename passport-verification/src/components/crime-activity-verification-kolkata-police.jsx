@@ -21,18 +21,32 @@ const SkeletonLoader = () => (
   </>
 );
 
-const CrimeAcivityTablePCC = () => {
+const CrimeAcivityTableKolkataPolice = () => {
   const [crimeData, setCrimeData] = useState([]);
   const [isLoadingPccRecords, setIsLoadingPccRecords] = useState(false);
-  const [pccInput, setPccInput] = useState({ fname: "", lname: "" });
+  const [kolkataPoliceRecords, setKolkataPoliceRecords] = useState({
+    name_accused: "",
+    criminal_aliases_name: "",
+    address: "",
+    father_accused: "",
+    age_accused: "",
+    from_date: "",
+    to_date: "",
+    case_yr: "",
+    policestations: "",
+    pageno: "1",
+  });
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const fetchPccCrimeDetails = async (fname, lname) => {
+  const fetchCIDRecords = async (crimeData) => {
     try {
       setIsLoadingPccRecords(true);
-      const response = await getPccCrimeDetails(fname, lname);
+      const response = await getPccCrimeDetails({
+        fname: crimeData.name_accused,
+        lname: crimeData.criminal_aliases_name,
+      });
       setCrimeData(response?.data?.Arrest || []);
       setCurrentPage(1); // Reset to first page on new search
     } catch (e) {
@@ -50,7 +64,7 @@ const CrimeAcivityTablePCC = () => {
   return (
     <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl overflow-hidden">
       <div className="m-3">
-        <h1 className="text-xl font-bold text-zinc-500">C.I.D Criminal Records</h1>
+        <h1 className="text-xl font-bold text-zinc-500">Kolkata Police Criminal Records</h1>
         <hr className="my-2" />
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center my-2">
@@ -58,18 +72,18 @@ const CrimeAcivityTablePCC = () => {
               type="text"
               placeholder="Enter First Name"
               className="ring-0 border-gray-300 rounded-md w-32 p-2"
-              onChange={(e) => setPccInput({ ...pccInput, fname: e.target.value })}
+              onChange={(e) => setPccInput({ ...kolkataPoliceRecords, fname: e.target.value })}
             />
             <Input
               type="text"
               placeholder="Enter Last Name"
               className="active:ring-0 focus:outline-none border-gray-300 rounded-md ml-4 w-32 p-2"
-              onChange={(e) => setPccInput({ ...pccInput, lname: e.target.value })}
+              onChange={(e) => setPccInput({ ...kolkataPoliceRecords, lname: e.target.value })}
             />
             <Button
               variant="secondary"
               className="mx-2 text-slate-700 hover:bg-zinc-200 shadow-sm border-2"
-              onClick={() => fetchPccCrimeDetails(pccInput?.fname || "", pccInput?.lname || "")}
+              onClick={() => fetchCIDRecords(kolkataPoliceRecords)}
             >
               Search
             </Button>
@@ -82,12 +96,12 @@ const CrimeAcivityTablePCC = () => {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-slate-100 hover:bg-slate-100">
-                    <TableHead>First Name</TableHead>
-                    <TableHead>Last Name</TableHead>
-                    <TableHead>Locality</TableHead>
-                    <TableHead>District</TableHead>
-                    <TableHead>Police Station</TableHead>
                     <TableHead>Case Ref. No.</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Father's Name</TableHead>
+                    <TableHead>Address</TableHead>
+                    <TableHead>Year</TableHead>
+                    <TableHead>Arrest Date</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -96,12 +110,12 @@ const CrimeAcivityTablePCC = () => {
                   ) : currentData.length > 0 ? (
                     currentData.map((crimeDetail, index) => (
                       <TableRow key={index}>
-                        <TableCell>{crimeDetail?.FirstName}</TableCell>
-                        <TableCell>{crimeDetail?.LastName}</TableCell>
-                        <TableCell>{crimeDetail?.locality}</TableCell>
-                        <TableCell>{crimeDetail?.distName}</TableCell>
-                        <TableCell>{crimeDetail?.psName}</TableCell>
-                        <TableCell>{crimeDetail?.case_ref_id}</TableCell>
+                        <TableCell>{crimeDetail?.PROV_CRM_NO}</TableCell>
+                        <TableCell>{crimeDetail?.NAME}</TableCell>
+                        <TableCell>{crimeDetail?.FATHERNAME}</TableCell>
+                        <TableCell>{crimeDetail?.ADDRESS}</TableCell>
+                        <TableCell>{crimeDetail?.CASEYEAR}</TableCell>
+                        <TableCell>{crimeDetail?.ARREST_DATE}</TableCell>
                       </TableRow>
                     ))
                   ) : (
@@ -155,4 +169,4 @@ const CrimeAcivityTablePCC = () => {
   );
 };
 
-export default CrimeAcivityTablePCC;
+export default CrimeAcivityTableKolkataPolice;

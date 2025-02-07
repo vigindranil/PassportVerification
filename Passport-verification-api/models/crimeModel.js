@@ -5,19 +5,21 @@ export async function updateCriminalInfoModel(
     ApplicationID,
     CaseRefferenceNumber ,
     PSName ,
-    CriminalStatus ,
-    CriminalStatusRemarks ,
+    CriminalStatus,
+    CriminalStatusRemarks,
+    CriminalRecordType,
     EntryUserID,
   ) {
     try {
       const [rows] = await pool.query(
-        `CALL sp_updateCriminalInfo(?,?,?, ?, ?, ?, @ErrorCode)`,
+        `CALL sp_updateCriminalInfo(?,?,?, ?, ?,?, ?, @ErrorCode)`,
         [
           ApplicationID,
           CaseRefferenceNumber ,
           PSName ,
           CriminalStatus ,
-          CriminalStatusRemarks ,
+          CriminalStatusRemarks,
+          CriminalRecordType,
           EntryUserID,
         ]
       );
