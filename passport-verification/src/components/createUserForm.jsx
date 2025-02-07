@@ -16,6 +16,7 @@ import { useToast } from "../hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import { FileAcceptModal } from "@/components/file-accept-modal"
 import UploadDocumentsModal from "@/components/uploadDocumentModal"
+import Cookies from "react-cookies"
 
 const UserManagement = () => {
   const [searchDistrict, setSearchDistrict] = useState("")
@@ -262,7 +263,13 @@ const UserManagement = () => {
   useEffect(() => {
     fetchDistricts()
     fetchUserDetails()
-  }, [])
+    const districtId = Cookies.load("ds_id")
+    console.log("districtId", districtId)
+    if (districtId) {
+      setFormData((prevState) => ({ ...prevState, DistrictID: districtId }))
+      onChangeDistrict(districtId)
+    }
+  }, [Cookies])
 
   const handleUpdateUserStatus = async (UserID, Status) => {
     try {
@@ -458,13 +465,16 @@ const UserManagement = () => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="district"className={`${invalidInput['district'] && 'border-[1.4px] border-red-400'}`}>District <span className="text-red-500">*</span></Label>
+          <Label htmlFor="district" className={`${invalidInput["district"] && "border-[1.4px] border-red-400"}`}>
+            District <span className="text-red-500">*</span>
+          </Label>
           <Select
             name="district"
             onValueChange={(value) => {
               onChangeDistrict(value)
             }}
             required
+            disabled={!!Cookies.load("districtId")}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select district" />
@@ -478,15 +488,19 @@ const UserManagement = () => {
                 ))}
             </SelectContent>
           </Select>
-          {invalidInput['district'] && <p className="text-red-500 text-xs">{invalidInput['district']}</p>}
+          {invalidInput["district"] && <p className="text-red-500 text-xs">{invalidInput["district"]}</p>}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="policeStation" className={`${invalidInput['policeStation'] && 'border-[1.4px] border-red-400'}`}>Police Station <span className="text-red-500">*</span></Label>
+          <Label
+            htmlFor="policeStation"
+            className={`${invalidInput["policeStation"] && "border-[1.4px] border-red-400"}`}
+          >
+            Police Station <span className="text-red-500">*</span>
+          </Label>
           <Select
             name="policeStation"
             onValueChange={(value) => setFormData({ ...formData, PSID: value })}
-
             disabled={formData.UserRoleID === "20" || formData.UserRoleID === "10"}
           >
             <SelectTrigger>
@@ -500,7 +514,7 @@ const UserManagement = () => {
               ))}
             </SelectContent>
           </Select>
-          {invalidInput['policeStation'] && <p className="text-red-500 text-xs">{invalidInput['policeStation']}</p>}
+          {invalidInput["policeStation"] && <p className="text-red-500 text-xs">{invalidInput["policeStation"]}</p>}
         </div>
 
         <div className="space-y-2">
