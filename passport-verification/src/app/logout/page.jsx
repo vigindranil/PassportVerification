@@ -9,7 +9,14 @@ const page = () => {
   useEffect(() => {
     const userSignOut = async () => {
       try {
-        await logout();
+        // await logout();
+        Cookies.remove("data");
+        Cookies.remove("type");
+        Cookies.remove("name");
+        Cookies.remove("ps");
+        Cookies.remove("district");
+        console.log("Error saving user:", error);
+        window.location.href = "/login";
       } catch (error) {
         Cookies.remove("data");
         Cookies.remove("type");

@@ -14,24 +14,24 @@ import { useRouter } from "next/navigation"
 import { toast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import { FileAcceptModal } from "./approve-reject-modal"
-import { updateEnquiryStatus } from "@/app/allFiles-sp/api"
-import { CheckCircle2, FileCheck, FileQuestion, FileUser, FileX2 } from "lucide-react"
+import { updateEnquiryStatus } from "@/app/allFiles-oc/api"
+import { CheckCircle2, Eye, FileCheck, FileUser, FileX2 } from "lucide-react"
 
 export default function PendingApplicationDatatable({ status }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [selectedDetails, setSelectedDetails] = useState({})
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
-  const [refreshFlag, setRefreshFlag] = useState(false);
   const itemsPerPage = 6
+  const [refreshFlag, setRefreshFlag] = useState(false);
   const [applicationStatus, setApplicationStatus] = useState(null)
   const [verificationData, setVerificationData] = useState([])
   const [isFileAcceptModalOpen, setIsFileAcceptModalOpen] = useState(false)
   const [type, setType] = useState("reject");
   const router = useRouter()
 
-  const filteredData = verificationData.filter((row) =>
-    Object?.values(row)?.some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())),
+  const filteredData = verificationData?.filter((row) =>
+    Object?.values(row).some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())),
   )
 
   const fetchApplicationStatus = async () => {
@@ -62,7 +62,7 @@ export default function PendingApplicationDatatable({ status }) {
       body: verificationData.map((row) => [
         row.FileNumber,
         row.ApplicantName,
-        row.Ps_Name,
+        row.PsName,
         row.PhoneNo,
         row.DateOfBirth,
       ]),
@@ -125,13 +125,13 @@ export default function PendingApplicationDatatable({ status }) {
 
   useEffect(() => {
     fetchApplicationStatus()
-  }, [searchTerm, refreshFlag]) // Added searchTerm as a dependency
+  }, [searchTerm,refreshFlag]) // Added searchTerm as a dependency
 
   return (
-    <div className="container mx-auto px-0 space-y-8 shadow-2xl">
+    <div className="container mx-auto px-0 space-y-8 shadow-md">
       <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl overflow-hidden">
-        <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
-          <h2 className="text-2xl font-bold text-white">Pending Application</h2>
+        <div className="bg-gradient-to-r from-green-600 to-teal-600 px-6 py-3">
+          <h2 className="text-2xl font-bold text-white">Pending Applications</h2>
         </div>
       </div>
       <div className="p-6">
@@ -159,7 +159,7 @@ export default function PendingApplicationDatatable({ status }) {
                     <span className="font-bold text-md">Applicant Name:</span> {selectedDetails?.ApplicantName}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Police Station:</span> {selectedDetails?.Ps_Name}
+                    <span className="font-bold text-md">Police Station:</span> {selectedDetails?.PsName}
                   </li>
                   <li className="text-sm">
                     <span className="font-bold text-md">Phone No:</span> {selectedDetails?.PhoneNo}
@@ -220,19 +220,19 @@ export default function PendingApplicationDatatable({ status }) {
                 currentData?.length ?
                   currentData?.map((row, index) => (
                     <TableRow key={index}>
-                      <TableCell>{row?.FileNumber}</TableCell>
-                      <TableCell>{row?.ApplicantName}</TableCell>
-                      <TableCell>{row?.Ps_Name}</TableCell>
-                      <TableCell>{row?.PhoneNo}</TableCell>
-                      <TableCell>{row?.DateOfBirth ? moment(row.DateOfBirth).format("DD/MM/YYYY") : "N/A"}</TableCell>
+                      <TableCell>{row.FileNumber}</TableCell>
+                      <TableCell>{row.ApplicantName}</TableCell>
+                      <TableCell>{row.PsName}</TableCell>
+                      <TableCell>{row.PhoneNo}</TableCell>
+                      <TableCell>{row.DateOfBirth ? moment(row.DateOfBirth).format("DD/MM/YYYY") : "N/A"}</TableCell>
                       <TableCell>
                         <div className="flex space-x-1">
                           <div className="relative group">
                             <Button
                               size="sm"
-                              variant="default"
+                              variant="outline"
                               className="bg-stone-100 ring-[0.5px] ring-slate-300 text-blue-700 hover:bg-blue-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
-                              onClick={() => router.push(`/applicationDetails/${row?.FileNumber}`)}
+                              onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
                             >
                               <FileUser className="m-0 p-0" />
                             </Button>
@@ -244,12 +244,12 @@ export default function PendingApplicationDatatable({ status }) {
                           <div className="relative group">
                             <Button
                               size="sm"
-                              variant="default"
+                              variant="outline"
                               className="bg-stone-100 ring-[0.5px] ring-slate-300 text-green-700 hover:bg-green-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
                               onClick={() => {
                                 setType('approve')
                                 setIsFileAcceptModalOpen(true)
-                                setSelectedDetails(row?.FileNumber)
+                                setSelectedDetails(row.FileNumber)
                               }}
                             >
                               <FileCheck className="mx-0 px-0" />
@@ -262,12 +262,12 @@ export default function PendingApplicationDatatable({ status }) {
                           <div className="relative group">
                             <Button
                               size="sm"
-                              variant="default"
-                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-red-700 hover:bg-red-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              variant="outline"
+                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-red-600 hover:bg-red-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
                               onClick={() => {
                                 setType('reject')
                                 setIsFileAcceptModalOpen(true)
-                                setSelectedDetails(row?.FileNumber)
+                                setSelectedDetails(row.FileNumber)
                               }}
                             >
                               <FileX2 className="mx-0 px-0" />
@@ -276,32 +276,6 @@ export default function PendingApplicationDatatable({ status }) {
                               Reject Application
                             </span>
                           </div>
-
-                          <div className="relative group">
-                            <Button
-                              size="sm"
-                              variant="default"
-                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-gray-700 hover:bg-gray-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
-                              onClick={() => {
-                                setType('query')
-                                setIsFileAcceptModalOpen(true)
-                                setSelectedDetails(row?.FileNumber)
-                              }}
-                            >
-                              <FileQuestion className="mx-0 px-0" />
-                            </Button>
-                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
-                              Query
-                            </span>
-                          </div>
-                          {/* <Button
-                            size="sm"
-                            variant="default"
-                            className="bg-purple-600 hover:bg-purple-700 text-white text-xs px-1 py-1"
-                            onClick={() => handleViewPPAttachment(row.fileNumber)}
-                          >
-                            View PP Attachment
-                          </Button> */}
                         </div>
                       </TableCell>
                     </TableRow>
@@ -324,7 +298,7 @@ export default function PendingApplicationDatatable({ status }) {
             >
               Prev
             </Button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1)?.map((page) => (
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <Button
                 key={page}
                 variant={currentPage === page ? "default" : "outline"}

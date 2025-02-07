@@ -23,7 +23,7 @@ export default function PendingApplicationDatatable({ status }) {
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
   const itemsPerPage = 6
-  const [applicationStatus, setApplicationStatus] = useState(null)
+  const [refreshFlag, setRefreshFlag] = useState(false);
   const [verificationData, setVerificationData] = useState([])
   const [isFileAcceptModalOpen, setIsFileAcceptModalOpen] = useState(false)
   const [type, setType] = useState("reject");
@@ -87,11 +87,16 @@ export default function PendingApplicationDatatable({ status }) {
 
       if (response?.status == 0) {
         toast({
-          title: "Successfull!",
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Successfull!</span>
+            </div>
+          ),
           description: response?.message,
           action: <ToastAction altText="Try again">Close</ToastAction>,
         })
-        fetchApplicationStatus();
+        await fetchApplicationStatus();
       } else {
         toast({
           variant: "destructive",
@@ -111,15 +116,9 @@ export default function PendingApplicationDatatable({ status }) {
     }
   }
 
-  const handleViewPPAttachment = (fileNumber) => {
-    console.log(`Viewing PP Attachment for file ${fileNumber}`)
-    // Implement the logic for viewing the PP attachment
-    // This could open a new window or modal with the attachment
-  }
-
   useEffect(() => {
     fetchApplicationStatus()
-  }, [searchTerm]) // Added searchTerm as a dependency
+  }, [searchTerm,refreshFlag]) // Added searchTerm as a dependency
 
   return (
     <div className="container mx-auto px-0 space-y-8 shadow-md">
@@ -141,34 +140,34 @@ export default function PendingApplicationDatatable({ status }) {
               <div className="space-y-2">
                 <ul>
                   <li className="text-sm">
-                    <span className="font-bold text-md">PV Sequence:</span> {selectedDetails.PVSequenceNo}
+                    <span className="font-bold text-md">PV Sequence:</span> {selectedDetails?.PVSequenceNo}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">File Number:</span> {selectedDetails.FileNumber}
+                    <span className="font-bold text-md">File Number:</span> {selectedDetails?.FileNumber}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Email ID:</span> {selectedDetails.EmailID}
+                    <span className="font-bold text-md">Email ID:</span> {selectedDetails?.EmailID}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Applicant Name:</span> {selectedDetails.ApplicantName}
+                    <span className="font-bold text-md">Applicant Name:</span> {selectedDetails?.ApplicantName}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Police Station:</span> {selectedDetails.PsName}
+                    <span className="font-bold text-md">Police Station:</span> {selectedDetails?.PsName}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Phone No:</span> {selectedDetails.PhoneNo}
+                    <span className="font-bold text-md">Phone No:</span> {selectedDetails?.PhoneNo}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Spouse Name:</span> {selectedDetails.SpouseName}
+                    <span className="font-bold text-md">Spouse Name:</span> {selectedDetails?.SpouseName}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Address:</span> {selectedDetails.VerificationAddress}
+                    <span className="font-bold text-md">Address:</span> {selectedDetails?.VerificationAddress}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Gender:</span> {selectedDetails.Gender}
+                    <span className="font-bold text-md">Gender:</span> {selectedDetails?.Gender}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Place Of Birth:</span> {selectedDetails.PlaceOfBirth}
+                    <span className="font-bold text-md">Place Of Birth:</span> {selectedDetails?.PlaceOfBirth}
                   </li>
                 </ul>
               </div>
@@ -243,7 +242,7 @@ export default function PendingApplicationDatatable({ status }) {
                               onClick={() => {
                                 setType('approve')
                                 setIsFileAcceptModalOpen(true)
-                                setSelectedDetails(row.FileNumber)
+                                setSelectedDetails(row?.FileNumber)
                               }}
                             >
                               <FileCheck className="mx-0 px-0" />
@@ -289,9 +288,9 @@ export default function PendingApplicationDatatable({ status }) {
         </div>
         <div className="flex items-center justify-between mt-4 text-sm">
           <div>
-            Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of {filteredData.length} entries
+            Showing {startIndex + 1} to {Math.min(endIndex, filteredData?.length)} of {filteredData?.length} entries
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button
               variant="outline"
               size="sm"

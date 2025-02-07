@@ -9,7 +9,7 @@ export default function Header() {
           Passport Verification Portal
         </Link>
         <nav>
-          <ul className="flex space-x-4">
+          {/* <ul className="flex space-x-4">
             <li>
               <Link href="#features" className="text-gray-600 hover:text-blue-600">
                 Service
@@ -25,7 +25,7 @@ export default function Header() {
                 Contact
               </Link>
             </li>
-          </ul>
+          </ul> */}
         </nav>
         {/* <Link className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-lg" href="/login">Authority Login</Link> */}
       </div>

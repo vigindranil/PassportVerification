@@ -166,3 +166,112 @@ export const getWBSEDCLDetails = async (req, res) => {
       });
     });
 };
+
+
+export const getKolkataPoliceCriminalRecordSearchv4 = async (req, res) => {
+  const { name_accused, criminal_aliases_name, address, father_accused, age_accused, from_date, to_date, case_yr, policestations, pageno} = req.body;
+
+  // Create FormData instance
+  let formData = new FormData();
+  formData.append("name_accused", name_accused || "");
+  formData.append("criminal_aliases_name", criminal_aliases_name || "");
+  formData.append("address", address || "");
+  formData.append("father_accused", father_accused || "");
+  formData.append("age_accused", age_accused || "");
+  formData.append("from_date", from_date || "");
+  formData.append("to_date", to_date || "");
+  formData.append("case_yr", case_yr || "");
+  formData.append("policestations", policestations || "");
+  formData.append("pageno", pageno || "");
+  formData.append("identitycategory", "");
+  formData.append("crimecategory", "");
+  formData.append("moduslist", "");
+  formData.append("brief_keyword", "");
+  formData.append("class", "");
+  formData.append("subclass", "");
+  formData.append("user_id", "");
+  formData.append("own_jurisdiction", "");
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://api.kolkatapolice.org/crimebabuapp/Api/criminalSearchv4",
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    data: formData,
+  };
+
+  axios
+    .request(config)
+    .then(async (response) => {
+      console.log("response", response.data);
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: response?.data,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res.status(400).json({
+        status: 0,
+        message: "Failed to fetched details",
+        data: null,
+      });
+    });
+};
+
+export const getPCCCrimeRecordSearch = async (req, res) => {
+  const { name_accused, criminal_aliases_name, address, father_accused, age_accused, from_date, to_date, case_yr, policestations, pageno} = req.body;
+
+  // Create FormData instance
+  let formData = new FormData();
+  formData.append("name_accused", name_accused || "");
+  formData.append("criminal_aliases_name", criminal_aliases_name || "");
+  formData.append("address", address || "");
+  formData.append("father_accused", father_accused || "");
+  formData.append("age_accused", age_accused || "");
+  formData.append("from_date", from_date || "");
+  formData.append("to_date", to_date || "");
+  formData.append("case_yr", case_yr || "");
+  formData.append("policestations", policestations || "");
+  formData.append("pageno", pageno || "");
+  formData.append("identitycategory", "");
+  formData.append("crimecategory", "");
+  formData.append("moduslist", "");
+  formData.append("brief_keyword", "");
+  formData.append("class", "");
+  formData.append("subclass", "");
+  formData.append("user_id", "");
+  formData.append("own_jurisdiction", "");
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://api.kolkatapolice.org/crimebabuapp/Api/criminalSearchv4",
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    data: formData,
+  };
+
+  axios
+    .request(config)
+    .then(async (response) => {
+      console.log("response", response.data);
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: response?.data,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res.status(400).json({
+        status: 0,
+        message: "Failed to fetched details",
+        data: null,
+      });
+    });
+};

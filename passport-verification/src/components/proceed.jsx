@@ -195,7 +195,7 @@ export default function Proceed() {
           Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of{" "}
           {filteredData.length} entries
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <Button
             variant="outline"
             size="sm"

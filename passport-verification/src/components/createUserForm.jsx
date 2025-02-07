@@ -61,6 +61,22 @@ const UserManagement = () => {
     AADHAARNo: "",
   })
 
+  const [invalidInput, setInvalidInput] = useState({
+    UserName: "",
+    FullName: "",
+    Firstname: "",
+    LastName: "",
+    MobileNo: "",
+    EmailID: "",
+    Gender: "",
+    AADHAARNo: "",
+    Designation: "",
+    UserRoleID: "",
+    DistrictID: "",
+    PSID: "",
+    aadharRegisterMobileNumber: ""
+  })
+
   const checkForSqlInjection = (value) => {
     return /select\s+\*\s+from/i.test(value)
   }
@@ -139,11 +155,11 @@ const UserManagement = () => {
     if (hasErrors) {
       toast({
         variant: "destructive",
-        title: "Validation Error",
-        description: "Please correct the errors in the form before submitting.",
+        title: "Failed to create user",
+        description: "Please fill the all required fields before submitting.",
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
-      return
+      return null;
     }
 
     setLoading(true)
@@ -158,6 +174,22 @@ const UserManagement = () => {
           description: "User Created Successfully",
           action: <ToastAction altText="Close">Close</ToastAction>,
         })
+
+        setFormData({
+          UserName: "",
+          FullName: "",
+          Firstname: "",
+          LastName: "",
+          MobileNo: "",
+          EmailID: "",
+          Gender: "",
+          AADHAARNo: "",
+          Designation: "",
+          UserRoleID: "",
+          DistrictID: "0",
+          PSID: "0",
+          aadharRegisterMobileNumber: "",
+        });
         fetchUserDetails() // Refresh user list after creating a new user
       } else {
         toast({
@@ -178,6 +210,32 @@ const UserManagement = () => {
     } finally {
       setLoading(false)
     }
+
+    const requiredFields = ["UserName", "FullName", "Firstname", "LastName", "MobileNo", "EmailID", "Gender", "AADHAARNo", "Designation"];
+
+    let errors = {};
+    requiredFields?.forEach((field) => {
+      if (!formData[field]) {
+        errors[field] = "This field is required.";
+        setInvalidInput((prev) => ({
+          ...prev,
+          [field]: `Invalid ${field} input`,
+        }));
+      } else {
+        errors[field] = "";
+        setInvalidInput((prev) => ({
+          ...prev,
+          [field]: "",
+        }));
+      }
+    });
+
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
   }
 
   const onChangeDistrict = async (DistrictID) => {
@@ -236,6 +294,18 @@ const UserManagement = () => {
       })
     }
 
+    const textPattern = /^[a-zA-Z0-9@]*$/;
+
+    // if (["UserName", "FullName", "Firstname", "LastName"].includes(name) && !textPattern.test(value)) {
+    //   setFormErrors({
+    //     ...formErrors,
+    //     [name]: "Only letters, numbers, and '@' are allowed.",
+    //   });
+    //   return;
+    // } else {
+    //   setFormErrors({ ...formErrors, [name]: "" });
+    // }
+
     if (name === "MobileNo") {
       newValue = newValue.replace(/\D/g, "")?.slice(0, 10)
     } else if (name === "AADHAARNo") {
@@ -253,7 +323,7 @@ const UserManagement = () => {
   }
 
   return (
-    <div className="container mx-auto px-0 space-y-8 shadow-2xl">
+    <div className="container mx-auto px-0 space-y-8 shadow-md">
       <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl overflow-hidden">
         <div className="bg-gradient-to-r to-purple-600 from-indigo-600 px-6 py-3">
           <h2 className="text-2xl font-bold text-white">User Registration</h2>
@@ -271,22 +341,29 @@ const UserManagement = () => {
             value={formData?.UserName}
             onChange={handleInputChange}
             required
+            pattern="^[a-zA-Z0-9@]+$"
+            title="Only letters, numbers, and '@' are allowed."
+            className={`${invalidInput['UserName'] && 'border-[1.4px] border-red-400'}`}
           />
+          {invalidInput['UserName'] && <p className="text-red-500 text-xs">{invalidInput['UserName']}</p>}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="FullName">User Full Name <span className="text-red-500">*</span></Label>
-          <Input id="FullName" name="FullName" value={formData?.FullName} onChange={handleInputChange} required />
+          <Input id="FullName" className={`${invalidInput['FullName'] && 'border-[1.4px] border-red-400'}`} name="FullName" value={formData?.FullName} onChange={handleInputChange} required />
+          {invalidInput['FullName'] && <p className="text-red-500 text-xs">{invalidInput['FullName']}</p>}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="Firstname">First Name <span className="text-red-500">*</span></Label>
-          <Input id="Firstname" name="Firstname" value={formData?.Firstname} onChange={handleInputChange} required />
+          <Input id="Firstname" className={`${invalidInput['Firstname'] && 'border-[1.4px] border-red-400'}`} name="Firstname" value={formData?.Firstname} onChange={handleInputChange} required />
+          {invalidInput['Firstname'] && <p className="text-red-500 text-xs">{invalidInput['Firstname']}</p>}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="LastName">Last Name <span className="text-red-500">*</span></Label>
-          <Input id="LastName" name="LastName" value={formData?.LastName} onChange={handleInputChange} required />
+          <Input id="LastName" className={`${invalidInput['LastName'] && 'border-[1.4px] border-red-400'}`} name="LastName" value={formData?.LastName} onChange={handleInputChange} required />
+          {invalidInput['LastName'] && <p className="text-red-500 text-xs">{invalidInput['LastName']}</p>}
         </div>
 
         <div className="space-y-2">
@@ -294,18 +371,20 @@ const UserManagement = () => {
           <Input
             id="EmailID"
             name="EmailID"
+            className={`${invalidInput['EmailID'] && 'border-[1.4px] border-red-400'}`}
             type="email"
             value={formData?.EmailID}
             onChange={handleInputChange}
             required
           />
+           {invalidInput['EmailID'] && <p className="text-red-500 text-xs">{invalidInput['EmailID']}</p>}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="userRole">Gender <span className="text-red-500">*</span></Label>
           <Select name="userRole" onValueChange={(value) => setFormData({ ...formData, Gender: value })} required>
             <SelectTrigger>
-              <SelectValue placeholder="Select role" />
+              <SelectValue placeholder="Select Gender" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="male">Male</SelectItem>
@@ -320,25 +399,27 @@ const UserManagement = () => {
           <Input
             id="MobileNo"
             name="MobileNo"
+            className={`${invalidInput['MobileNo'] && 'border-[1.4px] border-red-400'}`}
             value={formData?.MobileNo}
             onChange={handleInputChange}
             maxLength={10}
             required
           />
+           {invalidInput['MobileNo'] && <p className="text-red-500 text-xs">{invalidInput['MobileNo']}</p>}
           {formData.MobileNo.length > 0 && formData.MobileNo.length < 10 && (
             <p className="text-red-500 text-sm">Phone number must be 10 digits</p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="userRole">User Role <span className="text-red-500">*</span></Label>
+          <Label htmlFor="userRole" className={`${invalidInput['userRole'] && 'border-[1.4px] border-red-400'}`}>User Role <span className="text-red-500">*</span></Label>
           <Select
             name="userRole"
             onValueChange={(value) => {
               setFormData({ ...formData, UserRoleID: value })
               // Reset PSID if SP or DYSP is selected
               if (value === "20" || value === "10" || value === "50") {
-                setFormData((prev) => ({ ...prev, PSID: "" }))
+                setFormData((prev) => ({ ...prev, PSID: "0" }))
               }
             }}
             required
@@ -354,10 +435,11 @@ const UserManagement = () => {
               <SelectItem value="50">Spl.Enquiry Officer</SelectItem>
             </SelectContent>
           </Select>
+          {invalidInput['userRole'] && <p className="text-red-500 text-xs">{invalidInput['userRole']}</p>}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="userRole">Designation <span className="text-red-500">*</span></Label>
+          <Label htmlFor="userRole" className={`${invalidInput['userRole'] && 'border-[1.4px] border-red-400'}`}>Designation <span className="text-red-500">*</span></Label>
           <Select name="userRole" onValueChange={(value) => setFormData({ ...formData, Designation: value })} required>
             <SelectTrigger>
               <SelectValue placeholder="Select Designation" />
@@ -372,10 +454,11 @@ const UserManagement = () => {
               <SelectItem value="600">CP</SelectItem>
             </SelectContent>
           </Select>
+          {invalidInput['userRole'] && <p className="text-red-500 text-xs">{invalidInput['userRole']}</p>}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="district">District <span className="text-red-500">*</span></Label>
+          <Label htmlFor="district"className={`${invalidInput['district'] && 'border-[1.4px] border-red-400'}`}>District <span className="text-red-500">*</span></Label>
           <Select
             name="district"
             onValueChange={(value) => {
@@ -395,14 +478,15 @@ const UserManagement = () => {
                 ))}
             </SelectContent>
           </Select>
+          {invalidInput['district'] && <p className="text-red-500 text-xs">{invalidInput['district']}</p>}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="policeStation">Police Station <span className="text-red-500">*</span></Label>
+          <Label htmlFor="policeStation" className={`${invalidInput['policeStation'] && 'border-[1.4px] border-red-400'}`}>Police Station <span className="text-red-500">*</span></Label>
           <Select
             name="policeStation"
             onValueChange={(value) => setFormData({ ...formData, PSID: value })}
-            
+
             disabled={formData.UserRoleID === "20" || formData.UserRoleID === "10"}
           >
             <SelectTrigger>
@@ -416,10 +500,11 @@ const UserManagement = () => {
               ))}
             </SelectContent>
           </Select>
+          {invalidInput['policeStation'] && <p className="text-red-500 text-xs">{invalidInput['policeStation']}</p>}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="AADHAARNo">Aadhar Number <span className="text-red-500">*</span></Label>
+          <Label htmlFor="AADHAARNo" className={`${invalidInput['AADHAARNo'] && 'border-[1.4px] border-red-400'}`}>Aadhar Number <span className="text-red-500">*</span></Label>
           <Input
             id="AADHAARNo"
             name="AADHAARNo"
@@ -428,13 +513,14 @@ const UserManagement = () => {
             maxLength={12}
             required
           />
+           {invalidInput['AADHAARNo'] && <p className="text-red-500 text-xs">{invalidInput['AADHAARNo']}</p>}
           {formData?.AADHAARNo?.length > 0 && formData?.AADHAARNo?.length < 12 && (
             <p className="text-red-500 text-sm">Aadhar number must be 12 digits</p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="aadharRegisterMobileNumber">Aadhar Register Mobile Number <span className="text-red-500">*</span></Label>
+          <Label htmlFor="aadharRegisterMobileNumber" className={`${invalidInput['aadharRegisterMobileNumber'] && 'border-[1.4px] border-red-400'}`}>Aadhar Register Mobile Number <span className="text-red-500">*</span></Label>
           <Input
             id="aadharRegisterMobileNumber"
             name="aadharRegisterMobileNumber"
@@ -446,13 +532,14 @@ const UserManagement = () => {
             }}
             required
           />
+           {invalidInput['AADHAARNo'] && <p className="text-red-500 text-xs">{invalidInput['AADHAARNo']}</p>}
           {formData?.aadharRegisterMobileNumber && formData.aadharRegisterMobileNumber?.length < 10 && (
             <p className="text-red-500 text-sm">Phone number must be 10 digits</p>
           )}
         </div>
 
         <div className="md:col-span-2 lg:col-span-3 flex justify-center">
-          <Button onClick={handleCreateUser} disabled={loading} className="px-6">
+          <Button onClick={handleCreateUser} disabled={loading} className="px-6 bg-blue-600 hover:bg-blue-700">
             <UserPlus className="mr-2 h-4 w-4" /> Create User
           </Button>
         </div>
@@ -548,7 +635,7 @@ const UserManagement = () => {
                               variant="default"
                               className="bg-red-600 hover:bg-red-700 text-white text-xs px-1 py-1"
                             >
-                              {statuUpdateLoader ? statuUpdateLoader : "De-Activate"}
+                              {statuUpdateLoader ? statuUpdateLoader : "Deactivate"}
                             </Button>
                           )}
                         </div>
@@ -569,7 +656,7 @@ const UserManagement = () => {
             <div>
               Showing {startIndex + 1} to {Math.min(endIndex, filteredData?.length)} of {filteredData?.length} entries
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <Button
                 variant="outline"
                 size="sm"

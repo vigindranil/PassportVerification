@@ -23,6 +23,7 @@ export default function PendingApplicationDatatable({ status }) {
   const [selectedDetails, setSelectedDetails] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
+  const [refreshFlag, setRefreshFlag] = useState(false);
   const itemsPerPage = 6
   const [applicationStatus, setApplicationStatus] = useState(null)
   const [verificationData, setVerificationData] = useState([])
@@ -86,11 +87,30 @@ export default function PendingApplicationDatatable({ status }) {
       console.log(`applicationId: ${applicationId}`)
       console.log(`citizentype: ${citizentype}`)
       console.log(`file: ${file}`)
+      if (!citizentype){
+        toast({
+          variant: "destructive",
+          title: "Select Citizen Type!",
+          description: "Please select citizen type and then try again",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
+      }
+      if (!file){
+        toast({
+          variant: "destructive",
+          title: "Select File!",
+          description: "Please select a file and then try again",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
+      }
+
       // Implement the logic for accepting the file
       const response = await acceptApplication(applicationId, citizentype, file);
-      console.log('reponse:', response);
+      
 
       if (response?.status == 0) {
+        setRefreshFlag(prev =>!prev);
+        await fetchApplicationStatus();
         toast({
           title: (
             <div className="flex items-center gap-2">
@@ -101,7 +121,6 @@ export default function PendingApplicationDatatable({ status }) {
           description: "Case accepted successfully",
           action: <ToastAction altText="Try again">Close</ToastAction>,
         })
-        fetchApplicationStatus();
       } else {
         toast({
           variant: "destructive",
@@ -130,6 +149,10 @@ export default function PendingApplicationDatatable({ status }) {
   useEffect(() => {
     fetchApplicationStatus()
   }, [searchTerm]) // Added searchTerm as a dependency
+
+  useEffect(() => {
+    fetchApplicationStatus()
+  }, [refreshFlag]) // Added searchTerm as a dependency
 
   useEffect(() => setEO_POLICE_STATION(ps), [ps])
 
@@ -284,7 +307,7 @@ export default function PendingApplicationDatatable({ status }) {
           <div>
             Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of {filteredData.length} entries
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button
               variant="outline"
               size="sm"

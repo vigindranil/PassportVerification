@@ -89,7 +89,7 @@ export const sendOtp = async (req, res) => {
             const token = btoa(jwt_token);
             // const token = jwt_token;
 
-            const [result] = await updateAuthToken(rows[0]["UserID"], jwt_token, transactionId);
+            // const [result] = await updateAuthToken(rows[0]["UserID"], jwt_token, transactionId);
 
             res.cookie('data', token);
             res.cookie('type', rows[0]["UserTypeID"]);

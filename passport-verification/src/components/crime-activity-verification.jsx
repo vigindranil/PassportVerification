@@ -18,7 +18,7 @@ const SkeletonLoader = () => (
   </>
 )
 
-const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
+const CrimeAcivityTable = ({ status=[], isLoadingStatusHistrory }) => {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
 
@@ -44,9 +44,6 @@ const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
 
   return (
     <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
-      <div className="bg-gradient-to-r from-green-600 to-teal-600 px-6 py-3">
-        <h2 className="text-2xl font-bold text-white">Application Status History</h2>
-      </div>
       <div className="m-6">
         <Card>
           <CardContent className="p-0">
@@ -124,4 +121,4 @@ const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
   )
 }
 
-export default ApplicationStatusHistory
+export default CrimeAcivityTable;

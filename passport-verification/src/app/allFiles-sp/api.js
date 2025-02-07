@@ -11,7 +11,7 @@ export const updateEnquiryStatus = async (applicationId, type, remarks) => {
             "macAddress": "test-s4dn-3aos-dn338",
             "deviceId": "123#df",
             "StatusID": "80",
-            "StatusText": type == 'accept' ? 'SP APPROVED' : 'SP NOT APPROVE',
+            "StatusText": type == 'approve' ? 'SP APPROVED' : 'SP NOT APPROVE',
             "Remarks": remarks
         });
     } catch (error) {
@@ -19,3 +19,38 @@ export const updateEnquiryStatus = async (applicationId, type, remarks) => {
         return null;
     }
 }
+
+
+
+export const getSpecialEnquiryOfficers = async () => {
+    try {
+        return await postRequest("enquiryOfficers/getSpecialEnquiryOfficers");
+    } catch (error) {
+        console.log("Error:", error);
+        return null;
+    }
+}
+
+export const getApplicationStatus = async () => {
+    try {
+        return await postRequest("enquiryOfficers/getApplicationStatus");
+    } catch (error) {
+        console.log("Error:", error);
+        return null;
+    }
+}
+
+export const assignApplication = async ({ applicationId, assignTo, macAddress, locationIp, deviceId }) => {
+    try {
+      return await postRequest("enquiryOfficers/assignApplication", {
+        applicationId,
+        assignTo,
+        macAddress,
+        locationIp,
+        deviceId
+      });
+    } catch (error) {
+      console.log("Error:", error);
+      return null;
+    }
+  }

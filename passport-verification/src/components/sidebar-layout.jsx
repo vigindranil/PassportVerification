@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
@@ -15,11 +16,14 @@ import {
 } from "@/components/ui/sidebar";
 import { NavUser } from "@/components/nav-user";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 export default function SidebarLayout({
   breadcrumb = [{ href: "#", name: "Authority" }],
   children,
 }) {
+  const router = useRouter();
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -27,6 +31,10 @@ export default function SidebarLayout({
         <header className="flex justify-between h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 bg-zinc-200">
           <div className="flex items-center gap-2 px-4 w-full">
             <SidebarTrigger className="-ml-1 bg-white" />
+            {/* <button onClick={() => router.back()} className="flex items-center gap-2 p-2 border rounded-md hover:bg-gray-100">
+            <ArrowLeft className="w-5 h-5" />
+            <span>Back</span>
+          </button> */}
             <Separator orientation="vertical" className="mr-2 h-4 bg-slate-500" />
             <Breadcrumb>
               <BreadcrumbList>
