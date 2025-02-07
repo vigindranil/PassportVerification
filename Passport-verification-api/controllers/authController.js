@@ -96,7 +96,7 @@ export const sendOtp = async (req, res) => {
             res.cookie('name', rows[0]["UserFullName"]);
             res.cookie('district', rows[0]["DistrictName"]);
             res.cookie('ps', rows[0]["PoliceStationName"]);
-
+            res.cookie('DistrictID', rows[0]["DistrictID"]);
             console.log("token 1", jwt_token);
 
             logger.debug(
@@ -121,6 +121,7 @@ export const sendOtp = async (req, res) => {
                 type: rows[0]["UserTypeID"],
                 name: rows[0]["UserFullName"],
                 district: rows[0]["DistrictName"],
+                DistrictID: rows[0]["DistrictID"],
                 ps: rows[0]["PoliceStationName"],
                 token: token,
             });
