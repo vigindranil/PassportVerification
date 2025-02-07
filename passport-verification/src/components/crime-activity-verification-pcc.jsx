@@ -96,12 +96,12 @@ const CrimeAcivityTablePCC = () => {
                   ) : currentData.length > 0 ? (
                     currentData.map((crimeDetail, index) => (
                       <TableRow key={index}>
-                        <TableCell>{crimeDetail?.FirstName}</TableCell>
-                        <TableCell>{crimeDetail?.LastName}</TableCell>
-                        <TableCell>{crimeDetail?.locality}</TableCell>
-                        <TableCell>{crimeDetail?.distName}</TableCell>
-                        <TableCell>{crimeDetail?.psName}</TableCell>
-                        <TableCell>{crimeDetail?.case_ref_id}</TableCell>
+                        <TableCell>{crimeDetail?.FirstName || 'N/A'}</TableCell>
+                        <TableCell>{crimeDetail?.LastName || 'N/A'}</TableCell>
+                        <TableCell>{crimeDetail?.locality || 'N/A'}</TableCell>
+                        <TableCell>{crimeDetail?.distName || 'N/A'}</TableCell>
+                        <TableCell>{crimeDetail?.psName || 'N/A'}</TableCell>
+                        <TableCell>{crimeDetail?.case_ref_id || 'N/A'}</TableCell>
                       </TableRow>
                     ))
                   ) : (
