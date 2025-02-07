@@ -5,20 +5,21 @@ import Sidebar from '@/components/sidebar'
 import Navbar from '@/components/navbar'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { getDetailsApplicationId } from "./api"
+import { getDetailsApplicationId, getPccCrimeDetails } from "./api"
 import moment, { isMoment } from "moment"
 import DocumentTable from "@/components/document-table-component"
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import ApplicationStatusHistory from "@/components/application-status-history"
 import { Badge } from "@/components/ui/badge"
-import CrimeAcivityTable from "@/components/crime-activity-verification"
+import CrimeAcivityTablePCC from "@/components/crime-activity-verification-pcc"
 
 export default function Page({ FileNumber }) {
   const [applicationDetails, setApplicationDetails] = useState(null);
   const [isLoadingStatusHistrory, setIsLoadingStatusHistrory] = useState(true)
   const [isLoadingDocumentTable, setIsLoadingDocumentTable] = useState(true);
   const [verificationSuccess, setVerificationSuccess] = useState(false);
+  
   const { toast } = useToast()
 
   const fetchData = async (ApplicationId) => {
@@ -29,7 +30,7 @@ export default function Page({ FileNumber }) {
       console.log("Application Details Data:", response);
       setApplicationDetails(response?.data);
     } catch (e) {
-      console.log("Error fetching application details:", e);
+      console.log("Error:", e);
     } finally {
       setIsLoadingStatusHistrory(false)
       setIsLoadingDocumentTable(false)
@@ -257,7 +258,12 @@ export default function Page({ FileNumber }) {
               <div className="bg-gradient-to-r from-violet-600 to-amber-600 px-6 py-3">
                 <h2 className="text-2xl font-bold text-white">Crime Activity Verification</h2>
               </div>
-              <CrimeAcivityTable status={applicationDetails?.status} isLoadingStatusHistrory={isLoadingStatusHistrory} />
+
+              {/* PCC Criminal Records */}
+              <CrimeAcivityTablePCC />
+
+              {/* Kolkata Police Crime Records */}
+              <CrimeAcivityTablePCC />
             </div>
 
             <ApplicationStatusHistory status={applicationDetails?.status} isLoadingStatusHistrory={isLoadingStatusHistrory} />

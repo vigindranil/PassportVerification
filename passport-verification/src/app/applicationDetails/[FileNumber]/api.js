@@ -6,7 +6,7 @@ export const getDetailsApplicationId = async (applicationId) => {
       applicationId: applicationId,
     });
   } catch (error) {
-    console.log("Error saving user:", error);
+    console.log("Error:", error);
     return null;
   }
 };
@@ -14,13 +14,13 @@ export const getDetailsApplicationId = async (applicationId) => {
 export const getWBSEDCLDetails = async (consumerId, installationNum) => {
   try {
     return await postRequest("third-party/getWBSEDCLDetails", {
-      consumerId: "113000079",
-      installationNum: "4450",
+      consumerId: consumerId,
+      installationNum: installationNum,
       ApplicationId: "CA2075989000010",
       DocumentID: "2",
     });
   } catch (error) {
-    console.log("Error saving user:", error);
+    console.log("Error:", error);
     return null;
   }
 };
@@ -31,11 +31,11 @@ export const getBirthCertificateDetails = async (
 ) => {
   try {
     return await postRequest("third-party/getBirthCertificateDetails", {
-      CertificateNo: "B/2024/0937915",
-      dateofbirth: "11/07/2024",
+      CertificateNo: CertificateNo,
+      dateofbirth: dateofbirth,
     });
   } catch (error) {
-    console.log("Error saving user:", error);
+    console.log("Error:", error);
     return null;
   }
 };
@@ -61,5 +61,17 @@ export const verifyApplication = async (
     });
   } catch (error) {
     return error.message;
+  }
+};
+
+export const getPccCrimeDetails = async (fname, lname) => {
+  try {
+    return await postRequest("third-party/getPCCCrimeRecordSearch", {
+      fname: fname,
+      lname: lname,
+    });
+  } catch (error) {
+    console.log("Error:", error);
+    return null;
   }
 };
