@@ -50,7 +50,7 @@ const CrimeAcivityTablePCC = () => {
   return (
     <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl overflow-hidden">
       <div className="m-3">
-        <h1 className="text-xl font-bold text-zinc-500">Fetch PCC Criminal Records</h1>
+        <h1 className="text-xl font-bold text-zinc-500">C.I.D Criminal Records</h1>
         <hr className="my-2" />
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center my-2">

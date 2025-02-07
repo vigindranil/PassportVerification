@@ -50,7 +50,7 @@ const CrimeAcivityTableKolkataPolice = () => {
   return (
     <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl overflow-hidden">
       <div className="m-3">
-        <h1 className="text-xl font-bold text-zinc-500">Fetch Kolkata Police Criminal Records</h1>
+        <h1 className="text-xl font-bold text-zinc-500">Kolkata Police Criminal Records</h1>
         <hr className="my-2" />
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center my-2">
@@ -82,12 +82,13 @@ const CrimeAcivityTableKolkataPolice = () => {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-slate-100 hover:bg-slate-100">
-                    <TableHead>NAME</TableHead>
-                    <TableHead>FATHERNAME</TableHead>
-                    <TableHead>ADDRESS</TableHead>
+                    <TableHead>Case Ref. No.</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Father's Name</TableHead>
+                    <TableHead>Address</TableHead>
                     <TableHead>FATHERNAME</TableHead>
                     <TableHead>CASEYEAR</TableHead>
-                    <TableHead>Case Ref. No.</TableHead>
+                    <TableHead>ARREST_DATE</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -96,12 +97,13 @@ const CrimeAcivityTableKolkataPolice = () => {
                   ) : currentData.length > 0 ? (
                     currentData.map((crimeDetail, index) => (
                       <TableRow key={index}>
+                        <TableCell>{crimeDetail?.PROV_CRM_NO}</TableCell>
                         <TableCell>{crimeDetail?.NAME}</TableCell>
                         <TableCell>{crimeDetail?.FATHERNAME}</TableCell>
                         <TableCell>{crimeDetail?.ADDRESS}</TableCell>
                         <TableCell>{crimeDetail?.FATHERNAME}</TableCell>
                         <TableCell>{crimeDetail?.CASEYEAR}</TableCell>
-                        <TableCell>{crimeDetail?.case_ref_id}</TableCell>
+                        <TableCell>{crimeDetail?.ARREST_DATE}</TableCell>
                       </TableRow>
                     ))
                   ) : (
