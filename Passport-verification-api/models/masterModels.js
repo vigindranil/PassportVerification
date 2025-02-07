@@ -75,10 +75,7 @@ export async function showDesignationModel() {
     } catch (error) {
       console.error('Error fetching document subtypes:', error.message);
       throw new Error('Database error: ' + error.message);
-    }finally {
-      // releasing resources
-      pool.destroy();
-    }
+    }
   }
 
 
