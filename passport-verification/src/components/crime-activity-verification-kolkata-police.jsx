@@ -21,7 +21,7 @@ const SkeletonLoader = () => (
   </>
 );
 
-const CrimeAcivityTablePCC = () => {
+const CrimeAcivityTableKolkataPolice = () => {
   const [crimeData, setCrimeData] = useState([]);
   const [isLoadingPccRecords, setIsLoadingPccRecords] = useState(false);
   const [pccInput, setPccInput] = useState({ fname: "", lname: "" });
@@ -50,7 +50,7 @@ const CrimeAcivityTablePCC = () => {
   return (
     <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl overflow-hidden">
       <div className="m-3">
-        <h1 className="text-xl font-bold text-zinc-500">Fetch PCC Criminal Records</h1>
+        <h1 className="text-xl font-bold text-zinc-500">Fetch Kolkata Police Criminal Records</h1>
         <hr className="my-2" />
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center my-2">
@@ -82,11 +82,11 @@ const CrimeAcivityTablePCC = () => {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-slate-100 hover:bg-slate-100">
-                    <TableHead>First Name</TableHead>
-                    <TableHead>Last Name</TableHead>
-                    <TableHead>Locality</TableHead>
-                    <TableHead>District</TableHead>
-                    <TableHead>Police Station</TableHead>
+                    <TableHead>NAME</TableHead>
+                    <TableHead>FATHERNAME</TableHead>
+                    <TableHead>ADDRESS</TableHead>
+                    <TableHead>FATHERNAME</TableHead>
+                    <TableHead>CASEYEAR</TableHead>
                     <TableHead>Case Ref. No.</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -96,11 +96,11 @@ const CrimeAcivityTablePCC = () => {
                   ) : currentData.length > 0 ? (
                     currentData.map((crimeDetail, index) => (
                       <TableRow key={index}>
-                        <TableCell>{crimeDetail?.FirstName}</TableCell>
-                        <TableCell>{crimeDetail?.LastName}</TableCell>
-                        <TableCell>{crimeDetail?.locality}</TableCell>
-                        <TableCell>{crimeDetail?.distName}</TableCell>
-                        <TableCell>{crimeDetail?.psName}</TableCell>
+                        <TableCell>{crimeDetail?.NAME}</TableCell>
+                        <TableCell>{crimeDetail?.FATHERNAME}</TableCell>
+                        <TableCell>{crimeDetail?.ADDRESS}</TableCell>
+                        <TableCell>{crimeDetail?.FATHERNAME}</TableCell>
+                        <TableCell>{crimeDetail?.CASEYEAR}</TableCell>
                         <TableCell>{crimeDetail?.case_ref_id}</TableCell>
                       </TableRow>
                     ))
@@ -155,4 +155,4 @@ const CrimeAcivityTablePCC = () => {
   );
 };
 
-export default CrimeAcivityTablePCC;
+export default CrimeAcivityTableKolkataPolice;
