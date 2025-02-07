@@ -128,7 +128,7 @@ export default function PendingApplicationDatatable({ status, heading, period })
   return (
     <div className="mx-auto px-0 space-y-8 shadow-md">
       <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-lg overflow-hidden">
-        <div className={`bg-gradient-to-r ${(status == 0 || status == 5) ? 'from-yellow-600' : 'from-green-600'} ${(status == 0 || status == 5) ? 'to-yellow-400' : 'to-teal-600'} px-6 py-3`}>
+        <div className={`bg-gradient-to-r ${(status == 0 || status == 5) ? 'from-green-600' : 'from-green-600'} ${(status == 0 || status == 5) ? 'to-green-600' : 'to-green-600'} px-6 py-3`}>
           <h2 className="text-2xl font-bold text-white">{heading}</h2>
         </div>
       </div>
@@ -238,8 +238,9 @@ export default function PendingApplicationDatatable({ status, heading, period })
           </Table>
         </div>
         <div className="flex items-center justify-between mt-4 text-sm">
-          <div>
-            Showing {startIndex + 1} to {Math.min(endIndex, filteredData?.length)} of {filteredData?.length} entries
+        <div>
+            Showing {filteredData ? startIndex + 1 : 0} to {filteredData ? Math.min(endIndex, filteredData.length) : 0}{" "}
+            of {filteredData?.length || 0} entries
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <Button
