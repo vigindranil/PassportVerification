@@ -14,13 +14,14 @@ import ApplicationStatusHistory from "@/components/application-status-history"
 import { Badge } from "@/components/ui/badge"
 import CrimeAcivityTablePCC from "@/components/crime-activity-verification-pcc"
 import CrimeAcivityTableKolkataPolice from "@/components/crime-activity-verification-kolkata-police"
+import { Button } from "@/components/ui/button"
 
 export default function Page({ FileNumber }) {
   const [applicationDetails, setApplicationDetails] = useState(null);
   const [isLoadingStatusHistrory, setIsLoadingStatusHistrory] = useState(true)
   const [isLoadingDocumentTable, setIsLoadingDocumentTable] = useState(true);
   const [verificationSuccess, setVerificationSuccess] = useState(false);
-  
+
   const { toast } = useToast()
 
   const fetchData = async (ApplicationId) => {
@@ -265,6 +266,21 @@ export default function Page({ FileNumber }) {
 
               {/* Kolkata Police Crime Records */}
               <CrimeAcivityTableKolkataPolice />
+
+              <div className="flex justify-center px-5 py-5 gap-2">
+                <Button className="bg-amber-600 hover:bg-amber-700 text-white font-bold
+                text-sm py-2 px-3 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+                  onClick={() => console.log('test')
+                  }>
+                  Criminal Record Found
+                </Button>
+                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold
+                text-sm py-2 px-3 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+                  onClick={() => console.log('test')
+                  }>
+                  Criminal Record Not Found
+                </Button>
+              </div>
             </div>
 
             <ApplicationStatusHistory status={applicationDetails?.status} isLoadingStatusHistrory={isLoadingStatusHistrory} />
