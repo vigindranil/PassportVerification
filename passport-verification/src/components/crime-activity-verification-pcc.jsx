@@ -106,7 +106,7 @@ const CrimeAcivityTablePCC = () => {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center">No Data Found</TableCell>
+                      <TableCell colSpan={6} className="text-center">No Record(s) Found</TableCell>
                     </TableRow>
                   )}
                 </TableBody>

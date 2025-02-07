@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "./ui/input";
 import moment from "moment";
 import { getKolkataPoliceCriminalRecordSearchv4, getPccCrimeDetails } from "@/app/applicationDetails/[FileNumber]/api";
+import DateRangePicker from "./date-range-picker";
 
 const SkeletonLoader = () => (
   <>
@@ -63,8 +64,8 @@ const CrimeAcivityTableKolkataPolice = () => {
       <div className="m-3">
         <h1 className="text-xl font-bold text-zinc-500">Kolkata Police Criminal Records</h1>
         <hr className="my-2" />
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center justify-center mb-6 flex-col">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 w-full my-4 px-14">
             <Input
               type="text"
               placeholder="Enter First Name (required)"
@@ -97,18 +98,6 @@ const CrimeAcivityTableKolkataPolice = () => {
             />
             <Input
               type="text"
-              placeholder="Enter From (optional)"
-              className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-64 p-2"
-              onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, from_date: e.target.value })}
-            />
-            <Input
-              type="text"
-              placeholder="Enter To (optional)"
-              className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-64 p-2"
-              onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, to_date: e.target.value })}
-            />
-            <Input
-              type="text"
               placeholder="Enter Case Year (optional)"
               className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-64 p-2"
               onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, case_yr: e.target.value })}
@@ -119,14 +108,15 @@ const CrimeAcivityTableKolkataPolice = () => {
               className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-64 p-2"
               onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, policestations: e.target.value })}
             />
-            <Button
-              variant="secondary"
-              className="mx-2 text-slate-700 hover:bg-zinc-200 shadow-sm border-2"
-              onClick={() => fetchCIDRecords(kolkataPoliceRecords)}
-            >
-              Search
-            </Button>
+            <DateRangePicker setKolkataPoliceRecords={setKolkataPoliceRecords} />
           </div>
+          <Button
+            variant="secondary"
+            className="mx-2 text-slate-700 hover:bg-zinc-200 shadow-sm border-2"
+            onClick={() => fetchCIDRecords(kolkataPoliceRecords)}
+          >
+            Search
+          </Button>
         </div>
 
         <Card>
@@ -159,7 +149,7 @@ const CrimeAcivityTableKolkataPolice = () => {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center">No Data Found</TableCell>
+                      <TableCell colSpan={6} className="text-center">No Record(s) Found</TableCell>
                     </TableRow>
                   )}
                 </TableBody>

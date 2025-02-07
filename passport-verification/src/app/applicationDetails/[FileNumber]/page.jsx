@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge"
 import CrimeAcivityTablePCC from "@/components/crime-activity-verification-pcc"
 import CrimeAcivityTableKolkataPolice from "@/components/crime-activity-verification-kolkata-police"
 import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
 
 export default function Page({ FileNumber }) {
   const [applicationDetails, setApplicationDetails] = useState(null);
@@ -258,7 +259,7 @@ export default function Page({ FileNumber }) {
             {/* Crime Activity Verification */}
             <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
               <div className="bg-gradient-to-r from-violet-600 to-amber-600 px-6 py-3">
-                <h2 className="text-2xl font-bold text-white">Crime Activity Verification</h2>
+                <h2 className="text-2xl font-bold text-white">Criminal Activity Verification</h2>
               </div>
 
               {/* PCC Criminal Records */}
@@ -267,19 +268,25 @@ export default function Page({ FileNumber }) {
               {/* Kolkata Police Crime Records */}
               <CrimeAcivityTableKolkataPolice />
 
-              <div className="flex justify-center px-5 py-5 gap-2">
-                <Button className="bg-amber-600 hover:bg-amber-700 text-white font-bold
+              <div className="flex justify-center px-5 py-5 gap-2 flex-col">
+                <div className="w-full">
+                  <Textarea className="w-[60%] mx-auto border-2" placeholder="Enter any remarks (optional)"></Textarea>
+                </div>
+                <div className="w-full flex justify-center gap-2">
+
+                  <Button className="bg-amber-600 hover:bg-amber-700 text-white font-bold
                 text-sm py-2 px-3 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-                  onClick={() => console.log('test')
-                  }>
-                  Criminal Record Found
-                </Button>
-                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold
+                    onClick={() => console.log('test')
+                    }>
+                    Criminal Record Found
+                  </Button>
+                  <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold
                 text-sm py-2 px-3 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-                  onClick={() => console.log('test')
-                  }>
-                  Criminal Record Not Found
-                </Button>
+                    onClick={() => console.log('test')
+                    }>
+                    Criminal Record Not Found
+                  </Button>
+                </div>
               </div>
             </div>
 
