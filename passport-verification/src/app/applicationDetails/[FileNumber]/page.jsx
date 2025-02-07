@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import ApplicationStatusHistory from "@/components/application-status-history"
 import { Badge } from "@/components/ui/badge"
+import CrimeAcivityTable from "@/components/crime-activity-verification"
 
 export default function Page({ FileNumber }) {
   const [applicationDetails, setApplicationDetails] = useState(null);
@@ -34,11 +35,11 @@ export default function Page({ FileNumber }) {
       setIsLoadingDocumentTable(false)
     }
   }
- 
+
 
   useEffect(() => {
     console.log("FileNumber:", FileNumber);
-    FileNumber && fetchData(FileNumber); 
+    FileNumber && fetchData(FileNumber);
   }, [FileNumber, verificationSuccess]);
 
 
@@ -175,7 +176,7 @@ export default function Page({ FileNumber }) {
                 </CardContent>
               </Card>
             </div>
-            
+
             {(applicationDetails?.applicationDetails?.AadharVerifiedstatus !== null && applicationDetails?.applicationDetails?.AadharVerifiedstatus !== 0) && <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
               <div className="bg-gradient-to-r from-yellow-600 to-yellow-300 px-6 py-3">
                 <h2 className="text-2xl font-bold text-white">AADHAAR Details</h2>
@@ -188,7 +189,7 @@ export default function Page({ FileNumber }) {
                     <div className="space-y-2 my-2">
                       <div className="flex flex-col">
                         <span className="text-sm font-medium text-gray-500">Aadhaar Number</span>
-                        <span className="text-base">{applicationDetails?.applicationDetails?.AadharNumber ? "XXXXXXXX"+atob(applicationDetails?.applicationDetails?.AadharNumber).slice(-4) : 'N/A'}</span>
+                        <span className="text-base">{applicationDetails?.applicationDetails?.AadharNumber ? "XXXXXXXX" + atob(applicationDetails?.applicationDetails?.AadharNumber).slice(-4) : 'N/A'}</span>
                       </div>
                     </div>
                     <div className="space-y-2 my-2">
@@ -245,12 +246,20 @@ export default function Page({ FileNumber }) {
 
 
             <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 to-teal-600 px-6 py-3">
+              <div className="bg-gradient-to-r from-cyan-600 to-violet-600 px-6 py-3">
                 <h2 className="text-2xl font-bold text-white">Document(s) Uploaded for the Application</h2>
               </div>
               <DocumentTable fileNo={FileNumber} documents={applicationDetails?.documents} docPath={applicationDetails?.filepath} isLoadingDocumentTable={isLoadingDocumentTable} verificationSuccess={setVerificationSuccess} />
-
             </div>
+
+            {/* Crime Activity Verification */}
+            <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+              <div className="bg-gradient-to-r from-violet-600 to-amber-600 px-6 py-3">
+                <h2 className="text-2xl font-bold text-white">Crime Activity Verification</h2>
+              </div>
+              <CrimeAcivityTable status={applicationDetails?.status} isLoadingStatusHistrory={isLoadingStatusHistrory} />
+            </div>
+
             <ApplicationStatusHistory status={applicationDetails?.status} isLoadingStatusHistrory={isLoadingStatusHistrory} />
           </div>
         </main>
