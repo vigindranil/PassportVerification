@@ -24,15 +24,29 @@ const SkeletonLoader = () => (
 const CrimeAcivityTableKolkataPolice = () => {
   const [crimeData, setCrimeData] = useState([]);
   const [isLoadingPccRecords, setIsLoadingPccRecords] = useState(false);
-  const [pccInput, setPccInput] = useState({ fname: "", lname: "" });
+  const [kolkataPoliceRecords, setKolkataPoliceRecords] = useState({
+    name_accused: "",
+    criminal_aliases_name: "",
+    address: "",
+    father_accused: "",
+    age_accused: "",
+    from_date: "",
+    to_date: "",
+    case_yr: "",
+    policestations: "",
+    pageno: "1",
+  });
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const fetchPccCrimeDetails = async (fname, lname) => {
+  const fetchCIDRecords = async (crimeData) => {
     try {
       setIsLoadingPccRecords(true);
-      const response = await getPccCrimeDetails(fname, lname);
+      const response = await getPccCrimeDetails({
+        fname: crimeData.name_accused,
+        lname: crimeData.criminal_aliases_name,
+      });
       setCrimeData(response?.data?.Arrest || []);
       setCurrentPage(1); // Reset to first page on new search
     } catch (e) {
@@ -58,18 +72,18 @@ const CrimeAcivityTableKolkataPolice = () => {
               type="text"
               placeholder="Enter First Name"
               className="ring-0 border-gray-300 rounded-md w-32 p-2"
-              onChange={(e) => setPccInput({ ...pccInput, fname: e.target.value })}
+              onChange={(e) => setPccInput({ ...kolkataPoliceRecords, fname: e.target.value })}
             />
             <Input
               type="text"
               placeholder="Enter Last Name"
               className="active:ring-0 focus:outline-none border-gray-300 rounded-md ml-4 w-32 p-2"
-              onChange={(e) => setPccInput({ ...pccInput, lname: e.target.value })}
+              onChange={(e) => setPccInput({ ...kolkataPoliceRecords, lname: e.target.value })}
             />
             <Button
               variant="secondary"
               className="mx-2 text-slate-700 hover:bg-zinc-200 shadow-sm border-2"
-              onClick={() => fetchPccCrimeDetails(pccInput?.fname || "", pccInput?.lname || "")}
+              onClick={() => fetchCIDRecords(kolkataPoliceRecords)}
             >
               Search
             </Button>
@@ -86,9 +100,8 @@ const CrimeAcivityTableKolkataPolice = () => {
                     <TableHead>Name</TableHead>
                     <TableHead>Father's Name</TableHead>
                     <TableHead>Address</TableHead>
-                    <TableHead>FATHERNAME</TableHead>
-                    <TableHead>CASEYEAR</TableHead>
-                    <TableHead>ARREST_DATE</TableHead>
+                    <TableHead>Year</TableHead>
+                    <TableHead>Arrest Date</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -101,7 +114,6 @@ const CrimeAcivityTableKolkataPolice = () => {
                         <TableCell>{crimeDetail?.NAME}</TableCell>
                         <TableCell>{crimeDetail?.FATHERNAME}</TableCell>
                         <TableCell>{crimeDetail?.ADDRESS}</TableCell>
-                        <TableCell>{crimeDetail?.FATHERNAME}</TableCell>
                         <TableCell>{crimeDetail?.CASEYEAR}</TableCell>
                         <TableCell>{crimeDetail?.ARREST_DATE}</TableCell>
                       </TableRow>

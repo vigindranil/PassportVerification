@@ -75,3 +75,23 @@ export const getPccCrimeDetails = async (fname, lname) => {
     return null;
   }
 };
+
+export const getKolkataPoliceCriminalRecordSearchv4 = async (data) => {
+  try {
+    return await postRequest("third-party/getKolkataPoliceCriminalRecordSearchv4", {
+      name_accused: data.name_accused,
+      criminal_aliases_name: data.name_accused,
+      address: data.name_accused,
+      father_accused: data.name_accused,
+      age_accused: data.name_accused,
+      from_date: data.name_accused,
+      to_date: data.name_accused,
+      case_yr: data.name_accused,
+      policestations: data.name_accused,
+      pageno: data.name_accused
+    });
+  } catch (error) {
+    console.log("Error:", error);
+    return null;
+  }
+};

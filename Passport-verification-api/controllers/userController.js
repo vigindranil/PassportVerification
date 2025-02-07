@@ -574,8 +574,8 @@ export const logout = async (req, res) => {
         const OperationName = "logout";
         const json = "{}"
     //  const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,EntryUserId)
-        const result = await logoutModel(req.user.UserID, null, null);
-
+        // const result = await logoutModel(req.user.UserID, null, null);
+        const result = 0;
             console.log("result", result);
             
         if (result == 0) {
