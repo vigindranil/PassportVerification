@@ -10,3 +10,5 @@
 2025-02-07 11:39:34 | ERROR | pool.close is not a function
 2025-02-07 11:45:20 | ERROR | connection is not defined
 2025-02-07 11:45:24 | ERROR | connection is not defined
+2025-02-07 13:14:48 | ERROR | Failed to fetch log files: Unexpected token 'p', "pool.destr"... is not valid JSON
+2025-02-07 13:14:57 | ERROR | Failed to fetch log files: Unexpected token 'p', "pool.destr"... is not valid JSON
