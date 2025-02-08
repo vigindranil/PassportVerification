@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { getUserLoginModel, updateAuthToken } from '../models/authModels.js';
 import { generateOtpAadhaar, verifyOtpAadhaar } from "./thirdPartyAPI.js";
 import logger from "../utils/logger.js";
+import client from '../redisClient.js';
 
 // Secret key for JWT (ensure this is stored securely in environment variables)
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -52,17 +53,16 @@ export const sendOtp = async (req, res) => {
             });
         }
         
-        // const transactionId = await generateOtpAadhaar(atob(rows["AADHAARNo"]), rows["UserID"]);
-        const transactionId = "---"
-        // console.log("transactionId", transactionId);
-
-
-        // if (!transactionId) {
+        // const aadhaar_response = await generateOtpAadhaar(atob(rows[0]["AADHAARNo"]), rows[0]["UserID"]);
+        // const transactionId = aadhaar_response?.transaction_id;
+        
+        // if (aadhaar_response?.status != 200) {
         //     return res.status(400).json({
         //         status: 1,
-        //         message: "Failed to send OTP",
+        //         message: aadhaar_response?.error?.message || "Failed to send OTP",
         //     });
         // }
+        const transactionId = "";
        
 
         if (rows !== undefined && rows[0]?.length !== 0) {
@@ -87,9 +87,9 @@ export const sendOtp = async (req, res) => {
             );
 
             const token = btoa(jwt_token);
-            // const token = jwt_token;
-
-            // const [result] = await updateAuthToken(rows[0]["UserID"], jwt_token, transactionId);
+            
+            // Store token in Redis with expiration (1 hour)
+            // await client.setEx(`user:${rows[0]["UserID"]}:token`, 3600 * 3, token);
 
             res.cookie('data', token);
             res.cookie('type', rows[0]["UserTypeID"]);
