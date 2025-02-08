@@ -608,7 +608,7 @@ const UserManagement = () => {
               </Button>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Search:</span>
+              <span className="text-sm text-gray-500"></span>
               <Input
                 className="w-64"
                 placeholder="Search..."
