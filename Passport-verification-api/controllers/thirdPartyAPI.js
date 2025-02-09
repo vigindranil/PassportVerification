@@ -10,47 +10,9 @@ import {
 import qs from "qs";
 dotenv.config();
 
-// export const generateOtpAadhaar = async (aadhaar_number, user_id) => {
-//   try {
-//     const url = "https://api.gridlines.io/aadhaar-api/boson/generate-otp";
-//     const headers = {
-//       "Accept": "application/json",
-//       "Content-Type": "application/json",
-//       "X-API-Key": "0ZU5MIiP9neGxEhpxLZCpBrmDk087jw0",
-//       "X-Auth-Type": "API-Key",
-//     };
-
-//     const body = JSON.stringify({
-//       aadhaar_number: aadhaar_number,
-//       consent: "Y",
-//       user_id: user_id,
-//     });
-
-//     const response = await fetch(url, {
-//       method: "POST",
-//       headers: headers,
-//       body: body,
-//       timeout: 0, // Node-fetch does not have a built-in timeout option; you can handle it separately if needed
-//     });
-
-//     console.log("api aadhaar response: ", response);
-//     const transactionId = response.headers.get("x-transaction-id");
-//     console.log("api aadhaar transactionId: " + transactionId);
-
-//     if (response.ok) {
-//       return transactionId;
-//     } else {
-//       return transactionId;
-//     }
-//   } catch (error) {
-//     console.log("Error generating OTP: ", error);
-//     return false;
-//   }
-// };
-
 export const generateOtpAadhaar = async (aadhaar_number, user_id) => {
   let data = JSON.stringify({
-    aadhaar_number: "831041509389",
+    aadhaar_number: aadhaar_number,
     consent: "Y",
     user_id: user_id,
   });
@@ -68,56 +30,90 @@ export const generateOtpAadhaar = async (aadhaar_number, user_id) => {
     data: data,
   };
 
-  axios
-    .request(config)
-    .then(async (result) => {
-      console.log("response", result?.data);
-      return result?.data;
-    })
-    .catch((error) => {
-      if (error?.response) {
-        console.log(error?.response?.data); // Logs only the response data
-        return error?.response?.data;
-      } else {
-        return null;
-      }
-    });
+  try {
+    const result = await axios.request(config);
+    console.log("response", result?.data);
+    return result?.data;
+  } catch (error) {
+    if (error?.response) {
+      console.log(error?.response?.data); // Logs only the response data
+      return error?.response?.data;
+    } else {
+      return null;
+    }
+  }
 };
 
 export const verifyOtpAadhaar = async (otp, user_id, transaction_id) => {
-  try {
-    const url = "https://api.gridlines.io/aadhaar-api/boson/submit-otp";
-    const headers = {
+  let data = JSON.stringify({
+    otp: otp,
+    include_xml: true,
+    share_code: "1001",
+    user_id: user_id,
+  });
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://api.gridlines.io/aadhaar-api/boson/submit-otp",
+    headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
       "X-API-Key": "0ZU5MIiP9neGxEhpxLZCpBrmDk087jw0",
       "X-Auth-Type": "API-Key",
       "X-Transaction-ID": transaction_id,
-    };
+    },
+    data: data,
+  };
 
-    const body = JSON.stringify({
-      otp: otp,
-      include_xml: true,
-      share_code: "1001",
-      user_id: user_id,
-    });
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: headers,
-      body: body,
-      timeout: 0, // Node-fetch does not have a built-in timeout option; you can handle it separately if needed
-    });
-
-    if (response.ok) {
-      return true;
-    } else {
-      return false;
-    }
+  try {
+    const result = await axios.request(config);
+    console.log("response", result?.data);
+    return result?.data;
   } catch (error) {
-    return false;
+    if (error?.response) {
+      console.log(error?.response?.data); // Logs only the response data
+      return error?.response?.data;
+    } else {
+      return null;
+    }
   }
 };
+
+// export const verifyOtpAadhaar = async (otp, user_id, transaction_id) => {
+//   try {
+//     const url = "https://api.gridlines.io/aadhaar-api/boson/submit-otp";
+//     const headers = {
+//       Accept: "application/json",
+//       "Content-Type": "application/json",
+//       "X-API-Key": "0ZU5MIiP9neGxEhpxLZCpBrmDk087jw0",
+//       "X-Auth-Type": "API-Key",
+//       "X-Transaction-ID": transaction_id,
+//     };
+
+//     const body = JSON.stringify({
+//       otp: otp,
+//       include_xml: true,
+//       share_code: "1001",
+//       user_id: user_id,
+//     });
+
+//     const response = await fetch(url, {
+//       method: "POST",
+//       headers: headers,
+//       body: body,
+//       timeout: 0, // Node-fetch does not have a built-in timeout option; you can handle it separately if needed
+//     });
+
+//     if (response.ok) {
+//       return true;
+//     } else {
+//       return false;
+//     }
+//   } catch (error) {
+//     return false;
+//   }
+// };
 
 export const getBirthCertificateDetails = async (req, res) => {
   const { CertificateNo, dateofbirth } = req.body;

@@ -5,7 +5,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export const postRequest = async (url, request_body = {}) => {
   try {
     const authToken = Cookies.load("data");
-    console.log();
 
     const HEADERS = {
       Authorization: `Bearer ${authToken}`,
@@ -20,7 +19,6 @@ export const postRequest = async (url, request_body = {}) => {
     };
 
     const response = await fetch(`${BASE_URL}${url}`, requestOptions);
-    console.log(response);
 
     if (response?.status === 401) {
       Cookies.remove("data");
@@ -28,6 +26,7 @@ export const postRequest = async (url, request_body = {}) => {
       Cookies.remove("name");
       Cookies.remove("ps");
       Cookies.remove("district");
+      Cookies.remove("ds_id");
       window.location.href = "/session-expired";
     } else if (!response.ok) {
       throw new Error(response);
@@ -36,7 +35,6 @@ export const postRequest = async (url, request_body = {}) => {
       return result;
     }
   } catch (error) {
-    console.log(error);
     throw error; // Propagate error to the caller
   }
 };
@@ -57,7 +55,6 @@ export const logout = async () => {
     };
 
     const response = await fetch(`${BASE_URL}user/logout`, requestOptions);
-    console.log(response);
 
     if (response?.status === 401) {
       Cookies.remove("data");
@@ -65,6 +62,7 @@ export const logout = async () => {
       Cookies.remove("name");
       Cookies.remove("ps");
       Cookies.remove("district");
+      Cookies.remove("ds_id");
       window.location.href = "/session-expired";
     } else if (!response.ok) {
       Cookies.remove("data");
@@ -72,6 +70,7 @@ export const logout = async () => {
       Cookies.remove("name");
       Cookies.remove("ps");
       Cookies.remove("district");
+      Cookies.remove("ds_id");
       window.location.href = "/";
     } else {
       const result = await response.json(); // Assuming the API returns JSON
@@ -80,6 +79,7 @@ export const logout = async () => {
       Cookies.remove("name");
       Cookies.remove("ps");
       Cookies.remove("district");
+      Cookies.remove("ds_id");
       window.location.href = "/";
     }
   } catch (error) {
@@ -89,6 +89,7 @@ export const logout = async () => {
     Cookies.remove("name");
     Cookies.remove("ps");
     Cookies.remove("district");
+    Cookies.remove("ds_id");
     window.location.href = "/";
   }
 };
@@ -114,6 +115,7 @@ export const getRequest = async (url) => {
       Cookies.remove("name");
       Cookies.remove("ps");
       Cookies.remove("district");
+      Cookies.remove("ds_id");
       window.location.href = "/session-expired";
     } else if (!response.ok) {
       throw new Error(response);
@@ -122,7 +124,6 @@ export const getRequest = async (url) => {
       return result;
     }
   } catch (error) {
-    console.log(error);
     throw error; // Propagate error to the caller
   }
 };
@@ -155,16 +156,15 @@ export const postFileRequest = async (url, request_body) => {
       Cookies.remove("name");
       Cookies.remove("ps");
       Cookies.remove("district");
+      Cookies.remove("ds_id");
       window.location.href = "/session-expired";
     } else if (!response.ok) {
       throw new Error(response);
     } else {
       const result = await response.json(); // Assuming the API returns JSON
-      console.log(result);
       return result;
     }
   } catch (error) {
-    console.log(error);
     throw error; // Propagate error to the caller
   }
 };

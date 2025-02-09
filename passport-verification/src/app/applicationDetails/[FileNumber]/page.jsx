@@ -262,11 +262,11 @@ export default function Page({ FileNumber }) {
                 <h2 className="text-2xl font-bold text-white">Criminal Activity Verification</h2>
               </div>
 
-              {/* PCC Criminal Records */}
-              <CrimeAcivityTablePCC />
-
               {/* Kolkata Police Crime Records */}
               <CrimeAcivityTableKolkataPolice />
+
+              {/* PCC Criminal Records */}
+              <CrimeAcivityTablePCC />
 
               <div className="flex justify-center px-5 py-5 gap-2 flex-col">
                 <div className="w-full">
@@ -274,14 +274,12 @@ export default function Page({ FileNumber }) {
                 </div>
                 <div className="w-full flex justify-center gap-2">
 
-                  <Button className="bg-amber-600 hover:bg-amber-700 text-white font-bold
-                text-sm py-2 px-3 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+                  <Button variant="destructive" className="text-sm py-2 px-3 rounded-md shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2"
                     onClick={() => console.log('test')
                     }>
-                    Criminal Record Found
+                    Criminal Record(s) Found
                   </Button>
-                  <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold
-                text-sm py-2 px-3 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+                  <Button variant="secondary" className="text-sm py-2 px-3 rounded-md shadow-sm border-2 hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
                     onClick={() => console.log('test')
                     }>
                     Criminal Record Not Found

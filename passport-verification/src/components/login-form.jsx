@@ -35,26 +35,22 @@ const LoginForm = () => {
       const response = await sendOtp(username, password)
       console.log("sendOtp", response)
 
-      if (response) {
+      if (response?.status == 0) {
         toast({
           title: (
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-5 w-5 text-green-500" />
-              <span>OTP sent successfully!</span>
+              <span>{response?.message || 'OTP sent successfully!'}</span>
             </div>
           ),
           description: "A six digit code was sent to your AADHAR linked phone number",
-          action: (
-            <ToastAction altText="close">Close</ToastAction>
-          ),
         })
         setShowOtp(true)
       } else {
         toast({
           variant: "destructive",
-          title: "UserName or Password Invaild!",
+          title: response?.message || 'Failed to login',
           description: "Please try again",
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
         })
       }
     } catch (error) {
@@ -63,7 +59,6 @@ const LoginForm = () => {
         variant: "destructive",
         title: "Failed to Send OTP!",
         description: "Something went wrong, Please try again",
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
     } finally {
       setLoadingOtpSend(false)
