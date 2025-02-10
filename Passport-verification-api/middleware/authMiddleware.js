@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import client from '../redisClient.js';
+// import client from '../redisClient.js';
 
 
 // Secret key for JWT
