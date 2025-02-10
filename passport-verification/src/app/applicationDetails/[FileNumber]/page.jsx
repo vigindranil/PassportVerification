@@ -405,14 +405,18 @@ export default function Page({ FileNumber }) {
               <div className="bg-gradient-to-r from-violet-600 to-amber-600 px-6 py-3">
                 <h2 className="text-2xl font-bold text-white">Criminal Activity Verification</h2>
               </div>
-              {(applicationDetails?.applicationDetails?.CriminalStatus == 2) ?
+              {(applicationDetails?.applicationDetails?.CriminalStatus == 1) ?
                 <>
                   <div className="space-y-2 w-full min-h-[200px] h-full py-10 flex justify-center items-baseline">
                     <div className="flex flex-col w-full min-h-[200px] text-center justify-center items-center">
                       <span className="text-base font-medium text-red-500 flex gap-1 items-center"><AlertCircle /> Criminal Record(s) Found</span>
                       <div className="flex flex-col justify-start items-start w-auto max-w-[600px] py-2">
-                        <span className="text-sm text-gray-500 mb-2"><b className="text-black">Grounds for Criminal Records:</b><br/>{applicationDetails?.applicationDetails?.CriminalRecordType == 3 ? 'Kolkata Police Criminal Records & C.I.D Criminal Records' : applicationDetails?.applicationDetails?.CriminalRecordType == 2 ? 'C.I.D Criminal Record' : 'Kolkata Police Criminal Records'}</span>
+                        <span className="text-sm text-gray-500 mb-2"><b className="text-black">Grounds for Criminal Records:</b> {applicationDetails?.applicationDetails?.CriminalRecordType == 3 ? 'Kolkata Police Criminal Records & C.I.D Criminal Records' : applicationDetails?.applicationDetails?.CriminalRecordType == 2 ? 'C.I.D Criminal Record' : 'Kolkata Police Criminal Records'}</span>
                         <span className="text-sm text-gray-500 mb-2"><b className="text-black">Verified By:</b> {applicationDetails?.applicationDetails?.CriminalRecoedVerifiedby}</span>
+                        <span className="text-sm text-gray-500 mb-2"><b className="text-black">Case Reference No. (Kolkata Police Records):</b> {applicationDetails?.applicationDetails?.CaseRefferenceNumber ? JSON.parse(applicationDetails?.applicationDetails?.CaseRefferenceNumber)?.KolkataPolice?.join(", ") : 'N/A'}</span>
+                        <span className="text-sm text-gray-500 mb-2"><b className="text-black">Police Station. (Kolkat Police Records):</b> {applicationDetails?.applicationDetails?.CriminalRecordPsName ? JSON.parse(applicationDetails?.applicationDetails?.CriminalRecordPsName)?.KolkataPolice?.join(", ") : 'N/A'}</span>
+                        <span className="text-sm text-gray-500 mb-2"><b className="text-black">Case Reference No. (CID Records):</b> {applicationDetails?.applicationDetails?.CaseRefferenceNumber ? JSON.parse(applicationDetails?.applicationDetails?.CaseRefferenceNumber)?.CID?.join(", ") : 'N/A'}</span>
+                        <span className="text-sm text-gray-500 mb-2"><b className="text-black">Police Station. (CID Records):</b> {applicationDetails?.applicationDetails?.CriminalRecordPsName ? JSON.parse(applicationDetails?.applicationDetails?.CriminalRecordPsName)?.CID?.join(", ") : 'N/A'}</span>
                         <span className="text-justify text-sm text-gray-500 mb-2"><b className="text-black">Remarks:</b> {applicationDetails?.applicationDetails?.CrimalRemarks || 'N/A'}</span>
                       </div>
                     </div>
