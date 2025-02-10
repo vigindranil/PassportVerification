@@ -1,0 +1,5 @@
+2025-02-10 13:02:18 | DEBUG | {"API":"getApplicationCountsv1","REQUEST":{"EntryuserId":1},"RESPONSE":{"status":0,"message":"Data fetched successfully","data":{"TotalPendingApplications":0,"Last15DaysPendingApplications":0,"EOAccepectButNotStartedVerify":0,"EOStartedVerify":0,"EOComplete":0,"OCPending":0,"OCComplete":0,"SPPending":0,"SPDone":0,"SEPending":0,"SEComplete":0,"SPPendingReverify":0,"SPReverifyComplete":0}}}
+2025-02-10 13:02:27 | DEBUG | {"API":"getPoliceStationsByDistrict","REQUEST":{},"RESPONSE":{"status":1,"message":"Invalid districtId"}}
+2025-02-10 13:02:27 | DEBUG | {"API":"getPoliceStationsByDistrict","REQUEST":{},"RESPONSE":{"status":1,"message":"Invalid districtId"}}
+2025-02-10 13:02:30 | DEBUG | {"API":"showuserDetails","REQUEST":{"EntryuserId":1},"RESPONSE":{"status":1,"message":"No data found"}}
+2025-02-10 13:02:31 | DEBUG | {"API":"showuserDetails","REQUEST":{"EntryuserId":1},"RESPONSE":{"status":1,"message":"No data found"}}
