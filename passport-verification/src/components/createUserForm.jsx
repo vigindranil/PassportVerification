@@ -226,8 +226,8 @@ const UserManagement = () => {
     ]
 
     const errors = {}
-    requiredFields?.filter(data=>data['DistrictID'] !== "").forEach((field) => {
-      if (formData[field] !== 'DistrictID' && formData[field] !== 'PSID' && !formData[field]) {
+    requiredFields?.forEach((field) => {
+      if (!formData[field]) {
         errors[field] = "This field is required."
         setInvalidInput((prev) => ({
           ...prev,
@@ -248,9 +248,9 @@ const UserManagement = () => {
     }
   }
 
-  const onChangeDistrict = async () => {
+  const onChangeDistrict = async (DistrictID) => {
+    // console.log("sasasa")
     try {
-      const DistrictID = Cookies.load("ds_id")
       setPsLoader("Loading...")
       setFormData({ ...formData, DistrictID: DistrictID })
       const policeStationData = await getPoliceStationsByDistrict(DistrictID)
@@ -271,19 +271,25 @@ const UserManagement = () => {
   }
 
   useEffect(() => {
+    fetchDistricts()
     fetchUserDetails()
+    const districtId = Cookies.load("ds_id")
+    console.log("districtId", districtId)
+    if (districtId) {
+      setFormData((prevState) => ({ ...prevState, DistrictID: districtId }))
+      onChangeDistrict(districtId)
+    }
   }, []) // Added empty dependency array to fix the issue
 
   useEffect(() => {
     const districtId = Cookies.load("ds_id")
-    console.log("districtId",districtId);
-    
     if (districtId) {
+      // fetchPoliceStation();
       setFormData((prevState) => ({ ...prevState, DistrictID: districtId }))
-      onChangeDistrict()
+      onChangeDistrict(districtId)
     }
   }, [])
-
+  
   const handleUpdateUserStatus = async (UserID, Status) => {
     try {
       setStatuUpdateLoader("Loading...")
@@ -504,33 +510,31 @@ const UserManagement = () => {
           {invalidInput["userRole"] && <p className="text-red-500 text-xs">{invalidInput["userRole"]}</p>}
         </div>
 
-        {!(formData.UserRoleID === "20" || formData.UserRoleID === "10" || formData.UserRoleID === "50") && (
-          <div className="space-y-2">
-            <Label
-              htmlFor="policeStation"
-              className={`${invalidInput["policeStation"] && "border-[1.4px] border-red-400"}`}
-            >
-              Police Station <span className="text-red-500">*</span>
-            </Label>
-            <Select
-              name="policeStation"
-              onValueChange={(value) => setFormData({ ...formData, PSID: value })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={psLoader} />
-              </SelectTrigger>
-              <SelectContent>
-                {policeStationsData?.map((station, index) => (
-                  <SelectItem key={index} value={station?.psm_id}>
-                    {station?.psm_name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {invalidInput["policeStation"] && <p className="text-red-500 text-xs">{invalidInput["policeStation"]}</p>}
-          </div>
-        )}
-
+        <div className="space-y-2">
+          <Label
+            htmlFor="policeStation"
+            className={`${invalidInput["policeStation"] && "border-[1.4px] border-red-400"}`}
+          >
+            Police Station <span className="text-red-500">*</span>
+          </Label>
+          <Select
+            name="policeStation"
+            onValueChange={(value) => setFormData({ ...formData, PSID: value })}
+            disabled={formData.UserRoleID === "20" || formData.UserRoleID === "10"}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={psLoader} />
+            </SelectTrigger>
+            <SelectContent>
+              {policeStationsData?.map((station, index) => (
+                <SelectItem key={index} value={station?.psm_id}>
+                  {station?.psm_name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {invalidInput["policeStation"] && <p className="text-red-500 text-xs">{invalidInput["policeStation"]}</p>}
+        </div>
 
         <div className="space-y-2">
           <Label htmlFor="AADHAARNo" className={`${invalidInput["AADHAARNo"] && "border-[1.4px] border-red-400"}`}>
@@ -604,7 +608,7 @@ const UserManagement = () => {
               </Button>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500"></span>
+              <span className="text-sm text-gray-500">Search:</span>
               <Input
                 className="w-64"
                 placeholder="Search..."

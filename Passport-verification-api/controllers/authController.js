@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { getUserLoginModel, updateAuthToken } from "../models/authModels.js";
 import { generateOtpAadhaar, verifyOtpAadhaar } from "./thirdPartyAPI.js";
 import logger from "../utils/logger.js";
-import client from "../redisClient.js";
+// import client from "../redisClient.js";
 
 // Secret key for JWT (ensure this is stored securely in environment variables)
 const JWT_SECRET = process.env.JWT_SECRET;
