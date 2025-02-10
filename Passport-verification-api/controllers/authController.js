@@ -1,219 +1,258 @@
 import jwt from "jsonwebtoken";
-import { getUserLoginModel, updateAuthToken } from '../models/authModels.js';
+import { getUserLoginModel, updateAuthToken } from "../models/authModels.js";
 import { generateOtpAadhaar, verifyOtpAadhaar } from "./thirdPartyAPI.js";
 import logger from "../utils/logger.js";
+import client from "../redisClient.js";
 
 // Secret key for JWT (ensure this is stored securely in environment variables)
 const JWT_SECRET = process.env.JWT_SECRET;
 
-
 export const sendOtp = async (req, res) => {
-    try {
-        const { username, password, loginType } = req.body;
+  try {
+    const { username, password, loginType } = req.body;
 
-        if (!username) {
-            return res.status(400).json({
-                status: 1,
-                message: "Invalid username",
-                data: null,
-            });
-        } else if (!password) {
-            logger.debug(
-                JSON.stringify({
-                    API: "sendOtp",
-                    REQUEST: { username, password },
-                    RESPONSE: {
-                        status: 1,
-                        message: "Invalid Password",
-                        data: null,
-                    },
-                })
-            );
-            return res.status(400).json({
-                status: 1,
-                message: "Invalid Password",
-                data: null,
-            });
-        }
-
-        const rows = await getUserLoginModel(username, btoa(password));
-
-        if (!rows || rows.length == 0) {
-            return res.status(400).json({
-                status: 1,
-                message: "Invalid username or password",
-            });
-        }
-
-        if (loginType == 2 && rows[0]["UserTypeID"] != 40) {
-            return res.status(400).json({
-                status: 1,
-                message: "Invalid user for mobile login",
-            });
-        }
-        
-        // const transactionId = await generateOtpAadhaar(atob(rows["AADHAARNo"]), rows["UserID"]);
-        const transactionId = "---"
-        // console.log("transactionId", transactionId);
-
-
-        // if (!transactionId) {
-        //     return res.status(400).json({
-        //         status: 1,
-        //         message: "Failed to send OTP",
-        //     });
-        // }
-       
-
-        if (rows !== undefined && rows[0]?.length !== 0) {
-            console.log("rows", rows);
-            console.log("UserID", rows[0]["UserID"]);
-            
-            const jwt_token = jwt.sign(
-                {
-                    UserID: rows[0]["UserID"],
-                    DistrictID: rows[0]["DistrictID"],
-                    DistrictName: rows[0]["DistrictName"],
-                    PoliceStationID: rows[0]["PoliceStationID"],
-                    PoliceStationName: rows[0]["PoliceStationName"],
-                    UserTypeID: rows[0]["UserTypeID"],
-                    UserTypeName: rows[0]["UserTypeName"],
-                    Username: rows[0]["Username"],
-                    UserFullName: rows[0]["UserFullName"],
-                    TransactionId: transactionId,
-                },
-                JWT_SECRET,
-                { expiresIn: "24h" }
-            );
-
-            const token = btoa(jwt_token);
-            // const token = jwt_token;
-
-            // const [result] = await updateAuthToken(rows[0]["UserID"], jwt_token, transactionId);
-
-            res.cookie('data', token);
-            res.cookie('type', rows[0]["UserTypeID"]);
-            res.cookie('name', rows[0]["UserFullName"]);
-            res.cookie('district', rows[0]["DistrictName"]);
-            res.cookie('ps', rows[0]["PoliceStationName"]);
-            res.cookie('DistrictID', rows[0]["DistrictID"]);
-            console.log("token 1", jwt_token);
-
-            logger.debug(
-                JSON.stringify({
-                    API: "sendOtp",
-                    REQUEST: { username, password },
-                    RESPONSE: {
-                        status: 0,
-                        message: "OTP sent successfully",
-                        type: rows[0]["UserTypeID"],
-                        name: rows[0]["UserFullName"],
-                        district: rows[0]["DistrictName"],
-                        ps: rows[0]["PoliceStationName"],
-                        token: token,
-                    },
-                })
-            );
-
-            res.status(200).json({
-                status: 0,
-                message: "OTP sent successfully",
-                type: rows[0]["UserTypeID"],
-                name: rows[0]["UserFullName"],
-                district: rows[0]["DistrictName"],
-                DistrictID: rows[0]["DistrictID"],
-                ps: rows[0]["PoliceStationName"],
-                token: token,
-            });
-
-        } else {
-            logger.error(error.message);
-            return res.status(404).json({
-                status: 1,
-                message: "Invalid user.",
-                data: null,
-            });
-        }
-
-    } catch (error) {
-        logger.error(error.message);
-
-        return res.status(500).json({
+    if (!username) {
+      return res.status(400).json({
+        status: 1,
+        message: "Invalid username",
+        data: null,
+      });
+    } else if (!password) {
+      logger.debug(
+        JSON.stringify({
+          API: "sendOtp",
+          REQUEST: { username, password },
+          RESPONSE: {
             status: 1,
-            message: "An error occurred, Please try again",
+            message: "Invalid Password",
             data: null,
-        });
+          },
+        })
+      );
+      return res.status(400).json({
+        status: 1,
+        message: "Invalid Password",
+        data: null,
+      });
     }
+
+    const rows = await getUserLoginModel(username, btoa(password));
+
+    if (!rows || rows.length == 0) {
+      return res.status(400).json({
+        status: 1,
+        message: "Invalid username or password",
+      });
+    }
+
+    if (loginType == 2 && rows[0]["UserTypeID"] != 40) {
+      return res.status(400).json({
+        status: 1,
+        message: "Invalid user for mobile login",
+      });
+    }
+
+    if (rows !== undefined && rows[0]?.length !== 0) {
+      //   const transactionId = aadhaar_response?.transaction_id;
+      //   const aadhaar_response = await generateOtpAadhaar(
+      //     atob(rows[0]["AADHAARNo"]),
+      //     rows[0]["UserID"]
+      //   );
+      //   console.log("transactionId", transactionId);
+
+      //   if (aadhaar_response?.status != 200) {
+      //     return res.status(400).json({
+      //       status: 1,
+      //       message: aadhaar_response?.error?.message || "Failed to send OTP",
+      //     });
+      //   }
+      //   if (aadhaar_response?.data?.code != "1001") {
+      //     return res.status(400).json({
+      //       status: 1,
+      //       message: aadhaar_response?.data?.message || "Failed to send OTP",
+      //     });
+      //   }
+      const transactionId = "";
+
+      const jwt_token = jwt.sign(
+        {
+          UserID: rows[0]["UserID"],
+          DistrictID: rows[0]["DistrictID"],
+          DistrictName: rows[0]["DistrictName"],
+          PoliceStationID: rows[0]["PoliceStationID"],
+          PoliceStationName: rows[0]["PoliceStationName"],
+          UserTypeID: rows[0]["UserTypeID"],
+          UserTypeName: rows[0]["UserTypeName"],
+          Username: rows[0]["Username"],
+          UserFullName: rows[0]["UserFullName"],
+          TransactionId: transactionId,
+          isLoggedIn: 0,
+        },
+        JWT_SECRET,
+        { expiresIn: "24h" }
+      );
+
+      const token = btoa(jwt_token);
+
+      // Store token in Redis with expiration (1 hour)
+      // await client.setEx(`user:${rows[0]["UserID"]}:token`, 3600 * 3, token);
+
+      res.cookie("data", token);
+
+      logger.debug(
+        JSON.stringify({
+          API: "sendOtp",
+          REQUEST: { username, password },
+          RESPONSE: {
+            status: 0,
+            message: "OTP sent successfully",
+            token: token,
+          },
+        })
+      );
+
+      res.status(200).json({
+        status: 0,
+        message: "OTP sent successfully",
+        token: token,
+      });
+    } else {
+      logger.error(error.message);
+      return res.status(404).json({
+        status: 1,
+        message: "Invalid user.",
+        data: null,
+      });
+    }
+  } catch (error) {
+    logger.error(error.message);
+
+    return res.status(500).json({
+      status: 1,
+      message: "An error occurred, Please try again",
+      data: null,
+    });
+  }
 };
 
 export const verifyOtp = async (req, res) => {
-    try {
-        const { otp } = req.body;
+  try {
+    const { otp } = req.body;
 
-        console.log('otp', otp);
-        if (!otp) {
-            logger.debug(
-                JSON.stringify({
-                    API: "verifyOtp",
-                    REQUEST: { otp },
-                    RESPONSE: {
-                        status: 1,
-                        message: "Invalid OTP"
-                    },
-                })
-            );
-            const [result] = await updateAuthToken(req.user.UserID, "", "");
-            return res.status(400).json({
-                status: 1,
-                message: "Invalid OTP"
-            });
-        }
-        
-        // const otpStatus = await verifyOtpAadhaar(otp, req.user.UserID, req.user.TransactionId);
-        const otpStatus = true;
-        console.log('otpStatus', otpStatus);
-
-        if (otp == '999999') {
-            logger.debug(
-                JSON.stringify({
-                    API: "verifyOtp",
-                    REQUEST: { otp },
-                    RESPONSE: {
-                        status: 0,
-                        message: "OTP has been verified successfully"
-                    },
-                })
-            );
-            return res.status(200).json({
-                status: 0,
-                message: "OTP has been verified successfully",
-            });
-        }
-        else {
-            logger.debug(
-                JSON.stringify({
-                    API: "verifyOtp",
-                    REQUEST: { otp },
-                    RESPONSE: {
-                        status: 1,
-                        message: "Failed to verify OTP",
-                    },
-                })
-            );
-            const [result] = await updateAuthToken(req.user.UserID, "", "");
-            return res.status(400).json({
-                status: 1,
-                message: "Failed to verify OTP",
-            });
-        }
-
-    } catch (error) {
-        logger.error(error.message);
-        const [result] = await updateAuthToken(req.user.UserID, "", "");
-        return res.status(500).json({
+    console.log("otp", otp);
+    if (!otp) {
+      logger.debug(
+        JSON.stringify({
+          API: "verifyOtp",
+          REQUEST: { otp },
+          RESPONSE: {
             status: 1,
-            message: "An error occurred, Please try again",
-            data: null,
-        });
+            message: "Invalid OTP",
+          },
+        })
+      );
+      // Remove token from Redis
+      // const result = await client.del(`user:${req.user.UserID}:token`);
+      return res.status(400).json({
+        status: 1,
+        message: "Invalid OTP",
+      });
     }
+
+    // const aadhaar_response = await verifyOtpAadhaar(
+    //     otp,
+    //     req.user.UserID,
+    //     req.user.TransactionId
+    // );
+    // const transactionId = aadhaar_response?.transaction_id;
+
+    const transactionId = "";
+
+    console.log("jwt", {
+      ...req.user,
+      TransactionId: transactionId,
+      isLoggedIn: 1,
+    });
+
+    const jwt_token = jwt.sign(
+      {
+        ...req.user,
+        TransactionId: transactionId,
+        isLoggedIn: 1,
+      },
+      JWT_SECRET
+    );
+
+    const token = btoa(jwt_token);
+
+    // Store token in Redis with expiration (1 hour)
+    // await client.setEx(`user:${rows[0]["UserID"]}:token`, 3600 * 3, token);
+
+    res.cookie("data", token);
+
+    // if (aadhaar_response?.status != 200) {
+    //   return res.status(400).json({
+    //     status: 1,
+    //     message: aadhaar_response?.error?.message || "Failed to send OTP",
+    //     token: token,
+    //   });
+    // }
+    // if (aadhaar_response?.data?.code != 1001) {
+    //   return res.status(400).json({
+    //     status: 1,
+    //     message: aadhaar_response?.data?.message || "Failed to send OTP",
+    //     token: token,
+    //   });
+    // }
+
+    // if(aadhaar_response?.data?.code == '1001' || otp == '999999'){
+    if (otp == "999999") {
+      res.cookie("type", req.user.UserTypeID);
+      res.cookie("name", req.user.UserFullName);
+      res.cookie("district", req.user.DistrictName);
+      res.cookie("ps", req.user.PoliceStationName);
+      res.cookie("DistrictID", req.user.DistrictID);
+      logger.debug(
+        JSON.stringify({
+          API: "sendOtp",
+          REQUEST: { otp },
+          RESPONSE: {
+            status: 0,
+            message: "OTP sent successfully",
+            type: req.user.UserTypeID,
+            name: req.user.UserFullName,
+            district: req.user.DistrictName,
+            ps: req.user.PoliceStationName,
+            token: token,
+          },
+        })
+      );
+ 
+      res.status(200).json({
+        status: 0,
+        message: "OTP sent successfully",
+        type: req.user.UserTypeID,
+        name: req.user.UserFullName,
+        district: req.user.DistrictName,
+        DistrictID: req.user.DistrictID,
+        ps: req.user.PoliceStationName,
+        isLoggedIn: 1,
+        token: token,
+      });
+    } else {
+      res.status(400).json({
+        status: 1,
+        message: "Invalid OTP",
+        token: token,
+      });
+    }
+  } catch (error) {
+    logger.error(error.message);
+    // const result = await client.del(`user:${req.user.UserID}:token`);
+    return res.status(500).json({
+      status: 1,
+      message: "An error occurred, Please try again",
+      data: null,
+    });
+  }
 };

@@ -95,3 +95,12 @@ export const getKolkataPoliceCriminalRecordSearchv4 = async (data) => {
     return null;
   }
 };
+
+export const updateCriminalInfoApi = async (payload) => {
+  try {
+    return await postRequest("crime/updateCriminalInfo", payload);
+  } catch (error) {
+    console.log("Error:", error);
+    return null;
+  }
+};

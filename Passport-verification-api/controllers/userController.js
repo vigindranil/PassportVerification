@@ -1,11 +1,15 @@
-import { updateAuthToken } from '../models/authModels.js';
-import { logoutModel } from '../models/logoutModel.js';
-import { getApplicationStatusModel, saveUserRegistrationModel } from '../models/userModel.js';
-import { updateUserActivationStatusModel } from '../models/userModel.js'
-import { showuserDetailsModel } from '../models/userModel.js'
-import {getApplicationCountsv1Model} from '../models/userModel.js'
-import logger from '../utils/logger.js';
-import {saveTransactionHistory} from '../models/logModel.js'
+import { updateAuthToken } from "../models/authModels.js";
+import { logoutModel } from "../models/logoutModel.js";
+import {
+  getApplicationStatusModel,
+  saveUserRegistrationModel,
+} from "../models/userModel.js";
+import { updateUserActivationStatusModel } from "../models/userModel.js";
+import { showuserDetailsModel } from "../models/userModel.js";
+import { getApplicationCountsv1Model } from "../models/userModel.js";
+import logger from "../utils/logger.js";
+import { saveTransactionHistory } from "../models/logModel.js";
+import client from "../redisClient.js";
 /**
  * @swagger
  * /saveUserRegistration:
@@ -63,8 +67,58 @@ import {saveTransactionHistory} from '../models/logModel.js'
  *         description: Internal server error.
  */
 export const saveUserRegistration = async (req, res) => {
-    try {
-        const { UserID,
+  try {
+    const {
+      UserID,
+      UserName,
+      FullName,
+      UserPassword,
+      Firstname,
+      LastName,
+      MobileNo,
+      EmailID,
+      Gender,
+      AADHAARNo,
+      Designation,
+      UserRoleID,
+      DistrictID,
+      PSID,
+    } = req.body;
+
+    console.log("req.user.UserID", req.user.UserID);
+    const ipaddress = "test";
+    const macAddress = "test";
+    const Longitude = "test";
+    const Latitude = "test";
+    const OperationName = "saveUserRegistration";
+    const json = "{}";
+    //  const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,req.user.UserID)
+    const result = await saveUserRegistrationModel(
+      UserID,
+      UserName,
+      FullName,
+      btoa(UserPassword),
+      Firstname,
+      LastName,
+      MobileNo,
+      EmailID,
+      Gender,
+      btoa(AADHAARNo),
+      Designation,
+      UserRoleID,
+      DistrictID,
+      PSID,
+      req.user.UserID
+    ); // change aadhar token
+
+    console.log("askodgjklmv", result);
+
+    if (result == 0) {
+      logger.debug(
+        JSON.stringify({
+          API: "saveUserRegistration",
+          REQUEST: {
+            UserID,
             UserName,
             FullName,
             UserPassword,
@@ -77,107 +131,58 @@ export const saveUserRegistration = async (req, res) => {
             Designation,
             UserRoleID,
             DistrictID,
-            PSID
-        } = req.body;
-
-        console.log("req.user.UserID", req.user.UserID);
-        const ipaddress = "test";
-        const macAddress = "test";
-        const Longitude = "test";
-        const Latitude = "test";
-        const OperationName = "saveUserRegistration";
-        const json = "{}"
-    //  const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,req.user.UserID)
-        const result = await saveUserRegistrationModel(
+            PSID,
+          },
+          RESPONSE: {
+            status: 0,
+            message: "User has been created successfully",
+          },
+        })
+      );
+      return res.status(200).json({
+        status: 0,
+        message: "User has been created successfully",
+      });
+    } else {
+      logger.debug(
+        JSON.stringify({
+          API: "saveUserRegistration",
+          REQUEST: {
             UserID,
             UserName,
             FullName,
-            btoa(UserPassword),
+            UserPassword,
             Firstname,
             LastName,
             MobileNo,
             EmailID,
             Gender,
-            btoa(AADHAARNo),
+            AADHAARNo,
             Designation,
             UserRoleID,
             DistrictID,
             PSID,
-            req.user.UserID); // change aadhar token
-
-        console.log('askodgjklmv', result);
-
-        if (result == 0) {
-            logger.debug(
-                JSON.stringify({
-                    API: "saveUserRegistration",
-                    REQUEST: {UserID,
-                        UserName,
-                        FullName,
-                        UserPassword,
-                        Firstname,
-                        LastName,
-                        MobileNo,
-                        EmailID,
-                        Gender,
-                        AADHAARNo,
-                        Designation,
-                        UserRoleID,
-                        DistrictID,
-                        PSID },
-                    RESPONSE: {
-                        status: 0,
-                        message: "User has been created successfully"
-                    },
-                })
-            );
-            return res.status(200).json({
-                status: 0,
-                message: "User has been created successfully",
-                
-            });
-        } else {
-            logger.debug(
-                JSON.stringify({
-                    API: "saveUserRegistration",
-                    REQUEST: {UserID,
-                        UserName,
-                        FullName,
-                        UserPassword,
-                        Firstname,
-                        LastName,
-                        MobileNo,
-                        EmailID,
-                        Gender,
-                        AADHAARNo,
-                        Designation,
-                        UserRoleID,
-                        DistrictID,
-                        PSID },
-                    RESPONSE: {
-                          status: 1,
-                          message: "Failed to create user"
-                    },
-                })
-            );
-            return res.status(400).json({
-                status: 1,
-                message: "Failed to create user",
-            });
-
-        }
-
-
-    } catch (error) {
-        logger.error("Error fetching state information:", error);
-        res.status(500).json({
+          },
+          RESPONSE: {
             status: 1,
-            message: "An error occurred",
-            data: null,
-        });
+            message: "Failed to create user",
+          },
+        })
+      );
+      return res.status(400).json({
+        status: 1,
+        message: "Failed to create user",
+      });
     }
+  } catch (error) {
+    logger.error("Error fetching state information:", error);
+    res.status(500).json({
+      status: 1,
+      message: "An error occurred",
+      data: null,
+    });
+  }
 };
-
 
 /**
  * @swagger
@@ -209,65 +214,62 @@ export const saveUserRegistration = async (req, res) => {
  */
 
 export const updateUserActivationStatus = async (req, res) => {
-    try {
-        const { UserID, ActivationStatus } = req.body;
-        const ipaddress = "test";
-        const macAddress = "test";
-        const Longitude = "test";
-        const Latitude = "test";
-        const OperationName = "updateUserActivationStatus";
-        const json = "{}"
+  try {
+    const { UserID, ActivationStatus } = req.body;
+    const ipaddress = "test";
+    const macAddress = "test";
+    const Longitude = "test";
+    const Latitude = "test";
+    const OperationName = "updateUserActivationStatus";
+    const json = "{}";
     // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,EntryUserId)
-        const result = await updateUserActivationStatusModel(UserID,
-            ActivationStatus); // change aadhar token
+    const result = await updateUserActivationStatusModel(
+      UserID,
+      ActivationStatus
+    ); // change aadhar token
 
-            console.log("result", result);
-            
-        if (result == 0) {
-            logger.debug(
-                JSON.stringify({
-                    API: "updateUserActivationStatus",
-                    REQUEST: {UserID, ActivationStatus  },
-                    RESPONSE: {
-                          status: 0,
-                           message: "Update user activation status successfully"
-                    },
-                })
-            );
-            return res.status(200).json({
-                status: 0,
-                message: "Update user activation status successfully",
-            });
-        } else {
-            logger.debug(
-                JSON.stringify({
-                    API: "updateUserActivationStatus",
-                    REQUEST: {UserID, ActivationStatus  },
-                    RESPONSE: {
-                         status: 1,
-                        message: "Failed to change user activation status"
-                    },
-                })
-            );
-            return res.status(400).json({
-                status: 1,
-                message: "Failed to change user activation status",
-            });
+    console.log("result", result);
 
-        }
-
-
-    } catch (error) {
-        logger.error("Error:", error);
-        res.status(500).json({
+    if (result == 0) {
+      logger.debug(
+        JSON.stringify({
+          API: "updateUserActivationStatus",
+          REQUEST: { UserID, ActivationStatus },
+          RESPONSE: {
+            status: 0,
+            message: "Update user activation status successfully",
+          },
+        })
+      );
+      return res.status(200).json({
+        status: 0,
+        message: "Update user activation status successfully",
+      });
+    } else {
+      logger.debug(
+        JSON.stringify({
+          API: "updateUserActivationStatus",
+          REQUEST: { UserID, ActivationStatus },
+          RESPONSE: {
             status: 1,
-            message: "An error occurred",
-            data: null,
-        });
+            message: "Failed to change user activation status",
+          },
+        })
+      );
+      return res.status(400).json({
+        status: 1,
+        message: "Failed to change user activation status",
+      });
     }
+  } catch (error) {
+    logger.error("Error:", error);
+    res.status(500).json({
+      status: 1,
+      message: "An error occurred",
+      data: null,
+    });
+  }
 };
-
-
 
 /**
  * @swagger
@@ -329,7 +331,6 @@ export const updateUserActivationStatus = async (req, res) => {
 
 //         }
 
-
 //     } catch (error) {
 //         console.error("Error fetching :", error);
 //         res.status(500).json({
@@ -384,239 +385,193 @@ export const updateUserActivationStatus = async (req, res) => {
  */
 
 export const showuserDetails = async (req, res) => {
-    try {
-        const ipaddress = "test";
-        const macAddress = "test";
-        const Longitude = "test";
-        const Latitude = "test";
-        const OperationName = "showuserDetails";
-        const json = "{}"
+  try {
+    const ipaddress = "test";
+    const macAddress = "test";
+    const Longitude = "test";
+    const Latitude = "test";
+    const OperationName = "showuserDetails";
+    const json = "{}";
     //  const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0,OperationName ,json ,EntryUserId)
-        const [result] = await showuserDetailsModel(req.user.UserID);
-        console.log("result", result);
+    const [result] = await showuserDetailsModel(req.user.UserID);
+    console.log("result", result);
 
-        if (result?.length !== 0) {
-            logger.debug(
-                JSON.stringify({
-                    API: "showuserDetails",
-                    REQUEST: {EntryuserId: req.user.UserID },
-                    RESPONSE: {
-                        status: 0,
-                        message: "Data fetched successfully",
-                        data: result
-                    },
-                })
-            );
-            return res.status(200).json({
-                status: 0,
-                message: "Data fetched successfully",
-                data: result
-            });
-        } else {
-            logger.debug(
-                JSON.stringify({
-                    API: "showuserDetails",
-                    REQUEST: {EntryuserId: req.user.UserID },
-                    RESPONSE: {
-                        status: 1,
-                        message: "No data found",
-                    },
-                })
-            );
-            return res.status(400).json({
-                status: 1,
-                message: "No data found",
-            });
-
-        }
-
-
-    } catch (error) {
-        logger.error("Error fetching :", error);
-        res.status(500).json({
+    if (result?.length !== 0) {
+      logger.debug(
+        JSON.stringify({
+          API: "showuserDetails",
+          REQUEST: { EntryuserId: req.user.UserID },
+          RESPONSE: {
+            status: 0,
+            message: "Data fetched successfully",
+            data: result,
+          },
+        })
+      );
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: result,
+      });
+    } else {
+      logger.debug(
+        JSON.stringify({
+          API: "showuserDetails",
+          REQUEST: { EntryuserId: req.user.UserID },
+          RESPONSE: {
             status: 1,
-            message: "An error occurred",
-            data: null,
-        });
+            message: "No data found",
+          },
+        })
+      );
+      return res.status(400).json({
+        status: 1,
+        message: "No data found",
+      });
     }
+  } catch (error) {
+    logger.error("Error fetching :", error);
+    res.status(500).json({
+      status: 1,
+      message: "An error occurred",
+      data: null,
+    });
+  }
 };
-
-
 
 export const getApplicationStatus = async (req, res) => {
-    try {
-        const { status_id, periord_id } = req.body;
-        const ipaddress = "test";
-        const macAddress = "test";
-        const Longitude = "test";
-        const Latitude = "test";
-        const OperationName = "getApplicationStatus";
-        const json = "{}"
+  try {
+    const { status_id, periord_id } = req.body;
+    const ipaddress = "test";
+    const macAddress = "test";
+    const Longitude = "test";
+    const Latitude = "test";
+    const OperationName = "getApplicationStatus";
+    const json = "{}";
     //  const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,EntryUserId)
 
-        const [result] = await getApplicationStatusModel(req.user.UserID, status_id,periord_id);
-        console.log("result", result);
+    const [result] = await getApplicationStatusModel(
+      req.user.UserID,
+      status_id,
+      periord_id
+    );
+    console.log("result", result);
 
-        if (result?.length > 0) {
-            logger.debug(
-                JSON.stringify({
-                    API: "getApplicationStatus",
-                    REQUEST: {status_id, periord_id  },
-                    RESPONSE: {
-                        status: 0,
-                        message: "Data fetched successfully",
-                        data: result
-                    },
-                })
-            );
-            return res.status(200).json({
-                status: 0,
-                message: "Data fetched successfully",
-                data: result
-            });
-        } else {
-            logger.debug(
-                JSON.stringify({
-                    API: "getApplicationStatus",
-                    REQUEST: {status_id, periord_id  },
-                    RESPONSE: {
-                          status: 1,
-                          message: "No data found"
-                    },
-                })
-            );
-            return res.status(400).json({
-                status: 1,
-                message: "No data found",
-            });
-
-        }
-
-
-    } catch (error) {
-        logger.error("Error fetching :", error);
-        res.status(500).json({
+    if (result?.length > 0) {
+      logger.debug(
+        JSON.stringify({
+          API: "getApplicationStatus",
+          REQUEST: { status_id, periord_id },
+          RESPONSE: {
+            status: 0,
+            message: "Data fetched successfully",
+            data: result,
+          },
+        })
+      );
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: result,
+      });
+    } else {
+      logger.debug(
+        JSON.stringify({
+          API: "getApplicationStatus",
+          REQUEST: { status_id, periord_id },
+          RESPONSE: {
             status: 1,
-            message: "An error occurred",
-            data: null,
-        });
+            message: "No data found",
+          },
+        })
+      );
+      return res.status(400).json({
+        status: 1,
+        message: "No data found",
+      });
     }
+  } catch (error) {
+    logger.error("Error fetching :", error);
+    res.status(500).json({
+      status: 1,
+      message: "An error occurred",
+      data: null,
+    });
+  }
 };
-
-
-
 
 export const getApplicationCountsv1 = async (req, res) => {
-    try {
-        const ipaddress = "test";
-        const macAddress = "test";
-        const Longitude = "test";
-        const Latitude = "test";
-        const OperationName = "getApplicationCountsv1";
-        const json = "{}"
-        // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,req.user.UserID)
-        const [result] = await getApplicationCountsv1Model(req.user.UserID);
-        console.log("result", result);
+  try {
+    const ipaddress = "test";
+    const macAddress = "test";
+    const Longitude = "test";
+    const Latitude = "test";
+    const OperationName = "getApplicationCountsv1";
+    const json = "{}";
+    // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,req.user.UserID)
+    const [result] = await getApplicationCountsv1Model(req.user.UserID);
+    console.log("result", result);
 
-        if (result?.length !== 0) {
-            logger.debug(
-                JSON.stringify({
-                    API: "getApplicationCountsv1",
-                    REQUEST: {EntryuserId: req.user.UserID },
-                    RESPONSE: {
-                        status: 0,
-                        message: "Data fetched successfully",
-                        data: result[0]
-                    },
-                })
-            );
-            return res.status(200).json({
-                status: 0,
-                message: "Data fetched successfully",
-                data: result[0]
-            });
-        } else {
-            logger.debug(
-                JSON.stringify({
-                    API: "getApplicationCountsv1",
-                    REQUEST: {EntryuserId : req.user.UserID },
-                    RESPONSE: {
-                        status: 1,
-                        message: "No data found",
-                    },
-                })
-            );
-            return res.status(400).json({
-                status: 1,
-                message: "No data found",
-            });
-
-        }
-
-
-    } catch (error) {
-        logger.error("Error fetching :", error);
-        res.status(500).json({
+    if (result?.length !== 0) {
+      logger.debug(
+        JSON.stringify({
+          API: "getApplicationCountsv1",
+          REQUEST: { EntryuserId: req.user.UserID },
+          RESPONSE: {
+            status: 0,
+            message: "Data fetched successfully",
+            data: result[0],
+          },
+        })
+      );
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: result[0],
+      });
+    } else {
+      logger.debug(
+        JSON.stringify({
+          API: "getApplicationCountsv1",
+          REQUEST: { EntryuserId: req.user.UserID },
+          RESPONSE: {
             status: 1,
-            message: "An error occurred",
-            data: null,
-        });
+            message: "No data found",
+          },
+        })
+      );
+      return res.status(400).json({
+        status: 1,
+        message: "No data found",
+      });
     }
+  } catch (error) {
+    logger.error("Error fetching :", error);
+    res.status(500).json({
+      status: 1,
+      message: "An error occurred",
+      data: null,
+    });
+  }
 };
-
 
 export const logout = async (req, res) => {
-    try {
-        const ipaddress = "test";
-        const macAddress = "test";
-        const Longitude = "test";
-        const Latitude = "test";
-        const OperationName = "logout";
-        const json = "{}"
-    //  const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,EntryUserId)
-        // const result = await logoutModel(req.user.UserID, null, null);
-        const result = 0;
-            console.log("result", result);
-            
-        if (result == 0) {
-            logger.debug(
-                JSON.stringify({
-                    API: "logout",
-                    REQUEST: {EntryuserId : req.user.UserID },
-                    RESPONSE: {
-                        status: 0,
-                        message: "Logout successfully"
-                    },
-                })
-            );
-            return res.status(200).json({
-                status: 0,
-                message: "Logout successfully",
-            });
-        } else {
-            logger.debug(
-                JSON.stringify({
-                    API: "logout",
-                    REQUEST: {EntryuserId : req.user.UserID },
-                    RESPONSE: {
-                        status: 1,
-                        message: "Failed to logout",
-                    },
-                })
-            );
-            return res.status(400).json({
-                status: 1,
-                message: "Failed to logout",
-            });
+  try {
+    // Remove token from Redis
+    // const result = await client.del(`user:${req.user.UserID}:token`);
+    // console.log("result", result);
 
-        }
-    } catch (error) {
-        logger.error("Error:", error);
-        res.status(500).json({
-            status: 1,
-            message: "Failed to logout",
-            data: null,
-        });
-    }
+    return res.status(200).json({
+      status: 0,
+      message: "Logout successfully",
+    });
+
+  } catch (error) {
+    logger.error("Error:", error);
+    res.status(500).json({
+      status: 1,
+      message: "Failed to logout",
+      data: null,
+    });
+  }
 };
-

@@ -1,5 +1,4 @@
 "use client";
-
 import * as React from "react";
 import { LayoutGrid, PackageSearch } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
@@ -47,10 +46,10 @@ const data = {
           { "title": "Total Pending Applications", "url": "/totalPending" },
           { "title": "Last 15 Days Pending", "url": "/last15DaysPending" },
           { "title": "Applications Accepted by EO", "url": "/eoAcceptedFile" },
-          { "title": "Pending Verification (EO)", "url": "/pendingVerificatonEO" },
-          { "title": "Verification Completed (EO)", "url": "/verificationCompletedEO" },
+          { "title": "Pending in EO", "url": "/pendingVerificatonEO" },
+          { "title": "Completed By EO", "url": "/verificationCompletedEO" },
           { "title": "Pending in OC", "url": "/pendingInOC" },
-          { "title": "Completed By OC", "url": "/verificationCompletedEO" },
+          { "title": "Completed By OC", "url": "/completed-oc" },
           { "title": "Pending in SP/DIB", "url": "/pendingInSPDIB" },
           { "title": "Pending in Enquiry Officer", "url": "/pendingInEnquiryOfficer" },
         ]
@@ -76,7 +75,7 @@ const data = {
         "isActive": true,
         "type": 40,
         "items": [
-          { "title": "Verify Pending (PS)", "url": "/allFiles" },
+          { "title": "Verify Pending in (PS)", "url": "/allFiles" },
           { "title": "Accepted but Verification Pending (EO)", "url": "/acceptedAndVerificationPending-eo" },
           { "title": "Verify Completed (EO)", "url": "/verificationCompletedEO" },
         ]
@@ -130,8 +129,8 @@ const data = {
           { "title": "Total Pending Applications", "url": "/totalPending" },
           { "title": "Last 15 Days Pending", "url": "/last15DaysPending" },
           { "title": "EO Accepted", "url": "/eoAcceptedFile" },
-          { "title": "Pending Verification (EO)", "url": "/pendingVerificatonEO" },
-          { "title": "Verification Completed (EO)", "url": "/verificationCompletedEO" },
+          { "title": "Pending in (EO)", "url": "/pendingVerificatonEO" },
+          { "title": "Completed in EO", "url": "/verificationCompletedEO" },
           { "title": "Pending in OC", "url": "/pendingInOC" },
           { "title": "Completed By OC", "url": "/verificationCompletedEO" },
           { "title": "Pending in SP/DIB", "url": "/allFiles-sp" },
@@ -161,8 +160,8 @@ const data = {
         "isActive": true,
         "type": 50,
         "items": [
-          { "title": "Pending In SE", "url": "/allFiles-oc" },
-          { "title": "Completed By SE", "url": "/verificationCompletedEO" },
+          { "title": "Pending in SE", "url": "/allFiles-oc" },
+          { "title": "Completed by SE", "url": "/verificationCompletedEO" },
         ]
       },
     ]

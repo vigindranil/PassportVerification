@@ -15,6 +15,7 @@ const page = () => {
         Cookies.remove("name");
         Cookies.remove("ps");
         Cookies.remove("district");
+        Cookies.remove("ds_id");
         console.log("Error saving user:", error);
         window.location.href = "/login";
       } catch (error) {
@@ -23,6 +24,7 @@ const page = () => {
         Cookies.remove("name");
         Cookies.remove("ps");
         Cookies.remove("district");
+        Cookies.remove("ds_id");
         console.log("Error saving user:", error);
         window.location.href = "/login";
       }

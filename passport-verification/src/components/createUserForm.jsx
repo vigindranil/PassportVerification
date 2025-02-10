@@ -248,8 +248,9 @@ const UserManagement = () => {
     }
   }
 
-  const onChangeDistrict = async (DistrictID) => {
+  const onChangeDistrict = async () => {
     try {
+      const DistrictID = Cookies.load("ds_id")
       setPsLoader("Loading...")
       setFormData({ ...formData, DistrictID: DistrictID })
       const policeStationData = await getPoliceStationsByDistrict(DistrictID)
@@ -270,21 +271,16 @@ const UserManagement = () => {
   }
 
   useEffect(() => {
-    fetchDistricts()
     fetchUserDetails()
-    const districtId = Cookies.load("ds_id")
-    console.log("districtId", districtId)
-    if (districtId) {
-      setFormData((prevState) => ({ ...prevState, DistrictID: districtId }))
-      onChangeDistrict(districtId)
-    }
   }, []) // Added empty dependency array to fix the issue
 
   useEffect(() => {
     const districtId = Cookies.load("ds_id")
+    console.log("districtId",districtId);
+    
     if (districtId) {
       setFormData((prevState) => ({ ...prevState, DistrictID: districtId }))
-      onChangeDistrict(districtId)
+      onChangeDistrict()
     }
   }, [])
 
@@ -608,7 +604,7 @@ const UserManagement = () => {
               </Button>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Search:</span>
+              <span className="text-sm text-gray-500"></span>
               <Input
                 className="w-64"
                 placeholder="Search..."

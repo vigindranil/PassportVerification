@@ -6,12 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "./ui/input";
 import moment from "moment";
 import { getKolkataPoliceCriminalRecordSearchv4, getPccCrimeDetails } from "@/app/applicationDetails/[FileNumber]/api";
+import DateRangePicker from "./date-range-picker";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
+import { VisuallyHidden } from "./ui/visually-hidden";
+import { Eye } from "lucide-react";
 
 const SkeletonLoader = () => (
   <>
     {[...Array(3)].map((_, index) => (
       <TableRow key={index}>
-        {[...Array(6)].map((_, i) => (
+        {[...Array(7)].map((_, i) => (
           <TableCell key={i}>
             <div className="h-4 bg-gray-300 rounded w-24 animate-pulse"></div>
           </TableCell>
@@ -21,7 +25,7 @@ const SkeletonLoader = () => (
   </>
 );
 
-const CrimeAcivityTableKolkataPolice = () => {
+const CrimeAcivityTableKolkataPolice = ({selectedRows, setSelectedRows}) => {
   const [crimeData, setCrimeData] = useState([]);
   const [isLoadingPccRecords, setIsLoadingPccRecords] = useState(false);
   const [kolkataPoliceRecords, setKolkataPoliceRecords] = useState({
@@ -36,9 +40,10 @@ const CrimeAcivityTableKolkataPolice = () => {
     policestations: "",
     pageno: "1",
   });
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDetails, setSelectedDetails] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 6;
 
   const fetchCIDRecords = async (crimeData) => {
     try {
@@ -58,13 +63,20 @@ const CrimeAcivityTableKolkataPolice = () => {
   const endIndex = startIndex + itemsPerPage;
   const currentData = crimeData.slice(startIndex, endIndex);
 
+  const toggleSelection = (crimeDetail) => {
+    setSelectedRows((prevSelected) => {
+      const exists = prevSelected.some((item) => item.PROV_CRM_NO === crimeDetail.PROV_CRM_NO);
+      return exists ? prevSelected.filter((item) => item.PROV_CRM_NO !== crimeDetail.PROV_CRM_NO) : [...prevSelected, crimeDetail];
+    });
+  };
+
   return (
     <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl overflow-hidden">
       <div className="m-3">
         <h1 className="text-xl font-bold text-zinc-500">Kolkata Police Criminal Records</h1>
         <hr className="my-2" />
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center justify-center mb-6 flex-col">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 w-full my-4 px-14">
             <Input
               type="text"
               placeholder="Enter First Name (required)"
@@ -90,22 +102,12 @@ const CrimeAcivityTableKolkataPolice = () => {
               onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, father_accused: e.target.value })}
             />
             <Input
-              type="text"
+              type="number"
+              min="1"
+              default=""
               placeholder="Enter Age (optional)"
               className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-64 p-2"
-              onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, age_accused: e.target.value })}
-            />
-            <Input
-              type="text"
-              placeholder="Enter From (optional)"
-              className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-64 p-2"
-              onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, from_date: e.target.value })}
-            />
-            <Input
-              type="text"
-              placeholder="Enter To (optional)"
-              className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-64 p-2"
-              onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, to_date: e.target.value })}
+              onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, age_accused: e.target.value < 1 ? 1 : e.target.value})}
             />
             <Input
               type="text"
@@ -119,14 +121,16 @@ const CrimeAcivityTableKolkataPolice = () => {
               className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-64 p-2"
               onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, policestations: e.target.value })}
             />
-            <Button
-              variant="secondary"
-              className="mx-2 text-slate-700 hover:bg-zinc-200 shadow-sm border-2"
-              onClick={() => fetchCIDRecords(kolkataPoliceRecords)}
-            >
-              Search
-            </Button>
+            <DateRangePicker setKolkataPoliceRecords={setKolkataPoliceRecords} />
           </div>
+          <Button
+            variant="secondary"
+            disabled={isLoadingPccRecords}
+            className="mx-2 text-slate-700 hover:bg-zinc-200 shadow-sm border-2"
+            onClick={() => fetchCIDRecords(kolkataPoliceRecords)}
+          >
+            {isLoadingPccRecords ? 'Searching...' : 'Search Criminal Records'}
+          </Button>
         </div>
 
         <Card>
@@ -135,12 +139,13 @@ const CrimeAcivityTableKolkataPolice = () => {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-slate-100 hover:bg-slate-100">
+                    <TableHead>Select</TableHead>
                     <TableHead>Case Ref. No.</TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Father's Name</TableHead>
                     <TableHead>Address</TableHead>
                     <TableHead>Year</TableHead>
-                    <TableHead>Arrest Date</TableHead>
+                    <TableHead>Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -149,21 +154,104 @@ const CrimeAcivityTableKolkataPolice = () => {
                   ) : currentData.length > 0 ? (
                     currentData.map((crimeDetail, index) => (
                       <TableRow key={index}>
+                        <TableCell>
+                          <input
+                            type="checkbox"
+                            className="w-4 h-4"
+                            checked={selectedRows.some((item) => item.PROV_CRM_NO === crimeDetail.PROV_CRM_NO)}
+                            onChange={() => toggleSelection(crimeDetail)}
+                          />
+                        </TableCell>
                         <TableCell>{crimeDetail?.PROV_CRM_NO || 'N/A'}</TableCell>
                         <TableCell>{crimeDetail?.NAME || 'N/A'}</TableCell>
                         <TableCell>{crimeDetail?.FATHERNAME || 'N/A'}</TableCell>
                         <TableCell>{crimeDetail?.ADDRESS || 'N/A'}</TableCell>
                         <TableCell>{crimeDetail?.CASEYEAR || 'N/A'}</TableCell>
-                        <TableCell>{crimeDetail?.ARREST_DATE || 'N/A'}</TableCell>
+                        <TableCell>
+                          <button
+                            className="flex bg-blue-100 justify-center items-center p-1 m-1 px-2 rounded-md hover:bg-blue-200 text-sm"
+                            onClick={() => {
+                              setSelectedDetails(crimeDetail)
+                              setIsModalOpen(true)
+                            }}
+                          >
+                            <Eye className="text-blue-600 mr-2 h-4 w-4" />
+                            View
+                          </button>
+                        </TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center">No Data Found</TableCell>
+                      <TableCell colSpan={7} className="text-center">No Record(s) Found</TableCell>
                     </TableRow>
                   )}
                 </TableBody>
               </Table>
+              {isModalOpen && (
+                <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                  <DialogContent className="w-full">
+                    <VisuallyHidden>
+                      <DialogTitle>Case Details</DialogTitle>
+                    </VisuallyHidden>
+                    <div className="space-y-2 h-full w-full px-5">
+                      <h1 className="text-center text-slate-500 font-bold text-xl mb-10 underline">Case Details</h1>
+                      {selectedDetails &&
+                        <div>
+                          {selectedDetails?.PROV_CRM_NO && <div><span className='font-bold'>PROV_CRM_NO:</span> <span>{selectedDetails?.PROV_CRM_NO}</span></div>}
+                          {selectedDetails?.NAME && <div><span className='font-bold'>NAME:</span> <span>{selectedDetails?.NAME}</span></div>}
+                          {selectedDetails?.ADDRESS && <div><span className='font-bold'>ADDRESS:</span> <span>{selectedDetails?.ADDRESS}</span></div>}
+                          {selectedDetails?.FATHERNAME && <div><span className='font-bold'>FATHERNAME:</span> <span>{selectedDetails?.FATHERNAME}</span></div>}
+                          {selectedDetails?.SEX && <div><span className='font-bold'>SEX:</span> <span>{selectedDetails?.SEX}</span></div>}
+                          {selectedDetails?.AGE && <div><span className='font-bold'>AGE:</span> <span>{selectedDetails?.AGE}</span></div>}
+                          {selectedDetails?.RELIGION && <div><span className='font-bold'>RELIGION:</span> <span>{selectedDetails?.RELIGION}</span></div>}
+                          {selectedDetails?.NATIONALITY && <div><span className='font-bold'>NATIONALITY:</span> <span>{selectedDetails?.NATIONALITY}</span></div>}
+                          {selectedDetails?.ANAME1 && <div><span className='font-bold'>ANAME1:</span> <span>{selectedDetails?.ANAME1}</span></div>}
+                          {selectedDetails?.ANAME2 && <div><span className='font-bold'>ANAME2:</span> <span>{selectedDetails?.ANAME2}</span></div>}
+                          {selectedDetails?.ANAME3 && <div><span className='font-bold'>ANAME3:</span> <span>{selectedDetails?.ANAME3}</span></div>}
+                          {selectedDetails?.ANAME4 && <div><span className='font-bold'>ANAME4:</span> <span>{selectedDetails?.ANAME4}</span></div>}
+                          {selectedDetails?.PSCODE && <div><span className='font-bold'>PSCODE:</span> <span>{selectedDetails?.PSCODE}</span></div>}
+                          {selectedDetails?.ADDR && <div><span className='font-bold'>ADDR:</span> <span>{selectedDetails?.ADDR}</span></div>}
+                          {selectedDetails?.BRIEF_FACT && <div><span className='font-bold'>BRIEF_FACT:</span> <span>{selectedDetails?.BRIEF_FACT}</span></div>}
+                          {selectedDetails?.CLASS && <div><span className='font-bold'>CLASS:</span> <span>{selectedDetails?.CLASS}</span></div>}
+                          {selectedDetails?.SUBCLASS && <div><span className='font-bold'>SUBCLASS:</span> <span>{selectedDetails?.SUBCLASS}</span></div>}
+                          {selectedDetails?.TRNID && <div><span className='font-bold'>TRNID:</span> <span>{selectedDetails?.TRNID}</span></div>}
+                          {selectedDetails?.CRIMEYEAR && <div><span className='font-bold'>CRIMEYEAR:</span> <span>{selectedDetails?.CRIMEYEAR}</span></div>}
+                          {selectedDetails?.CRIMENO && <div><span className='font-bold'>CRIMENO:</span> <span>{selectedDetails?.CRIMENO}</span></div>}
+                          {selectedDetails?.WA_YEAR && <div><span className='font-bold'>WA_YEAR:</span> <span>{selectedDetails?.WA_YEAR}</span></div>}
+                          {selectedDetails?.WASLNO && <div><span className='font-bold'>WASLNO:</span> <span>{selectedDetails?.WASLNO}</span></div>}
+                          {selectedDetails?.SLNO && <div><span className='font-bold'>SLNO:</span> <span>{selectedDetails?.SLNO}</span></div>}
+                          {selectedDetails?.BEARD && <div><span className='font-bold'>BEARD:</span> <span>{selectedDetails?.BEARD}</span></div>}
+                          {selectedDetails?.BIRTHMARK && <div><span className='font-bold'>BIRTHMARK:</span> <span>{selectedDetails?.BIRTHMARK}</span></div>}
+                          {selectedDetails?.BUILT && <div><span className='font-bold'>BUILT:</span> <span>{selectedDetails?.BUILT}</span></div>}
+                          {selectedDetails?.BURNMARK && <div><span className='font-bold'>BURNMARK:</span> <span>{selectedDetails?.BURNMARK}</span></div>}
+                          {selectedDetails?.COMPLEXION && <div><span className='font-bold'>COMPLEXION:</span> <span>{selectedDetails?.COMPLEXION}</span></div>}
+                          {selectedDetails?.CUTMARK && <div><span className='font-bold'>CUTMARK:</span> <span>{selectedDetails?.CUTMARK}</span></div>}
+                          {selectedDetails?.DEFORMITY && <div><span className='font-bold'>DEFORMITY:</span> <span>{selectedDetails?.DEFORMITY}</span></div>}
+                          {selectedDetails?.EAR && <div><span className='font-bold'>EAR:</span> <span>{selectedDetails?.EAR}</span></div>}
+                          {selectedDetails?.EYE && <div><span className='font-bold'>EYE:</span> <span>{selectedDetails?.EYE}</span></div>}
+                          {selectedDetails?.EYEBROW && <div><span className='font-bold'>EYEBROW:</span> <span>{selectedDetails?.EYEBROW}</span></div>}
+                          {selectedDetails?.FACE && <div><span className='font-bold'>FACE:</span> <span>{selectedDetails?.FACE}</span></div>}
+                          {selectedDetails?.HAIR && <div><span className='font-bold'>HAIR:</span> <span>{selectedDetails?.HAIR}</span></div>}
+                          {selectedDetails?.MOLE && <div><span className='font-bold'>MOLE:</span> <span>{selectedDetails?.MOLE}</span></div>}
+                          {selectedDetails?.MOUSTACHE && <div><span className='font-bold'>MOUSTACHE:</span> <span>{selectedDetails?.MOUSTACHE}</span></div>}
+                          {selectedDetails?.NOSE && <div><span className='font-bold'>NOSE:</span> <span>{selectedDetails?.NOSE}</span></div>}
+                          {selectedDetails?.SCARMARK && <div><span className='font-bold'>SCARMARK:</span> <span>{selectedDetails?.SCARMARK}</span></div>}
+                          {selectedDetails?.TATTOOMARK && <div><span className='font-bold'>TATTOOMARK:</span> <span>{selectedDetails?.TATTOOMARK}</span></div>}
+                          {selectedDetails?.WARTMARK && <div><span className='font-bold'>WARTMARK:</span> <span>{selectedDetails?.WARTMARK}</span></div>}
+                          {selectedDetails?.CATEGORY && <div><span className='font-bold'>CATEGORY:</span> <span>{selectedDetails?.CATEGORY}</span></div>}
+                          {selectedDetails?.US_CLASS && <div><span className='font-bold'>US_CLASS:</span> <span>{selectedDetails?.US_CLASS}</span></div>}
+                          {selectedDetails?.MOD_OPER && <div><span className='font-bold'>MOD_OPER:</span> <span>{selectedDetails?.MOD_OPER}</span></div>}
+                          {selectedDetails?.CASENO && <div><span className='font-bold'>CASENO:</span> <span>{selectedDetails?.CASENO}</span></div>}
+                          {selectedDetails?.CASEYEAR && <div><span className='font-bold'>CASEYEAR:</span> <span>{selectedDetails?.CASEYEAR}</span></div>}
+                          {selectedDetails?.CRSGENERALID && <div><span className='font-bold'>CRSGENERALID:</span> <span>{selectedDetails?.CRSGENERALID}</span></div>}
+                          {selectedDetails?.ARREST_DATE && <div><span className='font-bold'>ARREST_DATE:</span> <span>{selectedDetails?.ARREST_DATE}</span></div>}
+                        </div>
+                      }
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
             </div>
 
             {!isLoadingPccRecords && totalPages > 1 && (
@@ -203,6 +291,19 @@ const CrimeAcivityTableKolkataPolice = () => {
             )}
           </CardContent>
         </Card>
+        {/* Selected Rows Display */}
+        {selectedRows.length > 0 && (
+          <div className="mt-6 p-4 border rounded-lg bg-gray-50">
+            <h2 className="text-lg font-semibold">Record found from 'Kolkata Police Criminal Records' :</h2>
+            <ul className="list-disc pl-5">
+              {selectedRows.map((row, index) => (
+                <li key={index} className="text-sm">
+                  {row.NAME} - {row.PROV_CRM_NO} (Address: {row.ADDR || 'N/A'})
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );
