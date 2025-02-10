@@ -1,3 +1,0 @@
-2025-02-10 12:02:55 | ERROR | Error fetching : Database error: read ECONNRESET
-2025-02-10 12:16:23 | ERROR | Error fetching districts: Database error: connect ECONNREFUSED 115.187.62.16:3306
-2025-02-10 12:16:23 | ERROR | Error fetching : Database error: connect ECONNREFUSED 115.187.62.16:3306

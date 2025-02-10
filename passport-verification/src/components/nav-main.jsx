@@ -58,8 +58,8 @@ export function NavMain({ items }) {
                     <SidebarMenuSub>
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
-                            <Link className={`text-xs ${pathname == subItem.url && 'font-semibold text-indigo-600 hover:text-indigo-600 bg-indigo-100 hover:bg-indigo-100'}`} href={subItem.url}>
+                          <SidebarMenuSubButton className={`text-xs ${pathname == subItem.url && 'font-semibold text-indigo-500 hover:text-indigo-600 bg-indigo-100 hover:bg-indigo-100'}`} asChild>
+                            <Link className={`text-xs ${pathname == subItem.url && 'font-semibold text-indigo-500 hover:text-indigo-600 bg-indigo-100 hover:bg-indigo-100'}`} href={subItem.url}>
                               <span>{subItem.title}</span>
                             </Link>
                           </SidebarMenuSubButton>
