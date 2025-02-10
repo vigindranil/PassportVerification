@@ -59,7 +59,7 @@ import logger from '../utils/logger.js';
  */
 export const getPoliceStationsByDistrict = async (req, res) => {
   try {
-    const { districtId } = req.user.UserID;
+    const districtId = req.user.DistrictID;
 
     if (!districtId) {
       logger.debug(
