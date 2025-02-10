@@ -53,26 +53,26 @@ export const sendOtp = async (req, res) => {
     }
 
     if (rows !== undefined && rows[0]?.length !== 0) {
-      //   const transactionId = aadhaar_response?.transaction_id;
-      //   const aadhaar_response = await generateOtpAadhaar(
-      //     atob(rows[0]["AADHAARNo"]),
-      //     rows[0]["UserID"]
-      //   );
-      //   console.log("transactionId", transactionId);
+        
+        // const aadhaar_response = await generateOtpAadhaar(
+        //   atob(rows[0]["AADHAARNo"]),
+        //   rows[0]["UserID"]
+        // );
 
-      //   if (aadhaar_response?.status != 200) {
-      //     return res.status(400).json({
-      //       status: 1,
-      //       message: aadhaar_response?.error?.message || "Failed to send OTP",
-      //     });
-      //   }
-      //   if (aadhaar_response?.data?.code != "1001") {
-      //     return res.status(400).json({
-      //       status: 1,
-      //       message: aadhaar_response?.data?.message || "Failed to send OTP",
-      //     });
-      //   }
+        // if (aadhaar_response?.status != 200) {
+        //   return res.status(400).json({
+        //     status: 1,
+        //     message: aadhaar_response?.error?.message || "Failed to send OTP",
+        //   });
+        // }
+        // if (aadhaar_response?.data?.code != "1001") {
+        //   return res.status(400).json({
+        //     status: 1,
+        //     message: aadhaar_response?.data?.message || "Failed to send OTP",
+        //   });
+        // }
       const transactionId = "";
+      // const transactionId = aadhaar_response?.transaction_id;
 
       const jwt_token = jwt.sign(
         {
