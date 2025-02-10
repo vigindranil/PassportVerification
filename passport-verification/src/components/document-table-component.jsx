@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
-import { CheckCircle2, CheckCircle2Icon, Eye, FileCheck2, Loader, MapPin, Search } from "lucide-react"
+import { AlertCircle, CheckCircle2, CheckCircle2Icon, Eye, FileCheck2, Loader, MapPin, Search } from "lucide-react"
 import Image from "next/image"
 import { VisuallyHidden } from "@/components/ui/visually-hidden"
 import { getBirthCertificateDetails, getWBSEDCLDetails, verifyApplication } from "@/app/applicationDetails/[FileNumber]/api"
@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import { motion } from "framer-motion";
 import { Button } from "./ui/button"
+import moment from "moment"
 
 const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, verificationSuccess }) => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
@@ -49,12 +50,12 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
             <span>Success!</span>
           </div>
         ),
-        description: "Data has been successfully fetched",
+        description: "Data has been successfully retrieved",
         action: (
           <ToastAction altText="close">Close</ToastAction>
         ),
       })
-      setVerifiedResponse(response);
+      setVerifiedResponse(response || "");
     } catch (error) {
       console.log(error);
       toast({
@@ -86,12 +87,12 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
             <span>Success!</span>
           </div>
         ),
-        description: "Data has been successfully fetched",
+        description: "Data has been successfully retrieved",
         action: (
           <ToastAction altText="close">Close</ToastAction>
         ),
       })
-      setVerifiedResponse(response?.data?.data);
+      setVerifiedResponse(response?.data?.data || "");
     } catch (error) {
       console.log(error);
       toast({
@@ -304,10 +305,10 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                         {selectedImage?.Isverified ? <p><span className="font-bold">Verified by:</span> {selectedImage?.verifyBy ? selectedImage?.verifyBy : 'N/A'}</p> : null}
                       </div>
 
-                      {/* already verified data */}
+                      {/* already verified electricity data */}
                       {(selectedImage?.Isverified == 1) && <div className="w-full h-[150px]">
                         <hr className="my-2" />
-                        <h1 className="text-center font-bold font-mono underline my-4">Data fetched from WBSEDCL</h1>
+                        <h1 className="text-center font-bold font-mono underline my-4">Data obtained from WBSEDCL</h1>
                         <p>
                           <span className="font-bold">Consumer Name:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.consumerName}
                         </p>
@@ -316,17 +317,22 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                         </p>
                       </div>}
 
-                      {/* current verification data */}
-                      {(!selectedImage?.Isverified && verifiedResponse) && <div className="w-full h-[150px]">
+                      {/* current verification electricity data */}
+                      {(!selectedImage?.Isverified && verifiedResponse) ? <div className="w-full h-[150px]">
                         <hr className="my-1" />
-                        <h1 className="text-center font-bold font-mono underline my-4">Data fetched from WBSEDCL</h1>
+                        <h1 className="text-center font-bold font-mono underline my-4">Data retrieved from WBSEDCL</h1>
                         <p>
                           <span className="font-bold">Consumer Name:</span> {verifiedResponse?.data?.consumerName}
                         </p>
                         <p>
                           <span className="font-bold">Consumer Address:</span> {verifiedResponse?.data?.consumerAddress}
                         </p>
-                      </div>}
+                      </div>
+                        : (verifiedResponse == "") ? <div className="w-full h-full">
+                          <hr className="my-2" />
+                          <h1 className="text-center font-bold text-red-400 m-2 flex justify-center gap-1"><AlertCircle className="text-red-600" /> No record found with this consumer ID. & installation no.</h1>
+                        </div> : null
+                      }
 
                       {(selectedImage?.Isverified || verified || verifiedResponse) ?
                         <>
@@ -344,7 +350,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                           className="flex bg-blue-500 text-slate-200 justify-center items-center p-1 m-1 mt-5 px-3 rounded-md hover:bg-blue-600 mx-auto"
                           onClick={() => verifyElectricityBill(selectedImage?.IdNumber, selectedImage?.IdNumber2)}
                         >
-                          {verifyElectricityLoading ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Fetching</span> : <><span>Fetch Data</span></>}
+                          {verifyElectricityLoading ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Retrieving...</span> : <><span>Retrieve Data</span></>}
                         </button>
                       }
 
@@ -359,7 +365,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
 
                       <div>
                         <p><span className="font-bold">Certificate No:</span> {selectedImage?.IdNumber}</p>
-                        <p><span className="font-bold">Date of Birth:</span> {selectedImage?.IdNumber2}</p>
+                        <p><span className="font-bold">Date of Birth:</span> {moment(selectedImage?.IdNumber2).format('DD/MM/YYYY')}</p>
                         {selectedImage?.Isverified == 1 ? <p><span className="font-bold">Verified by:</span> {selectedImage?.verifyBy ? selectedImage?.verifyBy : 'N/A'}</p> : null}
                       </div>
                       {(selectedImage?.Isverified || verified || verifiedResponse) ?
@@ -384,16 +390,16 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                         :
                         <button
                           className='flex bg-blue-500 text-slate-200 justify-center items-center p-1 m-1 my-3 px-3 rounded-md hover:bg-blue-600 mx-auto'
-                          onClick={() => verifyBirthCertificate(selectedImage?.IdNumber, selectedImage?.IdNumber2)}
+                          onClick={() => verifyBirthCertificate(selectedImage?.IdNumber, moment(selectedImage?.IdNumber2).format('DD/MM/YYYY'))}
                         >
-                          {verifyElectricityLoading ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Fetching</span> : <><span>Fetch Data</span></>}
+                          {verifyElectricityLoading ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Retrieving...</span> : <><span>Retrieve Data</span></>}
                         </button>}
 
-                      {/* already verified data */}
+                      {/* already verified birth certificate data */}
                       {(selectedImage?.Isverified && selectedImage?.UserAgent) ?
                         <div className="w-full h-full">
                           <hr className="my-2" />
-                          <h1 className="text-center font-bold font-mono underline">Data fetched from Janma Mrityutathya Portal</h1>
+                          <h1 className="text-center font-bold font-mono underline">Data obtained from Janma Mrityutathya Portal</h1>
 
                           <div className="w-full h-[45vh] overflow-y-auto text-sm p-2">
                             <p><span className="font-bold">Name</span> {JSON.parse(selectedImage?.UserAgent)?.ChNamae}</p>
@@ -415,28 +421,34 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                         </div>
                         : null}
 
-                      {/* current verification data */}
-                      {(!selectedImage?.Isverified && verifiedResponse) && <div className="w-full h-full">
-                        <hr className="my-2" />
-                        <h1 className="text-center font-bold font-mono underline m-2">Data fetched from Janma Mrityutathya Portal</h1>
-                        <div className="w-full h-[45vh] overflow-y-auto text-sm p-2">
-                          <p><span className="font-bold">Name: </span> {verifiedResponse?.ChNamae}</p>
-                          <p><span className="font-bold">Gender: </span> {verifiedResponse?.ChGender}</p>
-                          <p><span className="font-bold">Date of Birth: </span> {verifiedResponse?.ChDob}</p>
-                          <p><span className="font-bold">Place of Birth: </span> {verifiedResponse?.PlaceOfBirth}</p>
-                          <p><span className="font-bold">Mother Name: </span> {verifiedResponse?.MotherName}</p>
-                          <p><span className="font-bold">Monther Identity Proof: </span> {verifiedResponse?.MontherIdentityProof}</p>
-                          <p><span className="font-bold">Father Name: </span> {verifiedResponse?.FatherName}</p>
-                          <p><span className="font-bold">Father Identity Proof: </span> {verifiedResponse?.FatherIdentityProof}</p>
-                          <p><span className="font-bold">Certificate No.: </span> {verifiedResponse?.CertificateNO}</p>
-                          <p><span className="font-bold">Date of Registration: </span> {verifiedResponse?.DateOfRegistration}</p>
-                          <p><span className="font-bold">SUhid: </span> {verifiedResponse?.SUhid}</p>
-                          <p><span className="font-bold">Date of Issue: </span> {verifiedResponse?.DateOfIssue}</p>
-                          <p><span className="font-bold">Issuing Auth: </span> {verifiedResponse?.IssuingAuth}</p>
-                          <p><span className="font-bold mt-2 flex">Present Address:</span> {verifiedResponse?.PresentAdd}</p>
-                          <p><span className="font-bold mt-2 flex">Permanent Address:</span> {verifiedResponse?.PermanentAdd}</p>
+                      {/* current verification birth certificate data */}
+                      {(!selectedImage?.Isverified && verifiedResponse) ?
+                        <div className="w-full h-full">
+                          <hr className="my-2" />
+                          <h1 className="text-center font-bold font-mono underline m-2">Data obtained from Janma Mrityutathya Portal</h1>
+                          <div className="w-full h-[45vh] overflow-y-auto text-sm p-2">
+                            <p><span className="font-bold">Name: </span> {verifiedResponse?.ChNamae}</p>
+                            <p><span className="font-bold">Gender: </span> {verifiedResponse?.ChGender}</p>
+                            <p><span className="font-bold">Date of Birth: </span> {verifiedResponse?.ChDob}</p>
+                            <p><span className="font-bold">Place of Birth: </span> {verifiedResponse?.PlaceOfBirth}</p>
+                            <p><span className="font-bold">Mother Name: </span> {verifiedResponse?.MotherName}</p>
+                            <p><span className="font-bold">Monther Identity Proof: </span> {verifiedResponse?.MontherIdentityProof}</p>
+                            <p><span className="font-bold">Father Name: </span> {verifiedResponse?.FatherName}</p>
+                            <p><span className="font-bold">Father Identity Proof: </span> {verifiedResponse?.FatherIdentityProof}</p>
+                            <p><span className="font-bold">Certificate No.: </span> {verifiedResponse?.CertificateNO}</p>
+                            <p><span className="font-bold">Date of Registration: </span> {verifiedResponse?.DateOfRegistration}</p>
+                            <p><span className="font-bold">SUhid: </span> {verifiedResponse?.SUhid}</p>
+                            <p><span className="font-bold">Date of Issue: </span> {verifiedResponse?.DateOfIssue}</p>
+                            <p><span className="font-bold">Issuing Auth: </span> {verifiedResponse?.IssuingAuth}</p>
+                            <p><span className="font-bold mt-2 flex">Present Address:</span> {verifiedResponse?.PresentAdd}</p>
+                            <p><span className="font-bold mt-2 flex">Permanent Address:</span> {verifiedResponse?.PermanentAdd}</p>
+                          </div>
                         </div>
-                      </div>}
+                        : (verifiedResponse == "") ? <div className="w-full h-full">
+                          <hr className="my-2" />
+                          <h1 className="text-center font-bold text-red-400 m-2 flex justify-center gap-1"><AlertCircle className="text-red-600" /> No record found with this certificate no. & date of birth</h1>
+                        </div> : null
+                      }
                     </div>
                   </div>}
                 </div>

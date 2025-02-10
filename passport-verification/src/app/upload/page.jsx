@@ -145,7 +145,7 @@ const ExcelUploader = () => {
   useEffect(()=>{
     if (progress) {
       const timer = setInterval(() => {
-        if (progress > 0) {
+        if (progress > 0 && progress < 99) {
           setProgress(progress + 1);
         } else {
           clearInterval(timer);

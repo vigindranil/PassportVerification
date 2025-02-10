@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { OTPInput } from "@/components/otp-input"
-import { User, Lock, Eye, EyeOff, RotateCcw, LoaderCircle, CheckCircle2 } from 'lucide-react'
+import { User, Lock, Eye, EyeOff, RotateCcw, LoaderCircle, CheckCircle2, AlertCircle } from 'lucide-react'
 import { sendOtp, verifyOtp } from "@/app/login/api"
 import { useToast } from "../hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
@@ -49,7 +49,12 @@ const LoginForm = () => {
       } else {
         toast({
           variant: "destructive",
-          title: response?.message || 'Failed to login',
+          title: (
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-5 w-5" />
+              <span>{response?.message || 'Failed to login'}</span>
+            </div>
+          ),
           description: "Please try again",
         })
       }
@@ -57,7 +62,12 @@ const LoginForm = () => {
       setMessage(`Error: ${error.message}`)
       toast({
         variant: "destructive",
-        title: "Failed to Send OTP!",
+        title: (
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-5 w-5" />
+            <span>Failed to Send OTP!</span>
+          </div>
+        ),
         description: "Something went wrong, Please try again",
       })
     } finally {
@@ -94,7 +104,12 @@ const LoginForm = () => {
       } else {
         toast({
           variant: "destructive",
-          title: "Failed to Verify OTP!",
+          title: (
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-5 w-5" />
+              <span>Failed to Verify OTP!</span>
+            </div>
+          ),
           description: "Something went wrong, Please try again",
           action: <ToastAction altText="Try again">Try again</ToastAction>,
         })
@@ -105,7 +120,12 @@ const LoginForm = () => {
 
       toast({
         variant: "destructive",
-        title: "Failed to Verify OTP!",
+        title: (
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-5 w-5" />
+            <span>Failed to Verify OTP!</span>
+          </div>
+        ),
         description: "Something went wrong, Please try again",
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
@@ -139,7 +159,12 @@ const LoginForm = () => {
       } else {
         toast({
           variant: "destructive",
-          title: "Failed to Send OTP!",
+          title: (
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-5 w-5" />
+              <span>Failed to Send OTP!</span>
+            </div>
+          ),
           description: "Something went wrong, Please try again",
           action: <ToastAction altText="Try again">Try again</ToastAction>,
         })
@@ -147,7 +172,12 @@ const LoginForm = () => {
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Failed to Send OTP!",
+        title: (
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-5 w-5" />
+            <span>Failed to Send OTP!</span>
+          </div>
+        ),
         description: "Something went wrong, Please try again",
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
@@ -241,10 +271,10 @@ const LoginForm = () => {
             <p className="whitespace-pre-wrap text-center text-sm">{resendTimer !== 0 ?
               `Didn't receive the OTP? \nYou can resend in ${resendTimer} seconds.` :
               <>
-              Didn't receive the OTP?
-              <Button variant="link" onClick={handleResend} className={`text-blue-500 font-bold px-1`} disabled={resendTimer === 0 ? false : true}>
-                {loadingResendOtp ? <>Please wait...<LoaderCircle className="animate-spin" /></> : <> Resend OTP</>}
-              </Button>
+                Didn't receive the OTP?
+                <Button variant="link" onClick={handleResend} className={`text-blue-500 font-bold px-1`} disabled={resendTimer === 0 ? false : true}>
+                  {loadingResendOtp ? <>Please wait...<LoaderCircle className="animate-spin" /></> : <> Resend OTP</>}
+                </Button>
               </>}
             </p>
 

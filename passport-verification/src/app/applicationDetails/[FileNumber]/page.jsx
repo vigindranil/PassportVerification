@@ -5,7 +5,7 @@ import Sidebar from '@/components/sidebar'
 import Navbar from '@/components/navbar'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { getDetailsApplicationId, getPccCrimeDetails } from "./api"
+import { getDetailsApplicationId, getPccCrimeDetails, updateCriminalInfoApi } from "./api"
 import moment, { isMoment } from "moment"
 import DocumentTable from "@/components/document-table-component"
 import { useToast } from "@/hooks/use-toast"
@@ -16,12 +16,19 @@ import CrimeAcivityTablePCC from "@/components/crime-activity-verification-pcc"
 import CrimeAcivityTableKolkataPolice from "@/components/crime-activity-verification-kolkata-police"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import { AlertCircle, CheckCircle2 } from "lucide-react"
 
 export default function Page({ FileNumber }) {
   const [applicationDetails, setApplicationDetails] = useState(null);
   const [isLoadingStatusHistrory, setIsLoadingStatusHistrory] = useState(true)
   const [isLoadingDocumentTable, setIsLoadingDocumentTable] = useState(true);
+  const [isLoadingCriminalRecordFound, setIsLoadingCriminalRecordFound] = useState(false)
+  const [isLoadingCriminalRecordNotFound, setIsLoadingCriminalRecordNotFound] = useState(false)
   const [verificationSuccess, setVerificationSuccess] = useState(false);
+
+  const [kolkataPoliceSelectedRows, setKolkataPoliceSelectedRows] = useState([]);
+  const [cidSelectedRows, setCidSelectedRows] = useState([]);
+  const [criminalRecordsRemark, setCriminalRecordsRemark] = useState("");
 
   const { toast } = useToast()
 
@@ -37,6 +44,143 @@ export default function Page({ FileNumber }) {
     } finally {
       setIsLoadingStatusHistrory(false)
       setIsLoadingDocumentTable(false)
+    }
+  }
+
+  const handleCriminalRecordFound = async () => {
+    try {
+      setIsLoadingCriminalRecordFound(true)
+
+      const kolkataPoliceRecord = kolkataPoliceSelectedRows?.length;
+      const cidRecord = cidSelectedRows?.length;
+      let CriminalRecordType = "";
+      let CaseRefferenceNumberKolkataPolice = [];
+      let CaseRefferenceNumberCID = [];
+      let PSNameKolkataPolice = [];
+      let PSNameCID = [];
+
+      if (kolkataPoliceRecord == 0 && cidRecord == 0) {
+        toast({
+          variant: "destructive",
+          title: (
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-5 w-5" />
+              <span>No criminal records selected!</span>
+            </div>
+          ),
+          description: "Please select any criminal record and then click on this button."
+        })
+      }
+
+      if (kolkataPoliceRecord && cidRecord) {
+        // CriminalRecordType = "Kolkata Police Criminal Record & CID Criminal Record"
+        CriminalRecordType = 3
+        CaseRefferenceNumberKolkataPolice = kolkataPoliceSelectedRows?.map(record => record?.PROV_CRM_NO || 'N/A');
+        CaseRefferenceNumberCID = cidSelectedRows?.map(record => record?.case_ref_id || 'N/A');
+        PSNameKolkataPolice = kolkataPoliceSelectedRows?.map(record => record?.PSCODE || 'N/A');
+        PSNameCID = cidSelectedRows?.map(record => record?.psName || 'N/A');
+      } else if (kolkataPoliceRecord) {
+        // CriminalRecordType = "Kolkata Police Criminal Record"
+        CriminalRecordType = 1
+        CaseRefferenceNumberKolkataPolice = kolkataPoliceSelectedRows?.map(record => record?.PROV_CRM_NO || 'N/A');
+        PSNameKolkataPolice = kolkataPoliceSelectedRows?.map(record => record?.PSCODE || 'N/A');
+      } else if (cidRecord) {
+        // CriminalRecordType = "CID Records"
+        CriminalRecordType = 2
+        CaseRefferenceNumberCID = cidSelectedRows?.map(record => record?.case_ref_id || 'N/A');
+        PSNameCID = cidSelectedRows?.map(record => record?.psName || 'N/A');
+      }
+
+      if (kolkataPoliceRecord || cidRecord) {
+        const payload = {
+          "ApplicationID": FileNumber,
+          "CaseRefferenceNumber": JSON.stringify({
+            "KolkataPolice": CaseRefferenceNumberKolkataPolice,
+            "CID": CaseRefferenceNumberCID,
+          }),
+          "PSName": JSON.stringify({
+            "KolkataPolice": PSNameKolkataPolice,
+            "CID": PSNameCID,
+          }),
+          "CriminalStatus": 1,
+          "CriminalStatusRemarks": criminalRecordsRemark || 'N/A',
+          "CriminalRecordType": CriminalRecordType,
+        }
+        const response = await updateCriminalInfoApi(payload);
+        if (response?.status == 0) {
+          await fetchData();
+          toast({
+            title: (
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-5 w-5 text-green-500" />
+                <span>Successfull!</span>
+              </div>
+            ),
+            description: "Criminal activity has been verified successfully"
+          })
+        } else {
+          toast({
+            variant: "destructive",
+            title: (
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-5 w-5" />
+                <span>Failed to update criminal records!</span>
+              </div>
+            ),
+            description: "Please try again later."
+          })
+        }
+        console.log("updateCriminalInfoApi:", response);
+      }
+    } catch (e) {
+      console.log("Error:", e);
+    } finally {
+      setIsLoadingCriminalRecordFound(false)
+    }
+  }
+
+  const handleCriminalRecordNotFound = async () => {
+    try {
+      setIsLoadingCriminalRecordNotFound(true)
+
+      const payload = {
+        "ApplicationID": FileNumber,
+        "CaseRefferenceNumber": JSON.stringify({}),
+        "PSName": JSON.stringify({}),
+        "CriminalStatus": 2,
+        "CriminalStatusRemarks": criminalRecordsRemark || 'N/A',
+        "CriminalRecordType": 0,
+      }
+      const response = await updateCriminalInfoApi(payload);
+      if (response?.status == 0) {
+        await fetchData();
+        toast({
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Successfull!</span>
+            </div>
+          ),
+          description: "Criminal activity has been verified successfully"
+        })
+      } else {
+        toast({
+          variant: "destructive",
+          title: (
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-5 w-5" />
+              <span>Failed to update criminal records!</span>
+            </div>
+          ),
+          description: "Please try again later."
+        })
+      }
+      console.log("updateCriminalInfoApi:", response);
+
+    } catch (e) {
+      console.log("Error:", e);
+    } finally {
+      setIsLoadingCriminalRecordNotFound(false)
     }
   }
 
@@ -257,35 +401,64 @@ export default function Page({ FileNumber }) {
             </div>
 
             {/* Crime Activity Verification */}
-            <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+            <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden min-h-[200px]">
               <div className="bg-gradient-to-r from-violet-600 to-amber-600 px-6 py-3">
                 <h2 className="text-2xl font-bold text-white">Criminal Activity Verification</h2>
               </div>
+              {(applicationDetails?.applicationDetails?.CriminalStatus == 2) ?
+                <>
+                  <div className="space-y-2 w-full min-h-[200px] h-full py-10 flex justify-center items-baseline">
+                    <div className="flex flex-col w-full min-h-[200px] text-center justify-center items-center">
+                      <span className="text-base font-medium text-red-500 flex gap-1 items-center"><AlertCircle /> Criminal Record(s) Found</span>
+                      <div className="flex flex-col justify-start items-start w-auto max-w-[600px] py-2">
+                        <span className="text-sm text-gray-500 mb-2"><b className="text-black">Grounds for Criminal Records:</b><br/>{applicationDetails?.applicationDetails?.CriminalRecordType == 3 ? 'Kolkata Police Criminal Records & C.I.D Criminal Records' : applicationDetails?.applicationDetails?.CriminalRecordType == 2 ? 'C.I.D Criminal Record' : 'Kolkata Police Criminal Records'}</span>
+                        <span className="text-sm text-gray-500 mb-2"><b className="text-black">Verified By:</b> {applicationDetails?.applicationDetails?.CriminalRecoedVerifiedby}</span>
+                        <span className="text-justify text-sm text-gray-500 mb-2"><b className="text-black">Remarks:</b> {applicationDetails?.applicationDetails?.CrimalRemarks || 'N/A'}</span>
+                      </div>
+                    </div>
+                  </div>
+                </> :
+                (applicationDetails?.applicationDetails?.CriminalStatus == 2) ?
+                  <>
+                    <div className="space-y-2 w-full min-h-[200px] h-full py-10 flex justify-center items-baseline">
+                      <div className="flex flex-col w-full min-h-[200px] text-center justify-center items-center">
+                        <span className="text-base font-medium text-gray-500">No Criminal Records Found</span>
+                        <div className="flex flex-col justify-start items-start w-auto max-w-[500px] py-2">
+                          <span className="text-sm"><b>Verified By:</b> {applicationDetails?.applicationDetails?.CriminalRecoedVerifiedby}</span>
+                          <span className="text-justify text-sm"><b>Remarks:</b> {applicationDetails?.applicationDetails?.CrimalRemarks || 'N/A'}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </> :
+                  <>
+                    {/* Kolkata Police Crime Records */}
+                    < CrimeAcivityTableKolkataPolice selectedRows={kolkataPoliceSelectedRows} setSelectedRows={setKolkataPoliceSelectedRows} />
 
-              {/* Kolkata Police Crime Records */}
-              <CrimeAcivityTableKolkataPolice />
+                    {/* PCC Criminal Records */}
+                    <CrimeAcivityTablePCC selectedRows={cidSelectedRows} setSelectedRows={setCidSelectedRows} />
 
-              {/* PCC Criminal Records */}
-              <CrimeAcivityTablePCC />
+                    <div className="flex justify-center px-5 py-5 gap-2 flex-col">
+                      <div className="w-full">
+                        <Textarea className="w-[60%] mx-auto border-2" placeholder="Enter any remarks (optional)" value={criminalRecordsRemark} onChange={(e) => setCriminalRecordsRemark(e.target.value)}></Textarea>
+                      </div>
+                      <div className="w-full flex justify-center gap-2">
 
-              <div className="flex justify-center px-5 py-5 gap-2 flex-col">
-                <div className="w-full">
-                  <Textarea className="w-[60%] mx-auto border-2" placeholder="Enter any remarks (optional)"></Textarea>
-                </div>
-                <div className="w-full flex justify-center gap-2">
+                        <Button disabled={isLoadingCriminalRecordFound} variant="destructive" className="text-sm py-2 px-3 rounded-md shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                          onClick={() => handleCriminalRecordFound()}>
+                          {isLoadingCriminalRecordFound ? 'Please Wait...' : 'Criminal Record(s) Found'}
+                        </Button>
+                        <Button disabled={isLoadingCriminalRecordNotFound} variant="secondary" className="text-sm py-2 px-3 rounded-md shadow-sm border-2 hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                          onClick={() => handleCriminalRecordNotFound()
+                          }>
+                          {isLoadingCriminalRecordNotFound ? 'Please Wait...' : 'Criminal Record Not Found'}
+                        </Button>
+                      </div>
+                    </div>
+                  </>
 
-                  <Button variant="destructive" className="text-sm py-2 px-3 rounded-md shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2"
-                    onClick={() => console.log('test')
-                    }>
-                    Criminal Record(s) Found
-                  </Button>
-                  <Button variant="secondary" className="text-sm py-2 px-3 rounded-md shadow-sm border-2 hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
-                    onClick={() => console.log('test')
-                    }>
-                    Criminal Record Not Found
-                  </Button>
-                </div>
-              </div>
+              }
+
+
             </div>
 
             <ApplicationStatusHistory status={applicationDetails?.status} isLoadingStatusHistrory={isLoadingStatusHistrory} />

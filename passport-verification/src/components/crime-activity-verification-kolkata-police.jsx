@@ -25,7 +25,7 @@ const SkeletonLoader = () => (
   </>
 );
 
-const CrimeAcivityTableKolkataPolice = () => {
+const CrimeAcivityTableKolkataPolice = ({selectedRows, setSelectedRows}) => {
   const [crimeData, setCrimeData] = useState([]);
   const [isLoadingPccRecords, setIsLoadingPccRecords] = useState(false);
   const [kolkataPoliceRecords, setKolkataPoliceRecords] = useState({
@@ -44,7 +44,6 @@ const CrimeAcivityTableKolkataPolice = () => {
   const [selectedDetails, setSelectedDetails] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
-  const [selectedRows, setSelectedRows] = useState([]);
 
   const fetchCIDRecords = async (crimeData) => {
     try {
@@ -130,7 +129,7 @@ const CrimeAcivityTableKolkataPolice = () => {
             className="mx-2 text-slate-700 hover:bg-zinc-200 shadow-sm border-2"
             onClick={() => fetchCIDRecords(kolkataPoliceRecords)}
           >
-            {isLoadingPccRecords ? 'Searching...' : 'Search'}
+            {isLoadingPccRecords ? 'Searching...' : 'Search Criminal Records'}
           </Button>
         </div>
 

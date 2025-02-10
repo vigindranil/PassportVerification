@@ -109,7 +109,6 @@ export default function PendingApplicationDatatable({ status }) {
       
 
       if (response?.status == 0) {
-        setRefreshFlag(prev =>!prev);
         await fetchApplicationStatus();
         toast({
           title: (

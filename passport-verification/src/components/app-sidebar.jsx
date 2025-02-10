@@ -1,5 +1,4 @@
 "use client";
-
 import * as React from "react";
 import { LayoutGrid, PackageSearch } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
@@ -50,7 +49,7 @@ const data = {
           { "title": "Pending in EO", "url": "/pendingVerificatonEO" },
           { "title": "Completed By EO", "url": "/verificationCompletedEO" },
           { "title": "Pending in OC", "url": "/pendingInOC" },
-          { "title": "Completed By OC", "url": "/verificationCompletedEO" },
+          { "title": "Completed By OC", "url": "/completed-oc" },
           { "title": "Pending in SP/DIB", "url": "/pendingInSPDIB" },
           { "title": "Pending in Enquiry Officer", "url": "/pendingInEnquiryOfficer" },
         ]

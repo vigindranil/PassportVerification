@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
-
+import { usePathname } from "next/navigation";
 import {
   Collapsible,
   CollapsibleContent,
@@ -22,6 +22,7 @@ import Cookies from "react-cookies";
 import Link from "next/link";
 
 export function NavMain({ items }) {
+  const pathname = usePathname();
   const type_id = Cookies.load("type");
   const [type, setType] = useState(null);
 
@@ -58,8 +59,8 @@ export function NavMain({ items }) {
                       {item.items?.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
-                            <Link href={subItem.url}>
-                              <span className="text-xs">{subItem.title}</span>
+                            <Link className={`text-xs ${pathname == subItem.url && 'font-semibold text-indigo-600 hover:text-indigo-600 bg-indigo-100 hover:bg-indigo-100'}`} href={subItem.url}>
+                              <span>{subItem.title}</span>
                             </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>

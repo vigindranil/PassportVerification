@@ -87,6 +87,7 @@ export default function PendingApplicationDatatable({ status }) {
       console.log('reponse:', response);
 
       if (response?.status == 0) {
+        await fetchApplicationStatus();
         toast({
           title: (
             <div className="flex items-center gap-2">
@@ -97,7 +98,6 @@ export default function PendingApplicationDatatable({ status }) {
           description: response?.message,
           action: <ToastAction altText="Try again">Close</ToastAction>,
         })
-        await fetchApplicationStatus();
       } else {
         toast({
           variant: "destructive",

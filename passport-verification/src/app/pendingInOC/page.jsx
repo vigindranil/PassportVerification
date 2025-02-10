@@ -6,7 +6,7 @@ import PendingApplicationDatatable from '@/components/pendingApplication';
 
 export default function allFiles() {
   return (
-    <div className="flex h-full bg-gray-100">
+    <div className="flex h-full min-h-[100vh] bg-gray-100">
       <div className="flex-1 flex flex-col overflow-hidden">
         <main className="flex-1 p-6">
           <CardContent>

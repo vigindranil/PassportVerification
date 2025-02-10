@@ -9,9 +9,8 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { VisuallyHidden } from "./ui/visually-hidden";
 import { Eye } from "lucide-react";
 
-const CrimeAcivityTablePCC = () => {
+const CrimeAcivityTablePCC = ({selectedRows, setSelectedRows}) => {
   const [crimeData, setCrimeData] = useState([]);
-  const [selectedRows, setSelectedRows] = useState([]);
   const [isLoadingPccRecords, setIsLoadingPccRecords] = useState(false);
   const [pccInput, setPccInput] = useState({ fname: "", lname: "" });
   const [currentPage, setCurrentPage] = useState(1);
@@ -67,14 +66,14 @@ const CrimeAcivityTablePCC = () => {
         <hr className="my-2" />
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
-            <Input type="text" placeholder="First Name" className="border-gray-300 rounded-md w-32 p-2"
+            <Input type="text" placeholder="Enter First Name" className="border-gray-300 rounded-md w-52 p-2"
               onChange={(e) => setPccInput({ ...pccInput, fname: e.target.value })}
             />
-            <Input type="text" placeholder="Last Name" className="border-gray-300 rounded-md ml-4 w-32 p-2"
+            <Input type="text" placeholder="Enter Last Name" className="border-gray-300 rounded-md ml-4 w-52 p-2"
               onChange={(e) => setPccInput({ ...pccInput, lname: e.target.value })}
             />
-            <Button variant="secondary" disabled={isLoadingPccRecords} className="mx-2" onClick={() => fetchPccCrimeDetails(pccInput.fname, pccInput.lname)}>
-              {isLoadingPccRecords ? 'Searching...' : 'Search'}
+            <Button variant="secondary" disabled={isLoadingPccRecords} className="mx-2 text-slate-700 border-2 hover:bg-zinc-200" onClick={() => fetchPccCrimeDetails(pccInput.fname, pccInput.lname)}>
+              {isLoadingPccRecords ? 'Searching...' : 'Search Criminal Records'}
             </Button>
           </div>
         </div>
