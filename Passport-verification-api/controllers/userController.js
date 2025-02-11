@@ -9,7 +9,7 @@ import { showuserDetailsModel } from "../models/userModel.js";
 import { getApplicationCountsv1Model } from "../models/userModel.js";
 import logger from "../utils/logger.js";
 import { saveTransactionHistory } from "../models/logModel.js";
-import client from "../redisClient.js";
+// import client from "../redisClient.js";
 /**
  * @swagger
  * /saveUserRegistration:
