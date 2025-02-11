@@ -9,12 +9,12 @@
 2025-02-11 17:01:07 | ERROR | Error in updateEnquiryStatusController:
 2025-02-11 17:07:28 | ERROR | Error in updateEnquiryStatusController:
 2025-02-11 17:11:26 | ERROR | Error in updateEnquiryStatusController:
-2025-02-11 18:23:46 | ERROR | Error in updateEnquiryStatusController:
-2025-02-11 19:08:31 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
-2025-02-11 19:08:54 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
-2025-02-11 19:10:09 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
-2025-02-11 19:10:19 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
-2025-02-11 19:12:20 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
-2025-02-11 19:12:32 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
-2025-02-11 19:12:34 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
-2025-02-11 19:12:35 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
+2025-02-11 19:07:06 | ERROR | Error fetching state information: Incorrect integer value: '' for column 'Designation' at row 1
+2025-02-11 19:12:07 | ERROR | Error fetching state information: Lock wait timeout exceeded; try restarting transaction
+2025-02-11 19:17:44 | ERROR | Error fetching state information: Incorrect integer value: '' for column 'UserRoleID' at row 1
+2025-02-11 19:22:14 | ERROR | Error fetching state information: Incorrect integer value: '' for column 'Designation' at row 1
+2025-02-11 19:27:44 | ERROR | Error fetching state information: Incorrect integer value: '' for column 'Designation' at row 1
+2025-02-11 19:36:00 | ERROR | Error fetching state information: Incorrect integer value: '' for column 'Designation' at row 1
+2025-02-11 19:36:57 | ERROR | Error fetching state information: Incorrect integer value: '' for column 'Designation' at row 1
+2025-02-11 19:42:47 | ERROR | Error fetching state information: Incorrect integer value: '' for column 'Designation' at row 1
+2025-02-11 19:44:02 | ERROR | Error fetching state information: Incorrect integer value: '' for column 'Designation' at row 1

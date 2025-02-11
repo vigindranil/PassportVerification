@@ -39,12 +39,15 @@ export const getDistrict = async () => {
 };
 
 export const getPoliceStationsByDistrict = async (districtID) => {
+  console.log("saheeeee")
   try {
 
-    return await postRequest("master/getPoliceStationsByDistrict",
+    const response = await postRequest("master/getPoliceStationsByDistrict",
       {
         "districtId": districtID,
       });
+      console.log("raja",response);
+return response;
   } catch (error) {
     console.log("Error saving user:", error);
     return null;
