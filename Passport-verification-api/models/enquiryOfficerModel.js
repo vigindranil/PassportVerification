@@ -87,3 +87,22 @@ export async function getStatusbySEModal(
       throw new Error('Database error: ' + error.message);
     }
   }
+
+
+
+
+  export async function getCountSEModel(
+    userId 
+) {
+    try {
+        const [rows] = await pool.query("CALL sp_getCountSE(?);", [
+            userId ,
+        ]);
+        console.log("rows", rows);
+
+        return rows[0];
+    } catch (error) {
+        console.log("error", error);
+        throw new Error("Database error: " + error.message);
+    }
+}

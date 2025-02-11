@@ -18,17 +18,18 @@ export const acceptApplication = async (applicationId, citizentype, file) => {
 
 export const updateEnquiryStatus = async (applicationId, type, remarks) => {
     try {
-        const macAddress = "-";
-        const locationIp = "-";
-        const deviceId = "-";
+        const use_details = await fetch("https://ipinfo.io/json");
+        const user_details_json = await use_details.json();
+    
+        const locationIp = user_details_json?.ip;
 
         console.log("type", type);
         
         return await postRequest("application/updateEnquiryStatus", {
             "ApplicationID": applicationId,
-            "locationIp": "115.187.62.100",
-            "macAddress": "t23d-s4dn-3aos-dn338",
-            "deviceId": "98nf39937mp2eq",
+            "locationIp": locationIp,
+            "macAddress": "-",
+            "deviceId": "-",
             "StatusID": "50",
             "StatusText": type == 'approve' ? 'OC APPROVED' : 'OC NOT APPROVE',
             "Remarks": remarks

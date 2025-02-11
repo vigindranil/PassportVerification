@@ -224,3 +224,9 @@ export async function getAadharDetailsByapplicationIdModel(
     throw new Error('Database error: ' + error.message);
   }
 }
+
+
+
+
+
+

@@ -1,4 +1,4 @@
-import { getSpecialEnquiryOfficersModel ,assignApplicationToSEModel, getStatusbySEModal} from '../models/enquiryOfficerModel.js';
+import { getSpecialEnquiryOfficersModel ,assignApplicationToSEModel, getStatusbySEModal, getCountSEModel} from '../models/enquiryOfficerModel.js';
 
 export const getSpecialEnquiryOfficers = async (req, res) => {
   const EntryUserID = req.user.UserID; 
@@ -93,6 +93,36 @@ export const assignApplication = async (req, res) => {
       return res.status(500).json({
         status: 1,
         message: 'An error occurred while retrieving application statuses.',
+        error: error.message,
+      });
+    }
+  };
+
+
+
+  export const getCountSE = async (req, res) => {
+    const userId  = req.user.UserID; 
+  
+    try {
+      if (!userId ) {
+        return res.status(400).json({
+          status: 1,
+          message: 'Invalid input data. EntryUserID is required.',
+        });
+      }
+  
+      const result = await getCountSEModel(userId );
+  
+      return res.status(200).json({
+        status: 0,
+        message: "data fetch susccfully",
+        data: result,
+      });
+    } catch (error) {
+      console.error('Error in getcount:', error.message);
+      return res.status(500).json({
+        status: 1,
+        message: 'Internal server error',
         error: error.message,
       });
     }
