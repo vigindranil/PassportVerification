@@ -7,7 +7,11 @@ import {
 } from "../models/eoModel.js";
 import { saveTransactionHistory } from "../models/logModel.js";
 import logger from "../utils/logger.js";
+import { S3Client, HeadBucketCommand } from '@aws-sdk/client-s3';
+import dotenv from 'dotenv'
 
+
+dotenv.config();
 export const saveDocumentUpload = async (req, res) => {
   try {
     const {
@@ -245,81 +249,227 @@ export const saveDocumentUpload = async (req, res) => {
   }
 };
 
+
+
+
+
+
+
+
+// export const getDocumentUploadDetails = async (req, res) => {
+  
+//   const requiredEnvVars = ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_REGION', 'AWS_BUCKET_NAME'];
+// requiredEnvVars.forEach((envVar) => {
+//   if (!process.env[envVar]) {
+//     console.error(`Missing environment variable: ${envVar}`);
+//     process.exit(1); // Stop the server if a required env var is missing
+//   }
+// });
+
+
+// const s3 = new S3Client({
+//   region: process.env.AWS_REGION,
+//   credentials: {
+//     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+//   },
+// });
+
+// try {
+//   const params = { Bucket: process.env.AWS_BUCKET_NAME };
+//   await s3.send(new HeadBucketCommand(params));
+//   console.log(`Successfully connected to the S3 bucket: ${process.env.AWS_BUCKET_NAME}`);
+// } catch (err) {
+//   console.error(`Error connecting to the S3 bucket: ${err.message}`);
+//   process.exit(1); // Stop the server if the bucket connection fails
+// }
+
+
+//   try {
+//     const { ApplicationId } = req.body;
+//     const EntryUserId = req.user.UserID;
+
+    
+// if (!ApplicationId || !EntryUserId) {
+//       logger.debug(
+//         JSON.stringify({
+//           API: "getDocumentUploadDetails",
+//           REQUEST: { ApplicationId, EntryUserId },
+//           RESPONSE: {
+//             status: 1,
+//             message: "Invalid input data",
+//           },
+//         })
+//       );
+//       return res.status(400).json({
+//         status: 1,
+//         message: "Invalid input data",
+//       });
+//     }
+//     const ipaddress = "test";
+//     const macAddress = "test";
+//     const Longitude = "test";
+//     const Latitude = "test";
+//     const OperationName = "getDocumentUploadDetails";
+//     const json = "{}";
+//     // const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, 0, OperationName, json, EntryUserId)
+//     const result = await getDocumentUploadDetailsModel(
+//       ApplicationId,
+//       EntryUserId
+//     );
+
+//     if (result.length > 0) {
+//       logger.debug(
+//         JSON.stringify({
+//           API: "getDocumentUploadDetails",
+//           REQUEST: { ApplicationId, EntryUserId },
+//           RESPONSE: {
+//             status: 0,
+//             message: "Document upload details fetched successfully",
+//             data: result,
+//           },
+//         })
+//       );
+//       return res.status(200).json({
+//         status: 0,
+//         message: "Document upload details fetched successfully",
+//         data: result,
+//       });
+//     } else {
+//       logger.debug(
+//         JSON.stringify({
+//           API: "getDocumentUploadDetails",
+//           REQUEST: { ApplicationId, EntryUserId },
+//           RESPONSE: {
+//             status: 1,
+//             message: "No document upload details found",
+//           },
+//         })
+//       );
+//       return res.status(404).json({
+//         status: 1,
+//         message: "No document upload details found",
+//       });
+//     }
+//   } catch (error) {
+//     logger.error("Error fetching document upload details:", error);
+//     return res.status(500).json({
+//       status: 1,
+//       message: "An error occurred while fetching document upload details",
+//       error: error.message,
+//     });
+//   }
+// };
+
+
+
 export const getDocumentUploadDetails = async (req, res) => {
   try {
+    // Validate required environment variables
+    const requiredEnvVars = ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_REGION', 'AWS_BUCKET_NAME'];
+    for (const envVar of requiredEnvVars) {
+      if (!process.env[envVar]) {
+        console.error(`Missing environment variable: ${envVar}`);
+        return res.status(500).json({ status: 1, message: `Missing environment variable: ${envVar}` });
+      }
+    }
+
+    // Initialize S3 Client
+    const s3 = new S3Client({
+      region: process.env.AWS_REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      },
+    });
+
+    // Check if the S3 bucket exists
+    try {
+      const params = { Bucket: process.env.AWS_BUCKET_NAME };
+      await s3.send(new HeadBucketCommand(params));
+      console.log(`Successfully connected to S3 bucket: ${process.env.AWS_BUCKET_NAME}`);
+    } catch (err) {
+      console.error(`Error connecting to S3 bucket: ${err.message}`);
+      return res.status(500).json({ status: 1, message: `Error connecting to S3 bucket: ${err.message}` });
+    }
+
+    // Extract values from request
     const { ApplicationId } = req.body;
-    const EntryUserId = req.user.UserID;
+    const EntryUserId = req.user.UserID; // Ensure req.user exists
 
     if (!ApplicationId || !EntryUserId) {
       logger.debug(
         JSON.stringify({
-          API: "getDocumentUploadDetails",
+          API: 'getDocumentUploadDetails',
           REQUEST: { ApplicationId, EntryUserId },
           RESPONSE: {
             status: 1,
-            message: "Invalid input data",
+            message: 'Invalid input data',
           },
         })
       );
-      return res.status(400).json({
-        status: 1,
-        message: "Invalid input data",
-      });
+      return res.status(400).json({ status: 1, message: 'Invalid input data' });
     }
-    const ipaddress = "test";
-    const macAddress = "test";
-    const Longitude = "test";
-    const Latitude = "test";
-    const OperationName = "getDocumentUploadDetails";
-    const json = "{}";
-    // const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, 0, OperationName, json, EntryUserId)
-    const result = await getDocumentUploadDetailsModel(
-      ApplicationId,
-      EntryUserId
-    );
+
+    // Dummy values (modify based on actual usage)
+    const ipaddress = 'test';
+    const macAddress = 'test';
+    const Longitude = 'test';
+    const Latitude = 'test';
+    const OperationName = 'getDocumentUploadDetails';
+    const json = '{}';
+
+    // Fetch document details
+    const result = await getDocumentUploadDetailsModel(ApplicationId, EntryUserId);
 
     if (result.length > 0) {
       logger.debug(
         JSON.stringify({
-          API: "getDocumentUploadDetails",
+          API: 'getDocumentUploadDetails',
           REQUEST: { ApplicationId, EntryUserId },
           RESPONSE: {
             status: 0,
-            message: "Document upload details fetched successfully",
+            message: 'Document upload details fetched successfully',
             data: result,
           },
         })
       );
       return res.status(200).json({
         status: 0,
-        message: "Document upload details fetched successfully",
+        message: 'Document upload details fetched successfully',
+        fileUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`,
         data: result,
+        
       });
     } else {
       logger.debug(
         JSON.stringify({
-          API: "getDocumentUploadDetails",
+          API: 'getDocumentUploadDetails',
           REQUEST: { ApplicationId, EntryUserId },
           RESPONSE: {
             status: 1,
-            message: "No document upload details found",
+            message: 'No document upload details found',
           },
         })
       );
-      return res.status(404).json({
-        status: 1,
-        message: "No document upload details found",
-      });
+      return res.status(404).json({ status: 1, message: 'No document upload details found' });
     }
   } catch (error) {
-    logger.error("Error fetching document upload details:", error);
+    logger.error('Error fetching document upload details:', error);
     return res.status(500).json({
       status: 1,
-      message: "An error occurred while fetching document upload details",
+      message: 'An error occurred while fetching document upload details',
       error: error.message,
     });
   }
 };
+
+
+
+
+
+
+
 
 export const saveCaseAssign = async (req, res) => {
   try {
