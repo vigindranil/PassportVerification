@@ -1,0 +1,20 @@
+2025-02-11 15:46:45 | ERROR | Error in updateEnquiryStatusController:
+2025-02-11 15:57:06 | ERROR | Error in updateEnquiryStatusController:
+2025-02-11 16:01:55 | ERROR | Error in updateEnquiryStatusController:
+2025-02-11 16:09:21 | ERROR | Error in updateEnquiryStatusController:
+2025-02-11 16:09:41 | ERROR | Error in updateEnquiryStatusController:
+2025-02-11 16:16:50 | ERROR | Error in updateEnquiryStatusController:
+2025-02-11 16:58:45 | ERROR | Error in updateEnquiryStatusController:
+2025-02-11 17:00:14 | ERROR | Error in updateEnquiryStatusController:
+2025-02-11 17:01:07 | ERROR | Error in updateEnquiryStatusController:
+2025-02-11 17:07:28 | ERROR | Error in updateEnquiryStatusController:
+2025-02-11 17:11:26 | ERROR | Error in updateEnquiryStatusController:
+2025-02-11 18:23:46 | ERROR | Error in updateEnquiryStatusController:
+2025-02-11 19:08:31 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
+2025-02-11 19:08:54 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
+2025-02-11 19:10:09 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
+2025-02-11 19:10:19 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
+2025-02-11 19:12:20 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
+2025-02-11 19:12:32 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
+2025-02-11 19:12:34 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
+2025-02-11 19:12:35 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'

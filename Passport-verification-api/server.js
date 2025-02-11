@@ -19,6 +19,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import getSpecialEnquiryOfficers from "./routes/enquiryOfficer.js";
 import updateCriminalInfo from './routes/crime.js';
+import transferapplication from './routes/spRoutes.js'
 
 
 const app = express();
@@ -104,6 +105,7 @@ app.use("/api/fileUpload", verifyToken, fileImportRoutes);
 app.use("/api/enquiryOfficers", verifyToken, getSpecialEnquiryOfficers)
 app.use("/api/upload", verifyToken, upload.single("file"), uploadRoutes);
 app.use("/api/crime", verifyToken, updateCriminalInfo);
+app.use("/api/sp", verifyToken, transferapplication)
 
 app.use(
   "/api/fileImport",

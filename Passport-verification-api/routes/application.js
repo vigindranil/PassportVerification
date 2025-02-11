@@ -33,5 +33,6 @@ router.post('/updateEnquiryStatus', updateEnquiryStatus);
 router.post('/verifyApplication', verifyApplication);
 router.post('/getDocumentsApplicationDetailsByFileNo', getDocumentsApplicationDetailsByFileNo);
 router.post('/getAadharDetailsByapplicationId', getAadharDetailsByapplicationId);
-router.post('/updateAADHAARInfo', updateAADHAARInfo)
+router.post('/updateAADHAARInfo', updateAADHAARInfo);
+
 export default router;

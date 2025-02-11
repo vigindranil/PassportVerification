@@ -132,6 +132,81 @@ export const getPoliceStationsByDistrict = async (req, res) => {
   }
 };
 
+
+export const getPoliceStationsById = async (req, res) => {
+  try {
+    const {districtId} = req.body;
+
+    console.log("districtId124",districtId);
+    
+    if (!districtId) {
+      logger.debug(
+        JSON.stringify({
+            API: "getPoliceStationsByDistrict",
+            REQUEST: {districtId },
+            RESPONSE: {
+              status: 1,
+        message: 'Invalid districtId' 
+            },
+        })
+    );
+      return res.status(400).json({
+        status: 1,
+        message: 'Invalid districtId',
+      });
+    }
+
+    const ipaddress = "test";
+            const macAddress = "test";
+            const Longitude = "test";
+            const Latitude = "test";
+            const OperationName = "getPoliceStationsByDistrict";
+            const json = "{}"
+        // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,EntryUserId)
+    const result = await getPoliceStationsByDistrictModel(districtId);
+
+    if (result.length > 0) {
+      logger.debug(
+        JSON.stringify({
+            API: "getPoliceStationsByDistrict",
+            REQUEST: {districtId },
+            RESPONSE: {
+              status: 0,
+              message: 'Police stations fetched successfully',
+              data: result,
+            },
+        })
+    );
+      return res.status(200).json({
+        status: 0,
+        message: 'Police stations fetched successfully',
+        data: result,
+      });
+    } else {
+      logger.debug(
+        JSON.stringify({
+            API: "getPoliceStationsByDistrict",
+            REQUEST: {districtId },
+            RESPONSE: {
+               status: 1,
+               message: 'No police stations found for the given districtId'
+            },
+        })
+    );
+      return res.status(404).json({
+        status: 1,
+        message: 'No police stations found for the given districtId',
+      });
+    }
+  } catch (error) {
+    logger.error('Error fetching police stations:', error);
+    return res.status(500).json({
+      status: 1,
+      message: 'An error occurred while fetching police stations',
+      error: error.message,
+    });
+  }
+};
 /**
  * @swagger
  * /showDistrict:

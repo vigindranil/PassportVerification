@@ -92,6 +92,54 @@ export const saveUserRegistration = async (req, res) => {
     const Latitude = "test";
     const OperationName = "saveUserRegistration";
     const json = "{}";
+
+    if(!UserName){
+      return res.status(400).json({
+        status: 1,
+        message: "Please enter username",
+      });
+    }
+    if(!FullName){
+      return res.status(400).json({
+        status: 1,
+        message: "Please enter FullName",
+      });
+    }
+    if(!MobileNo){
+      return res.status(400).json({
+        status: 1,
+        message: "Please enter FullName",
+      });
+    }
+    if(!Gender){
+      return res.status(400).json({
+        status: 1,
+        message: "Please enter FullName",
+      });
+    }
+    if(!AADHAARNo){
+      return res.status(400).json({
+        status: 1,
+        message: "Please enter FullName",
+      });
+    }
+    if(!Designation){
+      return res.status(400).json({
+        status: 1,
+        message: "Please enter FullName",
+      });
+    }
+    if(!UserRoleID){
+      return res.status(400).json({
+        status: 1,
+        message: "Please enter FullName",
+      });
+    }
+
+
+
+
+
     //  const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,req.user.UserID)
     const result = await saveUserRegistrationModel(
       UserID,
