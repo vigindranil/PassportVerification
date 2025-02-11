@@ -40,8 +40,10 @@ const dashboardConfig = {
         { title: "Verification Pending (OC)", key: "OCPending", icon: ArrowRightToLine, color: "red", link: "/pendingInOC" },
         { title: "Verified By OC", key: "OCComplete", icon: ArrowRightToLine, color: "teal", link: "/verificationCompletedEO" },
         { title: "Verification Pending \n(Enquiry Officer)", key: "SEPending", icon: ArrowRightToLine, color: "yellow", link: "/pendingInEnquiryOfficer" },
-        // { title: "Verified by Enquiry Officer", key: "SEComplete", icon: ArrowRightToLine, color: "blue", link: "/completed-se" },
         { title: "RE-Verified by Enquiry Officer", key: "SPPendingReverify", icon: ArrowRightToLine, color: "orange", link: "/re-verifiedBy-se" },
+        { title: "Transferd Case", key: "transferCaseCompleted", icon: ArrowRightToLine, color: "green", link: "/transferCaseCompleted" },
+        { title: "Pending Transfer Case", key: "transferCasePending", icon: ArrowRightToLine, color: "red", link: "/transferCasePending" },
+        // { title: "Verified by Enquiry Officer", key: "SEComplete", icon: ArrowRightToLine, color: "blue", link: "/completed-se" },
         // { title: "Verified by Enquiry Officer", key: "SPPendingReverify", icon: ArrowRightToLine, color: "orange", link: "/reverifiedBySE" },
         
 

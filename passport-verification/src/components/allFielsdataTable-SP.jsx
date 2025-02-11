@@ -15,7 +15,8 @@ import { toast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import { FileAcceptModal } from "./approve-reject-modal"
 import { updateEnquiryStatus } from "@/app/allFiles-sp/api"
-import { CheckCircle2, FileCheck, FileQuestion, FileUser, FileX2 } from "lucide-react"
+import { TransferModal } from "@/components/transferModal"
+import { CheckCircle2, FileCheck, FileQuestion, FileUser, FileX2, Rotate3d } from "lucide-react"
 
 export default function PendingApplicationDatatable({ status }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
@@ -26,6 +27,7 @@ export default function PendingApplicationDatatable({ status }) {
   const itemsPerPage = 6
   const [applicationStatus, setApplicationStatus] = useState(null)
   const [verificationData, setVerificationData] = useState([])
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
   const [isFileAcceptModalOpen, setIsFileAcceptModalOpen] = useState(false)
   const [type, setType] = useState("reject");
   const router = useRouter()
@@ -41,6 +43,17 @@ export default function PendingApplicationDatatable({ status }) {
     } catch (error) {
       console.log("Error fetching application status:", error)
     }
+  }
+
+  const handleTransfer = () => {
+    onTransfer(FileNumber, remarks, selectedDistrict, selectedPoliceStation)
+    setRemarks("")
+    setSelectedDistrict("")
+    setSelectedPoliceStation("")
+  }
+
+  const handleCloseTransferModal = () => {
+    setIsTransferModalOpen(false)
   }
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage)
@@ -68,6 +81,10 @@ export default function PendingApplicationDatatable({ status }) {
       ]),
     })
     doc.save("police_verification_data.pdf")
+  }
+
+  const handleOpenTransferModal = () => {
+    setIsTransferModalOpen(true)
   }
 
   const printTable = () => {
@@ -293,6 +310,27 @@ export default function PendingApplicationDatatable({ status }) {
                             <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
                               Query
                             </span>
+                          </div>
+
+                          <div className="relative group">
+                            <Button
+                              size="sm"
+                              variant="default"
+                              className="bg-blue-100 ring-[0.5px] ring-blue-300 text-gray-700 hover:bg-gray-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              onClick={handleOpenTransferModal}
+                            >
+                              <Rotate3d className="mx-0 px-0" />
+                            </Button>
+                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                              Transfer Application
+                            </span>
+                            <TransferModal
+                              isOpen={isTransferModalOpen}
+                              onClose={handleCloseTransferModal}
+                              fileNumber={row?.FileNumber}
+                              applicantName={row?.ApplicantName}
+                              onTransfer={handleTransfer}
+                            />
                           </div>
                           {/* <Button
                             size="sm"

@@ -54,3 +54,24 @@ export const assignApplication = async ({ applicationId, assignTo, macAddress, l
       return null;
     }
   }
+
+  export const showDistrict = async () => {
+    try {
+      return await postRequest("master/showDistrict", {
+      });
+    } catch (error) {
+      console.log("Error:", error);
+      return null;
+    }
+  }
+
+  
+  export const getPoliceStationsByDsId = async () => {
+    try {
+      return await postRequest("master/getPoliceStationsByDsId", {
+      });
+    } catch (error) {
+      console.log("Error:", error);
+      return null;
+    }
+  }
