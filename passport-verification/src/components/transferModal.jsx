@@ -24,9 +24,6 @@ export function TransferModal({ isOpen, onClose, fileNumber, applicantName, onTr
           console.log("Error fetching application status:", error)
         }
       }
-
-      
-
     fetchDistricts()
     setPoliceStations([])
   }, [])
@@ -38,6 +35,7 @@ export function TransferModal({ isOpen, onClose, fileNumber, applicantName, onTr
         try {
           const response = await getPoliceStationsByDsId(selectedDistrict)
           setPoliceStations(response.data)
+        //   console.log("Police Stations:", response.data)
         } catch (error) {
           console.log("Error fetching police stations:", error)
         }
@@ -94,8 +92,8 @@ export function TransferModal({ isOpen, onClose, fileNumber, applicantName, onTr
               </SelectTrigger>
               <SelectContent>
                 {policeStations.map((station) => (
-                  <SelectItem key={station.policeStationId} value={station.policeStationId.toString()}>
-                    {station.policeStationName}
+                  <SelectItem key={station.psm_id} value={station.psm_id.toString()}>
+                    {station.psm_name}
                   </SelectItem>
                 ))}
               </SelectContent>

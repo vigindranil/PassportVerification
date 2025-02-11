@@ -66,10 +66,9 @@ export const assignApplication = async ({ applicationId, assignTo, macAddress, l
   }
 
   
-  export const getPoliceStationsByDsId = async () => {
+  export const getPoliceStationsByDsId = async (districtId) => {
     try {
-      return await postRequest("master/getPoliceStationsByDsId", {
-      });
+      return await postRequest("master/getPoliceStationsByDsId", { "districtId": districtId });
     } catch (error) {
       console.log("Error:", error);
       return null;

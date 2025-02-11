@@ -60,6 +60,8 @@ const UserManagement = () => {
     EmailID: "",
     MobileNo: "",
     AADHAARNo: "",
+    Designation: "",
+    UserRoleID: "",
   })
 
   const [invalidInput, setInvalidInput] = useState({
@@ -221,8 +223,10 @@ const UserManagement = () => {
       "MobileNo",
       "EmailID",
       "Gender",
+      "UserRoleID",
       "AADHAARNo",
       "Designation",
+      "aadharRegisterMobileNumber"
     ]
 
     const errors = {}
@@ -289,7 +293,7 @@ const UserManagement = () => {
       onChangeDistrict(districtId)
     }
   }, [])
-  
+
   const handleUpdateUserStatus = async (UserID, Status) => {
     try {
       setStatuUpdateLoader("Loading...")
@@ -430,7 +434,7 @@ const UserManagement = () => {
             Gender <span className="text-red-500">*</span>
           </Label>
           <Select name="userRole" onValueChange={(value) => setFormData({ ...formData, Gender: value })} required>
-            <SelectTrigger>
+            <SelectTrigger className={`${invalidInput["Gender"] && "border-[1.4px] border-red-400"}`}>
               <SelectValue placeholder="Select Gender" />
             </SelectTrigger>
             <SelectContent>
@@ -461,7 +465,7 @@ const UserManagement = () => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="userRole" className={`${invalidInput["userRole"] && "border-[1.4px] border-red-400"}`}>
+          <Label htmlFor="userRole">
             User Role <span className="text-red-500">*</span>
           </Label>
           <Select
@@ -475,7 +479,7 @@ const UserManagement = () => {
             }}
             required
           >
-            <SelectTrigger>
+            <SelectTrigger className={`${invalidInput["UserRoleID"] && "border-[1.4px] border-red-400"}`}>
               <SelectValue placeholder="Select role" />
             </SelectTrigger>
             <SelectContent>
@@ -486,15 +490,15 @@ const UserManagement = () => {
               <SelectItem value="50">Spl.Enquiry Officer</SelectItem>
             </SelectContent>
           </Select>
-          {invalidInput["userRole"] && <p className="text-red-500 text-xs">{invalidInput["userRole"]}</p>}
+          {invalidInput["UserRoleID"] && <p className="text-red-500 text-xs">{invalidInput["UserRoleID"]}</p>}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="userRole" className={`${invalidInput["userRole"] && "border-[1.4px] border-red-400"}`}>
+          <Label htmlFor="userRole">
             Designation <span className="text-red-500">*</span>
           </Label>
           <Select name="userRole" onValueChange={(value) => setFormData({ ...formData, Designation: value })} required>
-            <SelectTrigger>
+            <SelectTrigger className={`${invalidInput["Designation"] && "border-[1.4px] border-red-400"}`}>
               <SelectValue placeholder="Select Designation" />
             </SelectTrigger>
             <SelectContent>
@@ -507,7 +511,7 @@ const UserManagement = () => {
               <SelectItem value="600">CP</SelectItem>
             </SelectContent>
           </Select>
-          {invalidInput["userRole"] && <p className="text-red-500 text-xs">{invalidInput["userRole"]}</p>}
+          {invalidInput["Designation"] && <p className="text-red-500 text-xs">{invalidInput["Designation"]}</p>}
         </div>
 
         <div className="space-y-2">
@@ -537,10 +541,11 @@ const UserManagement = () => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="AADHAARNo" className={`${invalidInput["AADHAARNo"] && "border-[1.4px] border-red-400"}`}>
+          <Label htmlFor="AADHAARNo">
             Aadhar Number <span className="text-red-500">*</span>
           </Label>
           <Input
+            className={`${invalidInput["AADHAARNo"] && "border-[1.4px] border-red-400"}`}
             id="AADHAARNo"
             name="AADHAARNo"
             value={formData.AADHAARNo}
@@ -557,13 +562,13 @@ const UserManagement = () => {
         <div className="space-y-2">
           <Label
             htmlFor="aadharRegisterMobileNumber"
-            className={`${invalidInput["aadharRegisterMobileNumber"] && "border-[1.4px] border-red-400"}`}
           >
             Aadhar Register Mobile Number <span className="text-red-500">*</span>
           </Label>
           <Input
             id="aadharRegisterMobileNumber"
             name="aadharRegisterMobileNumber"
+            className={`${invalidInput["aadharRegisterMobileNumber"] && "border-[1.4px] border-red-400"}`}
             maxLength={10}
             value={formData?.aadharRegisterMobileNumber || ""}
             onChange={(e) => {
@@ -572,7 +577,7 @@ const UserManagement = () => {
             }}
             required
           />
-          {invalidInput["AADHAARNo"] && <p className="text-red-500 text-xs">{invalidInput["AADHAARNo"]}</p>}
+          {invalidInput["aadharRegisterMobileNumber"] && <p className="text-red-500 text-xs">{invalidInput["aadharRegisterMobileNumber"]}</p>}
           {formData?.aadharRegisterMobileNumber && formData.aadharRegisterMobileNumber?.length < 10 && (
             <p className="text-red-500 text-sm">Phone number must be 10 digits</p>
           )}
