@@ -41,7 +41,7 @@ export const transferapplication = async (req, res) => {
             },
             RESPONSE: {
               status: 0,
-              message: "Status has been updated successfully",
+              message: "Application has been  transfered successfully",
             },
           })
         );
@@ -82,3 +82,9 @@ export const transferapplication = async (req, res) => {
       });
     }
   };
+
+
+
+
+
+ 
