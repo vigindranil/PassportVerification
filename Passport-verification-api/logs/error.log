@@ -14,3 +14,7 @@
 2025-02-11 19:17:44 | ERROR | Error fetching state information: Incorrect integer value: '' for column 'UserRoleID' at row 1
 2025-02-11 19:22:14 | ERROR | Error fetching state information: Incorrect integer value: '' for column 'Designation' at row 1
 2025-02-11 19:27:44 | ERROR | Error fetching state information: Incorrect integer value: '' for column 'Designation' at row 1
+2025-02-11 19:36:00 | ERROR | Error fetching state information: Incorrect integer value: '' for column 'Designation' at row 1
+2025-02-11 19:36:57 | ERROR | Error fetching state information: Incorrect integer value: '' for column 'Designation' at row 1
+2025-02-11 19:42:47 | ERROR | Error fetching state information: Incorrect integer value: '' for column 'Designation' at row 1
+2025-02-11 19:44:02 | ERROR | Error fetching state information: Incorrect integer value: '' for column 'Designation' at row 1
