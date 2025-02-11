@@ -128,8 +128,8 @@ export default function PendingApplicationDatatable({ status }) {
   }, [searchTerm, refreshFlag]) // Added searchTerm as a dependency
 
   return (
-    <div className="container mx-auto px-0 space-y-8 shadow-2xl">
-      <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl overflow-hidden">
+    <div className="container mx-auto px-0 space-y-8 shadow-md rounded-sm">
+      <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-md overflow-hidden">
         <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
           <h2 className="text-2xl font-bold text-white">Pending Application</h2>
         </div>
@@ -222,7 +222,7 @@ export default function PendingApplicationDatatable({ status }) {
                     <TableRow key={index}>
                       <TableCell>{row?.FileNumber}</TableCell>
                       <TableCell>{row?.ApplicantName}</TableCell>
-                      <TableCell>{row?.Ps_Name}</TableCell>
+                      <TableCell>{row?.PsName}</TableCell>
                       <TableCell>{row?.PhoneNo}</TableCell>
                       <TableCell>{row?.DateOfBirth ? moment(row.DateOfBirth).format("DD/MM/YYYY") : "N/A"}</TableCell>
                       <TableCell>

@@ -156,7 +156,7 @@ export default function PendingApplicationDatatable({ status }) {
   useEffect(() => setEO_POLICE_STATION(ps), [ps])
 
   return (
-    <div className="container mx-auto px-0 space-y-8 shadow-lg">
+    <div className="container mx-auto px-0 space-y-8 shadow-sm">
       <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-lg overflow-hidden">
         <div className="bg-gradient-to-r from-yellow-600 to-yellow-400 px-6 py-3">
           <h2 className="text-2xl font-bold text-white">Total Pending Applications at {EO_POLICE_STATION && EO_POLICE_STATION} PS</h2>
