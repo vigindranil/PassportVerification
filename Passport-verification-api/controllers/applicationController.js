@@ -566,7 +566,7 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
   export const transferapplication = async (req, res) => {
     try {
       const {
-        ApplicationID,
+        applicationId,
         locationIp,
         deviceId ,
         remarks ,
@@ -576,7 +576,7 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
       } = req.body;
   
       const result = await transferapplicationModel(
-        ApplicationID,
+        applicationId,
         locationIp,
         deviceId,
         remarks,
@@ -586,12 +586,14 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
         req.user.UserID
       );
   
+      console.log("result",result);
+      
       if (result == 0) {
         logger.debug(
           JSON.stringify({
             API: "transferapplication",
             REQUEST: {
-              ApplicationID,
+              applicationId,
               locationIp,
               deviceId,
               remarks,
@@ -614,7 +616,7 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
           JSON.stringify({
             API: "transferapplication",
             REQUEST: {
-              ApplicationID,
+              applicationId,
               locationIp,
               deviceId,
               remarks,
