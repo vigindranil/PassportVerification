@@ -228,7 +228,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                           className="flex bg-blue-100 justify-center items-center p-1 m-1 px-2 rounded-md hover:bg-blue-200 text-sm"
                           onClick={() => {
                             setVerifiedResponse(null)
-                            setSelectedDoc(`${docPath}${doc?.DocumentPath}`)
+                            setSelectedDoc(`${doc?.DocumentPath}`)
                             setType(doc?.FileType)
                             setIsDetailsModalOpen(true)
                             setDocType(doc?.DocumentTypeId)
