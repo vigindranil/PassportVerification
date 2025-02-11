@@ -1,15 +1,15 @@
-import { log } from "console";
 import pool from "../db.js";
 
 export async function getUserLoginModel(username, password) {
     try {
         const [rows] = await pool.query('CALL sp_getUserLoginDetails(?, ?)', [username, password]);
-        console.log(rows[0]);
-        
         return rows[0];
     } catch (error) {
         console.log(error.message);
-        return null
+        return null;
+    } finally {
+        // await pool.end(); // Close the pool after execution
+        console.log("Connection closed");
     }
 };
 
