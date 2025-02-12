@@ -56,7 +56,7 @@ export const getApplicationDetails = async (req, res) => {
     const OperationName = "getApplicationDetails";
     const json = "{}";
 
-    // const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, 0, OperationName, json, entryUserId)
+    // const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, applicationId, OperationName, json, entryUserId)
     // console.log(saveTransaction);
 
     logger.debug(
