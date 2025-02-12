@@ -18,3 +18,4 @@
 2025-02-11 19:12:32 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
 2025-02-11 19:12:34 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
 2025-02-11 19:12:35 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
+2025-02-11 19:18:52 | ERROR | Error fetching state information: Duplicate entry 'OCUser134' for key 'tbl_user_auth.ua_username_UNIQUE'
