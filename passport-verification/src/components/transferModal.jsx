@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -9,25 +9,24 @@ import { Label } from "@/components/ui/label"
 import { getPoliceStationsByDsId, showDistrict } from "@/app/allFiles-sp/api"
 
 export function TransferModal({ isOpen, onClose, fileNumber, applicantName, onTransfer }) {
-  const [remarks, setRemarks] =useState("")
+  const [remarks, setRemarks] = useState("")
   const [selectedDistrict, setSelectedDistrict] = useState("")
-  const [selectedPoliceStation, setSelectedPoliceStation] =useState("")
-  const [districts, setDistricts] =useState([])
-  const [policeStations, setPoliceStations] =useState([])
+  const [selectedPoliceStation, setSelectedPoliceStation] = useState("")
+  const [districts, setDistricts] = useState([])
+  const [policeStations, setPoliceStations] = useState([])
 
   useEffect(() => {
     const fetchDistricts = async () => {
-        try {
-          const response = await showDistrict()
-          setDistricts(response.data)
-        } catch (error) {
-          console.log("Error fetching application status:", error)
-        }
+      try {
+        const response = await showDistrict()
+        setDistricts(response.data)
+      } catch (error) {
+        console.log("Error fetching application status:", error)
       }
+    }
     fetchDistricts()
     setPoliceStations([])
   }, [])
-
 
   useEffect(() => {
     const fetchPoliceStations = async () => {
@@ -35,7 +34,6 @@ export function TransferModal({ isOpen, onClose, fileNumber, applicantName, onTr
         try {
           const response = await getPoliceStationsByDsId(selectedDistrict)
           setPoliceStations(response.data)
-        //   console.log("Police Stations:", response.data)
         } catch (error) {
           console.log("Error fetching police stations:", error)
         }
@@ -47,14 +45,18 @@ export function TransferModal({ isOpen, onClose, fileNumber, applicantName, onTr
     fetchPoliceStations()
   }, [selectedDistrict])
 
-  const handleTransfer = () => {
-    onTransfer(fileNumber, remarks, selectedDistrict, selectedPoliceStation)
-    setRemarks("")
-    setSelectedDistrict("")
-    setSelectedPoliceStation("")
-    onClose()
-  }
 
+    const transferapplication = async () => {
+      try {
+        const result = await response.json()
+        console.log("Transfer successful:", result)
+        onTransfer(fileNumber, remarks, selectedDistrict, selectedPoliceStation)
+      } catch (error) {
+        console.error("Error transferring application:", error)
+      }
+    }
+
+ 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
@@ -105,7 +107,7 @@ export function TransferModal({ isOpen, onClose, fileNumber, applicantName, onTr
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button className="bg-blue-500 hover:bg-blue-600" onClick={handleTransfer}>
+          <Button className="bg-blue-500 hover:bg-blue-600" onClick={transferapplication}>
             Transfer
           </Button>
         </DialogFooter>

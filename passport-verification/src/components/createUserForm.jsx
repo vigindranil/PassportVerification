@@ -311,35 +311,56 @@ const UserManagement = () => {
   }
 
   const handleInputChange = (e) => {
-    const { name, value } = e?.target
-    let newValue = value
-
+    const { name, value } = e.target;
+    let newValue = value;
+  
+    // Prevent SQL Injection
     if (checkForSqlInjection(value)) {
-      newValue = value.replace(/select\s+\*\s+from/gi, "")
+      newValue = value.replace(/select\s+\*\s+from/gi, "");
       toast({
         variant: "destructive",
         title: "Invalid Input",
         description: "SQL injection attempt detected and removed.",
         action: <ToastAction altText="Close">Close</ToastAction>,
-      })
+      });
     }
-
-    const textPattern = /^[a-zA-Z0-9@]*$/
-
-    if (name === "MobileNo") {
-      newValue = newValue.replace(/\D/g, "")?.slice(0, 10)
-    } else if (name === "AADHAARNo") {
-      newValue = newValue.replace(/\D/g, "")?.slice(0, 12)
+  
+    if (name === "UserName") {
+      if (/^\d+$/.test(newValue)) {
+        newValue = newValue.slice(0, 10); 
+  
+        if (newValue.length < 10) {
+          setInvalidInput((prev) => ({
+            ...prev,
+            [name]: "Mobile number must be exactly 10 digits.",
+          }));
+        } else {
+          setInvalidInput((prev) => ({ ...prev, [name]: "" }));
+        }
+      }
+      else if (!/^[a-zA-Z0-9@]*$/.test(newValue)) {
+        setInvalidInput((prev) => ({
+          ...prev,
+          [name]: "Only letters, numbers, and '@' are allowed.",
+        }));
+      } 
+      else {
+        setInvalidInput((prev) => ({ ...prev, [name]: "" }));
+      }
+    } 
+    else if (name === "MobileNo") {
+      newValue = newValue.replace(/\D/g, "").slice(0, 10); 
+    } 
+    else if (name === "AADHAARNo") {
+      newValue = newValue.replace(/\D/g, "").slice(0, 12);
     }
+    setFormData((prev) => ({ ...prev, [name]: newValue }));
+  };
+  
 
-    setFormData((prev) => ({ ...prev, [name]: newValue }))
-  }
-
-  // Added handleAcceptFile function.  Placeholder for actual implementation.
   const handleAcceptFile = () => {
-    // Implement your file acceptance logic here
     console.log("File accepted!")
-    setSelectedFile(null) // Close the modal after accepting
+    setSelectedFile(null) 
   }
 
   return (
@@ -353,7 +374,7 @@ const UserManagement = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-6">
         <div className="space-y-2">
           <Label htmlFor="UserName">
-            Login User Name <span className="text-red-500">*</span>
+            Login User Name <span className="text-zinc-400">(phone no.)</span> <span className="text-red-500">*</span>
           </Label>
           <Input
             id="UserName"
@@ -503,11 +524,11 @@ const UserManagement = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="300">OC/IC</SelectItem>
-              <SelectItem value="700">DIO</SelectItem>
-              <SelectItem value="100">DYSP</SelectItem>
-              <SelectItem value="200">SP</SelectItem>
+              <SelectItem value="700">DIO/SBO</SelectItem>
+              <SelectItem value="100">DYSP/DSP</SelectItem>
+              <SelectItem value="200">SP/DCSB</SelectItem>
               <SelectItem value="400">Addl.SP</SelectItem>
-              <SelectItem value="500">Addl.CP</SelectItem>
+              <SelectItem value="500">Addl.CP/JointCP</SelectItem>
               <SelectItem value="600">CP</SelectItem>
             </SelectContent>
           </Select>
