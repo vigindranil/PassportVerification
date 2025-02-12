@@ -92,7 +92,6 @@ export default function PendingApplicationDatatable({ status }) {
           variant: "destructive",
           title: "Select Citizen Type!",
           description: "Please select citizen type and then try again",
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
         })
       }
       if (!file){
@@ -100,7 +99,6 @@ export default function PendingApplicationDatatable({ status }) {
           variant: "destructive",
           title: "Select File!",
           description: "Please select a file and then try again",
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
         })
       }
 
@@ -118,14 +116,12 @@ export default function PendingApplicationDatatable({ status }) {
             </div>
           ),
           description: "Case accepted successfully",
-          action: <ToastAction altText="Try again">Close</ToastAction>,
         })
       } else {
         toast({
           variant: "destructive",
           title: "Failed to accept file!",
           description: response?.message,
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
         })
       }
     } catch (e) {
@@ -134,7 +130,6 @@ export default function PendingApplicationDatatable({ status }) {
         variant: "destructive",
         title: "Failed to accept file!",
         description: 'An error occurred',
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
     }
   }

@@ -9,8 +9,9 @@ import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import DataTable from "@/components/excelParsedDatatable"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { CheckCircle2, Loader2 } from "lucide-react"
+import { AlertCircle, CheckCircle2, Download, FileImage, Loader2 } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
+import { Label } from "@/components/ui/label"
 
 
 const ExcelUploader = () => {
@@ -24,6 +25,19 @@ const ExcelUploader = () => {
   const [isImported, setIsImported] = useState(false)
   const { toast } = useToast()
   const fileInputRef = useRef(null)
+
+  const handleDownload = async (e) => {
+    e.preventDefault()
+    const response = await fetch("/assets/sample_excel_format.xls");
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "sample_excel_format.xls";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
 
   const handleFileChange = (e) => {
     if (e.target.files) {
@@ -114,7 +128,7 @@ const ExcelUploader = () => {
         throw new Error(response?.message)
       }
 
-      
+
     } catch (e) {
       console.log(e)
       setError(e.message || "Failed to upload file. Please try again.")
@@ -139,10 +153,9 @@ const ExcelUploader = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = ""
     }
-    fileInputRef.current?.click()
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     if (progress) {
       const timer = setInterval(() => {
         if (progress > 0 && progress < 99) {
@@ -153,7 +166,7 @@ const ExcelUploader = () => {
       }, 1000);
       return () => clearInterval(timer);
     }
-  },[progress])
+  }, [progress])
 
 
   return (
@@ -169,14 +182,20 @@ const ExcelUploader = () => {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Input
-                        type="file"
-                        accept=".xlsx, .xls, .csv"
-                        onChange={handleFileChange}
-                        disabled={importing || isImported}
-                        ref={fileInputRef}
-                        className="cursor-pointer bg-gray-200" // Added light gray background
-                      />
+                     
+                      <div className="grid w-full items-center gap-1.5">
+                        <div className="flex items-center gap-2 border-[2px] border-indigo-400 border-dashed rounded-md ps-3 cursor-pointer">
+                          <FileImage className="w-8 h-8 text-gray-400" />
+                          <Input
+                            className="flex-1 rounded-none border-none cursor-pointer bg-indigo-50"
+                            type="file"
+                            accept=".xlsx, .xls, .csv"
+                            onChange={handleFileChange}
+                            disabled={importing || isImported}
+                            ref={fileInputRef}
+                          />
+                        </div>
+                      </div>
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Select an Excel file to import</p>
@@ -189,7 +208,7 @@ const ExcelUploader = () => {
                       <Button
                         onClick={handleExcelParse}
                         disabled={importing || isImported || !file}
-                        className="cursor-pointer"
+                        className={`${importing ? 'cursor-wait' : 'cursor-pointer'}`}
                       >
                         {importing ? "Converting..." : "Import Excel"}
                       </Button>
@@ -203,11 +222,11 @@ const ExcelUploader = () => {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
-                        className="mx-2 cursor-pointer"
+                        className={`${importing ? 'cursor-wait' : 'cursor-pointer'} mx-2`}
                         onClick={handleUpload}
                         disabled={uploading || !isImported}
                       >
-                        {uploading ? <div className="flex justify-center items-center">Uploading <Loader2 className="animate-spin"/></div> : "Upload Excel"}
+                        {uploading ? <div className="flex justify-center items-center">Uploading <Loader2 className="animate-spin mx-1" /></div> : "Upload Excel"}
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -256,6 +275,13 @@ const ExcelUploader = () => {
                     <p className="text-sm text-center font-bold">Note: This process might take some time, please do not refresh or close this page</p>
                   </div>
                 }
+                <hr />
+                <p className="text-sm font-medium text-zinc-600 flex gap-1 items-center p-1 rounded-md my-0">
+                  <AlertCircle className="h-6 w-6 text-indigo-600" /> <b>Instruction:</b> The format of the Excel file must match exactly that of the sample Excel file given below.
+                </p>
+                <Button onClick={(e) => handleDownload(e)} variant="ghost" className="text-sm text-zinc-700 underline underline-offset-2 hover:text-indigo-500 font-medium flex gap-1 items-center p-1 rounded-md my-0">
+                  <Download className="h-6 w-6 text-indigo-600" /> <b>Download Sample Excel File</b>
+                </Button>
               </form>
             </CardContent>
           </Card>

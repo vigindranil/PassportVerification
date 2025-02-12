@@ -118,6 +118,7 @@ export async function saveCaseAssignModel(
     const [result] = await pool.query(
       "SELECT @application_Id AS application_Id, @ErrorCode AS ErrorCode;"
     );
+    console.log("applicationId", applicationId);
     console.log("save", result[0]);
     return result[0].ErrorCode;
   } catch (error) {

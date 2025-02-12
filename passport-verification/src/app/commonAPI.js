@@ -159,12 +159,16 @@ export const postFileRequest = async (url, request_body) => {
       Cookies.remove("ds_id");
       window.location.href = "/session-expired";
     } else if (!response.ok) {
-      throw new Error(response);
+      const result = await response.json(); // Assuming the API returns JSON
+      return result;
     } else {
       const result = await response.json(); // Assuming the API returns JSON
       return result;
     }
   } catch (error) {
+    console.log(error.message);
+    console.log(error);
+    
     throw error; // Propagate error to the caller
   }
 };

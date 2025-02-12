@@ -32,6 +32,6 @@ export const acceptApplication = async (applicationId, citizentype, file) => {
     });
   } catch (error) {
     console.log("Error:", error);
-    return new Error(error.message);
+    return error.message;
   }
 };

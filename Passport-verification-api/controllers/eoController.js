@@ -355,6 +355,7 @@ export const saveCaseAssign = async (req, res) => {
     const file = req.file;
     const filepath = req?.file_name;
 
+    console.log("applicationId", applicationId);
     if (!file) {
       return res.status(400).json({ status: 1, message: "No file uploaded" });
     }
@@ -435,6 +436,7 @@ export const saveCaseAssign = async (req, res) => {
       return res.status(200).json({
         status: 0,
         message: "Case assigned successfully",
+        file_path: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`
       });
     } else if (errorCode === 3) {
       return res.status(400).json({
