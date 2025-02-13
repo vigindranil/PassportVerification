@@ -14,19 +14,35 @@ const verifyToken = async (req, res, next) => {
         .status(401)
         .json({ message: "Access denied! Unauthorized access." });
     }
-    const token = atob(token_base64); // Extract
 
+    const token = atob(token_base64); // Extract
     const decoded = jwt.verify(token, JWT_SECRET); // Verify the token
 
-
+    // sp for check session token
+    
     const [rows] = await getUserVerifyToken(decoded.UserID);
-
+    console.log("local token",token);
+    console.log("db token",rows?.JWTToken);
+    
     if (new Date() > rows?.TokenValidUpto) {
       return res.status(401).json({status: 1, message: 'Token expired! Please Login again to continue.' });
     } else
     if(rows?.JWTToken != token){
       return res.status(401).json({status: 1, message: 'Access denied! Unauthorized access.' });
     }
+
+    // sp for check session token
+    
+    // const [rows] = await getUserVerifyToken(decoded.UserID);
+    // console.log("local token",token);
+    // console.log("db token",rows?.JWTToken);
+    
+    // if (new Date() > rows?.TokenValidUpto) {
+    //   return res.status(401).json({status: 1, message: 'Token expired! Please Login again to continue.' });
+    // } else
+    // if(rows?.JWTToken != token){
+    //   return res.status(401).json({status: 1, message: 'Access denied! Unauthorized access.' });
+    // }
 
     // Retrieve token from Redis using user_id
     // const storedToken = await client.get(`user:${decoded.UserID}:token`);

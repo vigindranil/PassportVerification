@@ -1,3 +1,2 @@
-2025-02-12 13:09:52 | ERROR | Error fetching state information: Lock wait timeout exceeded; try restarting transaction
-2025-02-12 13:11:02 | ERROR | Error fetching state information: Lock wait timeout exceeded; try restarting transaction
-2025-02-12 13:11:16 | ERROR | Error fetching state information: Lock wait timeout exceeded; try restarting transaction
+2025-02-13 12:05:22 | ERROR | Error fetching : Database error: read ECONNRESET
+2025-02-13 16:11:04 | ERROR | Error fetching : Database error: read ECONNRESET

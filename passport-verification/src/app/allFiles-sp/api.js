@@ -74,3 +74,14 @@ export const assignApplication = async ({ applicationId, assignTo, macAddress, l
       return null;
     }
   }
+
+
+  
+  export const transferapplication = async ({fileNumber, locationIp, deviceId, remarks, districtId, psId, macAddress}) => {
+    try {
+      return await postRequest("sp/transferapplication", { "fileNumber":fileNumber, "locationIp" :"115.187.62.100", "deviceId":"deviceId", "remarks": remarks, "districtId":districtId, "psId":psId, "macAddress":"test-s4dn-3aos-dn338" });
+    } catch (error) {
+      console.log("Error:", error);
+      return null;
+    }
+  }

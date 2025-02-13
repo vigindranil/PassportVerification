@@ -56,5 +56,9 @@ export async function saveApplicationDetailsModel(
   } catch (error) {
     console.error("Error calling sp_saveApplicationDetails:", error);
     throw error;
-  }
+  } 
+  // finally { 
+  //   // Close the database connection
+  //   pool.end();
+  // }
 }
