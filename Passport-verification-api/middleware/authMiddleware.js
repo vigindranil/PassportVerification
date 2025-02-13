@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { getUserVerifyToken } from "../models/authModels.js";
 // import client from '../redisClient.js';
 
 
@@ -16,6 +17,16 @@ const verifyToken = async (req, res, next) => {
     const token = atob(token_base64); // Extract
 
     const decoded = jwt.verify(token, JWT_SECRET); // Verify the token
+
+
+    const [rows] = await getUserVerifyToken(decoded.UserID);
+
+    if (new Date() > rows?.TokenValidUpto) {
+      return res.status(401).json({status: 1, message: 'Token expired! Please Login again to continue.' });
+    } else
+    if(rows?.JWTToken != token){
+      return res.status(401).json({status: 1, message: 'Access denied! Unauthorized access.' });
+    }
 
     // Retrieve token from Redis using user_id
     // const storedToken = await client.get(`user:${decoded.UserID}:token`);
