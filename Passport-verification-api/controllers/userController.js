@@ -140,7 +140,22 @@ export const saveUserRegistration = async (req, res) => {
 
 
 
-    //  const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,req.user.UserID)
+     const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,JSON.stringify({
+      UserID,
+      UserName,
+      FullName,
+      UserPassword,
+      Firstname,
+      LastName,
+      MobileNo,
+      EmailID,
+      Gender,
+      AADHAARNo,
+      Designation,
+      UserRoleID,
+      DistrictID,
+      PSID,
+    }) ,req.user.UserID)
     const result = await saveUserRegistrationModel(
       UserID,
       UserName,

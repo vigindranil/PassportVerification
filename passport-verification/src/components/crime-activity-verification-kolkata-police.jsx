@@ -10,6 +10,9 @@ import DateRangePicker from "./date-range-picker";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { VisuallyHidden } from "./ui/visually-hidden";
 import { Eye } from "lucide-react";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
+import Cookies from "react-cookies";
 
 const SkeletonLoader = () => (
   <>
@@ -25,19 +28,21 @@ const SkeletonLoader = () => (
   </>
 );
 
-const CrimeAcivityTableKolkataPolice = ({selectedRows, setSelectedRows}) => {
+const CrimeAcivityTableKolkataPolice = ({ selectedRows, setSelectedRows, applicant_details }) => {
+  const ps = Cookies.load("ps");
+  const district = Cookies.load("district");
   const [crimeData, setCrimeData] = useState([]);
   const [isLoadingPccRecords, setIsLoadingPccRecords] = useState(false);
   const [kolkataPoliceRecords, setKolkataPoliceRecords] = useState({
-    name_accused: "",
+    name_accused: applicant_details?.ApplicantName || "",
     criminal_aliases_name: "",
-    address: "",
-    father_accused: "",
+    address: applicant_details?.PermanentAddress || applicant_details?.VerificationAddress || "",
+    father_accused: applicant_details?.FathersName,
     age_accused: "",
     from_date: "",
     to_date: "",
     case_yr: "",
-    policestations: "",
+    policestations: applicant_details?.Ps_Name,
     pageno: "1",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,7 +54,18 @@ const CrimeAcivityTableKolkataPolice = ({selectedRows, setSelectedRows}) => {
     try {
       setIsLoadingPccRecords(true);
       const response = await getKolkataPoliceCriminalRecordSearchv4(crimeData);
-      setCrimeData(response?.data?.result || []);
+
+      // phonetic search
+      const filterData = response?.data?.result?.filter(filter =>
+        filter?.NAME?.toUpperCase().includes(kolkataPoliceRecords?.name_accused?.toUpperCase())
+        && filter?.FATHERNAME?.toUpperCase().includes(kolkataPoliceRecords?.father_accused?.toUpperCase())
+        // && ( filter.ADDRESS?.toUpperCase().includes(district?.toUpperCase()) || filter.ADDR?.toUpperCase().includes(district?.toUpperCase()) )
+      );
+
+      // console.log('filterData', filterData);
+
+      setCrimeData(filterData || []);
+
       setCurrentPage(1); // Reset to first page on new search
     } catch (e) {
       console.log("Error:", e);
@@ -57,6 +73,7 @@ const CrimeAcivityTableKolkataPolice = ({selectedRows, setSelectedRows}) => {
       setIsLoadingPccRecords(false);
     }
   };
+
 
   const totalPages = Math.ceil(crimeData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -76,52 +93,48 @@ const CrimeAcivityTableKolkataPolice = ({selectedRows, setSelectedRows}) => {
         <h1 className="text-xl font-bold text-zinc-500">Kolkata Police Criminal Records</h1>
         <hr className="my-2" />
         <div className="flex items-center justify-center mb-6 flex-col">
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 w-full my-4 px-14">
-            <Input
-              type="text"
-              placeholder="Enter First Name (required)"
-              className="ring-0 border-gray-300 rounded-md w-64 p-2"
-              onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, name_accused: e.target.value })}
-            />
-            <Input
-              type="text"
-              placeholder="Enter Nickname (optional)"
-              className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-64 p-2"
-              onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, criminal_aliases_name: e.target.value })}
-            />
-            <Input
-              type="text"
-              placeholder="Enter Address (optional)"
-              className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-64 p-2"
-              onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, address: e.target.value })}
-            />
-            <Input
-              type="text"
-              placeholder="Enter Father Name (optional)"
-              className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-64 p-2"
-              onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, father_accused: e.target.value })}
-            />
-            <Input
-              type="number"
-              min="1"
-              default=""
-              placeholder="Enter Age (optional)"
-              className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-64 p-2"
-              onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, age_accused: e.target.value < 1 ? 1 : e.target.value})}
-            />
-            <Input
-              type="text"
-              placeholder="Enter Case Year (optional)"
-              className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-64 p-2"
-              onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, case_yr: e.target.value })}
-            />
-            <Input
-              type="text"
-              placeholder="Enter PS (optional)"
-              className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-64 p-2"
-              onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, policestations: e.target.value })}
-            />
-            <DateRangePicker setKolkataPoliceRecords={setKolkataPoliceRecords} />
+          <div className="flex flex-wrap items-center gap-y-2 w-full my-4 px-14">
+            <div className="w-1/3 px-3">
+              <Label className="text-zinc-500">Applicant Name</Label>
+              <Input
+                type="text"
+                placeholder="Enter First Name (required)"
+                className="ring-0 border-gray-300 rounded-md w-full p-2"
+                value={kolkataPoliceRecords?.name_accused}
+                onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, name_accused: e.target.value })}
+              />
+            </div>
+
+            <div className="w-1/3 px-3">
+              <Label className="text-zinc-500">Father's Name</Label>
+              <Input
+                type="text"
+                placeholder="Enter Father Name (optional)"
+                className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-full p-2"
+                value={kolkataPoliceRecords?.father_accused}
+                onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, father_accused: e.target.value })}
+              />
+            </div>
+
+            <div className="w-1/3 px-3">
+              <Label className="text-zinc-500">Police Station</Label>
+              <Input
+                type="text"
+                placeholder="Enter PS (optional)"
+                className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-full p-2"
+                value={kolkataPoliceRecords?.policestations}
+                onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, policestations: e.target.value })}
+              />
+            </div>
+
+            <div className="w-full px-3">
+              <Label className="text-zinc-500">Address</Label>
+              <Textarea placeholder="Enter Address (optional)"
+                className="active:ring-0 focus:outline-none border-gray-300 rounded-md w-[100%] p-2"
+                value={kolkataPoliceRecords?.address}
+                onChange={(e) => setKolkataPoliceRecords({ ...kolkataPoliceRecords, address: e.target.value })} />
+            </div>
+
           </div>
           <Button
             variant="secondary"

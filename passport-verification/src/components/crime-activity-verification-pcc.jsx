@@ -8,11 +8,15 @@ import { getPccCrimeDetails } from "@/app/applicationDetails/[FileNumber]/api";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { VisuallyHidden } from "./ui/visually-hidden";
 import { Eye } from "lucide-react";
+import { Label } from "./ui/label";
+import Cookies from "react-cookies";
 
-const CrimeAcivityTablePCC = ({selectedRows, setSelectedRows}) => {
+const CrimeAcivityTablePCC = ({ selectedRows, setSelectedRows, ApplicantName, FathersName }) => {
+  const ps = Cookies.load("ps");
+  const district = Cookies.load("district");
   const [crimeData, setCrimeData] = useState([]);
   const [isLoadingPccRecords, setIsLoadingPccRecords] = useState(false);
-  const [pccInput, setPccInput] = useState({ fname: "", lname: "" });
+  const [pccInput, setPccInput] = useState({ fname: ApplicantName?.split(" ")[0], lname: ApplicantName?.split(" ")[1] });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,7 +30,19 @@ const CrimeAcivityTablePCC = ({selectedRows, setSelectedRows}) => {
     try {
       setIsLoadingPccRecords(true);
       const response = await getPccCrimeDetails(fname, lname);
-      setCrimeData(response?.data?.Arrest || []);
+
+      // phonetic search
+      const filterData = response?.data?.Arrest?.filter(filter =>
+        filter?.FirstName?.trimStart().toUpperCase() === pccInput?.fname?.toUpperCase().trim()
+        && filter?.LastName?.toUpperCase().includes(pccInput?.lname?.toUpperCase())
+        && filter.gurdainName?.toUpperCase().includes(FathersName?.toUpperCase())
+        // && filter.psName?.toUpperCase().includes(ps?.toUpperCase())
+        // && filter.distName?.toUpperCase().includes(district?.toUpperCase())
+      );
+
+      console.log('filterData', filterData);
+
+      setCrimeData(filterData || []);
       setSelectedRows([]); // Clear previous selections on new search
     } catch (e) {
       console.error("Error fetching data:", e);
@@ -65,14 +81,20 @@ const CrimeAcivityTablePCC = ({selectedRows, setSelectedRows}) => {
         <h1 className="text-xl font-bold text-zinc-500">C.I.D Criminal Records</h1>
         <hr className="my-2" />
         <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center">
-            <Input type="text" placeholder="Enter First Name" className="border-gray-300 rounded-md w-52 p-2"
-              onChange={(e) => setPccInput({ ...pccInput, fname: e.target.value })}
-            />
-            <Input type="text" placeholder="Enter Last Name" className="border-gray-300 rounded-md ml-4 w-52 p-2"
-              onChange={(e) => setPccInput({ ...pccInput, lname: e.target.value })}
-            />
-            <Button variant="secondary" disabled={isLoadingPccRecords} className="mx-2 text-slate-700 border-2 hover:bg-zinc-200" onClick={() => fetchPccCrimeDetails(pccInput.fname, pccInput.lname)}>
+          <div className="flex items-center justify-center">
+            <div className="w-full px-3">
+              <Label className="text-zinc-500">First Name</Label>
+              <Input type="text" value={pccInput.fname} placeholder="Enter First Name" className="border-gray-300 rounded-md w-full p-2"
+                onChange={(e) => setPccInput({ ...pccInput, fname: e.target.value })}
+              />
+            </div>
+            <div className="w-full px-3">
+              <Label className="text-zinc-500">Last Name</Label>
+              <Input type="text" value={pccInput.lname} placeholder="Enter Last Name" className="border-gray-300 rounded-md w-full p-2"
+                onChange={(e) => setPccInput({ ...pccInput, lname: e.target.value })}
+              />
+            </div>
+            <Button variant="secondary" disabled={isLoadingPccRecords} className="mx-2 mt-5 text-slate-700 border-2 hover:bg-zinc-200" onClick={() => fetchPccCrimeDetails(pccInput.fname, pccInput.lname)}>
               {isLoadingPccRecords ? 'Searching...' : 'Search Criminal Records'}
             </Button>
           </div>

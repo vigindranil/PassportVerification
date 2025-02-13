@@ -17,6 +17,7 @@ import CrimeAcivityTableKolkataPolice from "@/components/crime-activity-verifica
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { AlertCircle, CheckCircle2 } from "lucide-react"
+import Cookies from "react-cookies";
 
 export default function Page({ FileNumber }) {
   const [applicationDetails, setApplicationDetails] = useState(null);
@@ -25,10 +26,11 @@ export default function Page({ FileNumber }) {
   const [isLoadingCriminalRecordFound, setIsLoadingCriminalRecordFound] = useState(false)
   const [isLoadingCriminalRecordNotFound, setIsLoadingCriminalRecordNotFound] = useState(false)
   const [verificationSuccess, setVerificationSuccess] = useState(false);
-
   const [kolkataPoliceSelectedRows, setKolkataPoliceSelectedRows] = useState([]);
   const [cidSelectedRows, setCidSelectedRows] = useState([]);
   const [criminalRecordsRemark, setCriminalRecordsRemark] = useState("");
+  const [districtName, setDistrictName] = useState("");
+  const [PSName, setPSName] = useState("");
 
   const { toast } = useToast()
 
@@ -188,6 +190,13 @@ export default function Page({ FileNumber }) {
   useEffect(() => {
     console.log("FileNumber:", FileNumber);
     FileNumber && fetchData(FileNumber);
+    const district = Cookies.load('ds');
+    const ps = Cookies.load('ps');
+
+    if (district && ps) {
+      setDistrictName(district);
+      setPSName(ps);
+    }
   }, [FileNumber, verificationSuccess]);
 
 
@@ -620,10 +629,10 @@ export default function Page({ FileNumber }) {
                       </> :
                       <>
                         {/* Kolkata Police Crime Records */}
-                        < CrimeAcivityTableKolkataPolice selectedRows={kolkataPoliceSelectedRows} setSelectedRows={setKolkataPoliceSelectedRows} />
+                        < CrimeAcivityTableKolkataPolice applicant_details={applicationDetails?.applicationDetails} selectedRows={kolkataPoliceSelectedRows} setSelectedRows={setKolkataPoliceSelectedRows} />
 
                         {/* PCC Criminal Records */}
-                        <CrimeAcivityTablePCC selectedRows={cidSelectedRows} setSelectedRows={setCidSelectedRows} />
+                        <CrimeAcivityTablePCC ApplicantName={applicationDetails?.applicationDetails?.ApplicantName} FathersName={applicationDetails?.applicationDetails?.FathersName} selectedRows={cidSelectedRows} setSelectedRows={setCidSelectedRows} />
 
                         <div className="flex justify-center px-5 py-5 gap-2 flex-col">
                           <div className="w-full">

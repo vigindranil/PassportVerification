@@ -57,6 +57,8 @@ export async function saveUserRegistrationModel(
   );
 
   const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
+  console.log("ErrorCode", result[0].ErrorCode);
+  
   return result[0].ErrorCode;
 
 }

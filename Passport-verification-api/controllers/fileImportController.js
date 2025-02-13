@@ -126,9 +126,16 @@ export const uploadExcel = async (req, res) => {
 
     await Promise.all(promises);
 
+    console.log({
+      added: success_arr,
+      duplicate: duplicate_arr,
+      failed: failure_arr,
+    });
+    
+
     res.status(200).json({
       status: 0,
-      message: `${success_arr.length} record(s) have been added`,
+      message: `${success_arr?.length} record(s) have been added`,
       data: {
         added: success_arr,
         duplicate: duplicate_arr,
