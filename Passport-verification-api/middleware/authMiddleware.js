@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { getUserVerifyToken } from "../models/authModels.js";
+import { getUserVerifyToken } from "../models/authModels.js";
 // import client from '../redisClient.js';
 
 

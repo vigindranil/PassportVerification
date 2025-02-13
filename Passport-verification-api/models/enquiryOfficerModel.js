@@ -17,13 +17,6 @@ export async function getSpecialEnquiryOfficersModel(
 }
 
 
-
-
-
-
-
-
-
 export async function assignApplicationToSEModel(
     applicationId,
     assignTo,
