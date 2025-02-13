@@ -35,3 +35,14 @@ export const acceptApplication = async (applicationId, citizentype, file) => {
     return error.message;
   }
 };
+
+export const getRequiredDocuments = async (citizenTypeId, dateOfBirth) => {
+  try {
+    return await postRequest("documents/get-required-documents", {
+      citizenTypeId,
+      dateOfBirth
+    });
+  } catch (error) {
+    return [];
+  }
+};

@@ -7,11 +7,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label"
 import { Input } from "./ui/input"
 import { FileImage } from "lucide-react"
+import { getRequiredDocuments } from "@/app/allFiles/api"
 
 export function FileAcceptModal({ isOpen, onClose, fileData, onAccept }) {
   const [file, setFile] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [citizenType, setCitizenType] = useState("")
+  const [requiredDocuments, setRequiredDocuments] = useState([]);
 
   const handleAccept = async () => {
     if (file && citizenType) {
@@ -26,6 +28,14 @@ export function FileAcceptModal({ isOpen, onClose, fileData, onAccept }) {
         setIsLoading(false)
       }
     }
+  }
+
+  const handleCitizenOnChange = async (value) => {
+    // handle citizen type change
+    setCitizenType(value)
+    const dob = fileData?.DateOfBirth?.split("T")[0];
+    const response = await getRequiredDocuments(citizenType, dob);
+    setRequiredDocuments(response?.data || []);    
   }
 
   return (
@@ -47,7 +57,7 @@ export function FileAcceptModal({ isOpen, onClose, fileData, onAccept }) {
           </div>
           <div className="space-y-2">
             <Label>Citizen Type<span className="text-red-500">*</span></Label>
-            <Select value={citizenType} onValueChange={setCitizenType}>
+            <Select value={citizenType} onValueChange={(value)=>handleCitizenOnChange(value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Citizen Type" />
               </SelectTrigger>
@@ -75,6 +85,17 @@ export function FileAcceptModal({ isOpen, onClose, fileData, onAccept }) {
                 />
               </div>
             </div>
+
+            {requiredDocuments?.length ?
+              <div>
+              <ul className="list list-disc list-inside">
+              <Label className="font-bold text-zinc-500">Required documents need for verification</Label>
+              {requiredDocuments.map((doc, i) => (
+                <li className="leading-tight" key={i}>{doc}</li>
+              ))}
+              </ul>
+            </div>
+            :  null}
 
           </div>
         </div>
