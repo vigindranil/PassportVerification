@@ -1,0 +1,3 @@
+2025-02-12 13:09:52 | ERROR | Error fetching state information: Lock wait timeout exceeded; try restarting transaction
+2025-02-12 13:11:02 | ERROR | Error fetching state information: Lock wait timeout exceeded; try restarting transaction
+2025-02-12 13:11:16 | ERROR | Error fetching state information: Lock wait timeout exceeded; try restarting transaction
