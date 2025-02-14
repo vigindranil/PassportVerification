@@ -5,6 +5,25 @@ function getRequiredDocuments(citizenTypeId, dateOfBirth) {
         return { error: "Invalid date format. Please use YYYY-MM-DD." };
     }
 
+    const documentMapping = {
+        "Previously held Indian Passport": 4,
+        "Birth Certificate": 8,
+        "Voter ID card": 9,
+        "One parent's Voter ID card or Death Certificate": 15,
+        "Education Documents": 14,
+        "Aadhar Card": 5,
+        "Electric Bill": 1,
+        "Land deed": 26,
+        "Certificate of Naturalization": 27,
+        "Indian Passport": 28,
+        "Government-issued Identity Proof": 29,
+        "Address Proof": 30,
+        "Nationality Proof": 31,
+        "Certificate of Registration": 32,
+        "Proof of Descent": 33,
+        "Parent’s Citizenship Proof (Passport, Voter ID, Birth Certificate, Land Deed, School Certificate)": 38
+    };
+
     const requiredDocuments = {
         1: [],
         2: [
@@ -56,16 +75,20 @@ function getRequiredDocuments(citizenTypeId, dateOfBirth) {
                 "Proof that both parents were Indian citizens OR one parent was an Indian citizen and the other was not an illegal migrant (Voter ID / Birth Certificate / Death Certificate / Land Deed / Passport / School Certificate / Migrant Certificate)"
             ];
         } else {
-            return { status: 1, message: "Invalid date of birth range for citizen by birth.", data: []};
+            return { status: 1, message: "Invalid date of birth range for citizen by birth.", data: [] };
         }
     }
 
     if (!requiredDocuments[citizenTypeId]) {
-        return { status: 1, message: "Invalid citizen type ID", data: []};
+        return { status: 1, message: "Invalid citizen type ID", data: [] };
     }
 
-    return requiredDocuments[citizenTypeId];
+    return requiredDocuments[citizenTypeId].map(doc => ({
+        name: doc,
+        doc_type_id: documentMapping[doc] || null
+    }));
 }
+
 
 export const requiredDocuments = async (req, res) => {
     const { citizenTypeId, dateOfBirth } = req.body;
