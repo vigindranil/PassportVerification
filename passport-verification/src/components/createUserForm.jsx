@@ -313,12 +313,26 @@ const UserManagement = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    
+    let newValue = value;
 
-    // Only apply validation for specific fields
-    if (["UserName", "MobileNo", "AADHAARNo"].includes(name)) {
-        let newValue = value.replace(/\D/g, ""); // Allow only numbers
+    // Prevent spaces in UserName field
+    if (name === "UserName") {
+        newValue = newValue.replace(/\s/g, ""); // Remove spaces
 
-        if (name === "UserName" || name === "MobileNo") {
+        if (newValue.length === 0) {
+            setInvalidInput((prev) => ({
+                ...prev,
+                [name]: "UserName cannot be empty or contain spaces.",
+            }));
+        } else {
+            setInvalidInput((prev) => ({ ...prev, [name]: "" }));
+        }
+    } 
+    else if ([ "MobileNo", "AADHAARNo"].includes(name)) {
+        newValue = value.replace(/\D/g, ""); // Allow only numbers
+
+        if (name === "MobileNo") {
             newValue = newValue.slice(0, 10); // Restrict to 10 digits
 
             if (newValue.length < 10) {
@@ -342,14 +356,11 @@ const UserManagement = () => {
                 setInvalidInput((prev) => ({ ...prev, [name]: "" }));
             }
         }
-
-        setFormData((prev) => ({ ...prev, [name]: newValue }));
-    } 
-    else {
-        // If it's another field, update it normally
-        setFormData((prev) => ({ ...prev, [name]: value }));
     }
+
+    setFormData((prev) => ({ ...prev, [name]: newValue }));
 };
+
 
 
   const handleAcceptFile = () => {
@@ -368,7 +379,7 @@ const UserManagement = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-6">
         <div className="space-y-2">
           <Label htmlFor="UserName">
-            Login User Name <span className="text-zinc-400">(10-digit phone no.)</span> <span className="text-red-500">*</span>
+            Login User Name  <span className="text-red-500">*</span>
           </Label>
           <Input
             id="UserName"
