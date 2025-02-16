@@ -21,7 +21,8 @@ function getRequiredDocuments(citizenTypeId, dateOfBirth) {
         "Nationality Proof": 31,
         "Certificate of Registration": 32,
         "Proof of Descent": 33,
-        "Parent’s Citizenship Proof (Passport, Voter ID, Birth Certificate, Land Deed, School Certificate)": 38
+        "Parent’s Citizenship Proof (Passport, Voter ID, Birth Certificate, Land Deed, School Certificate)": 38,
+        "Proof that both parents were Indian citizens OR one parent was an Indian citizen and the other was not an illegal migrant (Voter ID / Birth Certificate / Death Certificate / Land Deed / Passport / School Certificate / Migrant Certificate)": 38,
     };
 
     const requiredDocuments = {
@@ -50,7 +51,7 @@ function getRequiredDocuments(citizenTypeId, dateOfBirth) {
         ]
     };
 
-    if (citizenTypeId === 1) {
+    if (citizenTypeId == 1) {
         if (dob >= new Date("1950-01-26") && dob < new Date("1987-07-01")) {
             requiredDocuments[1] = [
                 "Previously held Indian Passport",

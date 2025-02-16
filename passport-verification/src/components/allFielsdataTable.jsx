@@ -82,11 +82,8 @@ export default function PendingApplicationDatatable({ status }) {
     windowPrint.close()
   }
 
-  const handleAcceptFile = async (applicationId, citizentype, file) => {
+  const handleAcceptFile = async (applicationId, citizentype, dateOfBirth) => {
     try {
-      console.log(`applicationId: ${applicationId}`)
-      console.log(`citizentype: ${citizentype}`)
-      console.log(`file: ${file}`)
       if (!citizentype){
         toast({
           variant: "destructive",
@@ -94,16 +91,16 @@ export default function PendingApplicationDatatable({ status }) {
           description: "Please select citizen type and then try again",
         })
       }
-      if (!file){
+      if (!dateOfBirth){
         toast({
           variant: "destructive",
-          title: "Select File!",
-          description: "Please select a file and then try again",
+          title: "Date of Birth is not available!",
+          description: "An error occurred",
         })
       }
 
       // Implement the logic for accepting the file
-      const response = await acceptApplication(applicationId, citizentype, file);
+      const response = await acceptApplication(applicationId, citizentype, dateOfBirth);
       
 
       if (response?.status == 0) {

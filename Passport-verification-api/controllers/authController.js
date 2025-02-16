@@ -119,7 +119,6 @@ export const sendOtp = async (req, res) => {
         token: token,
       });
     } else {
-      logger.error(error.message);
       return res.status(404).json({
         status: 1,
         message: "Invalid user.",
