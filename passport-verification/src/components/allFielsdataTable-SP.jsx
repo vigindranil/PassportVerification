@@ -46,7 +46,7 @@ export default function PendingApplicationDatatable({ status }) {
   }
 
   const handleTransfer = () => {
-    onTransfer(FileNumber, remarks, selectedDistrict, selectedPoliceStation)
+    onTransfer(selectedDetails, remarks, selectedDistrict, selectedPoliceStation)
     setRemarks("")
     setSelectedDistrict("")
     setSelectedPoliceStation("")
@@ -298,7 +298,7 @@ export default function PendingApplicationDatatable({ status }) {
                             <Button
                               size="sm"
                               variant="default"
-                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-gray-700 hover:bg-gray-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-gray-700 hover:bg-yellow-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
                               onClick={() => {
                                 setType('query')
                                 setIsFileAcceptModalOpen(true)
@@ -308,7 +308,7 @@ export default function PendingApplicationDatatable({ status }) {
                               <FileQuestion className="mx-0 px-0" />
                             </Button>
                             <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
-                              Query
+                              Raise Query
                             </span>
                           </div>
 
@@ -316,13 +316,13 @@ export default function PendingApplicationDatatable({ status }) {
                             <Button
                               size="sm"
                               variant="default"
-                              className="bg-blue-100 ring-[0.5px] ring-blue-300 text-gray-700 hover:bg-gray-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              className="bg-gray-100 ring-[0.5px] text-gray-700 hover:bg-teal-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
                               onClick={handleOpenTransferModal}
                             >
                               <Rotate3d className="mx-0 px-0" />
                             </Button>
                             <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
-                              Transfer Application
+                              Transfer to PS
                             </span>
                             <TransferModal
                               isOpen={isTransferModalOpen}
