@@ -23,7 +23,7 @@ export default function PendingApplicationDatatable({status}) {
   const router = useRouter()
 
   const filteredData = verificationData?.filter((row) =>
-    Object.values(row).some((value) => value.toString().toLowerCase().includes(searchTerm.toLowerCase())),
+    Object.values(row).some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())),
   )
 
   const fetchApplicationStatus = async () => {
@@ -96,34 +96,34 @@ export default function PendingApplicationDatatable({status}) {
               <div className="space-y-2">
                 <ul>
                   <li className="text-sm">
-                    <span className="font-bold text-md">PV Sequence:</span> {selectedDetails.PVSequenceNo}
+                    <span className="font-bold text-md">PV Sequence:</span> {selectedDetails?.PVSequenceNo}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">File Number:</span> {selectedDetails.FileNumber}
+                    <span className="font-bold text-md">File Number:</span> {selectedDetails?.FileNumber}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Email ID:</span> {selectedDetails.EmailID}
+                    <span className="font-bold text-md">Email ID:</span> {selectedDetails?.EmailID}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Applicant Name:</span> {selectedDetails.ApplicantName}
+                    <span className="font-bold text-md">Applicant Name:</span> {selectedDetails?.ApplicantName}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Police Station:</span> {selectedDetails.Ps_Name}
+                    <span className="font-bold text-md">Police Station:</span> {selectedDetails?.Ps_Name}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Phone No:</span> {selectedDetails.PhoneNo}
+                    <span className="font-bold text-md">Phone No:</span> {selectedDetails?.PhoneNo}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Spouse Name:</span> {selectedDetails.SpouseName}
+                    <span className="font-bold text-md">Spouse Name:</span> {selectedDetails?.SpouseName}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Address:</span> {selectedDetails.VerificationAddress}
+                    <span className="font-bold text-md">Address:</span> {selectedDetails?.VerificationAddress}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Gender:</span> {selectedDetails.Gender}
+                    <span className="font-bold text-md">Gender:</span> {selectedDetails?.Gender}
                   </li>
                   <li className="text-sm">
-                    <span className="font-bold text-md">Place Of Birth:</span> {selectedDetails.PlaceOfBirth}
+                    <span className="font-bold text-md">Place Of Birth:</span> {selectedDetails?.PlaceOfBirth}
                   </li>
                 </ul>
               </div>
@@ -135,12 +135,12 @@ export default function PendingApplicationDatatable({status}) {
             <Button variant="outline" onClick={exportToExcel}>
               Excel
             </Button>
-            <Button variant="outline" onClick={exportToPDF}>
+            {/* <Button variant="outline" onClick={exportToPDF}>
               PDF
             </Button>
             <Button variant="outline" onClick={printTable}>
               Print
-            </Button>
+            </Button> */}
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-500">Search:</span>
@@ -178,7 +178,7 @@ export default function PendingApplicationDatatable({status}) {
                         size="sm"
                         variant="default"
                         className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1"
-                        onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
+                        onClick={() => router.push(`/applicationDetails/${row?.FileNumber}`)}
                       >
                         Details
                       </Button>
@@ -193,7 +193,7 @@ export default function PendingApplicationDatatable({status}) {
           <div>
             Showing {startIndex + 1} to {Math.min(endIndex, filteredData?.length)} of {filteredData?.length} entries
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button
               variant="outline"
               size="sm"

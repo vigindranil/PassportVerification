@@ -11,9 +11,14 @@ import "jspdf-autotable"
 import { getApplicationStatus } from "@/app/totalPending/api"
 import moment from "moment"
 import { useRouter } from "next/navigation"
-import { FileUser } from "lucide-react"
+import { CheckCircle2, CircleCheckBig, FileUser } from "lucide-react"
+import { toast } from "@/hooks/use-toast"
+import { ToastAction } from "./ui/toast"
+import Cookies from "react-cookies";
+import { FileAcceptModal } from "./approve-reject-modal"
+import { updateEnquiryStatus } from "@/app/acceptedAndVerificationPending-eo/api"
 
-export default function PendingApplicationDatatable({ status, heading, period }) {
+export default function PendingApplicationDatatable({ status, heading, period, flag }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [selectedDetails, setSelectedDetails] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
@@ -22,6 +27,9 @@ export default function PendingApplicationDatatable({ status, heading, period })
   const [isLoading, setIsLoading] = useState(true)
   const [verificationData, setVerificationData] = useState([])
   const router = useRouter()
+  const user_role = Cookies.load('type');
+  const [isFileAcceptModalOpen, setIsFileAcceptModalOpen] = useState(false)
+  const [type, setType] = useState("reject");
 
   const filteredData = verificationData?.filter((row) =>
     Object.values(row)?.some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm.toLowerCase())),
@@ -36,6 +44,43 @@ export default function PendingApplicationDatatable({ status, heading, period })
       console.error("Error fetching application status:", error)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleCompleteVerification = async (applicationId, remarks="Recommend for Apporval") => {
+    try {
+      // Implement the logic for accepting the file
+      const response = await updateEnquiryStatus(applicationId, remarks);
+      console.log('reponse:', response);
+
+      if (response?.status == 0) {
+        await fetchApplicationStatus();
+        toast({
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Successfull!</span>
+            </div>
+          ),
+          description: response?.message,
+          action: <ToastAction altText="Try again">Close</ToastAction>,
+        })
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Failed to update status!",
+          description: response?.message,
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
+      }
+    } catch (e) {
+      console.log('Error:', e);
+      toast({
+        variant: "destructive",
+        title: "Failed to update status!",
+        description: 'An error occurred',
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
     }
   }
 
@@ -59,12 +104,12 @@ export default function PendingApplicationDatatable({ status, heading, period })
     const doc = new jsPDF()
     doc.autoTable({
       head: [["File Number", "Applicant Name", "Police Station", "Phone No.", "Verification Address"]],
-      body: filteredData?.map((row) => [
-        row?.FileNumber,
-        row?.ApplicantName,
-        row?.PsName,
-        row?.PhoneNo,
-        row?.VerificationAddress,
+      body: filteredData.map((row) => [
+        row.FileNumber,
+        row.ApplicantName,
+        row.PsName,
+        row.PhoneNo,
+        row.VerificationAddress,
       ]),
     })
     doc.save("applications.pdf")
@@ -83,7 +128,7 @@ export default function PendingApplicationDatatable({ status, heading, period })
   return (
     <div className="mx-auto px-0 space-y-8 shadow-md">
       <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-lg overflow-hidden">
-        <div className={`bg-gradient-to-r ${(status == 0 || status == 5) ? 'from-yellow-600' : 'from-green-600'} ${(status == 0 || status == 5) ? 'to-yellow-400' : 'to-teal-600'} px-6 py-3`}>
+        <div className={`bg-gradient-to-r ${(status == 0 || status == 5) ? 'from-green-600' : 'from-green-600'} ${(status == 0 || status == 5) ? 'to-green-600' : 'to-green-600'} px-6 py-3`}>
           <h2 className="text-2xl font-bold text-white">{heading}</h2>
         </div>
       </div>
@@ -98,8 +143,8 @@ export default function PendingApplicationDatatable({ status, heading, period })
           />
           <div className="space-x-2">
             <Button variant={'outline'} onClick={handleExportExcel}>Export Excel</Button>
-            <Button variant={'outline'} onClick={handleExportPDF}>Export PDF</Button>
-            <Button variant={'outline'} onClick={handlePrint}>Print</Button>
+            {/* <Button variant={'outline'} onClick={handleExportPDF}>Export PDF</Button>
+            <Button variant={'outline'} onClick={handlePrint}>Print</Button> */}
           </div>
         </div>
         <div className="border rounded-lg" id="police-verification-table">
@@ -153,7 +198,7 @@ export default function PendingApplicationDatatable({ status, heading, period })
                             size="sm"
                             variant="outline"
                             className="bg-stone-100 ring-[0.5px] ring-slate-300 text-blue-700 hover:bg-blue-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
-                            onClick={() => router.push(`/applicationDetails/${row?.FileNumber}`)}
+                            onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
                           >
                             <FileUser className="m-0 p-0" />
                           </Button>
@@ -161,6 +206,23 @@ export default function PendingApplicationDatatable({ status, heading, period })
                             View Application
                           </span>
                         </div>
+                        {(user_role == 40 && flag == "eo-accepted-file") && <div className="relative group">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="bg-stone-100 ring-[0.5px] ring-slate-300 text-green-700 hover:bg-green-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                            onClick={() => {
+                              setType('approve')
+                              setIsFileAcceptModalOpen(true)
+                              setSelectedDetails(row.FileNumber)
+                            }}
+                          >
+                            <CircleCheckBig className="mx-0 px-0" />
+                          </Button>
+                          <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                            Complete Verification
+                          </span>
+                        </div>}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -176,10 +238,11 @@ export default function PendingApplicationDatatable({ status, heading, period })
           </Table>
         </div>
         <div className="flex items-center justify-between mt-4 text-sm">
-          <div>
-            Showing {startIndex + 1} to {Math.min(endIndex, filteredData?.length) || 0} of {filteredData?.length || 0} entries
+        <div>
+            Showing {filteredData ? startIndex + 1 : 0} to {filteredData ? Math.min(endIndex, filteredData.length) : 0}{" "}
+            of {filteredData?.length || 0} entries
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button
               variant="outline"
               size="sm"
@@ -188,7 +251,7 @@ export default function PendingApplicationDatatable({ status, heading, period })
             >
               Prev
             </Button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            {Array?.from({ length: totalPages }, (_, i) => i + 1)?.map((page) => (
               <Button
                 key={page}
                 variant={currentPage === page ? "default" : "outline"}
@@ -208,6 +271,15 @@ export default function PendingApplicationDatatable({ status, heading, period })
             </Button>
           </div>
         </div>
+        {isFileAcceptModalOpen && selectedDetails && (
+          <FileAcceptModal
+            isOpen={isFileAcceptModalOpen}
+            onClose={() => setIsFileAcceptModalOpen(false)}
+            applicationId={selectedDetails}
+            onAccept={handleCompleteVerification}
+            type={type}
+          />
+        )}
       </div>
     </div>
   )

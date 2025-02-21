@@ -15,15 +15,19 @@ import { toast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import { FileAcceptModal } from "./approve-reject-modal"
 import { updateEnquiryStatus } from "@/app/allFiles-sp/api"
+import { TransferModal } from "@/components/transferModal"
+import { CheckCircle2, FileCheck, FileQuestion, FileUser, FileX2, Rotate3d } from "lucide-react"
 
 export default function PendingApplicationDatatable({ status }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [selectedDetails, setSelectedDetails] = useState({})
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
+  const [refreshFlag, setRefreshFlag] = useState(false);
   const itemsPerPage = 6
   const [applicationStatus, setApplicationStatus] = useState(null)
   const [verificationData, setVerificationData] = useState([])
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
   const [isFileAcceptModalOpen, setIsFileAcceptModalOpen] = useState(false)
   const [type, setType] = useState("reject");
   const router = useRouter()
@@ -39,6 +43,17 @@ export default function PendingApplicationDatatable({ status }) {
     } catch (error) {
       console.log("Error fetching application status:", error)
     }
+  }
+
+  const handleTransfer = () => {
+    onTransfer(selectedDetails, remarks, selectedDistrict, selectedPoliceStation)
+    setRemarks("")
+    setSelectedDistrict("")
+    setSelectedPoliceStation("")
+  }
+
+  const handleCloseTransferModal = () => {
+    setIsTransferModalOpen(false)
   }
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage)
@@ -68,6 +83,10 @@ export default function PendingApplicationDatatable({ status }) {
     doc.save("police_verification_data.pdf")
   }
 
+  const handleOpenTransferModal = () => {
+    setIsTransferModalOpen(true)
+  }
+
   const printTable = () => {
     const printContent = document.getElementById("police-verification-table")
     const windowPrint = window.open("", "", "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0")
@@ -79,35 +98,40 @@ export default function PendingApplicationDatatable({ status }) {
   }
 
   const handleAcceptFile = async (applicationId, type, remarks) => {
-    try{
+    try {
       // Implement the logic for accepting the file
       const response = await updateEnquiryStatus(applicationId, type, remarks);
       console.log('reponse:', response);
-      
+
       if (response?.status == 0) {
+        await fetchApplicationStatus();
         toast({
-        title: "Successfull!",
-        description: response?.message,
-        action: <ToastAction altText="Try again">Close</ToastAction>,
-      })
-      fetchApplicationStatus();
-    } else {
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Successfull!</span>
+            </div>
+          ),
+          description: response?.message,
+          action: <ToastAction altText="Try again">Close</ToastAction>,
+        })
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Failed to update status!",
+          description: response?.message,
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
+      }
+    } catch (e) {
+      console.log('Error:', e);
       toast({
         variant: "destructive",
         title: "Failed to update status!",
-        description: response?.message,
+        description: 'An error occurred',
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
     }
-  }catch (e) {
-    console.log('Error:', e);
-    toast({
-      variant: "destructive",
-      title: "Failed to update status!",
-      description: 'An error occurred',
-      action: <ToastAction altText="Try again">Try again</ToastAction>,
-    })
-  }
   }
 
   const handleViewPPAttachment = (fileNumber) => {
@@ -118,11 +142,11 @@ export default function PendingApplicationDatatable({ status }) {
 
   useEffect(() => {
     fetchApplicationStatus()
-  }, [searchTerm]) // Added searchTerm as a dependency
+  }, [searchTerm, refreshFlag]) // Added searchTerm as a dependency
 
   return (
-    <div className="container mx-auto px-0 space-y-8 shadow-2xl">
-      <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl overflow-hidden">
+    <div className="container mx-auto px-0 space-y-8 shadow-md rounded-sm">
+      <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-md overflow-hidden">
         <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
           <h2 className="text-2xl font-bold text-white">Pending Application</h2>
         </div>
@@ -179,12 +203,12 @@ export default function PendingApplicationDatatable({ status }) {
             <Button variant="outline" onClick={exportToExcel}>
               Excel
             </Button>
-            <Button variant="outline" onClick={exportToPDF}>
+            {/* <Button variant="outline" onClick={exportToPDF}>
               PDF
             </Button>
             <Button variant="outline" onClick={printTable}>
               Print
-            </Button>
+            </Button> */}
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-500">Search:</span>
@@ -215,55 +239,99 @@ export default function PendingApplicationDatatable({ status }) {
                     <TableRow key={index}>
                       <TableCell>{row?.FileNumber}</TableCell>
                       <TableCell>{row?.ApplicantName}</TableCell>
-                      <TableCell>{row?.Ps_Name}</TableCell>
+                      <TableCell>{row?.PsName}</TableCell>
                       <TableCell>{row?.PhoneNo}</TableCell>
                       <TableCell>{row?.DateOfBirth ? moment(row.DateOfBirth).format("DD/MM/YYYY") : "N/A"}</TableCell>
                       <TableCell>
                         <div className="flex space-x-1">
-                          <Button
-                            size="sm"
-                            variant="default"
-                            className="bg-green-600 hover:bg-green-700 text-white text-xs px-1 py-1"
-                            onClick={() => router.push(`/applicationDetails/${row?.FileNumber}`)}
-                          >
-                            Details
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="default"
-                            className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-1 py-1"
-                            onClick={() => {
-                              setType('approve')
-                              setIsFileAcceptModalOpen(true)
-                              setSelectedDetails(row?.FileNumber)
-                            }}
-                          >
-                            Approve
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="default"
-                            className="bg-red-500 hover:bg-red-600 text-white text-xs px-1 py-1"
-                            onClick={() => {
-                              setType('reject')
-                              setIsFileAcceptModalOpen(true)
-                              setSelectedDetails(row?.FileNumber)
-                            }}
-                          >
-                            Reject
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="default"
-                            className="bg-slate-500 hover:bg-slate-600 text-white text-xs px-1 py-1"
-                            onClick={() => {
-                              setType('query')
-                              setIsFileAcceptModalOpen(true)
-                              setSelectedDetails(row?.FileNumber)
-                            }}
-                          >
-                            Query
-                          </Button>
+                          <div className="relative group">
+                            <Button
+                              size="sm"
+                              variant="default"
+                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-blue-700 hover:bg-blue-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              onClick={() => router.push(`/applicationDetails/${row?.FileNumber}`)}
+                            >
+                              <FileUser className="m-0 p-0" />
+                            </Button>
+                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                              View Application
+                            </span>
+                          </div>
+
+                          <div className="relative group">
+                            <Button
+                              size="sm"
+                              variant="default"
+                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-green-700 hover:bg-green-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              onClick={() => {
+                                setType('approve')
+                                setIsFileAcceptModalOpen(true)
+                                setSelectedDetails(row?.FileNumber)
+                              }}
+                            >
+                              <FileCheck className="mx-0 px-0" />
+                            </Button>
+                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                              Approve Application
+                            </span>
+                          </div>
+
+                          <div className="relative group">
+                            <Button
+                              size="sm"
+                              variant="default"
+                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-red-700 hover:bg-red-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              onClick={() => {
+                                setType('reject')
+                                setIsFileAcceptModalOpen(true)
+                                setSelectedDetails(row?.FileNumber)
+                              }}
+                            >
+                              <FileX2 className="mx-0 px-0" />
+                            </Button>
+                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                              Reject Application
+                            </span>
+                          </div>
+
+                          <div className="relative group">
+                            <Button
+                              size="sm"
+                              variant="default"
+                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-gray-700 hover:bg-yellow-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              onClick={() => {
+                                setType('query')
+                                setIsFileAcceptModalOpen(true)
+                                setSelectedDetails(row?.FileNumber)
+                              }}
+                            >
+                              <FileQuestion className="mx-0 px-0" />
+                            </Button>
+                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                              Raise Query
+                            </span>
+                          </div>
+
+                          <div className="relative group">
+                            <Button
+                              size="sm"
+                              variant="default"
+                              className="bg-gray-100 ring-[0.5px] text-gray-700 hover:bg-teal-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              onClick={handleOpenTransferModal}
+                            >
+                              <Rotate3d className="mx-0 px-0" />
+                            </Button>
+                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                              Transfer to PS
+                            </span>
+                            <TransferModal
+                              isOpen={isTransferModalOpen}
+                              onClose={handleCloseTransferModal}
+                              fileNumber={row?.FileNumber}
+                              applicantName={row?.ApplicantName}
+                              onTransfer={handleTransfer}
+                            />
+                          </div>
                           {/* <Button
                             size="sm"
                             variant="default"
@@ -285,7 +353,7 @@ export default function PendingApplicationDatatable({ status }) {
           <div>
             Showing {startIndex + 1} to {Math.min(endIndex, filteredData?.length)} of {filteredData?.length} entries
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button
               variant="outline"
               size="sm"

@@ -51,7 +51,7 @@ export default function Proceed() {
     }
   };
 
-  const totalPages = Math.ceil(filteredData?.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentData = filteredData.slice(startIndex, endIndex);
@@ -192,10 +192,10 @@ export default function Proceed() {
       </div>
       <div className="flex items-center justify-between mt-4 text-sm">
         <div>
-          Showing {startIndex + 1} to {Math.min(endIndex, filteredData?.length)} of{" "}
-          {filteredData?.length} entries
+          Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of{" "}
+          {filteredData.length} entries
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <Button
             variant="outline"
             size="sm"

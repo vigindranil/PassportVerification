@@ -9,7 +9,7 @@ export const saveUser = async (userData) => {
       "UserID": 0,
       "UserName": userData.UserName,
       "UserPassword": "admin@123",
-      "UserFullName": userData.UserFullName,
+      "FullName": userData.FullName,
       "Firstname": userData.Firstname,
       "LastName": userData.LastName,
       "MobileNo": userData.MobileNo,
@@ -39,12 +39,15 @@ export const getDistrict = async () => {
 };
 
 export const getPoliceStationsByDistrict = async (districtID) => {
+  console.log("saheeeee")
   try {
 
-    return await postRequest("master/getPoliceStationsByDistrict",
+    const response = await postRequest("master/getPoliceStationsByDistrict",
       {
         "districtId": districtID,
       });
+      console.log("raja",response);
+return response;
   } catch (error) {
     console.log("Error saving user:", error);
     return null;

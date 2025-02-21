@@ -2,13 +2,17 @@ import {
   saveDocumentUploadModel,
   getDocumentUploadDetailsModel,
   saveCaseAssignModel,
+  getStatusByEOModel,
+  getCountEOModel,
 } from "../models/eoModel.js";
 import { saveTransactionHistory } from "../models/logModel.js";
 import logger from "../utils/logger.js";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 export const saveDocumentUpload = async (req, res) => {
   try {
     const {
+      DocDetailsID,
       ApplicationId,
       DocumentRemarks,
       DocumentTypeId,
@@ -28,14 +32,14 @@ export const saveDocumentUpload = async (req, res) => {
     const EntryUserId = req.user.UserID;
     const file = req.file;
     const filepath = req?.file_name;
-    console.log(file);
-    
 
+    console.log("req.file",req.file)
     if (!file) {
       logger.debug(
         JSON.stringify({
           API: "saveDocumentUpload",
           REQUEST: {
+            DocDetailsID,
             ApplicationId,
             filepath,
             DocumentRemarks,
@@ -64,6 +68,7 @@ export const saveDocumentUpload = async (req, res) => {
         JSON.stringify({
           API: "saveDocumentUpload",
           REQUEST: {
+            DocDetailsID,
             ApplicationId,
             filepath,
             DocumentRemarks,
@@ -78,7 +83,7 @@ export const saveDocumentUpload = async (req, res) => {
             longitude,
             latitude,
             DeviceId,
-            appDocId, 
+            appDocId,
             EntryUserId,
           },
           RESPONSE: {
@@ -93,11 +98,37 @@ export const saveDocumentUpload = async (req, res) => {
       });
     }
 
+    // Initialize S3 Client
+    const s3 = new S3Client({
+      region: process.env.AWS_REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      },
+    });
+
+    // Check if the S3 bucket exists
+
+    const params = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: `${ApplicationId}-${DocumentTypeId}-${Date.now()}`, // Unique name for the file
+      Body: req.file.buffer,
+      ContentType: req.file.mimetype || "application/octet-stream", // Set content type dynamically
+      ACL: "public-read", // This allows the file to be publicly readable
+    };
+    try {
+      await s3.send(new PutObjectCommand(params));
+    } catch (error) {
+      console.error("S3 Upload Error:", error);
+      throw new Error("Failed to upload file to S3");
+    }
+
     const OperationName = "saveDocumentUpload";
     const json = "{}";
     const result = await saveDocumentUploadModel(
+      DocDetailsID,
       ApplicationId,
-      filepath,
+      `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`,
       DocumentRemarks,
       DocumentTypeId,
       IdNumber,
@@ -113,7 +144,16 @@ export const saveDocumentUpload = async (req, res) => {
       appDocId,
       EntryUserId
     );
-    await saveTransactionHistory(ipaddress, MacAddress, longitude, latitude, 0, OperationName, json, EntryUserId)
+    await saveTransactionHistory(
+      ipaddress,
+      MacAddress,
+      longitude,
+      latitude,
+      0,
+      OperationName,
+      json,
+      EntryUserId
+    );
     if (result == 0) {
       logger.debug(
         JSON.stringify({
@@ -146,6 +186,7 @@ export const saveDocumentUpload = async (req, res) => {
       return res.status(200).json({
         status: 0,
         message: "Document uploaded successfully",
+        fileUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`,
       });
     } else if (result == 3) {
       logger.debug(
@@ -309,13 +350,40 @@ export const saveCaseAssign = async (req, res) => {
       macAddress,
       locationIp,
       deviceId,
+      dateOfBirth,
     } = req.body;
     const entryUserId = req.user.UserID;
-    const file = req.file;
-    const filepath = req?.file_name;
+    let filepath = "";
+    const dob = new Date(dateOfBirth);
 
-    if (!file) {
-      return res.status(400).json({ status: 1, message: "No file uploaded" });
+    const pp_document = {
+      "citizen_type_1_(1950-01-26_to_1987-06-30)": "https://wb-passport-verify.s3.ap-south-1.amazonaws.com/citizen_type_1_(1950-01-26_to_1987-06-30)",
+      "citizen_type_1_(1987-07-01_to_2004-12-02)": "https://wb-passport-verify.s3.ap-south-1.amazonaws.com/citizen_type_1_(1987-07-01_to_2004-12-02)",
+      "citizen_type_1_(2004-12-03_onwards)": "https://wb-passport-verify.s3.ap-south-1.amazonaws.com/citizen_type_1_(2004-12-03_onwards)",
+      "citizen_type_2_Citizen_by_Naturalization": "https://wb-passport-verify.s3.ap-south-1.amazonaws.com/citizen_type_2_Citizen_by_Naturalization",
+      "citizen_type_3_Citizen_by_Registration": "https://wb-passport-verify.s3.ap-south-1.amazonaws.com/citizen_type_3_Citizen_by_Registration",
+      "citizen_type_4_Citizen_by_Descent": "https://wb-passport-verify.s3.ap-south-1.amazonaws.com/citizen_type_4_Citizen_by_Descent",
+    }
+
+    if (citizentype == 1) {
+      if (dob >= new Date("1950-01-26") && dob < new Date("1987-07-01")) {
+        filepath = pp_document["citizen_type_1_(1950-01-26_to_1987-06-30)"]
+      }
+      else if (dob >= new Date("1987-07-01") && dob < new Date("2004-12-03")) {
+        filepath = pp_document["citizen_type_1_(1987-07-01_to_2004-12-02)"]
+      }
+      else if (dob >= new Date("2004-12-03")) {
+        filepath = pp_document["citizen_type_1_(2004-12-03_onwards)"]
+      }
+    }
+    if (citizentype == 2) {
+      filepath = pp_document["citizen_type_2_Citizen_by_Naturalization"]
+    }
+    else if (citizentype == 3) {
+      filepath = pp_document["citizen_type_3_Citizen_by_Registration"]
+    }
+    else if (citizentype == 4) {
+      filepath = pp_document["citizen_type_4_Citizen_by_Descent"]
     }
 
     if (!applicationId || !citizentype) {
@@ -330,7 +398,6 @@ export const saveCaseAssign = async (req, res) => {
     const OperationName = "saveCaseAssign";
     const json = "{}";
 
-    console.log("entryUserId", entryUserId);
 
     //  const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, 0, OperationName, json, entryUserId)
 
@@ -345,7 +412,6 @@ export const saveCaseAssign = async (req, res) => {
       entryUserId
     );
 
-    console.log("errorCode", errorCode);
 
     if (errorCode == 0) {
       logger.debug(
@@ -369,6 +435,7 @@ export const saveCaseAssign = async (req, res) => {
       return res.status(200).json({
         status: 0,
         message: "Case assigned successfully",
+        file_path: filepath
       });
     } else if (errorCode === 3) {
       return res.status(400).json({
@@ -404,6 +471,62 @@ export const saveCaseAssign = async (req, res) => {
     return res.status(500).json({
       status: 1,
       message: "An error occurred while assigning the case",
+      error: error.message,
+    });
+  }
+};
+
+export const getStatusByEO = async (req, res) => {
+  try {
+    const { status, period } = req.body;
+    const userId = req.user.UserID;
+    if (!userId || !status || !period) {
+      return res.status(400).json({ status: 1, message: "Invalid input data" });
+    }
+
+    const result = await getStatusByEOModel(userId, status, period);
+
+    if (result == 0) {
+      return res.status(200).json({
+        status: 0,
+        message: "Status fetched successfully",
+        data: result,
+      });
+    } else {
+      return res.status(404).json({ status: 1, message: "No records found" });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      status: 1,
+      message: "An error occurred while fetching status",
+      error: error.message,
+    });
+  }
+};
+
+export const getCountEO = async (req, res) => {
+  try {
+    const userId = req.user.UserID; // Extract logged-in user ID
+
+    if (!userId) {
+      return res.status(400).json({
+        status: 1,
+        message: "Invalid input data. All fields are required.",
+      });
+    }
+
+    const applicationStatuses = await getCountEOModel(userId);
+
+    return res.status(200).json({
+      status: 0,
+      message: "Application statuses retrieved successfully",
+      data: applicationStatuses[0],
+    });
+  } catch (error) {
+    console.error("Error in getApplicationStatusController:", error.message);
+    return res.status(500).json({
+      status: 1,
+      message: "An error occurred while retrieving application statuses.",
       error: error.message,
     });
   }

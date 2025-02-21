@@ -45,7 +45,7 @@ const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
   return (
     <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
       <div className="bg-gradient-to-r from-green-600 to-teal-600 px-6 py-3">
-        <h2 className="text-2xl font-bold text-white">Application Status History</h2>
+        <h2 className="text-2xl font-bold text-white">Application Timeline</h2>
       </div>
       <div className="m-6">
         <Card>
@@ -55,9 +55,10 @@ const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
                 <TableHeader>
                   <TableRow className="bg-slate-100 hover:bg-slate-100">
                     <TableHead>Full Name</TableHead>
-                    <TableHead>Authority Level</TableHead>
+                    <TableHead>Role</TableHead>
                     <TableHead>Application State</TableHead>
-                    <TableHead>Updated Date</TableHead>
+                    <TableHead>Remarks</TableHead>
+                    <TableHead>Updated Date <small>(DD/MM/YYYY hh:mm:ss)</small></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -66,15 +67,16 @@ const ApplicationStatusHistory = ({ status, isLoadingStatusHistrory }) => {
                   ) : currentData?.length > 0 ? (
                     currentData.map((stat, index) => (
                       <TableRow key={index}>
-                        <TableCell>{stat?.UserName}</TableCell>
+                        <TableCell>{stat?.FullName}</TableCell>
                         <TableCell>{stat?.UserRole}</TableCell>
                         <TableCell>{stat?.ApplicationState == "EoAccept" ? "Application Accepted By EO" : stat?.ApplicationState == "EoStartVerify" ? "Document Uploaded By EO" : stat?.ApplicationState}</TableCell>
-                        <TableCell>{moment(stat?.ApplicationStateUpdatedDateTime).format("DD/MM/YYYY | hh:mm a")}</TableCell>
+                        <TableCell>{stat?.Remarks ? stat?.Remarks : 'N/A'}</TableCell>
+                        <TableCell>{stat?.ApplicationStateUpdatedDateTime ? moment(stat?.ApplicationStateUpdatedDateTime).format("DD/MM/YYYY hh:mm:ss A") : 'N/A'}</TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center">No Data Found</TableCell>
+                      <TableCell colSpan={5} className="text-center">No Data Found</TableCell>
                     </TableRow>
                   )}
                 </TableBody>

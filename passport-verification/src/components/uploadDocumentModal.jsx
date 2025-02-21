@@ -59,10 +59,10 @@ function UploadDocumentsModal({ isOpen, onClose, fileData }) {
         <div className="space-y-6">
           <div className="flex gap-4">
             <div className="bg-blue-500 text-white px-4 py-2 rounded">
-              Name: {fileData.name}
+              Name: {fileData?.name}
             </div>
             <div className="bg-orange-500 text-white px-4 py-2 rounded">
-              File no: {fileData.fileNumber}
+              File no: {fileData?.fileNumber}
             </div>
           </div>
 

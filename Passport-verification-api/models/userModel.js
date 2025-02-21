@@ -57,6 +57,8 @@ export async function saveUserRegistrationModel(
   );
 
   const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
+  console.log("ErrorCode", result[0].ErrorCode);
+  
   return result[0].ErrorCode;
 
 }
@@ -118,7 +120,7 @@ export async function getApplicationCountsv1Model(
   EntryUserID
 ) {
   try {
-    const [rows] = await pool.query('CALL GetApplicationCountsv1(?)', [EntryUserID]);
+    const [rows] = await pool.query('CALL sp_getApplicationCount(?)', [EntryUserID]);
     console.log("GetApplicationCountsv1", rows);
     
     return rows;

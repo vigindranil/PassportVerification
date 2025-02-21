@@ -2,85 +2,118 @@ import fetch from "node-fetch";
 import dotenv from "dotenv";
 import axios from "axios";
 import https from "https";
-import crypto from 'crypto';
+import crypto from "crypto";
 import {
   savethirdpartyVerifyStatus,
   setExternelApiLog,
 } from "../models/applicationModel.js";
+import qs from "qs";
 dotenv.config();
 
 export const generateOtpAadhaar = async (aadhaar_number, user_id) => {
-  try {
-    const url = "https://api.gridlines.io/aadhaar-api/boson/generate-otp";
-    const headers = {
+  let data = JSON.stringify({
+    aadhaar_number: aadhaar_number,
+    consent: "Y",
+    user_id: user_id,
+  });
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://api.gridlines.io/aadhaar-api/boson/generate-otp",
+    headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
       "X-API-Key": "0ZU5MIiP9neGxEhpxLZCpBrmDk087jw0",
       "X-Auth-Type": "API-Key",
-    };
+    },
+    data: data,
+  };
 
-    const body = JSON.stringify({
-      aadhaar_number: aadhaar_number,
-      consent: "Y",
-      user_id: user_id,
-    });
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: headers,
-      body: body,
-      timeout: 0, // Node-fetch does not have a built-in timeout option; you can handle it separately if needed
-    });
-
-    console.log("api aadhaar response: ", response);
-    const transactionId = response.headers.get("x-transaction-id");
-    console.log("api aadhaar transactionId: " + transactionId);
-
-    if (response.ok) {
-      return transactionId;
-    } else {
-      return transactionId;
-    }
+  try {
+    const result = await axios.request(config);
+    console.log("response", result?.data);
+    return result?.data;
   } catch (error) {
-    console.log("Error generating OTP: ", error);
-    return false;
+    if (error?.response) {
+      console.log(error?.response?.data); // Logs only the response data
+      return error?.response?.data;
+    } else {
+      return null;
+    }
   }
 };
 
 export const verifyOtpAadhaar = async (otp, user_id, transaction_id) => {
-  try {
-    const url = "https://api.gridlines.io/aadhaar-api/boson/submit-otp";
-    const headers = {
+  let data = JSON.stringify({
+    otp: otp,
+    include_xml: true,
+    share_code: "1001",
+    user_id: user_id,
+  });
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://api.gridlines.io/aadhaar-api/boson/submit-otp",
+    headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
       "X-API-Key": "0ZU5MIiP9neGxEhpxLZCpBrmDk087jw0",
       "X-Auth-Type": "API-Key",
       "X-Transaction-ID": transaction_id,
-    };
+    },
+    data: data,
+  };
 
-    const body = JSON.stringify({
-      otp: otp,
-      include_xml: true,
-      share_code: "1001",
-      user_id: user_id,
-    });
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: headers,
-      body: body,
-      timeout: 0, // Node-fetch does not have a built-in timeout option; you can handle it separately if needed
-    });
-
-    if (response.ok) {
-      return true;
-    } else {
-      return false;
-    }
+  try {
+    const result = await axios.request(config);
+    console.log("response", result?.data);
+    return result?.data;
   } catch (error) {
-    return false;
+    if (error?.response) {
+      console.log(error?.response?.data); // Logs only the response data
+      return error?.response?.data;
+    } else {
+      return null;
+    }
   }
 };
+
+// export const verifyOtpAadhaar = async (otp, user_id, transaction_id) => {
+//   try {
+//     const url = "https://api.gridlines.io/aadhaar-api/boson/submit-otp";
+//     const headers = {
+//       Accept: "application/json",
+//       "Content-Type": "application/json",
+//       "X-API-Key": "0ZU5MIiP9neGxEhpxLZCpBrmDk087jw0",
+//       "X-Auth-Type": "API-Key",
+//       "X-Transaction-ID": transaction_id,
+//     };
+
+//     const body = JSON.stringify({
+//       otp: otp,
+//       include_xml: true,
+//       share_code: "1001",
+//       user_id: user_id,
+//     });
+
+//     const response = await fetch(url, {
+//       method: "POST",
+//       headers: headers,
+//       body: body,
+//       timeout: 0, // Node-fetch does not have a built-in timeout option; you can handle it separately if needed
+//     });
+
+//     if (response.ok) {
+//       return true;
+//     } else {
+//       return false;
+//     }
+//   } catch (error) {
+//     return false;
+//   }
+// };
 
 export const getBirthCertificateDetails = async (req, res) => {
   const { CertificateNo, dateofbirth } = req.body;
@@ -124,7 +157,7 @@ export const getBirthCertificateDetails = async (req, res) => {
 };
 
 export const getWBSEDCLDetails = async (req, res) => {
-  const { consumerId, installationNum} = req.body;
+  const { consumerId, installationNum } = req.body;
 
   if (!consumerId) {
     return res.status(400).json({ error: "ConsumerId is required." });
@@ -151,6 +184,111 @@ export const getWBSEDCLDetails = async (req, res) => {
     .request(config)
     .then(async (response) => {
       console.log("response", response);
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: response?.data,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res.status(400).json({
+        status: 0,
+        message: "Failed to fetched details",
+        data: null,
+      });
+    });
+};
+
+export const getKolkataPoliceCriminalRecordSearchv4 = async (req, res) => {
+  const {
+    name_accused,
+    criminal_aliases_name,
+    address,
+    father_accused,
+    age_accused,
+    from_date,
+    to_date,
+    case_yr,
+    policestations,
+    pageno,
+  } = req.body;
+
+  // Create FormData instance
+  let formData = new FormData();
+  formData.append("name_accused", name_accused || "");
+  formData.append("criminal_aliases_name", criminal_aliases_name || "");
+  formData.append("address", address || "");
+  formData.append("father_accused", father_accused || "");
+  formData.append("age_accused", age_accused || "");
+  formData.append("from_date", from_date || "");
+  formData.append("to_date", to_date || "");
+  formData.append("case_yr", case_yr || "");
+  formData.append("policestations", policestations || "");
+  formData.append("pageno", pageno || "");
+  formData.append("identitycategory", "");
+  formData.append("crimecategory", "");
+  formData.append("moduslist", "");
+  formData.append("brief_keyword", "");
+  formData.append("class", "");
+  formData.append("subclass", "");
+  formData.append("user_id", "");
+  formData.append("own_jurisdiction", "");
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://api.kolkatapolice.org/crimebabuapp/Api/criminalSearchv4",
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    data: formData,
+  };
+
+  axios
+    .request(config)
+    .then(async (response) => {
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: response?.data,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res.status(400).json({
+        status: 0,
+        message: "Failed to fetched details",
+        data: null,
+      });
+    });
+};
+
+export const getPCCCrimeRecordSearch = async (req, res) => {
+  const { fname, lname } = req.body;
+
+  let data = qs.stringify({
+    authToken: "PCC@Pd@26062024",
+    fname: fname,
+    lname: lname,
+  });
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://sitrep-cid.wb.gov.in/Api/pccApi",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    data: data,
+    httpsAgent: new https.Agent({
+      secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+    }),
+  };
+
+  axios
+    .request(config)
+    .then(async (response) => {
       return res.status(200).json({
         status: 0,
         message: "Data fetched successfully",

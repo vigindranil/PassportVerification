@@ -3,7 +3,10 @@ import pool from '../db.js';
 
 export async function getPoliceStationsByDistrictModel(districtId) {
     try {
-      const [rows] = await pool.query('CALL GetPoliceStationsByDistrict(?)', [districtId]);
+      console.log("districtId",districtId);
+      
+      const [rows] = await pool.query('CALL sp_getPoliceStationsByDistrict(?)', [districtId]);
+      console.log("rows",rows);
       return rows[0]; 
     } catch (error) {
       throw new Error('Database error: ' + error.message);
@@ -16,7 +19,7 @@ export async function getPoliceStationsByDistrictModel(districtId) {
 
 export async function showDistrictModel() {
   try {
-    const [rows] = await pool.query('CALL showDistrict()');
+    const [rows] = await pool.query('CALL sp_getDistrict()');
     return rows[0]; 
   } catch (error) {
     throw new Error('Database error: ' + error.message);
@@ -26,7 +29,7 @@ export async function showDistrictModel() {
 
 export async function showDesignationModel() {
     try {
-      const [rows] = await pool.query('CALL showDesgination();');
+      const [rows] = await pool.query('CALL sp_getDesgination();');
       return rows[0]; 
     } catch (error) {
       throw new Error('Database error: ' + error.message);

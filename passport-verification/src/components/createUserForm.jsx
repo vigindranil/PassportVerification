@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Search, UserPlus } from "lucide-react"
+import { UserPlus } from "lucide-react"
 import { saveUser } from "@/app/createUserForm/api"
 import * as XLSX from "xlsx"
 import jsPDF from "jspdf"
@@ -14,8 +14,9 @@ import "jspdf-autotable"
 import { getDistrict, getPoliceStationsByDistrict, showuserDetails, tooglebutton } from "@/app/createUserForm/api"
 import { useToast } from "../hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
-import { FileAcceptModal } from "@/components/file-accept-modal" 
-import UploadDocumentsModal from "@/components/uploadDocumentModal" 
+import { FileAcceptModal } from "@/components/file-accept-modal"
+import UploadDocumentsModal from "@/components/uploadDocumentModal"
+import Cookies from "react-cookies"
 
 const UserManagement = () => {
   const [searchDistrict, setSearchDistrict] = useState("")
@@ -37,7 +38,35 @@ const UserManagement = () => {
 
   const [formData, setFormData] = useState({
     UserName: "",
-    UserFullName: "",
+    FullName: "",
+    Firstname: "",
+    LastName: "",
+    MobileNo: "",
+    EmailID: "",
+    Gender: "",
+    AADHAARNo: "",
+    Designation: "",
+    UserRoleID: "",
+    DistrictID: "0",
+    PSID: "0",
+    aadharRegisterMobileNumber: "",
+  })
+
+  const [formErrors, setFormErrors] = useState({
+    UserName: "",
+    FullName: "",
+    Firstname: "",
+    LastName: "",
+    EmailID: "",
+    MobileNo: "",
+    AADHAARNo: "",
+    Designation: "",
+    UserRoleID: "",
+  })
+
+  const [invalidInput, setInvalidInput] = useState({
+    UserName: "",
+    FullName: "",
     Firstname: "",
     LastName: "",
     MobileNo: "",
@@ -49,16 +78,6 @@ const UserManagement = () => {
     DistrictID: "",
     PSID: "",
     aadharRegisterMobileNumber: "",
-  })
-
-  const [formErrors, setFormErrors] = useState({
-    UserName: "",
-    UserFullName: "",
-    Firstname: "",
-    LastName: "",
-    EmailID: "",
-    MobileNo: "",
-    AADHAARNo: "",
   })
 
   const checkForSqlInjection = (value) => {
@@ -76,13 +95,13 @@ const UserManagement = () => {
     const doc = new jsPDF()
     doc.autoTable({
       head: [["User Name", "Full Name", "District Name", "Police Station", "Designation", "User Role"]],
-      body: users.map((row) => [
-        row.UserName,
-        row.FullName,
-        row.DistrictName,
-        row.PoliceStationName,
-        row.Designation,
-        row.userType,
+      body: users?.map((row) => [
+        row?.UserName,
+        row?.FullName,
+        row?.DistrictName,
+        row?.PoliceStationName,
+        row?.Designation,
+        row?.userType,
       ]),
     })
     doc.save("user_management_data.pdf")
@@ -102,10 +121,10 @@ const UserManagement = () => {
     Object.values(row).some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())),
   )
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage)
+  const totalPages = Math?.ceil(filteredData?.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  const currentData = filteredData.slice(startIndex, endIndex)
+  const currentData = filteredData?.slice(startIndex, endIndex)
 
   const fetchDistricts = async () => {
     try {
@@ -135,28 +154,45 @@ const UserManagement = () => {
   }
 
   const handleCreateUser = async () => {
-    const hasErrors = Object.values(formErrors).some((error) => error !== "")
+    const dataToSend = { ...formData, DistrictID: formData.DistrictID || Cookies.load("ds_id") }
+    const hasErrors = Object?.values(formErrors)?.some((error) => error !== "")
     if (hasErrors) {
       toast({
         variant: "destructive",
-        title: "Validation Error",
-        description: "Please correct the errors in the form before submitting.",
+        title: "Failed to create user",
+        description: "Please fill all required fields before submitting.",
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
-      return
+      return null
     }
 
     setLoading(true)
     setError(null)
     setSuccess(null)
     try {
-      const response = await saveUser(formData)
+      const response = await saveUser(dataToSend)
       console.log("user saved", response)
       if (response?.status == 0) {
         toast({
           title: "Successful!",
           description: "User Created Successfully",
           action: <ToastAction altText="Close">Close</ToastAction>,
+        })
+
+        setFormData({
+          UserName: "",
+          FullName: "",
+          Firstname: "",
+          LastName: "",
+          MobileNo: "",
+          EmailID: "",
+          Gender: "",
+          AADHAARNo: "",
+          Designation: "",
+          UserRoleID: "",
+          DistrictID: "",
+          PSID: "0",
+          aadharRegisterMobileNumber: "",
         })
         fetchUserDetails() // Refresh user list after creating a new user
       } else {
@@ -178,9 +214,46 @@ const UserManagement = () => {
     } finally {
       setLoading(false)
     }
+
+    const requiredFields = [
+      "UserName",
+      "FullName",
+      "Firstname",
+      "LastName",
+      "MobileNo",
+      "EmailID",
+      "Gender",
+      "UserRoleID",
+      "AADHAARNo",
+      "Designation",
+      "aadharRegisterMobileNumber"
+    ]
+
+    const errors = {}
+    requiredFields?.forEach((field) => {
+      if (!formData[field]) {
+        errors[field] = "This field is required."
+        setInvalidInput((prev) => ({
+          ...prev,
+          [field]: `Invalid ${field} input`,
+        }))
+      } else {
+        errors[field] = ""
+        setInvalidInput((prev) => ({
+          ...prev,
+          [field]: "",
+        }))
+      }
+    })
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors)
+      return
+    }
   }
 
   const onChangeDistrict = async (DistrictID) => {
+    // console.log("sasasa")
     try {
       setPsLoader("Loading...")
       setFormData({ ...formData, DistrictID: DistrictID })
@@ -204,12 +277,22 @@ const UserManagement = () => {
   useEffect(() => {
     fetchDistricts()
     fetchUserDetails()
-  }, []) // Added empty dependency array to fix the useEffect warning
+    const districtId = Cookies.load("ds_id")
+    console.log("districtId", districtId)
+    if (districtId) {
+      setFormData((prevState) => ({ ...prevState, DistrictID: districtId }))
+      onChangeDistrict(districtId)
+    }
+  }, []) // Added empty dependency array to fix the issue
 
-  // useEffect(()=> {
-  //   console.log("users", users);
-    
-  // }, [users])
+  useEffect(() => {
+    const districtId = Cookies.load("ds_id")
+    if (districtId) {
+      // fetchPoliceStation();
+      setFormData((prevState) => ({ ...prevState, DistrictID: districtId }))
+      onChangeDistrict(districtId)
+    }
+  }, [])
 
   const handleUpdateUserStatus = async (UserID, Status) => {
     try {
@@ -227,31 +310,66 @@ const UserManagement = () => {
     }
   }
 
+
   const handleInputChange = (e) => {
-    const { name, value } = e.target
-    let newValue = value
+    const { name, value } = e.target;
+    
+    let newValue = value;
 
-    if (checkForSqlInjection(value)) {
-      newValue = value.replace(/select\s+\*\s+from/gi, "")
-      toast({
-        variant: "destructive",
-        title: "Invalid Input",
-        description: "SQL injection attempt detected and removed.",
-        action: <ToastAction altText="Close">Close</ToastAction>,
-      })
+    // Prevent spaces in UserName field
+    if (name === "UserName") {
+        newValue = newValue.replace(/\s/g, ""); // Remove spaces
+
+        if (newValue.length === 0) {
+            setInvalidInput((prev) => ({
+                ...prev,
+                [name]: "UserName cannot be empty or contain spaces.",
+            }));
+        } else {
+            setInvalidInput((prev) => ({ ...prev, [name]: "" }));
+        }
+    } 
+    else if ([ "MobileNo", "AADHAARNo"].includes(name)) {
+        newValue = value.replace(/\D/g, ""); // Allow only numbers
+
+        if (name === "MobileNo") {
+            newValue = newValue.slice(0, 10); // Restrict to 10 digits
+
+            if (newValue.length < 10) {
+                setInvalidInput((prev) => ({
+                    ...prev,
+                    [name]: "Must be exactly 10 digits.",
+                }));
+            } else {
+                setInvalidInput((prev) => ({ ...prev, [name]: "" }));
+            }
+        } 
+        else if (name === "AADHAARNo") {
+            newValue = newValue.slice(0, 12); // Restrict to 12 digits
+
+            if (newValue.length < 12) {
+                setInvalidInput((prev) => ({
+                    ...prev,
+                    [name]: "AADHAAR number must be exactly 12 digits.",
+                }));
+            } else {
+                setInvalidInput((prev) => ({ ...prev, [name]: "" }));
+            }
+        }
     }
 
-    if (name === "MobileNo") {
-      newValue = newValue.replace(/\D/g, "").slice(0, 10)
-    } else if (name === "AADHAARNo") {
-      newValue = newValue.replace(/\D/g, "").slice(0, 12)
-    }
+    setFormData((prev) => ({ ...prev, [name]: newValue }));
+};
 
-    setFormData((prev) => ({ ...prev, [name]: newValue }))
+
+
+  const handleAcceptFile = () => {
+    console.log("File accepted!")
+    setSelectedFile(null)
   }
 
   return (
-    <div className="container mx-auto px-0 space-y-8 shadow-2xl">
+    <div className="container mx-auto px-0 space-y-8 shadow-md">
       <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-xl overflow-hidden">
         <div className="bg-gradient-to-r to-purple-600 from-indigo-600 px-6 py-3">
           <h2 className="text-2xl font-bold text-white">User Registration</h2>
@@ -260,47 +378,90 @@ const UserManagement = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-6">
         <div className="space-y-2">
-          <Label htmlFor="UserName">User Name</Label>
-          <Input id="UserName" name="UserName" value={formData.UserName} onChange={handleInputChange}/>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="UserFullName">User Full Name</Label>
+          <Label htmlFor="UserName">
+            Login User Name  <span className="text-red-500">*</span>
+          </Label>
           <Input
-            id="UserFullName"
-            name="UserFullName"
-            value={formData.UserFullName}
+            id="UserName"
+            name="UserName"
+            value={formData?.UserName}
+            onChange={handleInputChange}
+            required
+            pattern="^\d{10}$"
+            title="Enter a 10-digit mobile number."
+            className={`${invalidInput["UserName"] && "border-[1.4px] border-red-400"}`}
+          />
+          {invalidInput["UserName"] && <p className="text-red-500 text-xs">{invalidInput["UserName"]}</p>}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="FullName">
+            User Full Name <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="FullName"
+            className={`${invalidInput["FullName"] && "border-[1.4px] border-red-400"}`}
+            name="FullName"
+            value={formData?.FullName}
             onChange={handleInputChange}
             required
           />
+          {invalidInput["FullName"] && <p className="text-red-500 text-xs">{invalidInput["FullName"]}</p>}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="Firstname">First Name</Label>
-          <Input id="Firstname" name="Firstname" value={formData.Firstname} onChange={handleInputChange} required />
+          <Label htmlFor="Firstname">
+            First Name <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="Firstname"
+            className={`${invalidInput["Firstname"] && "border-[1.4px] border-red-400"}`}
+            name="Firstname"
+            value={formData?.Firstname}
+            onChange={handleInputChange}
+            required
+          />
+          {invalidInput["Firstname"] && <p className="text-red-500 text-xs">{invalidInput["Firstname"]}</p>}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="LastName">Last Name</Label>
-          <Input id="LastName" name="LastName" value={formData.LastName} onChange={handleInputChange} required />
+          <Label htmlFor="LastName">
+            Last Name <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="LastName"
+            className={`${invalidInput["LastName"] && "border-[1.4px] border-red-400"}`}
+            name="LastName"
+            value={formData?.LastName}
+            onChange={handleInputChange}
+            required
+          />
+          {invalidInput["LastName"] && <p className="text-red-500 text-xs">{invalidInput["LastName"]}</p>}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="EmailID">Email</Label>
+          <Label htmlFor="EmailID">
+            Email <span className="text-red-500">*</span>
+          </Label>
           <Input
             id="EmailID"
             name="EmailID"
+            className={`${invalidInput["EmailID"] && "border-[1.4px] border-red-400"}`}
             type="email"
-            value={formData.EmailID}
+            value={formData?.EmailID}
             onChange={handleInputChange}
             required
           />
+          {invalidInput["EmailID"] && <p className="text-red-500 text-xs">{invalidInput["EmailID"]}</p>}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="userRole">Gender</Label>
+          <Label htmlFor="userRole">
+            Gender <span className="text-red-500">*</span>
+          </Label>
           <Select name="userRole" onValueChange={(value) => setFormData({ ...formData, Gender: value })} required>
-            <SelectTrigger>
-              <SelectValue placeholder="Select role" />
+            <SelectTrigger className={`${invalidInput["Gender"] && "border-[1.4px] border-red-400"}`}>
+              <SelectValue placeholder="Select Gender" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="male">Male</SelectItem>
@@ -311,111 +472,40 @@ const UserManagement = () => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="MobileNo">Phone Number</Label>
+          <Label htmlFor="MobileNo">
+            Phone Number <span className="text-red-500">*</span>
+          </Label>
           <Input
             id="MobileNo"
             name="MobileNo"
-            value={formData.MobileNo}
+            className={`${invalidInput["MobileNo"] && "border-[1.4px] border-red-400"}`}
+            value={formData?.MobileNo}
             onChange={handleInputChange}
             maxLength={10}
             required
           />
+          {invalidInput["MobileNo"] && <p className="text-red-500 text-xs">{invalidInput["MobileNo"]}</p>}
           {formData.MobileNo.length > 0 && formData.MobileNo.length < 10 && (
             <p className="text-red-500 text-sm">Phone number must be 10 digits</p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="district">District</Label>
+          <Label htmlFor="userRole">
+            User Role <span className="text-red-500">*</span>
+          </Label>
           <Select
-            name="district"
+            name="userRole"
             onValueChange={(value) => {
-              onChangeDistrict(value)
+              setFormData({ ...formData, UserRoleID: value })
+              // Reset PSID if SP or DYSP is selected
+              if (value === "20" || value === "10" || value === "50") {
+                setFormData((prev) => ({ ...prev, PSID: "0" }))
+              }
             }}
             required
           >
-            <SelectTrigger>
-              <SelectValue placeholder="Select district" />
-            </SelectTrigger>
-            <SelectContent>
-              {districtsData?.map((district, index) => (
-                <SelectItem key={index} value={district.districtId}>
-                  {district.districtName}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="policeStation">Police Station</Label>
-          <Select name="policeStation" onValueChange={(value) => setFormData({ ...formData, PSID: value })} required>
-            <SelectTrigger>
-              <SelectValue placeholder={psLoader} />
-            </SelectTrigger>
-            <SelectContent>
-              {policeStationsData?.map((station, index) => (
-                <SelectItem key={index} value={station.psm_id}>
-                  {station.psm_name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="userRole">Designation</Label>
-          <Select name="userRole" onValueChange={(value) => setFormData({ ...formData, Designation: value })} required>
-            <SelectTrigger>
-              <SelectValue placeholder="Select Designation" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="300">OC/IC</SelectItem>
-              <SelectItem value="100">DYSP</SelectItem>
-              <SelectItem value="200">SP</SelectItem>
-              <SelectItem value="400">Addl.SP</SelectItem>
-              <SelectItem value="500">Addl.CP</SelectItem>
-              <SelectItem value="600">CP</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="AADHAARNo">Aadhar Number</Label>
-          <Input
-            id="AADHAARNo"
-            name="AADHAARNo"
-            value={formData.AADHAARNo}
-            onChange={handleInputChange}
-            maxLength={12}
-            required
-          />
-          {formData.AADHAARNo.length > 0 && formData.AADHAARNo.length < 12 && (
-            <p className="text-red-500 text-sm">Aadhar number must be 12 digits</p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="aadharRegisterMobileNumber">Aadhar Register Mobile Number</Label>
-          <Input
-            id="aadharRegisterMobileNumber"
-            name="aadharRegisterMobileNumber"
-            maxLength={10}
-            value={formData.aadharRegisterMobileNumber || ""}
-            onChange={(e) => {
-              const value = e.target.value.replace(/\D/g, "").slice(0, 10)
-              setFormData((prev) => ({ ...prev, aadharRegisterMobileNumber: value }))
-            }}
-          />
-          {formData.aadharRegisterMobileNumber && formData.aadharRegisterMobileNumber.length < 10 && (
-            <p className="text-red-500 text-sm">Phone number must be 10 digits</p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="userRole">User Role</Label>
-          <Select name="userRole" onValueChange={(value) => setFormData({ ...formData, UserRoleID: value })} required>
-            <SelectTrigger>
+            <SelectTrigger className={`${invalidInput["UserRoleID"] && "border-[1.4px] border-red-400"}`}>
               <SelectValue placeholder="Select role" />
             </SelectTrigger>
             <SelectContent>
@@ -423,13 +513,104 @@ const UserManagement = () => {
               <SelectItem value="20">SP</SelectItem>
               <SelectItem value="10">DYSP</SelectItem>
               <SelectItem value="40">EO</SelectItem>
-              <SelectItem value="50">Enquiry Officer</SelectItem>
+              <SelectItem value="50">Spl.Enquiry Officer</SelectItem>
             </SelectContent>
           </Select>
+          {invalidInput["UserRoleID"] && <p className="text-red-500 text-xs">{invalidInput["UserRoleID"]}</p>}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="userRole">
+            Designation <span className="text-red-500">*</span>
+          </Label>
+          <Select name="userRole" onValueChange={(value) => setFormData({ ...formData, Designation: value })} required>
+            <SelectTrigger className={`${invalidInput["Designation"] && "border-[1.4px] border-red-400"}`}>
+              <SelectValue placeholder="Select Designation" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="300">OC/IC</SelectItem>
+              <SelectItem value="700">DIO/SBO</SelectItem>
+              <SelectItem value="100">DYSP/DSP</SelectItem>
+              <SelectItem value="200">SP/DCSB</SelectItem>
+              <SelectItem value="400">Addl.SP</SelectItem>
+              <SelectItem value="500">Addl.CP/JointCP</SelectItem>
+              <SelectItem value="600">CP</SelectItem>
+            </SelectContent>
+          </Select>
+          {invalidInput["Designation"] && <p className="text-red-500 text-xs">{invalidInput["Designation"]}</p>}
+        </div>
+
+        <div className="space-y-2">
+          <Label
+            htmlFor="policeStation"
+            className={`${invalidInput["policeStation"] && "border-[1.4px] border-red-400"}`}
+          >
+            Police Station <span className="text-red-500">*</span>
+          </Label>
+          <Select
+            name="policeStation"
+            onValueChange={(value) => setFormData({ ...formData, PSID: value })}
+            disabled={formData.UserRoleID === "20" || formData.UserRoleID === "10"}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={psLoader} />
+            </SelectTrigger>
+            <SelectContent>
+              {policeStationsData?.map((station, index) => (
+                <SelectItem key={index} value={station?.psm_id}>
+                  {station?.psm_name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {invalidInput["policeStation"] && <p className="text-red-500 text-xs">{invalidInput["policeStation"]}</p>}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="AADHAARNo">
+            Aadhar Number <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            className={`${invalidInput["AADHAARNo"] && "border-[1.4px] border-red-400"}`}
+            id="AADHAARNo"
+            name="AADHAARNo"
+            value={formData.AADHAARNo}
+            onChange={handleInputChange}
+            maxLength={12}
+            required
+          />
+          {invalidInput["AADHAARNo"] && <p className="text-red-500 text-xs">{invalidInput["AADHAARNo"]}</p>}
+          {formData?.AADHAARNo?.length > 0 && formData?.AADHAARNo?.length < 12 && (
+            <p className="text-red-500 text-sm">Aadhar number must be 12 digits</p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label
+            htmlFor="aadharRegisterMobileNumber"
+          >
+            Aadhar Register Mobile Number <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="aadharRegisterMobileNumber"
+            name="aadharRegisterMobileNumber"
+            className={`${invalidInput["aadharRegisterMobileNumber"] && "border-[1.4px] border-red-400"}`}
+            maxLength={10}
+            value={formData?.aadharRegisterMobileNumber || ""}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, "").slice(0, 10)
+              setFormData((prev) => ({ ...prev, aadharRegisterMobileNumber: value }))
+            }}
+            required
+          />
+          {invalidInput["aadharRegisterMobileNumber"] && <p className="text-red-500 text-xs">{invalidInput["aadharRegisterMobileNumber"]}</p>}
+          {formData?.aadharRegisterMobileNumber && formData.aadharRegisterMobileNumber?.length < 10 && (
+            <p className="text-red-500 text-sm">Phone number must be 10 digits</p>
+          )}
         </div>
 
         <div className="md:col-span-2 lg:col-span-3 flex justify-center">
-          <Button onClick={handleCreateUser} disabled={loading} className="px-6">
+          <Button onClick={handleCreateUser} disabled={loading} className="px-6 bg-blue-600 hover:bg-blue-700">
             <UserPlus className="mr-2 h-4 w-4" /> Create User
           </Button>
         </div>
@@ -443,34 +624,7 @@ const UserManagement = () => {
         </div>
       </div>
       <div className="space-y-4 px-6">
-        <div className="flex space-x-4">
-          <div className="flex-1">
-            <Label htmlFor="searchDistrict">Search by District</Label>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-              <Input
-                id="searchDistrict"
-                placeholder="Enter district"
-                value={searchDistrict}
-                onChange={(e) => setSearchDistrict(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-          </div>
-          <div className="flex-1">
-            <Label htmlFor="searchPoliceStation">Search by Police Station</Label>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-              <Input
-                id="searchPoliceStation"
-                placeholder="Enter police station"
-                value={searchPoliceStation}
-                onChange={(e) => setSearchPoliceStation(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-          </div>
-        </div>
+        <div className="flex space-x-4">{/* Search fields removed as per your previous request */}</div>
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="space-x-2">
@@ -552,7 +706,7 @@ const UserManagement = () => {
                               variant="default"
                               className="bg-red-600 hover:bg-red-700 text-white text-xs px-1 py-1"
                             >
-                              {statuUpdateLoader ? statuUpdateLoader : "De-Activate"}
+                              {statuUpdateLoader ? statuUpdateLoader : "Deactivate"}
                             </Button>
                           )}
                         </div>
@@ -571,9 +725,9 @@ const UserManagement = () => {
           </div>
           <div className="flex items-center justify-between mt-4 text-sm">
             <div>
-              Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of {filteredData.length} entries
+              Showing {startIndex + 1} to {Math.min(endIndex, filteredData?.length)} of {filteredData?.length} entries
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <Button
                 variant="outline"
                 size="sm"

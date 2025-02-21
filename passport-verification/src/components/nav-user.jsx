@@ -72,7 +72,7 @@ export function NavUser() {
                 <span className="truncate text-xs">
                   District: {user?.district}
                 </span>
-                {(user?.type != 10 && user?.type != 20)  && <span className="truncate text-xs">
+                {(user?.type != 10 && user?.type != 20 && user?.type != 50)  && <span className="truncate text-xs">
                   Police Station: {user?.ps}
                 </span>}
               </div>
@@ -94,9 +94,9 @@ export function NavUser() {
                   <span className="truncate text-xs">
                     District: {user?.district}
                   </span>
-                  <span className="truncate text-xs">
-                    Police Station: {user?.ps}
-                  </span>
+                  {(user?.type != 10 && user?.type != 20 && user?.type != 50)  && <span className="truncate text-xs">
+                  Police Station: {user?.ps}
+                </span>}
                 </div>
               </div>
             </DropdownMenuLabel>

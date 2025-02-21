@@ -23,6 +23,7 @@ export default function PendingApplicationDatatable({ status }) {
   const [selectedDetails, setSelectedDetails] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
+  const [refreshFlag, setRefreshFlag] = useState(false);
   const itemsPerPage = 6
   const [applicationStatus, setApplicationStatus] = useState(null)
   const [verificationData, setVerificationData] = useState([])
@@ -31,8 +32,8 @@ export default function PendingApplicationDatatable({ status }) {
   const router = useRouter()
   const [EO_POLICE_STATION, setEO_POLICE_STATION] = useState("");
 
-  const filteredData = verificationData.filter((row) =>
-    Object.values(row).some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())),
+  const filteredData = verificationData?.filter((row) =>
+    Object?.values(row)?.some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())),
   )
 
   const fetchApplicationStatus = async () => {
@@ -81,16 +82,29 @@ export default function PendingApplicationDatatable({ status }) {
     windowPrint.close()
   }
 
-  const handleAcceptFile = async (applicationId, citizentype, file) => {
+  const handleAcceptFile = async (applicationId, citizentype, dateOfBirth) => {
     try {
-      console.log(`applicationId: ${applicationId}`)
-      console.log(`citizentype: ${citizentype}`)
-      console.log(`file: ${file}`)
+      if (!citizentype){
+        toast({
+          variant: "destructive",
+          title: "Select Citizen Type!",
+          description: "Please select citizen type and then try again",
+        })
+      }
+      if (!dateOfBirth){
+        toast({
+          variant: "destructive",
+          title: "Date of Birth is not available!",
+          description: "An error occurred",
+        })
+      }
+
       // Implement the logic for accepting the file
-      const response = await acceptApplication(applicationId, citizentype, file);
-      console.log('reponse:', response);
+      const response = await acceptApplication(applicationId, citizentype, dateOfBirth);
+      
 
       if (response?.status == 0) {
+        await fetchApplicationStatus();
         toast({
           title: (
             <div className="flex items-center gap-2">
@@ -99,15 +113,12 @@ export default function PendingApplicationDatatable({ status }) {
             </div>
           ),
           description: "Case accepted successfully",
-          action: <ToastAction altText="Try again">Close</ToastAction>,
         })
-        fetchApplicationStatus();
       } else {
         toast({
           variant: "destructive",
           title: "Failed to accept file!",
           description: response?.message,
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
         })
       }
     } catch (e) {
@@ -116,7 +127,6 @@ export default function PendingApplicationDatatable({ status }) {
         variant: "destructive",
         title: "Failed to accept file!",
         description: 'An error occurred',
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
     }
   }
@@ -131,10 +141,14 @@ export default function PendingApplicationDatatable({ status }) {
     fetchApplicationStatus()
   }, [searchTerm]) // Added searchTerm as a dependency
 
+  useEffect(() => {
+    fetchApplicationStatus()
+  }, [refreshFlag]) // Added searchTerm as a dependency
+
   useEffect(() => setEO_POLICE_STATION(ps), [ps])
 
   return (
-    <div className="container mx-auto px-0 space-y-8 shadow-lg">
+    <div className="container mx-auto px-0 space-y-8 shadow-sm">
       <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-lg overflow-hidden">
         <div className="bg-gradient-to-r from-yellow-600 to-yellow-400 px-6 py-3">
           <h2 className="text-2xl font-bold text-white">Total Pending Applications at {EO_POLICE_STATION && EO_POLICE_STATION} PS</h2>
@@ -192,12 +206,12 @@ export default function PendingApplicationDatatable({ status }) {
             <Button variant="outline" onClick={exportToExcel}>
               Excel
             </Button>
-            <Button variant="outline" onClick={exportToPDF}>
+            {/* <Button variant="outline" onClick={exportToPDF}>
               PDF
             </Button>
             <Button variant="outline" onClick={printTable}>
               Print
-            </Button>
+            </Button> */}
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-500">Search:</span>
@@ -284,7 +298,7 @@ export default function PendingApplicationDatatable({ status }) {
           <div>
             Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of {filteredData.length} entries
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button
               variant="outline"
               size="sm"

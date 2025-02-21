@@ -17,26 +17,29 @@ export const sendOtp = async (username, password) => {
 
     if (!response.ok) {
       const errorData = await response.json();
-      return false;
+      return errorData;
     }
     const data = await response.json();
     Cookies.save("data", data.token);
-    Cookies.save("name", data.name);
-    Cookies.save("type", data.type);
-    Cookies.save("ps", data.ps);
-    Cookies.save("district", data.district);
-    console.log("data", data);
-    return true;
+    return data;
 
   } catch (error) {
     console.log("Error sending OTP:", error);
-    return false;
+    return null;
   }
 };
 
 export const verifyOtp = async (otp) => {
   try {
-    return await postRequest("auth/verifyOtp", { otp });
+    const data = await postRequest("auth/verifyOtp", { otp });
+    Cookies.save("data", data.token);
+    Cookies.save("name", data.name);
+    Cookies.save("type", data.type);
+    Cookies.save("ps", data.ps);
+    Cookies.save("district", data.district);
+    Cookies.save("ds_id", data.DistrictID);
+    Cookies.save("__i", 1); // otp verified
+    return data;
   } catch (error) {
     console.log("Error:", error);
     return null;

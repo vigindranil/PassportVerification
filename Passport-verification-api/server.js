@@ -8,7 +8,6 @@ import fileImportRoutes from "./routes/fileImport.js";
 import verifyToken from "./middleware/authMiddleware.js";
 import masterRoutes from "./routes/master.js";
 import cors from "cors";
-import morgan from "morgan";
 import multer from "multer";
 import setupSwagger from "./utils/swagger.js";
 import eoDocumentUpload from "./routes/eoRoutes.js";
@@ -18,6 +17,11 @@ import logRoutes from "./routes/logs.js";
 import thirdPartyRoutes from "./routes/thirdPartyAPI.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import getSpecialEnquiryOfficers from "./routes/enquiryOfficer.js";
+import updateCriminalInfo from './routes/crime.js';
+import transferapplication from './routes/spRoutes.js'
+import requireDocument from './routes/requiredDocsRoutes.js'
+
 
 const app = express();
 const port = 3003;
@@ -46,41 +50,46 @@ const excelupload = multer({
   limits: { fileSize: 20 * 1024 * 1024 },
 });
 
+// Set up multer to handle file uploads
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+
 // for img / pdf and other docs upload
 // Set storage engine
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    req.filePath = uploadPath;
-    cb(null, uploadPath); // Upload folder
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    req.file_name =file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
-    cb(
-      null,
-      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
-    );
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     req.filePath = uploadPath;
+//     cb(null, uploadPath); // Upload folder
+//   },
+//   filename: (req, file, cb) => {
+//     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+//     req.file_name =file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+//     cb(
+//       null,
+//       file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+//     );
+//   },
+// });
 
-// Initialize multer
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 20 MB file size limit
-  fileFilter: (req, file, cb) => {
-    const fileTypes = /jpeg|jpg|png|gif|pdf/;
-    const extname = fileTypes.test(
-      path.extname(file.originalname).toLowerCase()
-    );
-    const mimetype = fileTypes.test(file.mimetype);
+// // Initialize multer
+// const upload = multer({
+//   storage: storage,
+//   limits: { fileSize: 20 * 1024 * 1024 }, // 20 MB file size limit
+//   fileFilter: (req, file, cb) => {
+//     const fileTypes = /jpeg|jpg|png|gif|pdf/;
+//     const extname = fileTypes.test(
+//       path.extname(file.originalname).toLowerCase()
+//     );
+//     const mimetype = fileTypes.test(file.mimetype);
 
-    if (extname && mimetype) {
-      return cb(null, true);
-    } else {
-      cb(new Error("File is not allowed to upload!"));
-    }
-  },
-});
+//     if (extname && mimetype) {
+//       return cb(null, true);
+//     } else {
+//       cb(new Error("File is not allowed to upload!"));
+//     }
+//   },
+// });
 
 //public Route
 app.use("/api/", logRoutes);
@@ -94,7 +103,12 @@ app.use("/api/master", verifyToken, masterRoutes);
 app.use("/api/eo", verifyToken, eoDocumentUpload);
 app.use("/api/application", verifyToken, getApplicationDetails);
 app.use("/api/fileUpload", verifyToken, fileImportRoutes);
+app.use("/api/enquiryOfficers", verifyToken, getSpecialEnquiryOfficers)
 app.use("/api/upload", verifyToken, upload.single("file"), uploadRoutes);
+app.use("/api/crime", verifyToken, updateCriminalInfo);
+app.use("/api/sp", verifyToken, transferapplication)
+app.use("/api/documents", verifyToken, requireDocument)
+
 app.use(
   "/api/fileImport",
   verifyToken,
