@@ -261,7 +261,7 @@ const UserManagement = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-6">
         <div className="space-y-2">
           <Label htmlFor="UserName">User Name</Label>
-          <Input id="UserName" name="UserName" value={formData.UserName} onChange={handleInputChange} required />
+          <Input id="UserName" name="UserName" value={formData.UserName} onChange={handleInputChange}/>
         </div>
         <div className="space-y-2">
           <Label htmlFor="UserFullName">User Full Name</Label>
