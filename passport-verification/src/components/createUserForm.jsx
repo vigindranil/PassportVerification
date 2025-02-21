@@ -217,7 +217,6 @@ const UserManagement = () => {
 
     const requiredFields = [
       "UserName",
-      "FullName",
       "Firstname",
       "LastName",
       "MobileNo",
@@ -379,7 +378,7 @@ const UserManagement = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-6">
         <div className="space-y-2">
           <Label htmlFor="UserName">
-            Login User Name  <span className="text-red-500">*</span>
+             User Name  <span className="text-red-500">*</span>
           </Label>
           <Input
             id="UserName"
@@ -396,7 +395,7 @@ const UserManagement = () => {
 
         <div className="space-y-2">
           <Label htmlFor="FullName">
-            User Full Name <span className="text-red-500">*</span>
+            User Full Name <span className="text-red-500"></span>
           </Label>
           <Input
             id="FullName"
