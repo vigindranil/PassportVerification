@@ -156,6 +156,41 @@ export const getBirthCertificateDetails = async (req, res) => {
     });
 };
 
+export const getLandDeedDetails = async (req, res) => {
+
+  const { MouzaCode, KhatianNo } = req.body;
+  if (!MouzaCode) {
+    return res.status(400).json({ error: "Mouza Code(IDN) is required." });
+  } else if (!KhatianNo) {
+    return res.status(400).json({ error: "Khatian No is required." });
+  }
+
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: `http://202.61.117.165:9080/NizamWebservice/service/CellLandOwnerdetail/${MouzaCode}/${KhatianNo}/0/17/RGxycyMxMjM=Ukd4eWN6RXlNMU5VUmc9PQ==`,
+  };
+
+  axios
+    .request(config)
+    .then(async (response) => {
+      console.log("response", response);
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: response?.data,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res.status(400).json({
+        status: 0,
+        message: "Failed to fetched details",
+        data: null,
+      });
+    });
+};
+
 export const getWBSEDCLDetails = async (req, res) => {
   const { consumerId, installationNum } = req.body;
 
