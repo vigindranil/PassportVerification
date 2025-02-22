@@ -96,9 +96,6 @@ export const sendOtp = async (req, res) => {
 
       const [result] = await updateAuthToken(rows[0]["UserID"], token, transactionId);
 
-      // Store token in Redis with expiration (1 hour)
-      // await client.setEx(`user:${rows[0]["UserID"]}:token`, 3600 * 3, token);
-
       res.cookie("data", token);
 
       logger.debug(
@@ -152,8 +149,6 @@ export const verifyOtp = async (req, res) => {
           },
         })
       );
-      // Remove token from Redis
-      // const result = await client.del(`user:${req.user.UserID}:token`);
       return res.status(400).json({
         status: 1,
         message: "Invalid OTP",
@@ -187,9 +182,6 @@ export const verifyOtp = async (req, res) => {
     const token = btoa(jwt_token);
 
     const [result] = await updateAuthToken(req.user.UserID, token, transactionId);
-
-    // Store token in Redis with expiration (1 hour)
-    // await client.setEx(`user:${rows[0]["UserID"]}:token`, 3600 * 3, token);
 
     res.cookie("data", token);
 
