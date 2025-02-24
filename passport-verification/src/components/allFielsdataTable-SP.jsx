@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation"
 import { toast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import { FileAcceptModal } from "./approve-reject-modal"
-import { updateEnquiryStatus } from "@/app/allFiles-sp/api"
+import { transferapplication, updateEnquiryStatus } from "@/app/allFiles-sp/api"
 import { TransferModal } from "@/components/transferModal"
 import { CheckCircle2, FileCheck, FileQuestion, FileUser, FileX2, Rotate3d } from "lucide-react"
 
@@ -36,35 +36,79 @@ export default function PendingApplicationDatatable({ status }) {
   const [type, setType] = useState("reject");
   const router = useRouter()
 
-  const filteredData = verificationData.filter((row) =>
+  const filteredData = verificationData?.filter((row) =>
     Object?.values(row)?.some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())),
   )
 
   const fetchApplicationStatus = async () => {
     try {
       const response = await getApplicationStatus(status, 15)
-      setVerificationData(response.data)
+      setVerificationData(response?.data)
     } catch (error) {
       console.log("Error fetching application status:", error)
     }
   }
 
-  const onTransfer = (selectedDetails, remarks, selectedDistrict, selectedPoliceStation) => {
-    console.log("Transfer initiated for:", selectedDetails, remarks, selectedDistrict, selectedPoliceStation);
-    setRemarks("")
-    setSelectedDistrict("")
-    setSelectedPoliceStation("")
+  const onTransfer = async (fileNumber, remarks, selectedDistrict, selectedPoliceStation) => {
+    if (!selectedDistrict || !selectedPoliceStation) {
+      console.log("Please fill in all fields before transferring.");
+      return;
+    }
+  
+    try {
+      console.log("Calling API with:", {
+        fileNumber,
+        locationIp: "115.187.62.100",
+        deviceId: "deviceId",
+        remarks,
+        districtId: selectedDistrict,
+        psId: selectedPoliceStation,
+        macAddress: "test-s4dn-3aos-dn338",
+      });
+  
+      const response = await transferapplication({
+        fileNumber,
+        locationIp: "115.187.62.100",
+        deviceId: "deviceId",
+        remarks,
+        districtId: selectedDistrict,
+        psId: selectedPoliceStation,
+        macAddress: "test-s4dn-3aos-dn338",
+      });
+  
+      if (response.status == 0) {
+        await fetchApplicationStatus();
+        toast({
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Successfull!</span>
+            </div>
+          ),
+          description: response?.message,
+          action: <ToastAction altText="Try again">Close</ToastAction>,
+        })
+        setRemarks("");
+        setSelectedDistrict("");
+        setSelectedPoliceStation("");
+      } else {
+        console.log("Transfer failed. No response from API.");
+      }
+    } catch (error) {
+      console.log("Error transferring application:", error);
+    }
   };
+  
 
 
   const handleCloseTransferModal = () => {
     setIsTransferModalOpen(false)
   }
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage)
+  const totalPages = Math.ceil(filteredData?.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  const currentData = filteredData.slice(startIndex, endIndex)
+  const currentData = filteredData?.slice(startIndex, endIndex)
 
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(verificationData)
@@ -77,7 +121,7 @@ export default function PendingApplicationDatatable({ status }) {
     const doc = new jsPDF()
     doc.autoTable({
       head: [["File Number", "Applicant Name", "Police Station", "Phone No.", "Date of Birth"]],
-      body: verificationData.map((row) => [
+      body: verificationData?.map((row) => [
         row.FileNumber,
         row.ApplicantName,
         row.Ps_Name,
