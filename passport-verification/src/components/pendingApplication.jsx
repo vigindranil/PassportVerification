@@ -244,6 +244,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                         </div>
                         </>
                         }
+                       
                       </div>
                     </TableCell>
                   </TableRow>
