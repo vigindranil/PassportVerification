@@ -210,16 +210,16 @@ export default function Page({ FileNumber }) {
               <TabsList className="flex gap-6 justify-center mb-4">
                 <TabsTrigger className="rounded-full bg-white hover:text-blue-500 ring-1 ring-slate-500/40 hover:shadow-md data-[state=active]:bg-blue-500 data-[state=active]:text-white" value="applicationDetails">Application Details</TabsTrigger>
                 <TabsTrigger className="rounded-full bg-white hover:text-blue-500 ring-1 ring-slate-500/40 hover:shadow-md data-[state=active]:bg-blue-500 data-[state=active]:text-white" value="aadhaarDetails">AADHAAR Details</TabsTrigger>
-                <TabsTrigger className="rounded-full bg-white hover:text-blue-500 ring-1 ring-slate-500/40 hover:shadow-md data-[state=active]:bg-blue-500 data-[state=active]:text-white" value="documents">Documents</TabsTrigger>
+                <TabsTrigger className="rounded-full bg-white hover:text-blue-500 ring-1 ring-slate-500/40 hover:shadow-md data-[state=active]:bg-blue-500 data-[state=active]:text-white" value="documents">Documents Uploaded by EO</TabsTrigger>
                 <TabsTrigger className="rounded-full bg-white hover:text-blue-500 ring-1 ring-slate-500/40 hover:shadow-md data-[state=active]:bg-blue-500 data-[state=active]:text-white" value="crimeVerification">Crime Verification</TabsTrigger>
-                <TabsTrigger className="rounded-full bg-white hover:text-blue-500 ring-1 ring-slate-500/40 hover:shadow-md data-[state=active]:bg-blue-500 data-[state=active]:text-white" value="statusHistory">Status History</TabsTrigger>
+                <TabsTrigger className="rounded-full bg-white hover:text-blue-500 ring-1 ring-slate-500/40 hover:shadow-md data-[state=active]:bg-blue-500 data-[state=active]:text-white" value="statusHistory">Application Timeline</TabsTrigger>
               </TabsList>
 
               {/* Application Details */}
               <TabsContent value="applicationDetails">
                 <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
                   <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3">
-                    <h2 className="text-2xl font-bold text-white">Application Details</h2>
+                    <h2 className="text-2xl font-bold text-white flex items-center">Application Details <small className="text-sm text-zinc-100 mx-2">(obtained from m-Passport)</small></h2>
                   </div>
 
                   <Card className="m-5">
