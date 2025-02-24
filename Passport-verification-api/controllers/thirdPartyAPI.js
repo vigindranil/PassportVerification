@@ -157,7 +157,6 @@ export const getBirthCertificateDetails = async (req, res) => {
 };
 
 export const getLandDeedDetails = async (req, res) => {
-
   const { MouzaCode, KhatianNo } = req.body;
   if (!MouzaCode) {
     return res.status(400).json({ error: "Mouza Code(IDN) is required." });
@@ -341,4 +340,50 @@ export const getPCCCrimeRecordSearch = async (req, res) => {
         data: null,
       });
     });
+};
+
+export const sendSMS = async (req, res) => {
+  const { smstext, mobileNumber, smsCategory = "N/A", tpid } = req.body;
+  if (!mobileNumber) {
+    return res.status(400).json({ error: "Mobile Number is required." });
+  } else if (!smstext) {
+    return res.status(400).json({ error: "Message text is required." });
+  }
+
+  const BartaBaseURL = "http://barta.wb.gov.in/send_sms_ites_webel.php?";
+  const extra = "";
+  const passkey = "sms_webel_ites_5252_@$#";
+
+  try {
+    const numbers = encodeURIComponent(mobileNumber);
+    const message = encodeURIComponent(smstext);
+    const passkeyNew = encodeURIComponent(passkey);
+
+    const url = `${BartaBaseURL}mobile=${numbers}&message=${message}&templateid=${tpid}&extra=${extra}&passkey=${passkeyNew}`;
+
+    console.log("BartaBaseURL:", url);
+
+    const response = await axios.post(
+      url,
+      {},
+      {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        httpsAgent: new https.Agent({
+          secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+        }),
+      }
+    );
+
+    console.log("SMS Execution:", response);
+    return res.status(200).json({
+      status: 0,
+      message: "SMS sent successfully"
+    });
+  } catch (error) {
+    console.error("Exception:", error.message);
+    return res.status(400).json({
+      status: 1,
+      message: "Exception occurred while sending SMS.",
+    });
+  }
 };
