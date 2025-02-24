@@ -111,7 +111,7 @@ export const saveDocumentUpload = async (req, res) => {
 
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
-      Key: `${ApplicationId}-${DocumentTypeId}}`, // Unique name for the file
+      Key: `${ApplicationId}-${DocumentTypeId}`, // Unique name for the file
       Body: req.file.buffer,
       ContentType: req.file.mimetype || "application/octet-stream", // Set content type dynamically
       ACL: "public-read", // This allows the file to be publicly readable

@@ -37,8 +37,8 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
       setVerifyElectricityLoading(true);
       setVerifiedResponse(null)
       const response = await getLandDeedDetails(
-        "0101055", 276
-        // mouzaCode, khatianNo
+        // "0101055", 276
+        mouzaCode, khatianNo
       );
       console.log("response", response);
 
