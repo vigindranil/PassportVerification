@@ -168,7 +168,10 @@ export const getLandDeedDetails = async (req, res) => {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
-    url: `http://202.61.117.165:9080/NizamWebservice/service/CellLandOwnerdetail/${MouzaCode}/${KhatianNo}/0/17/RGxycyMxMjM=Ukd4eWN6RXlNMU5VUmc9PQ==`,
+    url: `http://banglarbhumi.gov.in/NizamWebservice/service/CellLandOwnerdetail/${MouzaCode}/${KhatianNo}/0/17/RGxycyMxMjM=Ukd4eWN6RXlNMU5VUmc9PQ==`,
+    httpsAgent: new https.Agent({
+      secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+    }),
   };
 
   axios
