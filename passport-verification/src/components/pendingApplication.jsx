@@ -11,11 +11,12 @@ import "jspdf-autotable"
 import { getApplicationStatus } from "@/app/totalPending/api"
 import moment from "moment"
 import { useRouter } from "next/navigation"
-import { CheckCircle2, CircleCheckBig, FileUser } from "lucide-react"
+import { CheckCircle2, CircleCheckBig, FileUser, Rotate3d } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import Cookies from "react-cookies";
 import { FileAcceptModal } from "./approve-reject-modal"
+import { TransferModal } from "@/components/transferModal"
 import { updateEnquiryStatus } from "@/app/acceptedAndVerificationPending-eo/api"
 
 export default function PendingApplicationDatatable({ status, heading, period, flag }) {
@@ -29,6 +30,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
   const router = useRouter()
   const user_role = Cookies.load('type');
   const [isFileAcceptModalOpen, setIsFileAcceptModalOpen] = useState(false)
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
   const [type, setType] = useState("reject");
 
   const filteredData = verificationData?.filter((row) =>
@@ -123,6 +125,21 @@ export default function PendingApplicationDatatable({ status, heading, period, f
     windowPrint.focus()
     windowPrint.print()
     windowPrint.close()
+  }
+
+  const handleOpenTransferModal = () => {
+    setIsTransferModalOpen(true)
+  }
+
+  const handleCloseTransferModal = () => {
+    setIsTransferModalOpen(false)
+  }
+
+  const handleTransfer = () => {
+    onTransfer(selectedDetails, remarks, selectedDistrict, selectedPoliceStation)
+    setRemarks("")
+    setSelectedDistrict("")
+    setSelectedPoliceStation("")
   }
 
   return (
@@ -223,6 +240,27 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                             Complete Verification
                           </span>
                         </div>}
+
+                    {(user_role == 10) && <div className="relative group">
+                            <Button
+                              size="sm"
+                              variant="default"
+                              className="bg-gray-100 ring-[0.5px] text-gray-700 hover:bg-teal-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              onClick={handleOpenTransferModal}
+                            >
+                              <Rotate3d className="mx-0 px-0" />
+                            </Button>
+                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                              Transfer to PS
+                            </span>
+                            <TransferModal
+                              isOpen={isTransferModalOpen}
+                              onClose={handleCloseTransferModal}
+                              fileNumber={row?.FileNumber}
+                              applicantName={row?.ApplicantName}
+                              onTransfer={handleTransfer}
+                            />
+                          </div>}
                       </div>
                     </TableCell>
                   </TableRow>

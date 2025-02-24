@@ -33,6 +33,7 @@ const Sidebar = () => {
                         { type_id: 10, icon: Home, label: 'Home', href: '/dashboard' },
                         { type_id: 10, icon: Upload, label: 'Upload Data', href: '/upload' },
                         { type_id: 10, icon: CirclePlus, label: 'Create User', href: '/createUserForm' },
+                        { type_id: 10, icon: CirclePlus, label: 'All Files', href: '/allFiles' },
 
                         // EO
                         { type_id: 40, icon: Home, label: 'Home', href: '/dashboard-eo' },

@@ -24,6 +24,10 @@ export default function PendingApplicationDatatable({ status }) {
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
   const [refreshFlag, setRefreshFlag] = useState(false);
+  const [remarks, setRemarks] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedPoliceStation, setSelectedPoliceStation] = useState("");
+
   const itemsPerPage = 6
   const [applicationStatus, setApplicationStatus] = useState(null)
   const [verificationData, setVerificationData] = useState([])
@@ -45,12 +49,13 @@ export default function PendingApplicationDatatable({ status }) {
     }
   }
 
-  const handleTransfer = () => {
-    onTransfer(selectedDetails, remarks, selectedDistrict, selectedPoliceStation)
+  const onTransfer = (selectedDetails, remarks, selectedDistrict, selectedPoliceStation) => {
+    console.log("Transfer initiated for:", selectedDetails, remarks, selectedDistrict, selectedPoliceStation);
     setRemarks("")
     setSelectedDistrict("")
     setSelectedPoliceStation("")
-  }
+  };
+
 
   const handleCloseTransferModal = () => {
     setIsTransferModalOpen(false)
@@ -329,17 +334,9 @@ export default function PendingApplicationDatatable({ status }) {
                               onClose={handleCloseTransferModal}
                               fileNumber={row?.FileNumber}
                               applicantName={row?.ApplicantName}
-                              onTransfer={handleTransfer}
+                              onTransfer={onTransfer} // Pass the function here
                             />
                           </div>
-                          {/* <Button
-                            size="sm"
-                            variant="default"
-                            className="bg-purple-600 hover:bg-purple-700 text-white text-xs px-1 py-1"
-                            onClick={() => handleViewPPAttachment(row.fileNumber)}
-                          >
-                            View PP Attachment
-                          </Button> */}
                         </div>
                       </TableCell>
                     </TableRow>
