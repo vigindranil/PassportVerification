@@ -89,7 +89,7 @@ export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type
         <DialogHeader>
           <DialogTitle className="text-2xl text-center text-slate-600">
             <CircleHelp size="60" className="mx-auto text-blue-200" />
-            Are you sure you want to {type == "approve" ? "recommend for approval" : type == "reject" ? "not recommend for approval": type} ?
+            Are you sure you want to {type == "approve" ? "recommend for approval" : type == "reject" ? "not recommend for approval" : type} ?
           </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-4 p-4">
@@ -133,11 +133,31 @@ export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type
         <div className="flex justify-center gap-3 pt-5">
           <Button
             onClick={handleAccept}
-            className={`${type === "approve" ? "bg-blue-500 hover:bg-blue-600" : type === "reject" ? "bg-red-500 hover:bg-red-600" : type === "query" ? "bg-green-500 hover:bg-green-600" : ""}`}
+            className={`${type === "approve"
+                ? "bg-blue-500 hover:bg-blue-600"
+                : type === "reject"
+                  ? "bg-red-500 hover:bg-red-600"
+                  : type === "query"
+                    ? "bg-green-500 hover:bg-green-600"
+                    : type === "revoke"
+                      ? "bg-yellow-500 hover:bg-yellow-600"
+                      : ""
+              }`}
             disabled={(type === "query" && !enquiryOfficer) || isLoading}
           >
-            {isLoading ? "Processing..." : type === "approve" ? "Yes, Proceed" : type === "reject" ? "Yes, Proceed" : type === "query" ? "Assign" : ""}
+            {isLoading
+              ? "Processing..."
+              : type === "approve"
+                ? "Yes, Proceed"
+                : type === "reject"
+                  ? "Yes, Proceed"
+                  : type === "query"
+                    ? "Assign"
+                    : type === "revoke"
+                      ? "Revoke"
+                      : ""}
           </Button>
+
           <Button onClick={onClose} variant="secondary" className="hover:bg-zinc-200" disabled={isLoading}>
             Cancel
           </Button>

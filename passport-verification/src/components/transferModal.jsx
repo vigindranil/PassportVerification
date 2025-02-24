@@ -50,7 +50,7 @@ export function TransferModal({ isOpen, onClose, fileNumber, applicantName, onTr
       try {
         onTransfer(fileNumber, remarks, selectedDistrict, selectedPoliceStation)
       } catch (error) {
-        console.error("Error transferring application:", error)
+        console.log("Error transferring application:", error)
       }
     }
 
