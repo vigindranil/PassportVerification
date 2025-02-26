@@ -372,15 +372,15 @@ export default function PendingApplicationDatatable({ status }) {
                               <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
                                 Transfer to PS
                               </span>
-                              <TransferModal
-                                isOpen={isTransferModalOpen}
-                                onClose={handleCloseTransferModal}
-                                fileNumber={row?.FileNumber}
-                                applicantName={row?.ApplicantName}
-                                onTransfer={onTransfer} // Pass the function here
-                              />
                             </div>
                           }
+                          <TransferModal
+                            isOpen={isTransferModalOpen}
+                            onClose={handleCloseTransferModal}
+                            fileNumber={row?.FileNumber}
+                            applicantName={row?.ApplicantName}
+                            onTransfer={onTransfer} // Pass the function here
+                          />
                         </div>
                       </TableCell>
                     </TableRow>
