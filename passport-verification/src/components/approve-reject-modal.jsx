@@ -9,7 +9,7 @@ import { assignApplication, getSpecialEnquiryOfficers } from "@/app/allFiles-sp/
 import { CircleHelp, Eye } from 'lucide-react';
 import { toast } from "@/hooks/use-toast"; // Assuming you have a toast component
 
-export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type }) {
+export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type, mobile }) {
   const [remarks, setRemarks] = useState("");
   const [enquiryOfficer, setEnquiryOfficer] = useState("");
   const [officers, setOfficers] = useState([]);
@@ -78,7 +78,7 @@ export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type
         setIsLoading(false);
       }
     } else {
-      onAccept(applicationId, type, remarks);
+      onAccept(applicationId, type, remarks, mobile);
     }
     onClose();
   };

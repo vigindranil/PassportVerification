@@ -20,7 +20,7 @@ export function FileAcceptModal({ isOpen, onClose, fileData, onAccept }) {
     if (citizenType) {
       try {
         setIsLoading(true)
-        await onAccept(fileData.FileNumber, citizenType, fileData.DateOfBirth);
+        await onAccept(fileData.FileNumber, citizenType, fileData.DateOfBirth, fileData.PhoneNo);
         onClose()
       } catch (e) {
         console.log(e)

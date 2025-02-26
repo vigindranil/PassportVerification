@@ -1,6 +1,6 @@
 import { postRequest } from "../commonAPI";
 
-export const updateEnquiryStatus = async (applicationId, remarks) => {
+export const updateEnquiryStatus = async (applicationId, remarks, type="approve") => {
     try {
         const macAddress = "-";
         const locationIp = "-";
@@ -12,7 +12,7 @@ export const updateEnquiryStatus = async (applicationId, remarks) => {
             "macAddress": "t23d-s4dn-3aos-dn338",
             "deviceId": "98nf39937mp2eq",
             "StatusID": "10",
-            "StatusText": "Verified by EO",
+            "StatusText": type == "approve" ? "Recommended by EO" : "Not Recommended by EO",
             "Remarks": remarks
         });
     } catch (error) {

@@ -17,10 +17,12 @@ import { FileAcceptModal } from "./approve-reject-modal"
 import { transferapplication, updateEnquiryStatus } from "@/app/allFiles-sp/api"
 import { TransferModal } from "@/components/transferModal"
 import { CheckCircle2, FileCheck, FileQuestion, FileUser, FileX2, Rotate3d } from "lucide-react"
+import { Skeleton } from "./ui/skeleton"
 
 export default function PendingApplicationDatatable({ status }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [selectedDetails, setSelectedDetails] = useState({})
+  const [mobile, setMobile] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
   const [refreshFlag, setRefreshFlag] = useState(false);
@@ -34,6 +36,7 @@ export default function PendingApplicationDatatable({ status }) {
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
   const [isFileAcceptModalOpen, setIsFileAcceptModalOpen] = useState(false)
   const [type, setType] = useState("reject");
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter()
 
   const filteredData = verificationData?.filter((row) =>
@@ -42,10 +45,13 @@ export default function PendingApplicationDatatable({ status }) {
 
   const fetchApplicationStatus = async () => {
     try {
+      setIsLoading(true)
       const response = await getApplicationStatus(status, 15)
       setVerificationData(response?.data)
     } catch (error) {
       console.log("Error fetching application status:", error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -146,10 +152,10 @@ export default function PendingApplicationDatatable({ status }) {
     windowPrint.close()
   }
 
-  const handleAcceptFile = async (applicationId, type, remarks) => {
+  const handleAcceptFile = async (applicationId, type, remarks, mobile) => {
     try {
       // Implement the logic for accepting the file
-      const response = await updateEnquiryStatus(applicationId, type, remarks);
+      const response = await updateEnquiryStatus(applicationId, type, remarks, mobile);
       console.log('reponse:', response);
 
       if (response?.status == 0) {
@@ -283,6 +289,18 @@ export default function PendingApplicationDatatable({ status }) {
             </TableHeader>
             <TableBody>
               {
+                isLoading ? (
+                  Array.from({ length: 6 }).map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell><Skeleton className="h-6 w-24 bg-slate-200" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-20 bg-slate-200" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-20 bg-slate-200" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-20 bg-slate-200" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-20 bg-slate-200" /></TableCell>
+                      <TableCell><div className="flex gap-2"><Skeleton className="h-8 w-8 rounded-full bg-slate-200" /><Skeleton className="h-8 w-8 rounded-full bg-slate-200" /><Skeleton className="h-8 w-8 rounded-full bg-slate-200" /><Skeleton className="h-8 w-8 rounded-full bg-slate-200" /><Skeleton className="h-8 w-8 rounded-full bg-slate-200" /></div></TableCell>
+                    </TableRow>
+                  ))
+                ) :
                 currentData?.length ?
                   currentData?.map((row, index) => (
                     <TableRow key={index}>
@@ -316,6 +334,7 @@ export default function PendingApplicationDatatable({ status }) {
                                 setType('approve')
                                 setIsFileAcceptModalOpen(true)
                                 setSelectedDetails(row?.FileNumber)
+                                setMobile(row?.PhoneNo)
                               }}
                             >
                               <FileCheck className="mx-0 px-0" />
@@ -334,6 +353,7 @@ export default function PendingApplicationDatatable({ status }) {
                                 setType('reject')
                                 setIsFileAcceptModalOpen(true)
                                 setSelectedDetails(row?.FileNumber)
+                                setMobile(row?.PhoneNo)
                               }}
                             >
                               <FileX2 className="mx-0 px-0" />
@@ -430,6 +450,7 @@ export default function PendingApplicationDatatable({ status }) {
             applicationId={selectedDetails}
             onAccept={handleAcceptFile}
             type={type}
+            mobile={mobile}
           />
         )}
       </div>
