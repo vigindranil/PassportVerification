@@ -294,7 +294,7 @@ export default function PendingApplicationDatatable({ status }) {
                               Accept Application
                             </span>
                           </div>
-                          <div className="relative group">
+                          {/* <div className="relative group">
                             <Button
                               size="sm"
                               variant="default"
@@ -313,7 +313,7 @@ export default function PendingApplicationDatatable({ status }) {
                               applicantName={row?.ApplicantName}
                               onTransfer={handleTransfer}
                             />
-                          </div>
+                          </div> */}
                           {/* <Button
                             size="sm"
                             variant="default"
