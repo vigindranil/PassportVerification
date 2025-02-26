@@ -11,6 +11,7 @@ import {
 } from "../models/applicationModel.js";
 import { saveTransactionHistory } from "../models/logModel.js";
 import logger from "../utils/logger.js";
+import { sendSMSInternally } from "./thirdPartyAPI.js";
 
 export const getApplicationDetails = async (req, res) => {
   try {
@@ -105,6 +106,7 @@ export const updateEnquiryStatus = async (req, res) => {
       StatusID,
       StatusText,
       Remarks,
+      mobile
     } = req.body;
 
     const result = await updateEnquiryStatusModel(
@@ -137,10 +139,30 @@ export const updateEnquiryStatus = async (req, res) => {
           },
         })
       );
-      return res.status(200).json({
-        status: 0,
-        message: "Status has been updated successfully",
-      });
+
+      if(StatusText == "SP APPROVED" || StatusText == "SP NOT APPROVE"){
+        // const shortenURLResponse = await axios.get(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(filepath)}`);
+        // const shortenURL = shortenURLResponse.data;
+        const smstext = `Your police verification for Passport Application No. ${ApplicationID} has been completed. Verification Status: ${StatusText == "SP APPROVED" ? "Apporved by verification autority" : "Rejected by verification autority"} - WB Police`;
+        const mobileNumber = mobile;
+        const smsCategory = "verification completed";
+        const tpid = "1307174023428206731";
+  
+        const smsStatus = await sendSMSInternally(smstext, mobileNumber, smsCategory, tpid);
+        return res.status(200).json({
+          status: 0,
+          message: "Status has been updated successfully",
+          smsStatus,
+          smstext
+        });
+      } else {
+        return res.status(200).json({
+          status: 0,
+          message: "Status has been updated successfully",
+          smsStatus: "N/A",
+          smstext: "N/A"
+        });
+      }
     } else {
       logger.debug(
         JSON.stringify({

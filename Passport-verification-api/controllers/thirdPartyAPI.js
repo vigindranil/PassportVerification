@@ -203,6 +203,8 @@ export const getWBSEDCLDetails = async (req, res) => {
   }
 
   let data = JSON.stringify({
+    userId: "ppUser",
+    password: "ppPassword@123",
     consumerId: consumerId,
     installationNum: installationNum,
   });
@@ -210,7 +212,7 @@ export const getWBSEDCLDetails = async (req, res) => {
   let config = {
     method: "post",
     maxBodyLength: Infinity,
-    url: "https://portaltest.wbsedcl.in/WBSEDCLPASSPORTENQUIRYWS/FetchBasicConsumerDetails",
+    url: "https://portal.wbsedcl.in/WBSEDCLPASSPORTENQUIRYWS/FetchBasicConsumerDetails",
     headers: {
       "Content-Type": "application/json",
     },
@@ -361,8 +363,6 @@ export const sendSMS = async (req, res) => {
 
     const url = `${BartaBaseURL}mobile=${numbers}&message=${message}&templateid=${tpid}&extra=${extra}&passkey=${passkeyNew}`;
 
-    console.log("BartaBaseURL:", url);
-
     const response = await axios.post(
       url,
       {},
@@ -377,7 +377,7 @@ export const sendSMS = async (req, res) => {
     console.log("SMS Execution:", response);
     return res.status(200).json({
       status: 0,
-      message: "SMS sent successfully"
+      message: "SMS sent successfully",
     });
   } catch (error) {
     console.error("Exception:", error.message);
@@ -385,5 +385,46 @@ export const sendSMS = async (req, res) => {
       status: 1,
       message: "Exception occurred while sending SMS.",
     });
+  }
+};
+
+export const sendSMSInternally = async (
+  smstext,
+  mobileNumber,
+  smsCategory = "N/A",
+  tpid
+) => {
+  const BartaBaseURL = "http://barta.wb.gov.in/send_sms_ites_webel.php?";
+  const extra = "";
+  const passkey = "sms_webel_ites_5252_@$#";
+
+  try {
+    const numbers = encodeURIComponent(mobileNumber);
+    // const numbers = encodeURIComponent("6202734737");
+    // const numbers = encodeURIComponent("9836700645");
+    const message = encodeURIComponent(smstext);
+    const passkeyNew = encodeURIComponent(passkey);
+
+    const url = `${BartaBaseURL}mobile=${numbers}&message=${message}&templateid=${tpid}&extra=${extra}&passkey=${passkeyNew}`;
+
+    const response = await axios.post(
+      url,
+      {},
+      {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        httpsAgent: new https.Agent({
+          secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+        }),
+      }
+    );
+
+    if (response.status == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log("Exception:", error.message);
+    return false;
   }
 };

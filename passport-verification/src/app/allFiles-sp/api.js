@@ -1,6 +1,6 @@
 import { postFileRequest, postRequest } from "../commonAPI";
 
-export const updateEnquiryStatus = async (applicationId, type, remarks) => {
+export const updateEnquiryStatus = async (applicationId, type, remarks, mobile) => {
     try {
         const macAddress = "-";
         const locationIp = "-";
@@ -12,7 +12,8 @@ export const updateEnquiryStatus = async (applicationId, type, remarks) => {
             "deviceId": "123#df",
             "StatusID": "80",
             "StatusText": type == 'approve' ? 'SP APPROVED' : 'SP NOT APPROVE',
-            "Remarks": remarks
+            "Remarks": remarks,
+            mobile
         });
     } catch (error) {
         console.log("Error:", error);

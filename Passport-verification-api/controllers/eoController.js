@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   saveDocumentUploadModel,
   getDocumentUploadDetailsModel,
@@ -8,6 +9,7 @@ import {
 import { saveTransactionHistory } from "../models/logModel.js";
 import logger from "../utils/logger.js";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { sendSMSInternally } from "./thirdPartyAPI.js";
 
 export const saveDocumentUpload = async (req, res) => {
   try {
@@ -351,6 +353,7 @@ export const saveCaseAssign = async (req, res) => {
       locationIp,
       deviceId,
       dateOfBirth,
+      mobile,
     } = req.body;
     const entryUserId = req.user.UserID;
     let filepath = "";
@@ -432,10 +435,22 @@ export const saveCaseAssign = async (req, res) => {
           },
         })
       );
+
+      const shortenURLResponse = await axios.get(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(filepath)}`);
+      const shortenURL = shortenURLResponse.data;
+      const smstext = `Ref: Passport Application No. ${applicationId} . Your file is initiated for police verification. You are requested to follow instructions for police verification by accessing the following URL ${shortenURL}- WB Police`;
+      const mobileNumber = mobile;
+      const smsCategory = "process initiated";
+      const tpid = "1307174023413687252";
+
+      const smsStatus = await sendSMSInternally(smstext, mobileNumber, smsCategory, tpid);
+
       return res.status(200).json({
         status: 0,
         message: "Case assigned successfully",
-        file_path: filepath
+        file_path: filepath,
+        smsStatus,
+        smstext
       });
     } else if (errorCode === 3) {
       return res.status(400).json({
