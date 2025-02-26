@@ -15,14 +15,14 @@ export const getApplicationStatus = async (status, period) => {
 
 export const revokeEnquiryStatus = async (applicationId, type, remarks) => {
   try {
-      const macAddress = "-";
-      const locationIp = "-";
-      const deviceId = "-";
+    const use_details = await fetch("https://ipinfo.io/json");
+    const user_details_json = await use_details.json();
+    const locationIp = user_details_json?.ip || "-";
       return await postRequest("application/updateEnquiryStatus", {
           "ApplicationID": applicationId,
-          "locationIp": "115.187.62.100",
-          "macAddress": "test-s4dn-3aos-dn338",
-          "deviceId": "123#df",
+          "locationIp": locationIp,
+          "macAddress": "-",
+          "deviceId": "-",
           "StatusID": "0",
           "StatusText": 'Application Revoked',
           "Remarks": remarks

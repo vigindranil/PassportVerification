@@ -357,6 +357,7 @@ export const saveCaseAssign = async (req, res) => {
     } = req.body;
     const entryUserId = req.user.UserID;
     let filepath = "";
+    let messageDocUrl = "";
     const dob = new Date(dateOfBirth);
 
     const pp_document = {
@@ -371,22 +372,28 @@ export const saveCaseAssign = async (req, res) => {
     if (citizentype == 1) {
       if (dob >= new Date("1950-01-26") && dob < new Date("1987-07-01")) {
         filepath = pp_document["citizen_type_1_(1950-01-26_to_1987-06-30)"]
+        messageDocUrl = "wbpassportverify.link/uploads/1.pdf";
       }
       else if (dob >= new Date("1987-07-01") && dob < new Date("2004-12-03")) {
         filepath = pp_document["citizen_type_1_(1987-07-01_to_2004-12-02)"]
+        messageDocUrl = "wbpassportverify.link/uploads/2.pdf";
       }
       else if (dob >= new Date("2004-12-03")) {
         filepath = pp_document["citizen_type_1_(2004-12-03_onwards)"]
+        messageDocUrl = "wbpassportverify.link/uploads/3.pdf";
       }
     }
     if (citizentype == 2) {
       filepath = pp_document["citizen_type_2_Citizen_by_Naturalization"]
+      messageDocUrl = "wbpassportverify.link/uploads/4.pdf";
     }
     else if (citizentype == 3) {
       filepath = pp_document["citizen_type_3_Citizen_by_Registration"]
+      messageDocUrl = "wbpassportverify.link/uploads/4.pdf";
     }
     else if (citizentype == 4) {
       filepath = pp_document["citizen_type_4_Citizen_by_Descent"]
+      messageDocUrl = "wbpassportverify.link/uploads/4.pdf";
     }
 
     if (!applicationId || !citizentype) {
@@ -436,12 +443,11 @@ export const saveCaseAssign = async (req, res) => {
         })
       );
 
-      const shortenURLResponse = await axios.get(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(filepath)}`);
-      const shortenURL = shortenURLResponse.data;
-      const smstext = `Ref: Passport Application No. ${applicationId} . Your file is initiated for police verification. You are requested to follow instructions for police verification by accessing the following URL ${shortenURL}- WB Police`;
+      const smstext = `Passport Verification Process initiated ${applicationId}, required documents link ${messageDocUrl} - WB Police`;
       const mobileNumber = mobile;
+      // const mobileNumber = "6202734737";
       const smsCategory = "process initiated";
-      const tpid = "1307174023413687252";
+      const tpid = "1307174055755232946";
 
       const smsStatus = await sendSMSInternally(smstext, mobileNumber, smsCategory, tpid);
 
@@ -452,10 +458,15 @@ export const saveCaseAssign = async (req, res) => {
         smsStatus,
         smstext
       });
-    } else if (errorCode === 3) {
+    } else if (errorCode == 3) {
       return res.status(400).json({
         status: 1,
         message: "Logged in user does not have permission to add case",
+      });
+    } else if (errorCode == 4) {
+      return res.status(400).json({
+        status: 1,
+        message: "Application is already assigned to another EO",
       });
     } else {
       logger.debug(
