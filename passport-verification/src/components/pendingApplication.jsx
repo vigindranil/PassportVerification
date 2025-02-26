@@ -359,7 +359,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                             </div>
                           </>
                         }
-                        {(user_role == 10) &&
+                        {/* {(user_role == 10) &&
                           <div className="relative group">
                             <Button
                               size="sm"
@@ -380,7 +380,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                               onTransfer={onTransfer} // Pass the function here
                             />
                           </div>
-                        }
+                        } */}
                          {(user_role == 10 && status == 2) && (
                           <div className="relative group">
                             <Button

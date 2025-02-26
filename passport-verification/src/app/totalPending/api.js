@@ -24,7 +24,7 @@ export const revokeEnquiryStatus = async (applicationId, type, remarks) => {
           "macAddress": "test-s4dn-3aos-dn338",
           "deviceId": "123#df",
           "StatusID": "0",
-          "StatusText": type == 'revoke' ? 'DYSP Revoke' : 'DYSP NOT Revoke',
+          "StatusText": 'Application Revoked',
           "Remarks": remarks
       });
   } catch (error) {
