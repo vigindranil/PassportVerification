@@ -48,11 +48,9 @@ export function TransferModal({ isOpen, onClose, fileNumber, applicantName, onTr
 
     const transferapplication = async () => {
       try {
-        const result = await response.json()
-        console.log("Transfer successful:", result)
         onTransfer(fileNumber, remarks, selectedDistrict, selectedPoliceStation)
       } catch (error) {
-        console.error("Error transferring application:", error)
+        console.log("Error transferring application:", error)
       }
     }
 

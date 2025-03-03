@@ -16,21 +16,30 @@ import { FileAcceptModal } from "./file-accept-modal"
 import { toast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import Cookies from "react-cookies"
-import { BookOpenCheck, CheckCheck, CheckCircle2, CopyCheck, FileUser } from "lucide-react"
+import { TransferModal } from "@/components/transferModal"
+import { BookOpenCheck, CheckCheck, CheckCircle2, CopyCheck, FileUser, Rotate3d } from "lucide-react"
+import { transferapplication } from "@/app/allFiles-sp/api"
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function PendingApplicationDatatable({ status }) {
+  const user_role = Cookies.load('type');
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [selectedDetails, setSelectedDetails] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
   const [refreshFlag, setRefreshFlag] = useState(false);
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
   const itemsPerPage = 6
   const [applicationStatus, setApplicationStatus] = useState(null)
   const [verificationData, setVerificationData] = useState([])
   const [isFileAcceptModalOpen, setIsFileAcceptModalOpen] = useState(false)
+  const [remarks, setRemarks] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedPoliceStation, setSelectedPoliceStation] = useState("");
   const ps = Cookies.load('ps');
   const router = useRouter()
   const [EO_POLICE_STATION, setEO_POLICE_STATION] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const filteredData = verificationData?.filter((row) =>
     Object?.values(row)?.some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())),
@@ -38,10 +47,13 @@ export default function PendingApplicationDatatable({ status }) {
 
   const fetchApplicationStatus = async () => {
     try {
+      setIsLoading(true)
       const response = await getApplicationStatus(status, 30)
       setVerificationData(response.data)
     } catch (error) {
       console.log("Error fetching application status:", error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -72,6 +84,65 @@ export default function PendingApplicationDatatable({ status }) {
     doc.save("police_verification_data.pdf")
   }
 
+  const handleOpenTransferModal = () => {
+    setIsTransferModalOpen(true)
+  }
+
+  const handleCloseTransferModal = () => {
+    setIsTransferModalOpen(false)
+  }
+
+  const onTransfer = async (fileNumber, remarks, selectedDistrict, selectedPoliceStation) => {
+    if (!selectedDistrict || !selectedPoliceStation) {
+      console.log("Please fill in all fields before transferring.");
+      return;
+    }
+
+    try {
+      console.log("Calling API with:", {
+        fileNumber,
+        locationIp: "115.187.62.100",
+        deviceId: "deviceId",
+        remarks,
+        districtId: selectedDistrict,
+        psId: selectedPoliceStation,
+        macAddress: "test-s4dn-3aos-dn338",
+      });
+
+      const response = await transferapplication({
+        fileNumber,
+        locationIp: "115.187.62.100",
+        deviceId: "deviceId",
+        remarks,
+        districtId: selectedDistrict,
+        psId: selectedPoliceStation,
+        macAddress: "test-s4dn-3aos-dn338",
+      });
+
+      if (response.status == 0) {
+        await fetchApplicationStatus();
+        toast({
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Successfull!</span>
+            </div>
+          ),
+          description: response?.message,
+          action: <ToastAction altText="Try again">Close</ToastAction>,
+        })
+        setRemarks("");
+        setSelectedDistrict("");
+        setSelectedPoliceStation("");
+        setIsTransferModalOpen(false)
+      } else {
+        console.log("Transfer failed. No response from API.");
+      }
+    } catch (error) {
+      console.log("Error transferring application:", error);
+    }
+  };
+
   const printTable = () => {
     const printContent = document.getElementById("police-verification-table")
     const windowPrint = window.open("", "", "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0")
@@ -82,29 +153,26 @@ export default function PendingApplicationDatatable({ status }) {
     windowPrint.close()
   }
 
-  const handleAcceptFile = async (applicationId, citizentype, file) => {
+  const handleAcceptFile = async (applicationId, citizentype, dateOfBirth, mobileNo) => {
     try {
-      console.log(`applicationId: ${applicationId}`)
-      console.log(`citizentype: ${citizentype}`)
-      console.log(`file: ${file}`)
-      if (!citizentype){
+      if (!citizentype) {
         toast({
           variant: "destructive",
           title: "Select Citizen Type!",
           description: "Please select citizen type and then try again",
         })
       }
-      if (!file){
+      if (!dateOfBirth) {
         toast({
           variant: "destructive",
-          title: "Select File!",
-          description: "Please select a file and then try again",
+          title: "Date of Birth is not available!",
+          description: "An error occurred",
         })
       }
 
       // Implement the logic for accepting the file
-      const response = await acceptApplication(applicationId, citizentype, file);
-      
+      const response = await acceptApplication(applicationId, citizentype, dateOfBirth, mobileNo);
+
 
       if (response?.status == 0) {
         await fetchApplicationStatus();
@@ -240,7 +308,18 @@ export default function PendingApplicationDatatable({ status }) {
             </TableHeader>
             <TableBody>
               {
-                currentData?.length ?
+                isLoading ? (
+                  Array.from({ length: 6 }).map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell><Skeleton className="h-6 w-24 bg-slate-200" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-32 bg-slate-200" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-32 bg-slate-200" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-20 bg-slate-200" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-40 bg-slate-200" /></TableCell>
+                      <TableCell><div className="flex gap-2"><Skeleton className="h-10 w-10 rounded-full bg-slate-200" /><Skeleton className="h-10 w-10 rounded-full bg-slate-200" /></div></TableCell>
+                    </TableRow>
+                  ))
+                ) : currentData?.length ?
                   currentData?.map((row, index) => (
                     <TableRow key={index}>
                       <TableCell>{row?.FileNumber || "N/A"}</TableCell>
@@ -280,14 +359,28 @@ export default function PendingApplicationDatatable({ status }) {
                               Accept Application
                             </span>
                           </div>
-                          {/* <Button
-                            size="sm"
-                            variant="default"
-                            className="bg-purple-600 hover:bg-purple-700 text-white text-xs px-1 py-1"
-                            onClick={() => handleViewPPAttachment(row.fileNumber)}
-                          >
-                            View PP Attachment
-                          </Button> */}
+                          {(user_role == 10) &&
+                            <div className="relative group">
+                              <Button
+                                size="sm"
+                                variant="default"
+                                className="bg-gray-100 ring-[0.5px] text-gray-700 hover:bg-teal-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                                onClick={handleOpenTransferModal}
+                              >
+                                <Rotate3d className="mx-0 px-0" />
+                              </Button>
+                              <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                                Transfer to PS
+                              </span>
+                            </div>
+                          }
+                          <TransferModal
+                            isOpen={isTransferModalOpen}
+                            onClose={handleCloseTransferModal}
+                            fileNumber={row?.FileNumber}
+                            applicantName={row?.ApplicantName}
+                            onTransfer={onTransfer} // Pass the function here
+                          />
                         </div>
                       </TableCell>
                     </TableRow>

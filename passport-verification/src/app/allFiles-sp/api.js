@@ -1,18 +1,19 @@
 import { postFileRequest, postRequest } from "../commonAPI";
 
-export const updateEnquiryStatus = async (applicationId, type, remarks) => {
+export const updateEnquiryStatus = async (applicationId, type, remarks, mobile) => {
     try {
-        const macAddress = "-";
-        const locationIp = "-";
-        const deviceId = "-";
+      const use_details = await fetch("https://ipinfo.io/json");
+      const user_details_json = await use_details.json();
+      const locationIp = user_details_json?.ip || "-";
         return await postRequest("application/updateEnquiryStatus", {
             "ApplicationID": applicationId,
-            "locationIp": "115.187.62.100",
-            "macAddress": "test-s4dn-3aos-dn338",
-            "deviceId": "123#df",
+            "locationIp": locationIp,
+            "macAddress": "-",
+            "deviceId": "-",
             "StatusID": "80",
             "StatusText": type == 'approve' ? 'SP APPROVED' : 'SP NOT APPROVE',
-            "Remarks": remarks
+            "Remarks": remarks,
+            mobile
         });
     } catch (error) {
         console.log("Error:", error);
@@ -79,7 +80,10 @@ export const assignApplication = async ({ applicationId, assignTo, macAddress, l
   
   export const transferapplication = async ({fileNumber, locationIp, deviceId, remarks, districtId, psId, macAddress}) => {
     try {
-      return await postRequest("sp/transferapplication", { "fileNumber":fileNumber, "locationIp" :"115.187.62.100", "deviceId":"deviceId", "remarks": remarks, "districtId":districtId, "psId":psId, "macAddress":"test-s4dn-3aos-dn338" });
+      console.log("apitest",fileNumber);
+      console.log("apitest",districtId);
+      console.log("apitest",psId);
+      return await postRequest("sp/transferapplication", { "applicationId":fileNumber, "locationIp" :"115.187.62.100", "deviceId":"deviceId", "remarks": remarks, "districtId":districtId, "psId":psId, "macAddress":"test-s4dn-3aos-dn338" });
     } catch (error) {
       console.log("Error:", error);
       return null;

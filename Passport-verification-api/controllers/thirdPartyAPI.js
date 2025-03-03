@@ -156,6 +156,43 @@ export const getBirthCertificateDetails = async (req, res) => {
     });
 };
 
+export const getLandDeedDetails = async (req, res) => {
+  const { MouzaCode, KhatianNo } = req.body;
+  if (!MouzaCode) {
+    return res.status(400).json({ error: "Mouza Code(IDN) is required." });
+  } else if (!KhatianNo) {
+    return res.status(400).json({ error: "Khatian No is required." });
+  }
+
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: `http://banglarbhumi.gov.in/NizamWebservice/service/CellLandOwnerdetail/${MouzaCode}/${KhatianNo}/0/17/RGxycyMxMjM=Ukd4eWN6RXlNMU5VUmc9PQ==`,
+    httpsAgent: new https.Agent({
+      secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+    }),
+  };
+
+  axios
+    .request(config)
+    .then(async (response) => {
+      console.log("response", response);
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: response?.data,
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res.status(400).json({
+        status: 0,
+        message: "Failed to fetched details",
+        data: null,
+      });
+    });
+};
+
 export const getWBSEDCLDetails = async (req, res) => {
   const { consumerId, installationNum } = req.body;
 
@@ -166,6 +203,8 @@ export const getWBSEDCLDetails = async (req, res) => {
   }
 
   let data = JSON.stringify({
+    userId: "ppUser",
+    password: "ppPassword@123",
     consumerId: consumerId,
     installationNum: installationNum,
   });
@@ -173,7 +212,7 @@ export const getWBSEDCLDetails = async (req, res) => {
   let config = {
     method: "post",
     maxBodyLength: Infinity,
-    url: "https://portaltest.wbsedcl.in/WBSEDCLPASSPORTENQUIRYWS/FetchBasicConsumerDetails",
+    url: "https://portal.wbsedcl.in/WBSEDCLPASSPORTENQUIRYWS/FetchBasicConsumerDetails",
     headers: {
       "Content-Type": "application/json",
     },
@@ -303,4 +342,89 @@ export const getPCCCrimeRecordSearch = async (req, res) => {
         data: null,
       });
     });
+};
+
+export const sendSMS = async (req, res) => {
+  const { smstext, mobileNumber, smsCategory = "N/A", tpid } = req.body;
+  if (!mobileNumber) {
+    return res.status(400).json({ error: "Mobile Number is required." });
+  } else if (!smstext) {
+    return res.status(400).json({ error: "Message text is required." });
+  }
+
+  const BartaBaseURL = "http://barta.wb.gov.in/send_sms_ites_webel.php?";
+  const extra = "";
+  const passkey = "sms_webel_ites_5252_@$#";
+
+  try {
+    const numbers = encodeURIComponent(mobileNumber);
+    const message = encodeURIComponent(smstext);
+    const passkeyNew = encodeURIComponent(passkey);
+
+    const url = `${BartaBaseURL}mobile=${numbers}&message=${message}&templateid=${tpid}&extra=${extra}&passkey=${passkeyNew}`;
+
+    const response = await axios.post(
+      url,
+      {},
+      {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        httpsAgent: new https.Agent({
+          secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+        }),
+      }
+    );
+
+    console.log("SMS Execution:", response);
+    return res.status(200).json({
+      status: 0,
+      message: "SMS sent successfully",
+    });
+  } catch (error) {
+    console.error("Exception:", error.message);
+    return res.status(400).json({
+      status: 1,
+      message: "Exception occurred while sending SMS.",
+    });
+  }
+};
+
+export const sendSMSInternally = async (
+  smstext,
+  mobileNumber,
+  smsCategory = "N/A",
+  tpid
+) => {
+  const BartaBaseURL = "http://barta.wb.gov.in/send_sms_ites_webel.php?";
+  const extra = "";
+  const passkey = "sms_webel_ites_5252_@$#";
+
+  try {
+    const numbers = encodeURIComponent(mobileNumber);
+    // const numbers = encodeURIComponent("6202734737");
+    // const numbers = encodeURIComponent("9836700645");
+    const message = encodeURIComponent(smstext);
+    const passkeyNew = encodeURIComponent(passkey);
+
+    const url = `${BartaBaseURL}mobile=${numbers}&message=${message}&templateid=${tpid}&extra=${extra}&passkey=${passkeyNew}`;
+
+    const response = await axios.post(
+      url,
+      {},
+      {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        httpsAgent: new https.Agent({
+          secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+        }),
+      }
+    );
+
+    if (response.status == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log("Exception:", error.message);
+    return false;
+  }
 };

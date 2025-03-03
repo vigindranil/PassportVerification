@@ -1,11 +1,11 @@
 import express from "express";
-import { fileUpload } from "../controllers/docUploadController.js";
-import { saveCaseAssign, saveDocumentUpload } from "../controllers/eoController.js";
+import { fileUpload, fileUploadS3Bucket } from "../controllers/docUploadController.js";
+import { saveDocumentUpload } from "../controllers/eoController.js";
 
 const router = express.Router();
 
 router.post('/testUpload', fileUpload);
-router.post('/acceptCaseUploadDocument', saveCaseAssign)
+router.post('/fileUploadS3Bucket', fileUploadS3Bucket);
 router.post('/eodocumentupload', saveDocumentUpload);
 
 export default router;

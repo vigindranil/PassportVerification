@@ -7,24 +7,41 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label"
 import { Input } from "./ui/input"
 import { FileImage } from "lucide-react"
+import { getRequiredDocuments } from "@/app/allFiles/api"
 
 export function FileAcceptModal({ isOpen, onClose, fileData, onAccept }) {
-  const [file, setFile] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [citizenType, setCitizenType] = useState("")
+  const [requiredDocuments, setRequiredDocuments] = useState([]);
+  const [onChangeLoading, setOnChangeLoading] = useState(false);
+  const dob = fileData?.DateOfBirth?.split("T")[0];
 
   const handleAccept = async () => {
-    if (file && citizenType) {
+    if (citizenType) {
       try {
         setIsLoading(true)
-        await onAccept(fileData.FileNumber, citizenType, file);
+        await onAccept(fileData.FileNumber, citizenType, fileData.DateOfBirth, fileData.PhoneNo);
         onClose()
-      }catch (e) {
+      } catch (e) {
         console.log(e)
 
       } finally {
         setIsLoading(false)
       }
+    }
+  }
+
+  const handleCitizenOnChange = async (value) => {
+    try {
+      setOnChangeLoading(true);
+      // handle citizen type change
+      setCitizenType(value)
+      const response = await getRequiredDocuments(value, dob);
+      setRequiredDocuments(response?.data || []);
+    } catch (e) {
+      console.log(e)
+    } finally {
+      setOnChangeLoading(false);
     }
   }
 
@@ -47,7 +64,7 @@ export function FileAcceptModal({ isOpen, onClose, fileData, onAccept }) {
           </div>
           <div className="space-y-2">
             <Label>Citizen Type<span className="text-red-500">*</span></Label>
-            <Select value={citizenType} onValueChange={setCitizenType}>
+            <Select value={citizenType} onValueChange={(value) => handleCitizenOnChange(value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Citizen Type" />
               </SelectTrigger>
@@ -61,7 +78,7 @@ export function FileAcceptModal({ isOpen, onClose, fileData, onAccept }) {
             </Select>
           </div>
           <div className="space-y-2">
-
+{/* 
             <div className="grid w-full items-center gap-1.5">
               <Label htmlFor="picture">Upload PP File (pdf)<span className="text-red-500">*</span></Label>
               <div className="flex items-center gap-2 border-[1px] rounded-md py-0 ps-3 cursor-pointer">
@@ -74,12 +91,27 @@ export function FileAcceptModal({ isOpen, onClose, fileData, onAccept }) {
                   onChange={(e) => setFile(e.target.files[0] || null)}
                 />
               </div>
-            </div>
+            </div> */}
+
+            {
+              onChangeLoading ?
+                <div className="text-center py-4">Loading...</div>
+                :
+                requiredDocuments?.length > 0 ?
+                  <div>
+                    <ul className="list list-disc list-inside">
+                      <Label className="font-bold text-zinc-500">Required documents need for verification</Label>
+                      {requiredDocuments?.map((doc, i) => (
+                        <li className="leading-tight" key={i}>{doc?.name}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  : null}
 
           </div>
         </div>
         <div className="flex justify-end">
-          <Button onClick={handleAccept} className="bg-green-600 hover:bg-green-700" disabled={!file || !citizenType || isLoading}>
+          <Button onClick={handleAccept} className="bg-green-600 hover:bg-green-700" disabled={!citizenType || isLoading}>
             {isLoading ? 'Loading...' : 'Accept Application'}
           </Button>
         </div>

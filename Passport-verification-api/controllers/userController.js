@@ -99,46 +99,42 @@ export const saveUserRegistration = async (req, res) => {
         message: "Please enter username",
       });
     }
-    if(!FullName){
-      return res.status(400).json({
-        status: 1,
-        message: "Please enter FullName",
-      });
-    }
+    // if(!FullName){
+    //   return res.status(400).json({
+    //     status: 1,
+    //     message: "Please enter FullName",
+    //   });
+    // }
     if(!MobileNo){
       return res.status(400).json({
         status: 1,
-        message: "Please enter FullName",
+        message: "Please enter Mobile No.",
       });
     }
     if(!Gender){
       return res.status(400).json({
         status: 1,
-        message: "Please enter FullName",
+        message: "Please enter Gender",
       });
     }
     if(!AADHAARNo){
       return res.status(400).json({
         status: 1,
-        message: "Please enter FullName",
+        message: "Please enter AADHAAR No.",
       });
     }
     if(!Designation){
       return res.status(400).json({
         status: 1,
-        message: "Please enter FullName",
+        message: "Please enter Designation",
       });
     }
     if(!UserRoleID){
       return res.status(400).json({
         status: 1,
-        message: "Please enter FullName",
+        message: "Please enter User Role",
       });
     }
-
-
-
-
 
      const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,JSON.stringify({
       UserID,

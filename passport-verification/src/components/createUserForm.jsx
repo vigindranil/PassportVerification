@@ -217,7 +217,6 @@ const UserManagement = () => {
 
     const requiredFields = [
       "UserName",
-      "FullName",
       "Firstname",
       "LastName",
       "MobileNo",
@@ -310,58 +309,62 @@ const UserManagement = () => {
     }
   }
 
-  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    
     let newValue = value;
-  
-    // Prevent SQL Injection
-    if (checkForSqlInjection(value)) {
-      newValue = value.replace(/select\s+\*\s+from/gi, "");
-      toast({
-        variant: "destructive",
-        title: "Invalid Input",
-        description: "SQL injection attempt detected and removed.",
-        action: <ToastAction altText="Close">Close</ToastAction>,
-      });
-    }
-  
+
+    // Prevent spaces in UserName field
     if (name === "UserName") {
-      if (/^\d+$/.test(newValue)) {
-        newValue = newValue.slice(0, 10); 
-  
-        if (newValue.length < 10) {
-          setInvalidInput((prev) => ({
-            ...prev,
-            [name]: "Mobile number must be exactly 10 digits.",
-          }));
+        newValue = newValue.replace(/\s/g, ""); // Remove spaces
+
+        if (newValue.length === 0) {
+            setInvalidInput((prev) => ({
+                ...prev,
+                [name]: "UserName cannot be empty or contain spaces.",
+            }));
         } else {
-          setInvalidInput((prev) => ({ ...prev, [name]: "" }));
+            setInvalidInput((prev) => ({ ...prev, [name]: "" }));
         }
-      }
-      else if (!/^[a-zA-Z0-9@]*$/.test(newValue)) {
-        setInvalidInput((prev) => ({
-          ...prev,
-          [name]: "Only letters, numbers, and '@' are allowed.",
-        }));
-      } 
-      else {
-        setInvalidInput((prev) => ({ ...prev, [name]: "" }));
-      }
     } 
-    else if (name === "MobileNo") {
-      newValue = newValue.replace(/\D/g, "").slice(0, 10); 
-    } 
-    else if (name === "AADHAARNo") {
-      newValue = newValue.replace(/\D/g, "").slice(0, 12);
+    else if ([ "MobileNo", "AADHAARNo"].includes(name)) {
+        newValue = value.replace(/\D/g, ""); // Allow only numbers
+
+        if (name === "MobileNo") {
+            newValue = newValue.slice(0, 10); // Restrict to 10 digits
+
+            if (newValue.length < 10) {
+                setInvalidInput((prev) => ({
+                    ...prev,
+                    [name]: "Must be exactly 10 digits.",
+                }));
+            } else {
+                setInvalidInput((prev) => ({ ...prev, [name]: "" }));
+            }
+        } 
+        else if (name === "AADHAARNo") {
+            newValue = newValue.slice(0, 12); // Restrict to 12 digits
+
+            if (newValue.length < 12) {
+                setInvalidInput((prev) => ({
+                    ...prev,
+                    [name]: "AADHAAR number must be exactly 12 digits.",
+                }));
+            } else {
+                setInvalidInput((prev) => ({ ...prev, [name]: "" }));
+            }
+        }
     }
+
     setFormData((prev) => ({ ...prev, [name]: newValue }));
-  };
-  
+};
+
+
 
   const handleAcceptFile = () => {
     console.log("File accepted!")
-    setSelectedFile(null) 
+    setSelectedFile(null)
   }
 
   return (
@@ -375,7 +378,7 @@ const UserManagement = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-6">
         <div className="space-y-2">
           <Label htmlFor="UserName">
-            Login User Name <span className="text-zinc-400">(phone no.)</span> <span className="text-red-500">*</span>
+             User Name  <span className="text-red-500">*</span>
           </Label>
           <Input
             id="UserName"
@@ -383,8 +386,8 @@ const UserManagement = () => {
             value={formData?.UserName}
             onChange={handleInputChange}
             required
-            pattern="^[a-zA-Z0-9@]+$"
-            title="Only letters, numbers, and '@' are allowed."
+            pattern="^\d{10}$"
+            title="Enter a 10-digit mobile number."
             className={`${invalidInput["UserName"] && "border-[1.4px] border-red-400"}`}
           />
           {invalidInput["UserName"] && <p className="text-red-500 text-xs">{invalidInput["UserName"]}</p>}
@@ -392,7 +395,7 @@ const UserManagement = () => {
 
         <div className="space-y-2">
           <Label htmlFor="FullName">
-            User Full Name <span className="text-red-500">*</span>
+            User Full Name <span className="text-red-500"></span>
           </Label>
           <Input
             id="FullName"

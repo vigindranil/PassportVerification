@@ -1,6 +1,11 @@
 import { postFileRequest, postRequest } from "../commonAPI";
 
-export const acceptApplication = async (applicationId, citizentype, file) => {
+export const acceptApplication = async (
+  applicationId,
+  citizentype,
+  dateOfBirth,
+  mobile
+) => {
   try {
     // fetch get call https://ipinfo.io/json
     const use_details = await fetch("https://ipinfo.io/json");
@@ -21,17 +26,30 @@ export const acceptApplication = async (applicationId, citizentype, file) => {
     const locationIp = user_details_json?.ip;
     const deviceId = "-";
     const macAddress = "-";
-    return await postFileRequest("upload/acceptCaseUploadDocument", {
+    return await postRequest("application/acceptCaseUploadDocument", {
       applicationId,
       citizentype,
       jsonTEXT,
-      file,
+      dateOfBirth,
       macAddress,
       locationIp,
       deviceId,
+      mobile,
     });
+
   } catch (error) {
     console.log("Error:", error);
     return error.message;
+  }
+};
+
+export const getRequiredDocuments = async (citizenTypeId, dateOfBirth) => {
+  try {
+    return await postRequest("documents/get-required-documents", {
+      citizenTypeId,
+      dateOfBirth,
+    });
+  } catch (error) {
+    return [];
   }
 };

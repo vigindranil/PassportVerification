@@ -14,52 +14,107 @@ import { useRouter } from "next/navigation"
 import { toast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import { FileAcceptModal } from "./approve-reject-modal"
-import { updateEnquiryStatus } from "@/app/allFiles-sp/api"
+import { transferapplication, updateEnquiryStatus } from "@/app/allFiles-sp/api"
 import { TransferModal } from "@/components/transferModal"
 import { CheckCircle2, FileCheck, FileQuestion, FileUser, FileX2, Rotate3d } from "lucide-react"
+import { Skeleton } from "./ui/skeleton"
 
 export default function PendingApplicationDatatable({ status }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [selectedDetails, setSelectedDetails] = useState({})
+  const [mobile, setMobile] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
   const [refreshFlag, setRefreshFlag] = useState(false);
+  const [remarks, setRemarks] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedPoliceStation, setSelectedPoliceStation] = useState("");
+
   const itemsPerPage = 6
   const [applicationStatus, setApplicationStatus] = useState(null)
   const [verificationData, setVerificationData] = useState([])
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
   const [isFileAcceptModalOpen, setIsFileAcceptModalOpen] = useState(false)
   const [type, setType] = useState("reject");
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter()
 
-  const filteredData = verificationData.filter((row) =>
+  const filteredData = verificationData?.filter((row) =>
     Object?.values(row)?.some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())),
   )
 
   const fetchApplicationStatus = async () => {
     try {
+      setIsLoading(true)
       const response = await getApplicationStatus(status, 15)
-      setVerificationData(response.data)
+      setVerificationData(response?.data)
     } catch (error) {
       console.log("Error fetching application status:", error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  const handleTransfer = () => {
-    onTransfer(FileNumber, remarks, selectedDistrict, selectedPoliceStation)
-    setRemarks("")
-    setSelectedDistrict("")
-    setSelectedPoliceStation("")
-  }
+  const onTransfer = async (fileNumber, remarks, selectedDistrict, selectedPoliceStation) => {
+    if (!selectedDistrict || !selectedPoliceStation) {
+      console.log("Please fill in all fields before transferring.");
+      return;
+    }
+  
+    try {
+      console.log("Calling API with:", {
+        fileNumber,
+        locationIp: "115.187.62.100",
+        deviceId: "deviceId",
+        remarks,
+        districtId: selectedDistrict,
+        psId: selectedPoliceStation,
+        macAddress: "test-s4dn-3aos-dn338",
+      });
+  
+      const response = await transferapplication({
+        fileNumber,
+        locationIp: "115.187.62.100",
+        deviceId: "deviceId",
+        remarks,
+        districtId: selectedDistrict,
+        psId: selectedPoliceStation,
+        macAddress: "test-s4dn-3aos-dn338",
+      });
+  
+      if (response.status == 0) {
+        await fetchApplicationStatus();
+        toast({
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Successfull!</span>
+            </div>
+          ),
+          description: response?.message,
+          action: <ToastAction altText="Try again">Close</ToastAction>,
+        })
+        setRemarks("");
+        setSelectedDistrict("");
+        setSelectedPoliceStation("");
+      } else {
+        console.log("Transfer failed. No response from API.");
+      }
+    } catch (error) {
+      console.log("Error transferring application:", error);
+    }
+  };
+  
+
 
   const handleCloseTransferModal = () => {
     setIsTransferModalOpen(false)
   }
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage)
+  const totalPages = Math.ceil(filteredData?.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  const currentData = filteredData.slice(startIndex, endIndex)
+  const currentData = filteredData?.slice(startIndex, endIndex)
 
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(verificationData)
@@ -72,7 +127,7 @@ export default function PendingApplicationDatatable({ status }) {
     const doc = new jsPDF()
     doc.autoTable({
       head: [["File Number", "Applicant Name", "Police Station", "Phone No.", "Date of Birth"]],
-      body: verificationData.map((row) => [
+      body: verificationData?.map((row) => [
         row.FileNumber,
         row.ApplicantName,
         row.Ps_Name,
@@ -97,10 +152,10 @@ export default function PendingApplicationDatatable({ status }) {
     windowPrint.close()
   }
 
-  const handleAcceptFile = async (applicationId, type, remarks) => {
+  const handleAcceptFile = async (applicationId, type, remarks, mobile) => {
     try {
       // Implement the logic for accepting the file
-      const response = await updateEnquiryStatus(applicationId, type, remarks);
+      const response = await updateEnquiryStatus(applicationId, type, remarks, mobile);
       console.log('reponse:', response);
 
       if (response?.status == 0) {
@@ -234,6 +289,18 @@ export default function PendingApplicationDatatable({ status }) {
             </TableHeader>
             <TableBody>
               {
+                isLoading ? (
+                  Array.from({ length: 6 }).map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell><Skeleton className="h-6 w-24 bg-slate-200" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-20 bg-slate-200" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-20 bg-slate-200" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-20 bg-slate-200" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-20 bg-slate-200" /></TableCell>
+                      <TableCell><div className="flex gap-2"><Skeleton className="h-8 w-8 rounded-full bg-slate-200" /><Skeleton className="h-8 w-8 rounded-full bg-slate-200" /><Skeleton className="h-8 w-8 rounded-full bg-slate-200" /><Skeleton className="h-8 w-8 rounded-full bg-slate-200" /><Skeleton className="h-8 w-8 rounded-full bg-slate-200" /></div></TableCell>
+                    </TableRow>
+                  ))
+                ) :
                 currentData?.length ?
                   currentData?.map((row, index) => (
                     <TableRow key={index}>
@@ -267,6 +334,7 @@ export default function PendingApplicationDatatable({ status }) {
                                 setType('approve')
                                 setIsFileAcceptModalOpen(true)
                                 setSelectedDetails(row?.FileNumber)
+                                setMobile(row?.PhoneNo)
                               }}
                             >
                               <FileCheck className="mx-0 px-0" />
@@ -285,6 +353,7 @@ export default function PendingApplicationDatatable({ status }) {
                                 setType('reject')
                                 setIsFileAcceptModalOpen(true)
                                 setSelectedDetails(row?.FileNumber)
+                                setMobile(row?.PhoneNo)
                               }}
                             >
                               <FileX2 className="mx-0 px-0" />
@@ -298,7 +367,7 @@ export default function PendingApplicationDatatable({ status }) {
                             <Button
                               size="sm"
                               variant="default"
-                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-gray-700 hover:bg-gray-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-gray-700 hover:bg-yellow-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
                               onClick={() => {
                                 setType('query')
                                 setIsFileAcceptModalOpen(true)
@@ -308,7 +377,7 @@ export default function PendingApplicationDatatable({ status }) {
                               <FileQuestion className="mx-0 px-0" />
                             </Button>
                             <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
-                              Query
+                              Raise Query
                             </span>
                           </div>
 
@@ -316,30 +385,22 @@ export default function PendingApplicationDatatable({ status }) {
                             <Button
                               size="sm"
                               variant="default"
-                              className="bg-blue-100 ring-[0.5px] ring-blue-300 text-gray-700 hover:bg-gray-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              className="bg-gray-100 ring-[0.5px] text-gray-700 hover:bg-teal-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
                               onClick={handleOpenTransferModal}
                             >
                               <Rotate3d className="mx-0 px-0" />
                             </Button>
                             <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
-                              Transfer Application
+                              Transfer to PS
                             </span>
                             <TransferModal
                               isOpen={isTransferModalOpen}
                               onClose={handleCloseTransferModal}
                               fileNumber={row?.FileNumber}
                               applicantName={row?.ApplicantName}
-                              onTransfer={handleTransfer}
+                              onTransfer={onTransfer} // Pass the function here
                             />
                           </div>
-                          {/* <Button
-                            size="sm"
-                            variant="default"
-                            className="bg-purple-600 hover:bg-purple-700 text-white text-xs px-1 py-1"
-                            onClick={() => handleViewPPAttachment(row.fileNumber)}
-                          >
-                            View PP Attachment
-                          </Button> */}
                         </div>
                       </TableCell>
                     </TableRow>
@@ -389,6 +450,7 @@ export default function PendingApplicationDatatable({ status }) {
             applicationId={selectedDetails}
             onAccept={handleAcceptFile}
             type={type}
+            mobile={mobile}
           />
         )}
       </div>

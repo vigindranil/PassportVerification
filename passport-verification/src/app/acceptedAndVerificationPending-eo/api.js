@@ -1,22 +1,27 @@
 import { postRequest } from "../commonAPI";
 
-export const updateEnquiryStatus = async (applicationId, remarks) => {
-    try {
-        const macAddress = "-";
-        const locationIp = "-";
-        const deviceId = "-";
-        
-        return await postRequest("application/updateEnquiryStatus", {
-            "ApplicationID": applicationId,
-            "locationIp": "115.187.62.100",
-            "macAddress": "t23d-s4dn-3aos-dn338",
-            "deviceId": "98nf39937mp2eq",
-            "StatusID": "10",
-            "StatusText": "Verified by EO",
-            "Remarks": remarks
-        });
-    } catch (error) {
-        console.log("Error:", error);
-        return null;
-    }
-}
+export const updateEnquiryStatus = async (
+  applicationId,
+  remarks,
+  type = "approve"
+) => {
+  try {
+    const use_details = await fetch("https://ipinfo.io/json");
+    const user_details_json = await use_details.json();
+    const locationIp = user_details_json?.ip || "-";
+
+    return await postRequest("application/updateEnquiryStatus", {
+      ApplicationID: applicationId,
+      locationIp: locationIp,
+      macAddress: "-",
+      deviceId: "-",
+      StatusID: "10",
+      StatusText:
+        type == "approve" ? "Recommended by EO" : "Not Recommended by EO",
+      Remarks: remarks,
+    });
+  } catch (error) {
+    console.log("Error:", error);
+    return null;
+  }
+};

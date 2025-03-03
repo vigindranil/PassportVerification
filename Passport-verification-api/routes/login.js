@@ -1,5 +1,5 @@
 import express from "express";
-import { sendOtp } from '../controllers/authController.js';
+import { sendOtp, sendOtpV1, verifyOtpV1 } from '../controllers/authController.js';
 const router = express.Router();
 
 
@@ -39,5 +39,7 @@ const router = express.Router();
  *         description: Internal server error.
  */
 router.post('/sendOtp', sendOtp);
+router.post('/sendOtpV1', sendOtpV1);
+router.post('/verifyOtpV1', verifyOtpV1);
 
 export default router;

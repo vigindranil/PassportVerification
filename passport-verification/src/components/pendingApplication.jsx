@@ -8,15 +8,17 @@ import { Skeleton } from "@/components/ui/skeleton"
 import * as XLSX from "xlsx"
 import jsPDF from "jspdf"
 import "jspdf-autotable"
-import { getApplicationStatus } from "@/app/totalPending/api"
+import { getApplicationStatus, revokeEnquiryStatus } from "@/app/totalPending/api"
 import moment from "moment"
 import { useRouter } from "next/navigation"
-import { CheckCircle2, CircleCheckBig, FileUser } from "lucide-react"
+import { CheckCircle2, CircleCheckBig, CircleX, Cross, FileCheck, FileUser, Rotate3d, RotateCcw } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import Cookies from "react-cookies";
 import { FileAcceptModal } from "./approve-reject-modal"
+import { TransferModal } from "@/components/transferModal"
 import { updateEnquiryStatus } from "@/app/acceptedAndVerificationPending-eo/api"
+import { transferapplication } from "@/app/allFiles-sp/api"
 
 export default function PendingApplicationDatatable({ status, heading, period, flag }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
@@ -26,9 +28,13 @@ export default function PendingApplicationDatatable({ status, heading, period, f
   const itemsPerPage = 6
   const [isLoading, setIsLoading] = useState(true)
   const [verificationData, setVerificationData] = useState([])
+  const [remarks, setRemarks] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedPoliceStation, setSelectedPoliceStation] = useState("");
   const router = useRouter()
   const user_role = Cookies.load('type');
   const [isFileAcceptModalOpen, setIsFileAcceptModalOpen] = useState(false)
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
   const [type, setType] = useState("reject");
 
   const filteredData = verificationData?.filter((row) =>
@@ -47,10 +53,107 @@ export default function PendingApplicationDatatable({ status, heading, period, f
     }
   }
 
-  const handleCompleteVerification = async (applicationId, remarks) => {
+  const handleCompleteVerification = async (applicationId, remarks = "Recommend for Apporval") => {
     try {
       // Implement the logic for accepting the file
-      const response = await updateEnquiryStatus(applicationId, remarks);
+      let response = null;
+      if(type == "revoke"){
+        response = await revokeEnquiryStatus(applicationId, remarks);
+      } else {
+        response = await updateEnquiryStatus(applicationId, remarks, type);
+      }
+      console.log('reponse:', response);
+
+      if (response?.status == 0) {
+        await fetchApplicationStatus();
+        toast({
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Successfull!</span>
+            </div>
+          ),
+          description: response?.message,
+          action: <ToastAction altText="Try again">Close</ToastAction>,
+        })
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Failed to update status!",
+          description: response?.message,
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        })
+      }
+    } catch (e) {
+      console.log('Error:', e);
+      toast({
+        variant: "destructive",
+        title: "Failed to update status!",
+        description: 'An error occurred',
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
+    }
+  }
+
+  const onTransfer = async (fileNumber, remarks, selectedDistrict, selectedPoliceStation) => {
+    if (!selectedDistrict || !selectedPoliceStation) {
+      console.log("Please fill in all fields before transferring.");
+      return;
+    }
+
+    try {
+      console.log("Calling API with:", {
+        fileNumber,
+        locationIp: "115.187.62.100",
+        deviceId: "deviceId",
+        remarks,
+        districtId: selectedDistrict,
+        psId: selectedPoliceStation,
+        macAddress: "test-s4dn-3aos-dn338",
+      });
+
+      const response = await transferapplication({
+        fileNumber,
+        locationIp: "115.187.62.100",
+        deviceId: "deviceId",
+        remarks,
+        districtId: selectedDistrict,
+        psId: selectedPoliceStation,
+        macAddress: "test-s4dn-3aos-dn338",
+      });
+
+      if (response.status == 0) {
+        await fetchApplicationStatus();
+        toast({
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Successfull!</span>
+            </div>
+          ),
+          description: response?.message,
+          action: <ToastAction altText="Try again">Close</ToastAction>,
+        })
+        setRemarks("");
+        setSelectedDistrict("");
+        setSelectedPoliceStation("");
+        setIsTransferModalOpen(false)
+      } else {
+        console.log("Transfer failed. No response from API.");
+      }
+    } catch (error) {
+      console.log("Error transferring application:", error);
+    }
+  };
+
+  const handleCloseTransferModal = () => {
+    setIsTransferModalOpen(false)
+  }
+
+  const handleAcceptFile = async (applicationId, type, remarks) => {
+    try {
+      // Implement the logic for accepting the file
+      const response = await updateEnquiryStatus(applicationId, type, remarks);
       console.log('reponse:', response);
 
       if (response?.status == 0) {
@@ -123,6 +226,18 @@ export default function PendingApplicationDatatable({ status, heading, period, f
     windowPrint.focus()
     windowPrint.print()
     windowPrint.close()
+  }
+
+  const handleOpenTransferModal = () => {
+    setIsTransferModalOpen(true)
+  }
+
+
+  const handleTransfer = () => {
+    onTransfer(selectedDetails, remarks, selectedDistrict, selectedPoliceStation)
+    setRemarks("")
+    setSelectedDistrict("")
+    setSelectedPoliceStation("")
   }
 
   return (
@@ -206,23 +321,85 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                             View Application
                           </span>
                         </div>
-                        {(user_role == 40 && flag == "eo-accepted-file") && <div className="relative group">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="bg-stone-100 ring-[0.5px] ring-slate-300 text-green-700 hover:bg-green-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
-                            onClick={() => {
-                              setType('approve')
-                              setIsFileAcceptModalOpen(true)
-                              setSelectedDetails(row.FileNumber)
-                            }}
-                          >
-                            <CircleCheckBig className="mx-0 px-0" />
-                          </Button>
-                          <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
-                            Complete Verification
-                          </span>
-                        </div>}
+                        {(user_role == 40 && flag == "eo-accepted-file") &&
+                          <>
+                            <div className="relative group">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="bg-stone-100 ring-[0.5px] ring-slate-300 text-green-700 hover:bg-green-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                                onClick={() => {
+                                  setType('approve')
+                                  setIsFileAcceptModalOpen(true)
+                                  setSelectedDetails(row.FileNumber)
+                                }}
+                              >
+                                <CircleCheckBig className="mx-0 px-0" />
+                              </Button>
+                              <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                                Recommend Application
+                              </span>
+                            </div>
+                            <div className="relative group">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="bg-stone-100 ring-[0.5px] ring-slate-300 text-red-700 hover:bg-red-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                                onClick={() => {
+                                  setType('reject')
+                                  setIsFileAcceptModalOpen(true)
+                                  setSelectedDetails(row.FileNumber)
+                                }}
+                              >
+                                <CircleX className="mx-0 px-0" />
+                              </Button>
+                              <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                                Not Recommend
+                              </span>
+                            </div>
+                          </>
+                        }
+                        {/* {(user_role == 10) &&
+                          <div className="relative group">
+                            <Button
+                              size="sm"
+                              variant="default"
+                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-teal-700 hover:bg-teal-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              onClick={handleOpenTransferModal}
+                            >
+                              <Rotate3d className="mx-0 px-0" />
+                            </Button>
+                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                              Transfer to PS
+                            </span>
+                            <TransferModal
+                              isOpen={isTransferModalOpen}
+                              onClose={handleCloseTransferModal}
+                              fileNumber={row?.FileNumber}
+                              applicantName={row?.ApplicantName}
+                              onTransfer={onTransfer} // Pass the function here
+                            />
+                          </div>
+                        } */}
+                         {(user_role == 10 && status == 2) && (
+                          <div className="relative group">
+                            <Button
+                              size="sm"
+                              variant="default"
+                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-yellow-700 hover:bg-yellow-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              onClick={() => {
+                                setType("revoke")
+                                setIsFileAcceptModalOpen(true)
+                                setSelectedDetails(row?.FileNumber)
+                              }}
+                            >
+                              <RotateCcw className="mx-0 px-0" />
+                            </Button>
+                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                              Revoke Application
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -238,7 +415,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
           </Table>
         </div>
         <div className="flex items-center justify-between mt-4 text-sm">
-        <div>
+          <div>
             Showing {filteredData ? startIndex + 1 : 0} to {filteredData ? Math.min(endIndex, filteredData.length) : 0}{" "}
             of {filteredData?.length || 0} entries
           </div>

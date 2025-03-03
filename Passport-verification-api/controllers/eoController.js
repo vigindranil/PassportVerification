@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   saveDocumentUploadModel,
   getDocumentUploadDetailsModel,
@@ -8,6 +9,7 @@ import {
 import { saveTransactionHistory } from "../models/logModel.js";
 import logger from "../utils/logger.js";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { sendSMSInternally } from "./thirdPartyAPI.js";
 
 export const saveDocumentUpload = async (req, res) => {
   try {
@@ -111,7 +113,7 @@ export const saveDocumentUpload = async (req, res) => {
 
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
-      Key: `${Date.now()}-${req.file.originalname}`, // Unique name for the file
+      Key: `${ApplicationId}-${DocumentTypeId}`, // Unique name for the file
       Body: req.file.buffer,
       ContentType: req.file.mimetype || "application/octet-stream", // Set content type dynamically
       ACL: "public-read", // This allows the file to be publicly readable
@@ -350,14 +352,48 @@ export const saveCaseAssign = async (req, res) => {
       macAddress,
       locationIp,
       deviceId,
+      dateOfBirth,
+      mobile,
     } = req.body;
     const entryUserId = req.user.UserID;
-    const file = req.file;
-    const filepath = req?.file_name;
+    let filepath = "";
+    let messageDocUrl = "";
+    const dob = new Date(dateOfBirth);
 
-    console.log("applicationId", applicationId);
-    if (!file) {
-      return res.status(400).json({ status: 1, message: "No file uploaded" });
+    const pp_document = {
+      "citizen_type_1_(1950-01-26_to_1987-06-30)": "https://wb-passport-verify.s3.ap-south-1.amazonaws.com/citizen_type_1_(1950-01-26_to_1987-06-30)",
+      "citizen_type_1_(1987-07-01_to_2004-12-02)": "https://wb-passport-verify.s3.ap-south-1.amazonaws.com/citizen_type_1_(1987-07-01_to_2004-12-02)",
+      "citizen_type_1_(2004-12-03_onwards)": "https://wb-passport-verify.s3.ap-south-1.amazonaws.com/citizen_type_1_(2004-12-03_onwards)",
+      "citizen_type_2_Citizen_by_Naturalization": "https://wb-passport-verify.s3.ap-south-1.amazonaws.com/citizen_type_2_Citizen_by_Naturalization",
+      "citizen_type_3_Citizen_by_Registration": "https://wb-passport-verify.s3.ap-south-1.amazonaws.com/citizen_type_3_Citizen_by_Registration",
+      "citizen_type_4_Citizen_by_Descent": "https://wb-passport-verify.s3.ap-south-1.amazonaws.com/citizen_type_4_Citizen_by_Descent",
+    }
+
+    if (citizentype == 1) {
+      if (dob >= new Date("1950-01-26") && dob < new Date("1987-07-01")) {
+        filepath = pp_document["citizen_type_1_(1950-01-26_to_1987-06-30)"]
+        messageDocUrl = "wbpassportverify.link/uploads/1.pdf";
+      }
+      else if (dob >= new Date("1987-07-01") && dob < new Date("2004-12-03")) {
+        filepath = pp_document["citizen_type_1_(1987-07-01_to_2004-12-02)"]
+        messageDocUrl = "wbpassportverify.link/uploads/2.pdf";
+      }
+      else if (dob >= new Date("2004-12-03")) {
+        filepath = pp_document["citizen_type_1_(2004-12-03_onwards)"]
+        messageDocUrl = "wbpassportverify.link/uploads/3.pdf";
+      }
+    }
+    if (citizentype == 2) {
+      filepath = pp_document["citizen_type_2_Citizen_by_Naturalization"]
+      messageDocUrl = "wbpassportverify.link/uploads/4.pdf";
+    }
+    else if (citizentype == 3) {
+      filepath = pp_document["citizen_type_3_Citizen_by_Registration"]
+      messageDocUrl = "wbpassportverify.link/uploads/4.pdf";
+    }
+    else if (citizentype == 4) {
+      filepath = pp_document["citizen_type_4_Citizen_by_Descent"]
+      messageDocUrl = "wbpassportverify.link/uploads/4.pdf";
     }
 
     if (!applicationId || !citizentype) {
@@ -372,47 +408,20 @@ export const saveCaseAssign = async (req, res) => {
     const OperationName = "saveCaseAssign";
     const json = "{}";
 
-    console.log("entryUserId", entryUserId);
 
     //  const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, 0, OperationName, json, entryUserId)
 
-    
-    // Initialize S3 Client
-    const s3 = new S3Client({
-      region: process.env.AWS_REGION,
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      },
-    });
-
-    // Check if the S3 bucket exists
-
-    const params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: `${applicationId}-${citizentype}-${Date.now()}`, // Unique name for the file
-      Body: req.file.buffer,
-      ContentType: req.file.mimetype || "application/octet-stream", // Set content type dynamically
-      ACL: "public-read", // This allows the file to be publicly readable
-    };
-    try {
-      await s3.send(new PutObjectCommand(params));
-    } catch (error) {
-      console.error("S3 Upload Error:", error);
-      throw new Error("Failed to upload file to S3");
-    }
     const errorCode = await saveCaseAssignModel(
       applicationId,
       citizentype,
       jsonTEXT,
-      `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`,
+      filepath,
       macAddress,
       locationIp,
       deviceId,
       entryUserId
     );
 
-    console.log("errorCode", errorCode);
 
     if (errorCode == 0) {
       logger.debug(
@@ -433,15 +442,31 @@ export const saveCaseAssign = async (req, res) => {
           },
         })
       );
+
+      const smstext = `Passport Verification Process initiated ${applicationId}, required documents link ${messageDocUrl} - WB Police`;
+      const mobileNumber = mobile;
+      // const mobileNumber = "6202734737";
+      const smsCategory = "process initiated";
+      const tpid = "1307174055755232946";
+
+      const smsStatus = await sendSMSInternally(smstext, mobileNumber, smsCategory, tpid);
+
       return res.status(200).json({
         status: 0,
         message: "Case assigned successfully",
-        file_path: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`
+        file_path: filepath,
+        smsStatus,
+        smstext
       });
-    } else if (errorCode === 3) {
+    } else if (errorCode == 3) {
       return res.status(400).json({
         status: 1,
         message: "Logged in user does not have permission to add case",
+      });
+    } else if (errorCode == 4) {
+      return res.status(400).json({
+        status: 1,
+        message: "Application is already assigned to another EO",
       });
     } else {
       logger.debug(

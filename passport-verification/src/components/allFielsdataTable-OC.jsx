@@ -248,7 +248,7 @@ export default function PendingApplicationDatatable({ status }) {
                               <FileCheck className="mx-0 px-0" />
                             </Button>
                             <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
-                              Approve Application
+                              Recommend Application
                             </span>
                           </div>
 
@@ -266,7 +266,7 @@ export default function PendingApplicationDatatable({ status }) {
                               <FileX2 className="mx-0 px-0" />
                             </Button>
                             <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
-                              Reject Application
+                              Not Recommend
                             </span>
                           </div>
                           {/* <Button

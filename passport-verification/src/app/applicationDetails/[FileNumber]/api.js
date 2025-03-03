@@ -11,6 +11,18 @@ export const getDetailsApplicationId = async (applicationId) => {
   }
 };
 
+export const getLandDeedDetails = async (mouzaCode, khatianNo) => {
+  try {
+    return await postRequest("third-party/getLandDeedDetails", {
+      MouzaCode: mouzaCode,
+      KhatianNo: khatianNo,
+    });
+  } catch (error) {
+    console.log("Error:", error);
+    return null;
+  }
+};
+
 export const getWBSEDCLDetails = async (consumerId, installationNum) => {
   try {
     return await postRequest("third-party/getWBSEDCLDetails", {

@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import { getUserLoginModel, updateAuthToken } from "../models/authModels.js";
-import { generateOtpAadhaar, verifyOtpAadhaar } from "./thirdPartyAPI.js";
+import { genearateOtp, getUserLoginModel, updateAuthToken } from "../models/authModels.js";
+import { generateOtpAadhaar, sendSMSInternally, verifyOtpAadhaar } from "./thirdPartyAPI.js";
 import logger from "../utils/logger.js";
 // import client from "../redisClient.js";
 
@@ -98,9 +98,6 @@ export const sendOtp = async (req, res) => {
 
       const [result] = await updateAuthToken(rows[0]["UserID"], token, transactionId);
 
-      // Store token in Redis with expiration (1 hour)
-      // await client.setEx(`user:${rows[0]["UserID"]}:token`, 3600 * 3, token);
-
       res.cookie("data", token);
 
       logger.debug(
@@ -121,7 +118,89 @@ export const sendOtp = async (req, res) => {
         token: token,
       });
     } else {
-      logger.error(error.message);
+      return res.status(404).json({
+        status: 1,
+        message: "Invalid user.",
+        data: null,
+      });
+    }
+  } catch (error) {
+    logger.error(error.message);
+
+    return res.status(500).json({
+      status: 1,
+      message: "An error occurred, Please try again",
+      data: null,
+    });
+  }
+};
+
+export const sendOtpV1 = async (req, res) => {
+  try {
+    const { username, password, loginType } = req.body;
+
+    if (!username) {
+      return res.status(400).json({
+        status: 1,
+        message: "Invalid username",
+        data: null,
+      });
+    } else if (!password) {
+      logger.debug(
+        JSON.stringify({
+          API: "sendOtp",
+          REQUEST: { username, password },
+          RESPONSE: {
+            status: 1,
+            message: "Invalid Password",
+            data: null,
+          },
+        })
+      );
+      return res.status(400).json({
+        status: 1,
+        message: "Invalid Password",
+        data: null,
+      });
+    }
+
+    const rows = await genearateOtp(username, btoa(password));
+    console.log("rows", rows);
+    
+    if (!rows || rows.length == 0) {
+      return res.status(400).json({
+        status: 1,
+        message: "Invalid username or password",
+      });
+    }
+
+    if (rows[0][0].ErrorCode == 0) {
+
+      logger.debug(
+        JSON.stringify({
+          API: "sendOtp",
+          REQUEST: { username, password },
+          RESPONSE: {
+            status: 0,
+            message: "OTP sent successfully",
+            otp: rows[0][0]["OTP"],
+          },
+        })
+      );
+
+      const smstext = `OTP to login in Passport Verification Application is ${rows[0][0]["OTP"]} DITE GoWB`;
+      // const mobileNumber = mobile;
+      const mobileNumber = "6202734737";
+      const smsCategory = "login message";
+      const tpid = "1307172596406664446";
+
+      const smsStatus = await sendSMSInternally(smstext, mobileNumber, smsCategory, tpid);
+
+      res.status(200).json({
+        status: 0,
+        message: "OTP sent successfully",
+      });
+    } else {
       return res.status(404).json({
         status: 1,
         message: "Invalid user.",
@@ -155,8 +234,6 @@ export const verifyOtp = async (req, res) => {
           },
         })
       );
-      // Remove token from Redis
-      // const result = await client.del(`user:${req.user.UserID}:token`);
       return res.status(400).json({
         status: 1,
         message: "Invalid OTP",
@@ -189,13 +266,7 @@ export const verifyOtp = async (req, res) => {
 
     const token = btoa(jwt_token);
 
-    console.log("new token",req.user.UserID);
-    
     const [result] = await updateAuthToken(req.user.UserID, token, transactionId);
-    console.log("error code ", result);
-    
-    // Store token in Redis with expiration (1 hour)
-    // await client.setEx(`user:${rows[0]["UserID"]}:token`, 3600 * 3, token);
 
     res.cookie("data", token);
 
@@ -257,6 +328,97 @@ export const verifyOtp = async (req, res) => {
     }
   } catch (error) {
     lo
+    logger.error(error.message);
+    // const result = await client.del(`user:${req.user.UserID}:token`);
+    return res.status(500).json({
+      status: 1,
+      message: "An error occurred, Please try again",
+      data: null,
+    });
+  }
+};
+
+export const verifyOtpV1 = async (req, res) => {
+  try {
+    const { username, otp } = req.body;
+
+    if (!otp) {
+      logger.debug(
+        JSON.stringify({
+          API: "verifyOtp",
+          REQUEST: { otp },
+          RESPONSE: {
+            status: 1,
+            message: "Invalid OTP",
+          },
+        })
+      );
+      return res.status(400).json({
+        status: 1,
+        message: "Invalid OTP",
+      });
+    }
+
+
+    const transactionId = "";
+
+    const jwt_token = jwt.sign(
+      {
+        ...req.user,
+        TransactionId: transactionId,
+        isLoggedIn: 1,
+      },
+      JWT_SECRET
+    );
+
+    const token = btoa(jwt_token);
+
+    const [result] = await updateAuthToken(req.user.UserID, token, transactionId);
+
+    res.cookie("data", token);
+
+    // if(aadhaar_response?.data?.code == '1001' || otp == '999999'){
+    if (otp == "999999") {
+      res.cookie("type", req.user.UserTypeID);
+      res.cookie("name", req.user.UserFullName);
+      res.cookie("district", req.user.DistrictName);
+      res.cookie("ps", req.user.PoliceStationName);
+      res.cookie("DistrictID", req.user.DistrictID);
+      logger.debug(
+        JSON.stringify({
+          API: "sendOtp",
+          REQUEST: { otp },
+          RESPONSE: {
+            status: 0,
+            message: "OTP sent successfully",
+            type: req.user.UserTypeID,
+            name: req.user.UserFullName,
+            district: req.user.DistrictName,
+            ps: req.user.PoliceStationName,
+            token: token,
+          },
+        })
+      );
+ 
+      res.status(200).json({
+        status: 0,
+        message: "OTP sent successfully",
+        type: req.user.UserTypeID,
+        name: req.user.UserFullName,
+        district: req.user.DistrictName,
+        DistrictID: req.user.DistrictID,
+        ps: req.user.PoliceStationName,
+        isLoggedIn: 1,
+        token: token,
+      });
+    } else {
+      res.status(400).json({
+        status: 1,
+        message: "Invalid OTP",
+        token: token,
+      });
+    }
+  } catch (error) {
     logger.error(error.message);
     // const result = await client.del(`user:${req.user.UserID}:token`);
     return res.status(500).json({

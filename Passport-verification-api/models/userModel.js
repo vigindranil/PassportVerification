@@ -64,7 +64,6 @@ export async function saveUserRegistrationModel(
 }
 
 
-
 export async function updateUserActivationStatusModel(
   UserID,
   ActivationStatus,
