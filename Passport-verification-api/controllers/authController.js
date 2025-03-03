@@ -93,6 +93,8 @@ export const sendOtp = async (req, res) => {
       );
 
       const token = btoa(jwt_token);
+      console.log("token");
+      
 
       const [result] = await updateAuthToken(rows[0]["UserID"], token, transactionId);
 
@@ -187,8 +189,11 @@ export const verifyOtp = async (req, res) => {
 
     const token = btoa(jwt_token);
 
+    console.log("new token",req.user.UserID);
     
-
+    const [result] = await updateAuthToken(req.user.UserID, token, transactionId);
+    console.log("error code ", result);
+    
     // Store token in Redis with expiration (1 hour)
     // await client.setEx(`user:${rows[0]["UserID"]}:token`, 3600 * 3, token);
 
@@ -251,6 +256,7 @@ export const verifyOtp = async (req, res) => {
       });
     }
   } catch (error) {
+    lo
     logger.error(error.message);
     // const result = await client.del(`user:${req.user.UserID}:token`);
     return res.status(500).json({

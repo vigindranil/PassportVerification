@@ -27,10 +27,10 @@ export async function updateAuthToken(
         ]
     );
 
-    console.log("");
-    
+    const error_code = await pool.query("SELECT @ErrorCode AS ErrorCode;");
+    console.log("error_code", error_code);
 
-    return await pool.query("SELECT @ErrorCode AS ErrorCode;");
+    return error_code;
 
 }
 

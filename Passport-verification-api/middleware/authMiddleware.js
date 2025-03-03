@@ -21,13 +21,13 @@ const verifyToken = async (req, res, next) => {
     // sp for check session token
     
     const [rows] = await getUserVerifyToken(decoded.UserID);
-    console.log("local token",token);
-    console.log("db token",rows?.JWTToken);
+    console.log("local token",token_base64);
+    console.log("\ndb token",rows?.JWTToken);
     
-    if (new Date() > rows?.TokenValidUpto) {
-      return res.status(401).json({status: 1, message: 'Token expired! Please Login again to continue.' });
-    } else
-    if(rows?.JWTToken != token){
+    // if (new Date() > rows?.TokenValidUpto) {
+    //   return res.status(401).json({status: 1, message: 'Token expired! Please Login again to continue.' });
+    // } else
+    if(rows?.JWTToken != token_base64){
       return res.status(401).json({status: 1, message: 'Access denied! Unauthorized access.' });
     }
 
