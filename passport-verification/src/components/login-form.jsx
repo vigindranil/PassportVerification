@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { OTPInput } from "@/components/otp-input"
 import { User, Lock, Eye, EyeOff, RotateCcw, LoaderCircle, CheckCircle2, AlertCircle } from 'lucide-react'
-import { sendOtp, verifyOtp } from "@/app/login/api"
+import { sendOtp, sendOtpV1, verifyOtp } from "@/app/login/api"
 import { useToast } from "../hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import Cookies from "react-cookies";
@@ -33,7 +33,6 @@ const LoginForm = () => {
     setLoadingOtpSend(true)
     try {
       const response = await sendOtp(username, password)
-      console.log("sendOtp", response)
 
       if (response?.status == 0) {
         toast({
@@ -81,7 +80,6 @@ const LoginForm = () => {
 
     try {
       const response = await verifyOtp(otp)
-      console.log("response", response);
 
       if (response?.status == 0) {
         const type = Cookies.load('type');

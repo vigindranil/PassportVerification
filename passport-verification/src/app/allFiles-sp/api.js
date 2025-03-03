@@ -2,14 +2,14 @@ import { postFileRequest, postRequest } from "../commonAPI";
 
 export const updateEnquiryStatus = async (applicationId, type, remarks, mobile) => {
     try {
-        const macAddress = "-";
-        const locationIp = "-";
-        const deviceId = "-";
+      const use_details = await fetch("https://ipinfo.io/json");
+      const user_details_json = await use_details.json();
+      const locationIp = user_details_json?.ip || "-";
         return await postRequest("application/updateEnquiryStatus", {
             "ApplicationID": applicationId,
-            "locationIp": "115.187.62.100",
-            "macAddress": "test-s4dn-3aos-dn338",
-            "deviceId": "123#df",
+            "locationIp": locationIp,
+            "macAddress": "-",
+            "deviceId": "-",
             "StatusID": "80",
             "StatusText": type == 'approve' ? 'SP APPROVED' : 'SP NOT APPROVE',
             "Remarks": remarks,
