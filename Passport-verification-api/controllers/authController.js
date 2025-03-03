@@ -96,6 +96,9 @@ export const sendOtp = async (req, res) => {
 
       const [result] = await updateAuthToken(rows[0]["UserID"], token, transactionId);
 
+      // Store token in Redis with expiration (1 hour)
+      // await client.setEx(`user:${rows[0]["UserID"]}:token`, 3600 * 3, token);
+
       res.cookie("data", token);
 
       logger.debug(
