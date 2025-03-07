@@ -11,7 +11,7 @@ import { getRequiredDocuments } from "@/app/allFiles/api"
 
 export function FileAcceptModal({ isOpen, onClose, fileData, onAccept }) {
   const [isLoading, setIsLoading] = useState(false)
-  const [citizenType, setCitizenType] = useState("")
+  const [citizenType, setCitizenType] = useState("1")
   const [requiredDocuments, setRequiredDocuments] = useState([]);
   const [onChangeLoading, setOnChangeLoading] = useState(false);
   const dob = fileData?.DateOfBirth?.split("T")[0];
@@ -62,9 +62,9 @@ export function FileAcceptModal({ isOpen, onClose, fileData, onAccept }) {
               <div className="mt-1">{fileData?.FileNumber}</div>
             </div>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 hidden">
             <Label>Citizen Type<span className="text-red-500">*</span></Label>
-            <Select value={citizenType} onValueChange={(value) => handleCitizenOnChange(value)}>
+            <Select value={1} onValueChange={(value) => handleCitizenOnChange(value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Citizen Type" />
               </SelectTrigger>

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { OTPInput } from "@/components/otp-input"
 import { User, Lock, Eye, EyeOff, RotateCcw, LoaderCircle, CheckCircle2, AlertCircle } from 'lucide-react'
-import { sendOtp, sendOtpV1, verifyOtp } from "@/app/login/api"
+import { sendOtp, sendOtpV1, verifyOtp, verifyOtpV1 } from "@/app/login/api"
 import { useToast } from "../hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import Cookies from "react-cookies";
@@ -32,7 +32,8 @@ const LoginForm = () => {
     setError("")
     setLoadingOtpSend(true)
     try {
-      const response = await sendOtp(username, password)
+      // const response = await sendOtp(username, password)
+      const response = await sendOtpV1(username, password)
 
       if (response?.status == 0) {
         toast({
@@ -79,7 +80,8 @@ const LoginForm = () => {
     setLoadingOtpVerify(true)
 
     try {
-      const response = await verifyOtp(otp)
+      const response = await verifyOtpV1(username, otp);
+      // const response = await verifyOtp(otp);
 
       if (response?.status == 0) {
         const type = Cookies.load('type');
@@ -108,13 +110,11 @@ const LoginForm = () => {
               <span>Failed to Verify OTP!</span>
             </div>
           ),
-          description: "Something went wrong, Please try again",
+          description: response.message,
           action: <ToastAction altText="Try again">Try again</ToastAction>,
         })
-        setError(response.message)
       }
     } catch (error) {
-      console.log(error.message);
 
       toast({
         variant: "destructive",
@@ -137,7 +137,8 @@ const LoginForm = () => {
     setLoadingResendOtp(true)
 
     try {
-      const response = await sendOtp(username, password)
+      // const response = await sendOtp(username, password)
+      const response = await sendOtpV1(username, password)
       setMessage(`OTP sent successfully`)
       if (response) {
         setShowOtp(true)

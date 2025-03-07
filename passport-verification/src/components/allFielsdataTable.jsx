@@ -155,13 +155,7 @@ export default function PendingApplicationDatatable({ status }) {
 
   const handleAcceptFile = async (applicationId, citizentype, dateOfBirth, mobileNo) => {
     try {
-      if (!citizentype) {
-        toast({
-          variant: "destructive",
-          title: "Select Citizen Type!",
-          description: "Please select citizen type and then try again",
-        })
-      }
+      
       if (!dateOfBirth) {
         toast({
           variant: "destructive",

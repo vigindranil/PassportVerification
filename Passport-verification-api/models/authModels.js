@@ -35,8 +35,16 @@ export async function getUserVerifyToken(UserID) {
 
 export async function genearateOtp(username, password) {
   const [rows] = await pool.query(
-    "CALL sp_genearateotp(?, ?, @p_otp ,@ErrorCode);",
+    "CALL sp_genearateotp(?, ?, @p_otp, @contactNumber, @ErrorCode);",
     [username, password]
   );
-  return await pool.query("SELECT @p_otp AS OTP, @ErrorCode AS ErrorCode;");
+  return await pool.query("SELECT @p_otp AS OTP, @contactNumber AS ContactNumber, @ErrorCode AS ErrorCode;");
+}
+
+export async function checkOTP(username, otp) {
+  const [rows] = await pool.query(
+    "CALL sp_checkOTP(?, ?, @userDetails, @ErrorCode);",
+    [username, otp]
+  );
+  return await pool.query("SELECT @userDetails AS UserDetails, @ErrorCode AS ErrorCode;");
 }

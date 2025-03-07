@@ -71,7 +71,7 @@ export const fileUploadS3Bucket = async (req, res) => {
     // Check if the S3 bucket exists
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
-      Key: `citizen_type_1_(1987-07-01_to_2004-12-02)`, // Unique name for the file
+      Key: `docs`, // Unique name for the file
       Body: req.file.buffer,
       ContentType: req.file.mimetype || "application/octet-stream", // Set content type dynamically
       ACL: "public-read", // This allows the file to be publicly readable
