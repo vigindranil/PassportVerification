@@ -21,6 +21,8 @@ import getSpecialEnquiryOfficers from "./routes/enquiryOfficer.js";
 import updateCriminalInfo from './routes/crime.js';
 import transferapplication from './routes/spRoutes.js'
 import requireDocument from './routes/requiredDocsRoutes.js'
+import s3uploadRoutes from "./routes/s3-upload.js";
+import s3downloadRoutes from "./routes/s3-download.js";
 
 
 const app = express();
@@ -95,6 +97,8 @@ const upload = multer({ storage: storage });
 app.use("/api/", logRoutes);
 app.use("/api/auth/", loginRoutes);
 app.use("/api/third-party/", thirdPartyRoutes);
+app.use("/api/s3-upload", upload.single("file"), s3uploadRoutes);
+app.use("/api/s3-download", s3downloadRoutes);
 
 //private Route
 app.use("/api/auth/", verifyToken, authRoutes);

@@ -79,19 +79,29 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
         consumerId,
         installationNum
       );
-      toast({
-        title: (
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-5 w-5 text-green-500" />
-            <span>Success!</span>
-          </div>
-        ),
-        description: "Data has been successfully retrieved",
-        action: (
-          <ToastAction altText="close">Close</ToastAction>
-        ),
-      })
-      setVerifiedResponse(response || "");
+      if (response?.data?.messageCode == "04" || response?.status == 400) {
+        toast({
+          variant: "destructive",
+          title: "Failure!",
+          description: "Invalid Installation Number or Consumer ID",
+        })
+        setVerifiedResponse(null);
+      }
+      else {
+        toast({
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Success!</span>
+            </div>
+          ),
+          description: "Data has been successfully retrieved",
+          action: (
+            <ToastAction altText="close">Close</ToastAction>
+          ),
+        })
+        setVerifiedResponse(response || "");
+      }
     } catch (error) {
       console.log(error);
       toast({
@@ -553,13 +563,13 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                       }
                     </div>
                   </div>}
-                  
+
                   {/* Remarks */}
                   {((type != "pdf") && (userType != 10) && (docType != 1 && docType != 8 && docType != 26 && docType != 25)) && <div className={`w-1/2 p-10 h-full`}>
                     <div className="px-2">
-                    
+
                       <div>
-                        <p><span className="font-bold">Remarks against the document:</span><br/> {selectedImage?.Remarks || "N/A"}</p>
+                        <p><span className="font-bold">Remarks against the document:</span><br /> {selectedImage?.Remarks || "N/A"}</p>
                       </div>
 
                     </div>

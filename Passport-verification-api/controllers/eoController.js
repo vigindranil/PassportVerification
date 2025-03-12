@@ -358,6 +358,7 @@ export const saveCaseAssign = async (req, res) => {
     const entryUserId = req.user.UserID;
     let filepath = "";
     let messageDocUrl = "";
+    const fixedDoc = "wbpassportverify.link/uploads/doc.pdf";
     const dob = new Date(dateOfBirth);
 
     const pp_document = {
@@ -415,7 +416,7 @@ export const saveCaseAssign = async (req, res) => {
       applicationId,
       citizentype,
       jsonTEXT,
-      filepath,
+      fixedDoc,
       macAddress,
       locationIp,
       deviceId,
@@ -443,7 +444,7 @@ export const saveCaseAssign = async (req, res) => {
         })
       );
 
-      const smstext = `Passport Verification Process initiated ${applicationId}, required documents link ${messageDocUrl} - WB Police`;
+      const smstext = `Passport Verification Process initiated ${applicationId}, required documents link ${fixedDoc} - WB Police`;
       const mobileNumber = mobile;
       // const mobileNumber = "6202734737";
       const smsCategory = "process initiated";
@@ -454,7 +455,7 @@ export const saveCaseAssign = async (req, res) => {
       return res.status(200).json({
         status: 0,
         message: "Case assigned successfully",
-        file_path: filepath,
+        file_path: fixedDoc,
         smsStatus,
         smstext
       });

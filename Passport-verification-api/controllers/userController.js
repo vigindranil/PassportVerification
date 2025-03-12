@@ -202,6 +202,36 @@ export const saveUserRegistration = async (req, res) => {
         status: 0,
         message: "User has been created successfully",
       });
+    } else if (result == 3) {
+      logger.debug(
+        JSON.stringify({
+          API: "saveUserRegistration",
+          REQUEST: {
+            UserID,
+            UserName,
+            FullName,
+            UserPassword,
+            Firstname,
+            LastName,
+            MobileNo,
+            EmailID,
+            Gender,
+            AADHAARNo,
+            Designation,
+            UserRoleID,
+            DistrictID,
+            PSID,
+          },
+          RESPONSE: {
+            status: 1,
+            message: "Duplicate username, Please try different username",
+          },
+        })
+      );
+      return res.status(400).json({
+        status: 1,
+        message: "Duplicate username, Please try different username",
+      });
     } else {
       logger.debug(
         JSON.stringify({

@@ -2,7 +2,7 @@ import { postFileRequest, postRequest } from "../commonAPI";
 
 export const acceptApplication = async (
   applicationId,
-  citizentype,
+  citizentype = 1,
   dateOfBirth,
   mobile
 ) => {
@@ -28,7 +28,7 @@ export const acceptApplication = async (
     const macAddress = "-";
     return await postRequest("application/acceptCaseUploadDocument", {
       applicationId,
-      citizentype,
+      citizentype: 1,
       jsonTEXT,
       dateOfBirth,
       macAddress,

@@ -28,14 +28,12 @@ export const postRequest = async (url, request_body = {}) => {
       Cookies.remove("district");
       Cookies.remove("ds_id");
       window.location.href = "/session-expired";
-    } else if (!response.ok) {
-      throw new Error(response);
     } else {
       const result = await response.json(); // Assuming the API returns JSON
       return result;
     }
   } catch (error) {
-    throw error; // Propagate error to the caller
+    throw error.message; // Propagate error to the caller
   }
 };
 

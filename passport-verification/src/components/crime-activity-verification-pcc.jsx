@@ -35,7 +35,7 @@ const CrimeAcivityTablePCC = ({ selectedRows, setSelectedRows, ApplicantName, Fa
       const filterData = response?.data?.Arrest?.filter(filter =>
         filter?.FirstName?.trimStart().toUpperCase() === pccInput?.fname?.toUpperCase().trim()
         && filter?.LastName?.toUpperCase().includes(pccInput?.lname?.toUpperCase())
-        && filter.gurdainName?.toUpperCase().includes(FathersName?.toUpperCase())
+        // && filter.gurdainName?.toUpperCase().includes(FathersName?.toUpperCase())
         // && filter.psName?.toUpperCase().includes(ps?.toUpperCase())
         // && filter.distName?.toUpperCase().includes(district?.toUpperCase())
       );

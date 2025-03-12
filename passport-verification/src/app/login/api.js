@@ -70,9 +70,9 @@ export const verifyOtp = async (otp) => {
   }
 }
 
-export const verifyOtpV1 = async (otp) => {
+export const verifyOtpV1 = async (username, otp) => {
   try {
-    const data = await postRequest("auth/verifyOtpV1", { otp });
+    const data = await postRequest("auth/verifyOtpV1", { username, otp });
     Cookies.save("data", data.token);
     Cookies.save("name", data.name);
     Cookies.save("type", data.type);
@@ -80,10 +80,11 @@ export const verifyOtpV1 = async (otp) => {
     Cookies.save("district", data.district);
     Cookies.save("ds_id", data.DistrictID);
     Cookies.save("__i", 1); // otp verified
+    console.log("message", data.message)
     return data;
   } catch (error) {
     console.log("Error:", error);
-    return null;
+    return error.message;
   }
 }
 
