@@ -175,7 +175,9 @@ export const sendOtpV1 = async (req, res) => {
     }
 
     const rows = await genearateOtp(username, btoa(password));
-    console.log("rows", rows);
+
+    console.log("genrate otp", rows);
+    
 
     if (!rows || rows.length == 0) {
       return res.status(400).json({
@@ -198,8 +200,8 @@ export const sendOtpV1 = async (req, res) => {
       );
 
       const smstext = `OTP to login in Passport Verification Application is ${rows[0][0]["OTP"]} DITE GoWB`;
-      // const mobileNumber = rows[0][0]["ContactNumber"];
-      const mobileNumber = "6202734737";
+      const mobileNumber = rows[0][0]["ContactNumber"];
+      // const mobileNumber = "6202734737";
       const smsCategory = "login message";
       const tpid = "1307172596406664446";
 

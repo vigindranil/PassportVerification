@@ -43,7 +43,7 @@ const LoginForm = () => {
               <span>{response?.message || 'OTP sent successfully!'}</span>
             </div>
           ),
-          description: "A six digit code was sent to your AADHAR linked phone number",
+          description: "A six digit code was sent to your phone number",
         })
         setShowOtp(true)
       } else {
@@ -150,7 +150,7 @@ const LoginForm = () => {
               <span>OTP sent successfully!</span>
             </div>
           ),
-          description: "A six digit code was sent to your AADHAAR linked phone number",
+          description: "A six digit code was sent to your phone number",
           action: (
             <ToastAction altText="close">Close</ToastAction>
           ),

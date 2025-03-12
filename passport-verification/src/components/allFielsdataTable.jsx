@@ -48,7 +48,7 @@ export default function PendingApplicationDatatable({ status }) {
   const fetchApplicationStatus = async () => {
     try {
       setIsLoading(true)
-      const response = await getApplicationStatus(status, 30)
+      const response = await getApplicationStatus(status, 0)
       setVerificationData(response.data)
     } catch (error) {
       console.log("Error fetching application status:", error)
@@ -57,10 +57,10 @@ export default function PendingApplicationDatatable({ status }) {
     }
   }
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage)
+  const totalPages = Math.ceil(filteredData?.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  const currentData = filteredData.slice(startIndex, endIndex)
+  const currentData = filteredData?.slice(startIndex, endIndex)
 
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(verificationData)
@@ -386,7 +386,7 @@ export default function PendingApplicationDatatable({ status }) {
         </div>
         <div className="flex items-center justify-between mt-4 text-sm">
           <div>
-            Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)} of {filteredData.length} entries
+            Showing {startIndex + 1} to {Math.min(endIndex, filteredData?.length)} of {filteredData?.length} entries
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <Button

@@ -78,7 +78,7 @@ export function NavUser() {
                 </span>
                 <span className="truncate text-xs">District: {user?.district}</span>
                 {![10, 20, 50]?.includes(user?.type) && (
-                  <span className="truncate text-xs">Police Station: {user?.ps}</span>
+                  <span className="truncate text-xs">{user?.ps ? `Police Station: ${user?.ps}` : '' }</span>
                 )}
               </div>
             </SidebarMenuButton>
@@ -98,7 +98,7 @@ export function NavUser() {
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate text-xs">District: {user?.district}</span>
                   {![10, 20, 50].includes(user?.type) && (
-                    <span className="truncate text-xs">Police Station: {user?.ps}</span>
+                    <span className="truncate text-xs">{user?.ps ? `Police Station: ${user?.ps}` : '' }</span>
                   )}
                 </div>
               </div>

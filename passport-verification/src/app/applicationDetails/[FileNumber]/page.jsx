@@ -111,7 +111,8 @@ export default function Page({ FileNumber }) {
         }
         const response = await updateCriminalInfoApi(payload);
         if (response?.status == 0) {
-          await fetchData();
+          // reload
+          window.location.reload();
           toast({
             title: (
               <div className="flex items-center gap-2">
@@ -156,7 +157,7 @@ export default function Page({ FileNumber }) {
       }
       const response = await updateCriminalInfoApi(payload);
       if (response?.status == 0) {
-        await fetchData();
+        window.location.reload();
         toast({
           title: (
             <div className="flex items-center gap-2">
