@@ -62,6 +62,7 @@ const UserManagement = () => {
     AADHAARNo: "",
     Designation: "",
     UserRoleID: "",
+    aadharRegisterMobileNumber: "",
   })
 
   const [invalidInput, setInvalidInput] = useState({
