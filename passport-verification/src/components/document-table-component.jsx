@@ -339,6 +339,73 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                     )}
                   </div>
 
+                  {/* Matric Board Certificate */}
+                  {((userType != 10) && docType == 14) && <div className={`w-1/2 p-10 h-full`}>
+                  {/* {((userType != 10)) && <div className={`w-1/2 p-10 h-full`}> */}
+                    <div className="px-2">
+                      <h1 className="text-center font-bold text-xl my-3 mb-5 underline">Madhyamik Certificate (10th)</h1>
+
+                      <div>
+                        <p><span className="font-bold">Mouza Code (IDN):</span> {selectedImage?.IdNumber}</p>
+                        <p><span className="font-bold">Khatian Number:</span> {selectedImage?.IdNumber2}</p>
+                        {selectedImage?.Isverified ? <p><span className="font-bold">Verified by:</span> {selectedImage?.verifyBy ? selectedImage?.verifyBy : 'N/A'}</p> : null}
+                      </div>
+
+                      {/* current verification Land Deed Data */}
+                      {(selectedImage?.Isverified || verified || verifiedResponse) ?
+                        <>
+                          <button
+                            className={`${verified && 'cursor-not-allowed'} flex ${verified ? 'bg-green-500 hover:bg-green-500 text-slate-200' : 'bg-zinc-100 text-slate-600 border-[1.3px] hover:bg-zinc-200'}  p-1 m-1 flex items-center px-3 rounded-md mx-auto`}
+                            onClick={() => handleVerifyApplication(4, 'getLandDeedDetails', fileNo, selectedImage?.DocumentId, { IdNumber: selectedImage?.IdNumber, IdNumber2: selectedImage?.IdNumber2 }, verifiedResponse)}
+                            disabled={selectedImage?.Isverified || verifyApplicationLoading}
+                          >
+                            {(verifyApplicationLoading) ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Approving</span> : verified ? <><CheckCircle2Icon className="h-4 w-4 mr-1" /> <span>Document Verifed</span></> : <><span className="flex gap-1 justify-center items-center"><FileCheck2 size={18} className="font-extrabold text-green-600" />Approve The Document</span></>}
+                          </button>
+
+                        </>
+                        :
+                        <button
+                          className="flex bg-blue-500 text-slate-200 justify-center items-center p-1 m-1 mt-5 px-3 rounded-md hover:bg-blue-600 mx-auto"
+                          onClick={() => verifyLandDeed(selectedImage?.IdNumber, selectedImage?.IdNumber2)}
+                        >
+                          {verifyElectricityLoading ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Retrieving...</span> : <><span>Retrieve Data</span></>}
+                        </button>
+                      }
+
+                      {/* already verified Land Deed Data */}
+                      {(selectedImage?.Isverified == 1) && <div className="w-full h-[150px]">
+                        <hr className="my-2" />
+                        <h1 className="text-center font-bold font-mono underline my-4">Data obtained from Land Authority Department</h1>
+                        <p><span className="font-bold">Total Area:</span> {JSON.parse(selectedImage?.UserAgent)?.data[0]?.TotalArea}</p>
+                        <p><span className="font-bold">Owner Name:</span> {JSON.parse(selectedImage?.UserAgent)?.data[0]?.OwnerName}</p>
+                        <p><span className="font-bold">Owner Type:</span> {JSON.parse(selectedImage?.UserAgent)?.data[0]?.OwnerType}</p>
+                        <p><span className="font-bold">Address:</span> {JSON.parse(selectedImage?.UserAgent)?.data[0]?.Address}</p>
+                        <p><span className="font-bold">Gurdian Name:</span> {JSON.parse(selectedImage?.UserAgent)?.data[0]?.GurdianName}</p>
+                        <p><span className="font-bold">Khatian Creation Date:</span> {JSON.parse(selectedImage?.UserAgent)?.data[0]?.KhatianCreationDate}</p>
+                        <p><span className="font-bold">No. of Plots:</span> {JSON.parse(selectedImage?.UserAgent)?.data[0]?.NoOfPlots}</p>
+                      </div>}
+
+
+                      {(!selectedImage?.Isverified && verifiedResponse?.data[0]?.ERROR == 1) ? <div className="w-full h-[150px]">
+                        <hr className="my-1" />
+                        <h1 className="text-center font-bold font-mono underline my-4">Data retrieved from Land Authority Department</h1>
+                        <p><span className="font-bold">Total Area:</span> {verifiedResponse?.data[0]?.TotalArea}</p>
+                        <p><span className="font-bold">Owner Name:</span> {verifiedResponse?.data[0]?.OwnerName}</p>
+                        <p><span className="font-bold">Owner Type:</span> {verifiedResponse?.data[0]?.OwnerType}</p>
+                        <p><span className="font-bold">Address:</span> {verifiedResponse?.data[0]?.Address}</p>
+                        <p><span className="font-bold">Gurdian Name:</span> {verifiedResponse?.data[0]?.GurdianName}</p>
+                        <p><span className="font-bold">Khatian Creation Date:</span> {verifiedResponse?.data[0]?.KhatianCreationDate}</p>
+                        <p><span className="font-bold">No. of Plots:</span> {verifiedResponse?.data[0]?.NoOfPlots}</p>
+                      </div>
+                        : (verifiedResponse?.[0]) ? <div className="w-full h-full">
+                          <hr className="my-2" />
+                          <h1 className="text-center font-bold text-red-400 m-2 flex justify-center gap-1"><AlertCircle className="text-red-600" /> {verifiedResponse?.data[0]?.ERROR || 'No record found with this Mouza code & Khatian no.'}</h1>
+                        </div> : null
+                      }
+
+                    </div>
+                  </div>}
+
                   {/* Land Deed */}
                   {((userType != 10) && docType == 26) && <div className={`w-1/2 p-10 h-full`}>
                     <div className="px-2">
