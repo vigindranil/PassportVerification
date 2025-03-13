@@ -17,6 +17,7 @@ export const saveUser = async (userData) => {
       UserRoleID: userData.UserRoleID,
       DistrictID: userData.DistrictID,
       PSID: userData.PSID,
+      aadharRegisterMobileNumber: userData.aadharRegisterMobileNumber,
     });
   } catch (error) {
     console.log("Error saving user:", error);

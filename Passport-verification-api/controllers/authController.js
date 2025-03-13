@@ -101,6 +101,8 @@ export const sendOtp = async (req, res) => {
       );
 
       const token = btoa(jwt_token);
+      console.log("token");
+      
 
       const [result] = await updateAuthToken(
         rows[0]["UserID"],
@@ -347,6 +349,7 @@ export const verifyOtp = async (req, res) => {
       });
     }
   } catch (error) {
+    lo
     logger.error(error.message);
     // const result = await client.del(`user:${req.user.UserID}:token`);
     return res.status(500).json({

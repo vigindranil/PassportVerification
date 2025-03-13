@@ -83,6 +83,7 @@ export const saveUserRegistration = async (req, res) => {
       UserRoleID,
       DistrictID,
       PSID,
+      AADHAARMobileNo,
     } = req.body;
 
     console.log("req.user.UserID", req.user.UserID);
@@ -151,6 +152,8 @@ export const saveUserRegistration = async (req, res) => {
       UserRoleID,
       DistrictID,
       PSID,
+      AADHAARMobileNo,
+
     }) ,req.user.UserID)
     const result = await saveUserRegistrationModel(
       UserID,
@@ -167,6 +170,7 @@ export const saveUserRegistration = async (req, res) => {
       UserRoleID,
       DistrictID,
       PSID,
+      AADHAARMobileNo,
       req.user.UserID
     ); // change aadhar token
 
@@ -191,6 +195,7 @@ export const saveUserRegistration = async (req, res) => {
             UserRoleID,
             DistrictID,
             PSID,
+            AADHAARMobileNo,
           },
           RESPONSE: {
             status: 0,
@@ -221,6 +226,7 @@ export const saveUserRegistration = async (req, res) => {
             UserRoleID,
             DistrictID,
             PSID,
+            AADHAARMobileNo,
           },
           RESPONSE: {
             status: 1,
@@ -251,6 +257,7 @@ export const saveUserRegistration = async (req, res) => {
             UserRoleID,
             DistrictID,
             PSID,
+            AADHAARMobileNo,
           },
           RESPONSE: {
             status: 1,

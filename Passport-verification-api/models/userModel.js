@@ -17,6 +17,7 @@ export async function saveUserRegistrationModel(
   UserRoleID,
   DistrictID,
   PSID,
+  AADHAARMobileNo,
   EntryUserID
 ) {
   console.log('UserID:',UserID)
@@ -36,7 +37,7 @@ export async function saveUserRegistrationModel(
   console.log('EntryUserID:',EntryUserID)
   
   const [rows] = await pool.query(
-    "CALL sp_saveUserRegistrationv2(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, @ErrorCode, @ID);",
+    "CALL sp_saveUserRegistrationv2(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?, @ErrorCode, @ID);",
     [
       UserID,
       UserName,
@@ -52,6 +53,7 @@ export async function saveUserRegistrationModel(
       UserRoleID,
       DistrictID,
       PSID,
+      AADHAARMobileNo,
       EntryUserID
     ]
   );
