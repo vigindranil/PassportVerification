@@ -346,8 +346,9 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                       <h1 className="text-center font-bold text-xl my-3 mb-5 underline">Madhyamik Certificate (10th)</h1>
 
                       <div>
-                        <p><span className="font-bold">Mouza Code (IDN):</span> {selectedImage?.IdNumber}</p>
-                        <p><span className="font-bold">Khatian Number:</span> {selectedImage?.IdNumber2}</p>
+                        <p><span className="font-bold">Roll:</span> {selectedImage?.IdNumber}</p>
+                        <p><span className="font-bold">Number:</span> {selectedImage?.IdNumber2}</p>
+                        <p><span className="font-bold">Year of passing:</span> {selectedImage?.IdNumber3}</p>
                         {selectedImage?.Isverified ? <p><span className="font-bold">Verified by:</span> {selectedImage?.verifyBy ? selectedImage?.verifyBy : 'N/A'}</p> : null}
                       </div>
 
