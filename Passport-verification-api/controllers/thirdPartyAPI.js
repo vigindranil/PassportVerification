@@ -428,3 +428,45 @@ export const sendSMSInternally = async (
     return false;
   }
 };
+
+export const getMadhyamikCertificate = async (req, res) => {
+  try {
+    const { roll, number, examYear } = req.body; // Extract parameters from body
+
+    if (!roll || !number || !examYear) {
+      return res.status(400).json({ error: "Roll, Number, and Exam Year are required." });
+    }
+
+    // Step 1: Generate Token
+    const tokenResponse = await axios.post(
+      "http://117.250.96.97:88/api/auth/generate-token",
+      { username: "admin", password: "123" },
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    const token = tokenResponse.data?.token;
+    if (!token) {
+      return res.status(500).json({ error: "Failed to generate token" });
+    }
+
+    // Step 2: Fetch Madhyamik Certificate Details
+    const certificateResponse = await axios.post(
+      `http://117.250.96.97:88/api/students/verifyRollNo?roll=${roll}&number=${number}&examYear=${examYear}`,
+      {},
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    return res.status(200).json({
+      status: 1,
+      message: "Certificate details fetched successfully",
+      data: certificateResponse?.data || {},
+    });
+  } catch (error) {
+    console.error("Error fetching certificate details:", error?.message || error);
+    return res.status(500).json({
+      status: 0,
+      message: "Failed to fetch certificate details",
+      error: error?.response?.data || error?.message,
+    });
+  }
+};
