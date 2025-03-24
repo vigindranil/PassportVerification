@@ -1,5 +1,5 @@
 import express from 'express';
-import { getBirthCertificateDetails, getKolkataPoliceCriminalRecordSearchv4, getLandDeedDetails, getMadhyamikCertificate, getPCCCrimeRecordSearch, getWBSEDCLDetails, sendSMS } from '../controllers/thirdPartyAPI.js';
+import { getBirthCertificateDetails, getKolkataPoliceCriminalRecordSearchv4, getLandDeedDetails, getMadhyamikCertificate, getPCCApplicationDetails, getPCCCrimeRecordSearch, getWBSEDCLDetails, sendSMS } from '../controllers/thirdPartyAPI.js';
 
 const router = express.Router();
 
@@ -10,4 +10,5 @@ router.post('/getKolkataPoliceCriminalRecordSearchv4', getKolkataPoliceCriminalR
 router.post('/getPCCCrimeRecordSearch', getPCCCrimeRecordSearch);
 router.post('/sendSMS', sendSMS);
 router.post('/getMadhyamikCertificate', getMadhyamikCertificate);
+router.post('/getPCCApplicationDetails', getPCCApplicationDetails);
 export default router;

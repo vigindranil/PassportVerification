@@ -11,6 +11,19 @@ export const getDetailsApplicationId = async (applicationId) => {
   }
 };
 
+export const getMadhyamikCertificate = async (roll, number, year) => {
+  try {
+    return await postRequest("third-party/getMadhyamikCertificate", {
+      roll: roll,
+      number: number,
+      examYear: year,
+    });
+  } catch (error) {
+    console.log("Error:", error);
+    return null;
+  }
+};
+
 export const getLandDeedDetails = async (mouzaCode, khatianNo) => {
   try {
     return await postRequest("third-party/getLandDeedDetails", {
@@ -111,6 +124,20 @@ export const getKolkataPoliceCriminalRecordSearchv4 = async (data) => {
 export const updateCriminalInfoApi = async (payload) => {
   try {
     return await postRequest("crime/updateCriminalInfo", payload);
+  } catch (error) {
+    console.log("Error:", error);
+    return null;
+  }
+};
+
+export const getPCCApplicationDetails = async (applicant_name, applicant_aadhaar) => {
+  try {
+    return await postRequest("third-party/getPCCApplicationDetails", {
+      // applicant_name: "Sanjay",
+      // applicant_aadhaar: "8183",
+      applicant_name: applicant_name,
+      applicant_aadhaar: applicant_aadhaar,
+    });
   } catch (error) {
     console.log("Error:", error);
     return null;

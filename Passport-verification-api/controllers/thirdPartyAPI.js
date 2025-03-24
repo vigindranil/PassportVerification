@@ -434,7 +434,7 @@ export const getMadhyamikCertificate = async (req, res) => {
     const { roll, number, examYear } = req.body; // Extract parameters from body
 
     if (!roll || !number || !examYear) {
-      return res.status(400).json({ error: "Roll, Number, and Exam Year are required." });
+      return res.status(400).json({ status: 1, message: "Roll, Number, and Exam Year are required." });
     }
 
     // Step 1: Generate Token
@@ -446,7 +446,7 @@ export const getMadhyamikCertificate = async (req, res) => {
 
     const token = tokenResponse.data?.token;
     if (!token) {
-      return res.status(500).json({ error: "Failed to generate token" });
+      return res.status(500).json({ status:1, message: "Failed to generate token" });
     }
 
     // Step 2: Fetch Madhyamik Certificate Details
@@ -456,17 +456,63 @@ export const getMadhyamikCertificate = async (req, res) => {
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
+    console.log("certificateResponse", certificateResponse?.data);
+    
+    if (!certificateResponse?.data) {
+      return res.status(400).json({ status: 1, message: "Certificate not found", data: null });
+    }
     return res.status(200).json({
-      status: 1,
+      status: 0,
       message: "Certificate details fetched successfully",
-      data: certificateResponse?.data || {},
+      data: certificateResponse?.data,
     });
   } catch (error) {
     console.error("Error fetching certificate details:", error?.message || error);
     return res.status(500).json({
-      status: 0,
-      message: "Failed to fetch certificate details",
-      error: error?.response?.data || error?.message,
+      status: 1,
+      message: "Certificate not found",
+      data: null,
     });
   }
+};
+
+export const getPCCApplicationDetails = async (req, res) => {
+  const { applicant_name, applicant_aadhaar } = req.body;
+
+  if (!applicant_name) {
+    return res.status(400).json({ error: "Applicant Name is required." });
+  } else if (!applicant_aadhaar) {
+    return res.status(400).json({ error: "Aadhaar is required." });
+  }
+
+  // Create form data
+  let formData = new FormData();
+  formData.append("ApplicantName", applicant_name);
+  formData.append("ApplicantAadhaar", applicant_aadhaar);
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://wbpcb.nltr.org/WBPCCServiceV1/api/GetPassportPCCApplicationDetails",
+    data: formData,
+  };
+
+  axios
+    .request(config)
+    .then((response) => {
+      console.log("response", response.data);
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: response?.data?.data[0],
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res.status(400).json({
+        status: 0,
+        message: "Failed to fetch details",
+        data: null,
+      });
+    });
 };

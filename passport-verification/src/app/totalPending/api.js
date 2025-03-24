@@ -5,7 +5,7 @@ export const getApplicationStatus = async (status, period) => {
 
     return await postRequest("user/getApplicationStatus", {
         "status_id": status,
-        "periord_id": period
+        "periord_id": 0
     });
   } catch (error) {
     console.log("Error:", error);

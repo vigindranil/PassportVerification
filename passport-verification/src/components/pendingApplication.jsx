@@ -44,7 +44,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
   const fetchApplicationStatus = async () => {
     try {
       setIsLoading(true)
-      const response = await getApplicationStatus(status, period || 30)
+      const response = await getApplicationStatus(status, period || 0)
       setVerificationData(response?.data)
     } catch (error) {
       console.error("Error fetching application status:", error)

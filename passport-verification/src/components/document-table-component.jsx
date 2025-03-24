@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { AlertCircle, CheckCircle2, CheckCircle2Icon, Eye, FileCheck2, Loader, MapPin, Search } from "lucide-react"
 import Image from "next/image"
 import { VisuallyHidden } from "@/components/ui/visually-hidden"
-import { getBirthCertificateDetails, getLandDeedDetails, getWBSEDCLDetails, verifyApplication } from "@/app/applicationDetails/[FileNumber]/api"
+import { getBirthCertificateDetails, getLandDeedDetails, getMadhyamikCertificate, getWBSEDCLDetails, verifyApplication } from "@/app/applicationDetails/[FileNumber]/api"
 import Cookies from "react-cookies";
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
@@ -31,6 +31,42 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
   const { toast } = useToast()
   const [type, setType] = useState("")
 
+
+  const verifyMadhyamikCertificate = async (roll, number, year) => {
+    try {
+      setVerifyElectricityLoading(true);
+      setVerifiedResponse(null)
+      const response = await getMadhyamikCertificate(
+        roll, number, year
+        // "100021B", "032", "2014",
+      );
+      console.log("response", response);
+
+      toast({
+        title: (
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="h-5 w-5 text-green-500" />
+            <span>Success!</span>
+          </div>
+        ),
+        description: "Data has been successfully retrieved",
+        action: (
+          <ToastAction altText="close">Close</ToastAction>
+        ),
+      })
+      setVerifiedResponse(response || "");
+    } catch (error) {
+      console.log(error);
+      toast({
+        variant: "destructive",
+        title: "Failure!",
+        description: "Something went wrong, Please try again",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
+    } finally {
+      setVerifyElectricityLoading(false);
+    }
+  }
 
   const verifyLandDeed = async (mouzaCode, khatianNo) => {
     try {
@@ -341,7 +377,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
 
                   {/* Matric Board Certificate */}
                   {((userType != 10) && docType == 14) && <div className={`w-1/2 p-10 h-full`}>
-                  {/* {((userType != 10)) && <div className={`w-1/2 p-10 h-full`}> */}
+                    {/* {((userType != 10)) && <div className={`w-1/2 p-10 h-full`}> */}
                     <div className="px-2">
                       <h1 className="text-center font-bold text-xl my-3 mb-5 underline">Madhyamik Certificate (10th)</h1>
 
@@ -357,7 +393,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                         <>
                           <button
                             className={`${verified && 'cursor-not-allowed'} flex ${verified ? 'bg-green-500 hover:bg-green-500 text-slate-200' : 'bg-zinc-100 text-slate-600 border-[1.3px] hover:bg-zinc-200'}  p-1 m-1 flex items-center px-3 rounded-md mx-auto`}
-                            onClick={() => handleVerifyApplication(4, 'getLandDeedDetails', fileNo, selectedImage?.DocumentId, { IdNumber: selectedImage?.IdNumber, IdNumber2: selectedImage?.IdNumber2 }, verifiedResponse)}
+                            onClick={() => handleVerifyApplication(4, 'verifyMadhyamikCertificate', fileNo, selectedImage?.DocumentId, { IdNumber: selectedImage?.IdNumber, IdNumber2: selectedImage?.IdNumber2, IdNumber3: selectedImage?.IdNumber3 }, verifiedResponse)}
                             disabled={selectedImage?.Isverified || verifyApplicationLoading}
                           >
                             {(verifyApplicationLoading) ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Approving</span> : verified ? <><CheckCircle2Icon className="h-4 w-4 mr-1" /> <span>Document Verifed</span></> : <><span className="flex gap-1 justify-center items-center"><FileCheck2 size={18} className="font-extrabold text-green-600" />Approve The Document</span></>}
@@ -367,7 +403,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                         :
                         <button
                           className="flex bg-blue-500 text-slate-200 justify-center items-center p-1 m-1 mt-5 px-3 rounded-md hover:bg-blue-600 mx-auto"
-                          onClick={() => verifyLandDeed(selectedImage?.IdNumber, selectedImage?.IdNumber2)}
+                          onClick={() => verifyMadhyamikCertificate(selectedImage?.IdNumber, selectedImage?.IdNumber2, selectedImage?.IdNumber3)}
                         >
                           {verifyElectricityLoading ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Retrieving...</span> : <><span>Retrieve Data</span></>}
                         </button>
@@ -376,31 +412,33 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                       {/* already verified Land Deed Data */}
                       {(selectedImage?.Isverified == 1) && <div className="w-full h-[150px]">
                         <hr className="my-2" />
-                        <h1 className="text-center font-bold font-mono underline my-4">Data obtained from Land Authority Department</h1>
-                        <p><span className="font-bold">Total Area:</span> {JSON.parse(selectedImage?.UserAgent)?.data[0]?.TotalArea}</p>
-                        <p><span className="font-bold">Owner Name:</span> {JSON.parse(selectedImage?.UserAgent)?.data[0]?.OwnerName}</p>
-                        <p><span className="font-bold">Owner Type:</span> {JSON.parse(selectedImage?.UserAgent)?.data[0]?.OwnerType}</p>
-                        <p><span className="font-bold">Address:</span> {JSON.parse(selectedImage?.UserAgent)?.data[0]?.Address}</p>
-                        <p><span className="font-bold">Gurdian Name:</span> {JSON.parse(selectedImage?.UserAgent)?.data[0]?.GurdianName}</p>
-                        <p><span className="font-bold">Khatian Creation Date:</span> {JSON.parse(selectedImage?.UserAgent)?.data[0]?.KhatianCreationDate}</p>
-                        <p><span className="font-bold">No. of Plots:</span> {JSON.parse(selectedImage?.UserAgent)?.data[0]?.NoOfPlots}</p>
+                        <h1 className="text-center font-bold font-mono underline my-4">Data obtained from WBBSE</h1>
+                        <p><span className="font-bold">Roll:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.roll}</p>
+                        <p><span className="font-bold">Number:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.number}</p>
+                        <p><span className="font-bold">Exam Year:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.examYear}</p>
+                        <p><span className="font-bold">Student Name:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.studentName}</p>
+                        <p><span className="font-bold">Father Name:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.fatherName}</p>
+                        <p><span className="font-bold">Date Of Birth:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.dateOfBirth}</p>
+                        <p><span className="font-bold">School Name:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.schoolName}</p>
+                        <p><span className="font-bold">Certificate Date:</span> {JSON.parse(selectedImage?.UserAgent)?.data?.certificateDate}</p>
                       </div>}
 
 
-                      {(!selectedImage?.Isverified && verifiedResponse?.data[0]?.ERROR == 1) ? <div className="w-full h-[150px]">
+                      {(!selectedImage?.Isverified && verifiedResponse?.data) ? <div className="w-full h-[150px]">
                         <hr className="my-1" />
-                        <h1 className="text-center font-bold font-mono underline my-4">Data retrieved from Land Authority Department</h1>
-                        <p><span className="font-bold">Total Area:</span> {verifiedResponse?.data[0]?.TotalArea}</p>
-                        <p><span className="font-bold">Owner Name:</span> {verifiedResponse?.data[0]?.OwnerName}</p>
-                        <p><span className="font-bold">Owner Type:</span> {verifiedResponse?.data[0]?.OwnerType}</p>
-                        <p><span className="font-bold">Address:</span> {verifiedResponse?.data[0]?.Address}</p>
-                        <p><span className="font-bold">Gurdian Name:</span> {verifiedResponse?.data[0]?.GurdianName}</p>
-                        <p><span className="font-bold">Khatian Creation Date:</span> {verifiedResponse?.data[0]?.KhatianCreationDate}</p>
-                        <p><span className="font-bold">No. of Plots:</span> {verifiedResponse?.data[0]?.NoOfPlots}</p>
+                        <h1 className="text-center font-bold font-mono underline my-4">Data retrieved from WBBSE</h1>
+                        <p><span className="font-bold">Roll:</span> {verifiedResponse?.data?.roll}</p>
+                        <p><span className="font-bold">Number:</span> {verifiedResponse?.data?.number}</p>
+                        <p><span className="font-bold">Exam Year:</span> {verifiedResponse?.data?.examYear}</p>
+                        <p><span className="font-bold">Student Name:</span> {verifiedResponse?.data?.studentName}</p>
+                        <p><span className="font-bold">Father Name:</span> {verifiedResponse?.data?.fatherName}</p>
+                        <p><span className="font-bold">Date Of Birth:</span> {verifiedResponse?.data?.dateOfBirth}</p>
+                        <p><span className="font-bold">School Name:</span> {verifiedResponse?.data?.schoolName}</p>
+                        <p><span className="font-bold">Certificate Date:</span> {verifiedResponse?.data?.certificateDate}</p>
                       </div>
-                        : (verifiedResponse?.[0]) ? <div className="w-full h-full">
+                        : (verifiedResponse?.status == 1) ? <div className="w-full h-full">
                           <hr className="my-2" />
-                          <h1 className="text-center font-bold text-red-400 m-2 flex justify-center gap-1"><AlertCircle className="text-red-600" /> {verifiedResponse?.data[0]?.ERROR || 'No record found with this Mouza code & Khatian no.'}</h1>
+                          <h1 className="text-center font-bold text-red-400 m-2 flex justify-center gap-1"><AlertCircle className="text-red-600" /> {verifiedResponse?.message || 'No record found'}</h1>
                         </div> : null
                       }
 
@@ -633,7 +671,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                   </div>}
 
                   {/* Remarks */}
-                  {((type != "pdf") && (userType != 10) && (docType != 1 && docType != 8 && docType != 26 && docType != 25)) && <div className={`w-1/2 p-10 h-full`}>
+                  {((type != "pdf") && (userType != 10) && (docType != 1 && docType != 8 && docType != 26 && docType != 25)) && <div className={`w-1/3 p-10 h-full`}>
                     <div className="px-2">
 
                       <div>

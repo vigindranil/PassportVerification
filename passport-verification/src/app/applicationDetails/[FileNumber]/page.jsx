@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { AlertCircle, CheckCircle2 } from "lucide-react"
 import Cookies from "react-cookies";
+import PoliceClearanceCertificate from "@/components/police-clearance-certificate"
 
 export default function Page({ FileNumber }) {
   const [applicationDetails, setApplicationDetails] = useState(null);
@@ -664,6 +665,9 @@ export default function Page({ FileNumber }) {
                             </div>
                           </> :
                           <>
+                            {/* PCC Certificate */}
+                            < PoliceClearanceCertificate applicant_details={applicationDetails?.applicationDetails} selectedRows={kolkataPoliceSelectedRows} setSelectedRows={setKolkataPoliceSelectedRows} />
+
                             {/* Kolkata Police Crime Records */}
                             < CrimeAcivityTableKolkataPolice applicant_details={applicationDetails?.applicationDetails} selectedRows={kolkataPoliceSelectedRows} setSelectedRows={setKolkataPoliceSelectedRows} />
 
