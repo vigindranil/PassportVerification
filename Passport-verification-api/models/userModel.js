@@ -130,4 +130,25 @@ export async function getApplicationCountsv1Model(
   }
 }
 
+export async function updatePasswordModel(
+  UserID,
+  OldPassWord,
+  NewPassword,
+  EntryUserID,
+) {
+  const [rows] = await pool.query(
+    "CALL sp_updatepassword(?, ?, ?, ?, @ErrorCode);",
+    [
+      UserID,
+      OldPassWord,
+      NewPassword,
+      EntryUserID,
+    ]
+  );
 
+  const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
+  console.log("error code", result[0].ErrorCode);
+  
+  return result[0].ErrorCode;
+
+}

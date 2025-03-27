@@ -96,7 +96,7 @@ const upload = multer({ storage: storage });
 //public Route
 app.use("/api/", logRoutes);
 app.use("/api/auth/", loginRoutes);
-app.use("/api/third-party/", thirdPartyRoutes);
+app.use("/api/third-party/",verifyToken, thirdPartyRoutes);
 app.use("/api/s3-upload", upload.single("file"), s3uploadRoutes);
 app.use("/api/s3-download", s3downloadRoutes);
 

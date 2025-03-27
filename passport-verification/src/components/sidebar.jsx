@@ -33,21 +33,26 @@ const Sidebar = () => {
                         { type_id: 10, icon: Home, label: 'Home', href: '/dashboard' },
                         { type_id: 10, icon: Upload, label: 'Upload Data', href: '/upload' },
                         { type_id: 10, icon: CirclePlus, label: 'Create User', href: '/createUserForm' },
+                        { type_id: 10, icon: CirclePlus, label: 'Reset Password', href: '/reset-password' },
                         { type_id: 10, icon: CirclePlus, label: 'All Files', href: '/allFiles' },
-
+                        
                         // EO
+                        { type_id: 40, icon: CirclePlus, label: 'Reset Password', href: '/reset-password' },
                         { type_id: 40, icon: Home, label: 'Home', href: '/dashboard-eo' },
                         { type_id: 40, icon: File, label: 'All Files', href: '/allFiles' },
-
+                        
                         // OC
+                        { type_id: 30, icon: CirclePlus, label: 'Reset Password', href: '/reset-password' },
                         { type_id: 30, icon: Home, label: 'Home', href: '/dashboard-oc' },
                         { type_id: 30, icon: File, label: 'All Files', href: '/allFiles-oc' },
-
+                        
                         // SP
+                        { type_id: 20, icon: CirclePlus, label: 'Reset Password', href: '/reset-password' },
                         { type_id: 20, icon: Home, label: 'Home', href: '/dashboard-sp'},
                         { type_id: 20, icon: File, label: 'All Files', href: '/allFiles-sp' },
-
+                        
                         // SE
+                        { type_id: 50, icon: CirclePlus, label: 'Reset Password', href: '/reset-password' },
                         { type_id: 50, icon: Home, label: 'Home', href: '/dashboard-se' },
                         { type_id: 50, icon: File, label: 'All Files', href: '/allFiles-se' },
 

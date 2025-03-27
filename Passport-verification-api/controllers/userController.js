@@ -3,6 +3,7 @@ import { logoutModel } from "../models/logoutModel.js";
 import {
   getApplicationStatusModel,
   saveUserRegistrationModel,
+  updatePasswordModel,
 } from "../models/userModel.js";
 import { updateUserActivationStatusModel } from "../models/userModel.js";
 import { showuserDetailsModel } from "../models/userModel.js";
@@ -94,7 +95,7 @@ export const saveUserRegistration = async (req, res) => {
     const OperationName = "saveUserRegistration";
     const json = "{}";
 
-    if(!UserName){
+    if (!UserName) {
       return res.status(400).json({
         status: 1,
         message: "Please enter username",
@@ -106,55 +107,63 @@ export const saveUserRegistration = async (req, res) => {
     //     message: "Please enter FullName",
     //   });
     // }
-    if(!MobileNo){
+    if (!MobileNo) {
       return res.status(400).json({
         status: 1,
         message: "Please enter Mobile No.",
       });
     }
-    if(!Gender){
+    if (!Gender) {
       return res.status(400).json({
         status: 1,
         message: "Please enter Gender",
       });
     }
-    if(!AADHAARNo){
+    if (!AADHAARNo) {
       return res.status(400).json({
         status: 1,
         message: "Please enter AADHAAR No.",
       });
     }
-    if(!Designation){
+    if (!Designation) {
       return res.status(400).json({
         status: 1,
         message: "Please enter Designation",
       });
     }
-    if(!UserRoleID){
+    if (!UserRoleID) {
       return res.status(400).json({
         status: 1,
         message: "Please enter User Role",
       });
     }
 
-     const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,JSON.stringify({
-      UserID,
-      UserName,
-      FullName,
-      UserPassword,
-      Firstname,
-      LastName,
-      MobileNo,
-      EmailID,
-      Gender,
-      AADHAARNo,
-      Designation,
-      UserRoleID,
-      DistrictID,
-      PSID,
-      AADHAARMobileNo,
-
-    }) ,req.user.UserID)
+    const saveTransaction = await saveTransactionHistory(
+      ipaddress,
+      macAddress,
+      Longitude,
+      Latitude,
+      0,
+      OperationName,
+      JSON.stringify({
+        UserID,
+        UserName,
+        FullName,
+        UserPassword,
+        Firstname,
+        LastName,
+        MobileNo,
+        EmailID,
+        Gender,
+        AADHAARNo,
+        Designation,
+        UserRoleID,
+        DistrictID,
+        PSID,
+        AADHAARMobileNo,
+      }),
+      req.user.UserID
+    );
     const result = await saveUserRegistrationModel(
       UserID,
       UserName,
@@ -662,12 +671,84 @@ export const logout = async (req, res) => {
       status: 0,
       message: "Logout successfully",
     });
-
   } catch (error) {
     logger.error("Error:", error);
     res.status(500).json({
       status: 1,
       message: "Failed to logout",
+      data: null,
+    });
+  }
+};
+
+export const updatePassword = async (req, res) => {
+  try {
+    const { user_id, old_passWord, new_password } = req.body;
+    const ipaddress = "test";
+    const macAddress = "test";
+    const Longitude = "test";
+    const Latitude = "test";
+    const OperationName = "updatePasswordModel";
+
+    const result = await updatePasswordModel(
+      user_id || req.user.UserID,
+      old_passWord,
+      new_password,
+      req.user.UserID
+    );
+
+    const payload = { user_id, old_passWord, new_password, entry_user_id };
+
+    const json = JSON.stringify({ payload, result });
+    const saveTransaction = await saveTransactionHistory(
+      ipaddress,
+      macAddress,
+      Longitude,
+      Latitude,
+      0,
+      OperationName,
+      json,
+      user_id
+    );
+
+    console.log("result", saveTransaction);
+
+    if (result == 0) {
+      logger.debug(
+        JSON.stringify({
+          API: "updatePasswordModel",
+          REQUEST: { user_id, old_passWord, new_password, entry_user_id },
+          RESPONSE: {
+            status: 0,
+            message: "Passport reset successfully",
+          },
+        })
+      );
+      return res.status(200).json({
+        status: 0,
+        message: "Passport reset successfully",
+      });
+    } else {
+      logger.debug(
+        JSON.stringify({
+          API: "updateUserActivationStatus",
+          REQUEST: { user_id, old_passWord, new_password, entry_user_id },
+          RESPONSE: {
+            status: 1,
+            message: "Failed to reset password",
+          },
+        })
+      );
+      return res.status(400).json({
+        status: 1,
+        message: "Failed to reset password",
+      });
+    }
+  } catch (error) {
+    logger.error("Error:", error);
+    res.status(500).json({
+      status: 1,
+      message: "An error occurred",
       data: null,
     });
   }
