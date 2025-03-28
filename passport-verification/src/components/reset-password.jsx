@@ -56,11 +56,6 @@ export default function ResetPassword() {
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
     }
-
-    // Close the modal after successful reset
-    setIsResetPasswordModalOpen(false);
-    setNewPassword("");
-    setConfirmPassword("");
   };
 
   return (

@@ -683,21 +683,22 @@ export const logout = async (req, res) => {
 
 export const updatePassword = async (req, res) => {
   try {
-    const { user_id, old_passWord, new_password } = req.body;
+    const { user_id, old_password, new_password } = req.body;
     const ipaddress = "test";
     const macAddress = "test";
     const Longitude = "test";
     const Latitude = "test";
     const OperationName = "updatePasswordModel";
+    const entry_user_id = req.user.UserID;
 
     const result = await updatePasswordModel(
       user_id || req.user.UserID,
-      old_passWord,
+      old_password,
       new_password,
-      req.user.UserID
+      entry_user_id
     );
 
-    const payload = { user_id, old_passWord, new_password, entry_user_id };
+    const payload = { user_id, old_password, new_password, entry_user_id };
 
     const json = JSON.stringify({ payload, result });
     const saveTransaction = await saveTransactionHistory(
@@ -717,7 +718,7 @@ export const updatePassword = async (req, res) => {
       logger.debug(
         JSON.stringify({
           API: "updatePasswordModel",
-          REQUEST: { user_id, old_passWord, new_password, entry_user_id },
+          REQUEST: { user_id, old_password, new_password, entry_user_id },
           RESPONSE: {
             status: 0,
             message: "Passport reset successfully",
@@ -732,7 +733,7 @@ export const updatePassword = async (req, res) => {
       logger.debug(
         JSON.stringify({
           API: "updateUserActivationStatus",
-          REQUEST: { user_id, old_passWord, new_password, entry_user_id },
+          REQUEST: { user_id, old_password, new_password, entry_user_id },
           RESPONSE: {
             status: 1,
             message: "Failed to reset password",
@@ -745,6 +746,8 @@ export const updatePassword = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
+    
     logger.error("Error:", error);
     res.status(500).json({
       status: 1,

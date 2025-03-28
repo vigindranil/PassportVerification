@@ -33,6 +33,7 @@ const data = {
           { "title": "Home", "url": "/dashboard" },
           { "title": "Upload Applications", "url": "/upload" },
           { "title": "Create User", "url": "/createUserForm" },
+          { "title": 'Reset Password', "url": '/reset-password' },
           { "title": "Logout", "url": "/logout" }
         ]
       },
@@ -65,7 +66,8 @@ const data = {
         "items": [
           { "title": "Home", "url": "/dashboard-eo" },
           { "title": "All Files", "url": "/allFiles" },
-          { "title": "Logout", "url": "/logout" }
+          { "title": 'Reset Password', "url": '/reset-password' },
+          { "title": "Logout", "url": "/logout" },
         ]
       },
       {
@@ -91,6 +93,7 @@ const data = {
         "items": [
           { "title": "Home", "url": "/dashboard-oc" },
           { "title": "All Files", "url": "/allFiles-oc" },
+          { "title": 'Reset Password', "url": '/reset-password' },
           { "title": "Logout", "url": "/logout" }
         ]
       },
@@ -116,6 +119,7 @@ const data = {
         "items": [
           { "title": "Home", "url": "/dashboard-sp" },
           { "title": "All Files", "url": "/allFiles-sp" },
+          { "title": 'Reset Password', "url": '/reset-password' },
           { "title": "Logout", "url": "/logout" }
         ]
       },
@@ -150,6 +154,7 @@ const data = {
         "items": [
           { "title": "Home", "url": "/dashboard-se" },
           { "title": "All Files", "url": "/allFiles-se" },
+          { "title": 'Reset Password', "url": '/reset-password' },
           { "title": "Logout", "url": "/logout" }
         ]
       },

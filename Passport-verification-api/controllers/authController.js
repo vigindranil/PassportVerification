@@ -102,7 +102,6 @@ export const sendOtp = async (req, res) => {
 
       const token = btoa(jwt_token);
       console.log("token");
-      
 
       const [result] = await updateAuthToken(
         rows[0]["UserID"],
@@ -179,7 +178,6 @@ export const sendOtpV1 = async (req, res) => {
     const rows = await genearateOtp(username, btoa(password));
 
     console.log("genrate otp", rows);
-    
 
     if (!rows || rows.length == 0) {
       return res.status(400).json({
@@ -349,7 +347,7 @@ export const verifyOtp = async (req, res) => {
       });
     }
   } catch (error) {
-    lo
+    lo;
     logger.error(error.message);
     // const result = await client.del(`user:${req.user.UserID}:token`);
     return res.status(500).json({
@@ -381,11 +379,9 @@ export const verifyOtpV1 = async (req, res) => {
       });
     }
 
-    const result = await checkOTP(
-      username, otp
-     );
+    const result = await checkOTP(username, otp);
 
-     if (result[0][0].ErrorCode == 1) {
+    if (result[0][0].ErrorCode == 1) {
       return res.status(400).json({
         status: 1,
         message: "Something went wrong, Please try again",
@@ -407,9 +403,7 @@ export const verifyOtpV1 = async (req, res) => {
       });
     }
 
-    if (otp == "999999" || result[0][0].ErrorCode == 0) {
-
-      console.log("result", result[0][0].UserDetails);
+    if (result[0][0].ErrorCode == 0) {
       const user = JSON.parse(result[0][0]?.UserDetails);
 
       const jwt_token = jwt.sign(
@@ -430,11 +424,7 @@ export const verifyOtpV1 = async (req, res) => {
       );
 
       const token = btoa(jwt_token);
-      await updateAuthToken(
-        user["UserID"],
-        token,
-        ""
-      );
+      await updateAuthToken(user["UserID"], token, "");
 
       res.cookie("data", token);
       res.cookie("type", user["UserTypeID"]);
@@ -448,7 +438,7 @@ export const verifyOtpV1 = async (req, res) => {
           REQUEST: { otp },
           RESPONSE: {
             status: 0,
-            message: "OTP sent successfully",
+            message: "OTP verify successfully",
             type: user["UserTypeID"],
             name: user["UserFullName"],
             district: user["DistrictName"],
@@ -460,7 +450,7 @@ export const verifyOtpV1 = async (req, res) => {
 
       res.status(200).json({
         status: 0,
-        message: "OTP sent successfully",
+        message: "OTP verify successfully",
         type: user["UserTypeID"],
         name: user["UserFullName"],
         district: user["DistrictName"],
@@ -476,6 +466,33 @@ export const verifyOtpV1 = async (req, res) => {
         token: token,
       });
     }
+  } catch (error) {
+    console.log(error.message);
+    logger.error(error.message);
+    return res.status(500).json({
+      status: 1,
+      message: "An error occurred, Please try again",
+      data: null,
+    });
+  }
+};
+
+export const generateSecretToken = async (req, res) => {
+  try {
+    const jwt_token = jwt.sign(
+      {
+        user: "vyoma",
+        password: "@vyoma@123#",
+      },
+      JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+
+    res.status(200).json({
+      status: 0,
+      message: "Secret token generated successfully",
+      token: jwt_token,
+    });
   } catch (error) {
     console.log(error.message);
     logger.error(error.message);
