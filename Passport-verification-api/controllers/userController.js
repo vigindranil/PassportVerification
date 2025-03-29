@@ -693,8 +693,8 @@ export const updatePassword = async (req, res) => {
 
     const result = await updatePasswordModel(
       user_id || req.user.UserID,
-      old_password,
-      new_password,
+      btoa(old_password),
+      btoa(new_password),
       entry_user_id
     );
 

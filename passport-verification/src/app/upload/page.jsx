@@ -12,6 +12,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { AlertCircle, CheckCircle2, Download, FileImage, Loader2 } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 import { Label } from "@/components/ui/label"
+import Image from "next/image"
+import BackgroundImg from '@/assets/passport-bg.jpg';
 
 
 const ExcelUploader = () => {
@@ -170,8 +172,14 @@ const ExcelUploader = () => {
 
 
   return (
-    <div className="flex h-full bg-gray-100">
-      <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex h-full bg-gray-100 relative w-full min-h-screen">
+      <Image
+        src={BackgroundImg}
+        alt="Background Image"
+        objectFit="cover"
+        className="absolute opacity-15 inset-0 -z-2"
+      />
+      <div className="flex-1 flex flex-col overflow-hidden relative">
         <main className="flex-1 p-6">
           <Card className="w-full max-w-3xl mx-auto mb-8">
             <CardHeader>
@@ -182,7 +190,7 @@ const ExcelUploader = () => {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                     
+
                       <div className="grid w-full items-center gap-1.5">
                         <div className="flex items-center gap-2 border-[2px] border-indigo-400 border-dashed rounded-md ps-3 cursor-pointer">
                           <FileImage className="w-8 h-8 text-gray-400" />

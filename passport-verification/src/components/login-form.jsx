@@ -51,7 +51,7 @@ const LoginForm = () => {
           variant: "destructive",
           title: (
             <div className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5" />
+              <AlertCircle className="h-5 w-5 text-red-500" />
               <span>{response?.message || 'Failed to login'}</span>
             </div>
           ),
@@ -64,8 +64,8 @@ const LoginForm = () => {
         variant: "destructive",
         title: (
           <div className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5" />
-            <span>Failed to Send OTP!</span>
+            <AlertCircle className="h-5 w-5 text-red-500" />
+            <span>Failed!</span>
           </div>
         ),
         description: "Something went wrong, Please try again",
@@ -106,12 +106,11 @@ const LoginForm = () => {
           variant: "destructive",
           title: (
             <div className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5" />
-              <span>Failed to Verify OTP!</span>
+              <AlertCircle className="h-5 w-5 text-red-500" />
+              <span>Failed!</span>
             </div>
           ),
           description: response.message,
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
         })
       }
     } catch (error) {
@@ -120,12 +119,11 @@ const LoginForm = () => {
         variant: "destructive",
         title: (
           <div className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5" />
-            <span>Failed to Verify OTP!</span>
+            <AlertCircle className="h-5 w-5 text-red-500" />
+            <span>Failed!</span>
           </div>
         ),
         description: "Something went wrong, Please try again",
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
     } finally {
       setLoadingOtpVerify(false)
@@ -160,7 +158,7 @@ const LoginForm = () => {
           variant: "destructive",
           title: (
             <div className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5" />
+              <AlertCircle className="h-5 w-5 text-red-500" />
               <span>Failed to Send OTP!</span>
             </div>
           ),
@@ -173,7 +171,7 @@ const LoginForm = () => {
         variant: "destructive",
         title: (
           <div className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5" />
+            <AlertCircle className="h-5 w-5 text-red-500" />
             <span>Failed to Send OTP!</span>
           </div>
         ),

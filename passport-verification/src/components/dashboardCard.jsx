@@ -10,7 +10,7 @@ import { getCountEO } from '@/app/dashboard-eo/api';
 
 const dashboardConfig = {
     10: [
-        { title: "Total Pending Applications", key: "TotalPendingApplications", icon: Clock, color: "purple", link: "/totalPending" },
+        { title: "Total Pending \nApplications", key: "TotalPendingApplications", icon: Clock, color: "purple", link: "/totalPending" },
         { title: "Last 15 Days Pending\nApplications", key: "Last15DaysPendingApplications", icon: CalendarClock, color: "blue", link: "/last15DaysPending" },
         { title: "Accepted but Verification Pending (EO)", key: "EOAccepectButNotStartedVerify", icon: CircleCheckBig, color: "green", link: "/eoAcceptedFile" },
         // { title: "Verification Pending \n(EO)", key: "EOStartedVerify", icon: FileClock, color: "yellow", link: "/pendingVerificatonEO" },

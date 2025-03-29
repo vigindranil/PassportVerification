@@ -136,6 +136,11 @@ export async function updatePasswordModel(
   NewPassword,
   EntryUserID,
 ) {
+
+  console.log("model", {UserID,
+    OldPassWord,
+    NewPassword,
+    EntryUserID})
   const [rows] = await pool.query(
     "CALL sp_updatepassword(?, ?, ?, ?, @ErrorCode);",
     [
@@ -147,7 +152,7 @@ export async function updatePasswordModel(
   );
 
   const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
-  console.log("error code", result[0].ErrorCode);
+  console.log("updated Password error code", result[0].ErrorCode);
   
   return result[0].ErrorCode;
 
