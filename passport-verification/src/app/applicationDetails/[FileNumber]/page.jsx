@@ -206,16 +206,16 @@ export default function Page({ FileNumber }) {
 
 
   return (
-    <div className="flex bg-gray-100 h-full min-h-screen relative">
-      <Image
-        src={BackgroundImg}
-        alt="Background Image"
-        objectFit="cover"
-        className="absolute opacity-20 inset-0 -z-2"
-      />
-      <div className="flex-1 flex flex-col overflow-hidden relative">
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
-          <div className="container mx-auto px-6 py-8">
+    <div className="flex bg-gray-100 h-full min-h-screen">
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 relative">
+          <Image
+            src={BackgroundImg}
+            alt="Background Image"
+            objectFit="cover"
+            className="absolute opacity-20 inset-0 -z-2"
+          />
+          <div className="container mx-auto px-6 py-8 relative">
             <Tabs defaultValue="applicationDetails" className="w-full">
               <TabsList className="flex gap-6 justify-center mb-4">
                 <TabsTrigger className="rounded-full bg-white hover:text-blue-500 ring-1 ring-slate-500/40 hover:shadow-md data-[state=active]:bg-blue-500 data-[state=active]:text-white" value="applicationDetails">Application Details</TabsTrigger>
