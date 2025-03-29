@@ -479,10 +479,19 @@ export const verifyOtpV1 = async (req, res) => {
 
 export const generateSecretToken = async (req, res) => {
   try {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+      return res.status(400).json({
+        status: 1,
+        message: "Invalid username or password",
+      });
+    }
+
     const jwt_token = jwt.sign(
       {
-        user: "vyoma",
-        password: "@vyoma@123#",
+        user: username,
+        password: password,
       },
       JWT_SECRET,
       { expiresIn: "24h" }
