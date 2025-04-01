@@ -2,7 +2,7 @@
 
 import React from 'react'
 import DashboardCards from '@/components/dashboardCard'
-import BackgroundImg from '@/assets/images/background.jpg'
+import BackgroundImg from '@/assets/passport-bg.jpg'
 import Image from 'next/image'
 
 export default function Dashboard() {
@@ -14,7 +14,7 @@ export default function Dashboard() {
                         src={BackgroundImg}
                         alt="Background Image"
                         objectFit="cover"
-                        className="absolute opacity-20 inset-0 -z-2"
+                        className="absolute opacity-10 inset-0 -z-2"
                     />
                     <div className="container mx-auto px-6 py-8 relative">
                         <div className="mt-8">

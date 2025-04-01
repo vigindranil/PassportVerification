@@ -11,13 +11,13 @@ export default function allFiles() {
         src={BackgroundImg}
         alt="Background Image"
         objectFit="cover"
-        className="absolute opacity-20 inset-0 -z-2"
+        className="absolute opacity-10 inset-0 -z-2"
       />
       <div className="flex-1 flex flex-col overflow-hidden relative">
         <main className="flex-1 p-6">
           <CardContent>
             <Card>
-              <DataTable heading='Verification Pending (Special Enquiry Officer)' status={80} />
+              <DataTable heading='Verification Pending (Special Enquiry Officer)' status={90} />
             </Card>
           </CardContent>
         </main>

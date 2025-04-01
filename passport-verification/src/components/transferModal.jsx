@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { getPoliceStationsByDsId, showDistrict } from "@/app/allFiles-sp/api"
+import Cookies from "react-cookies"
 
 export function TransferModal({ isOpen, onClose, fileNumber, applicantName, onTransfer }) {
   const [remarks, setRemarks] = useState("")
@@ -14,12 +15,14 @@ export function TransferModal({ isOpen, onClose, fileNumber, applicantName, onTr
   const [selectedPoliceStation, setSelectedPoliceStation] = useState("")
   const [districts, setDistricts] = useState([])
   const [policeStations, setPoliceStations] = useState([])
+  const ds_id = Cookies.load("ds_id")
 
   useEffect(() => {
     const fetchDistricts = async () => {
       try {
         const response = await showDistrict()
         setDistricts(response.data)
+        setSelectedDistrict(ds_id)
       } catch (error) {
         console.log("Error fetching application status:", error)
       }
@@ -71,13 +74,13 @@ export function TransferModal({ isOpen, onClose, fileNumber, applicantName, onTr
           <p>Are you sure you want to transfer this file?</p>
           <div className="space-y-2">
             <Label htmlFor="district">District</Label>
-            <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>
-              <SelectTrigger id="district">
+            <Select value={selectedDistrict} onValueChange={setSelectedDistrict} disabled>
+              <SelectTrigger id="district" disabled>
                 <SelectValue placeholder="Select a district" />
               </SelectTrigger>
               <SelectContent>
                 {districts.map((district) => (
-                  <SelectItem key={district.districtId} value={district.districtId.toString()}>
+                  <SelectItem key={district.districtId} value={district.districtId.toString()} disabled>
                     {district.districtName}
                   </SelectItem>
                 ))}

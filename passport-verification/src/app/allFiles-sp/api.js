@@ -10,7 +10,7 @@ export const updateEnquiryStatus = async (applicationId, type, remarks, mobile) 
             "locationIp": locationIp,
             "macAddress": "-",
             "deviceId": "-",
-            "StatusID": "80",
+            "StatusID": type == 'approve' ? '80' : '60',
             "StatusText": type == 'approve' ? 'SP APPROVED' : 'SP NOT APPROVE',
             "Remarks": remarks,
             mobile

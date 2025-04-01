@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Cookies from "react-cookies";
 import { getDistrictNodalDashBoard } from '@/app/dashboard/api';
-import { CircleDashed, TrendingDown, ArrowRightToLine, Clock, CalendarClock, CircleCheckBig, FileClock, FileCheck2, ClockAlert, CircleCheck, CheckCheck, BadgeCheck } from 'lucide-react';
+import { CircleDashed, TrendingDown, ArrowRightToLine, Clock, CalendarClock, CircleCheckBig, FileClock, FileCheck2, ClockAlert, CircleCheck, CheckCheck, BadgeCheck, Ban } from 'lucide-react';
 import DashboardCard from './dashboard-cards';
 import { Skeleton } from "@/components/ui/skeleton";
 import { getCountEO } from '@/app/dashboard-eo/api';
@@ -24,6 +24,8 @@ const dashboardConfig = {
         { title: "Verification Pending \n(at Police Station)", key: "TotalPendingApplications", icon: Clock, color: "yellow", link: "/allFiles" },
         { title: "Applications Accepted\nbut Verifiaction Pending", key: "EOAccepectButNotStartedVerify", icon: CheckCheck, color: "blue", link: "/acceptedAndVerificationPending-eo" },
         { title: "Verification Completed\nBy EO", key: "EOComplete", icon: BadgeCheck, color: "purple", link: "/verificationCompletedEO" },
+        { title: "ApplicaRejected\nBy SP/DIB", key: "SPReject", icon: Ban, color: "red", link: "/rejected-sp" },
+        { title: "Approved\nBy SP/DIB", key: "SPApprove", icon: FileCheck2, color: "teal", link: "/completed-sp" },
     ],
     30: [
         { title: "Verification Pending", key: "OCPending", icon: Clock, color: "yellow", link: "/allFiles-oc" },
