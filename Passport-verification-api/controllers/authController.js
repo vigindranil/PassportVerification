@@ -402,6 +402,12 @@ export const verifyOtpV1 = async (req, res) => {
         message: "Max Attempts exceeded",
       });
     }
+    else if (result[0][0].ErrorCode == 7) {
+      return res.status(400).json({
+        status: 1,
+        message: "User has been deactivated by District Nodal",
+      });
+    }
 
     if (result[0][0].ErrorCode == 0) {
       const user = JSON.parse(result[0][0]?.UserDetails);

@@ -510,8 +510,8 @@ const UserManagement = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="30">OC/IC</SelectItem>
-              <SelectItem value="20">SP</SelectItem>
-              <SelectItem value="10">DYSP</SelectItem>
+              <SelectItem value="20">SP/DCP</SelectItem>
+              <SelectItem value="10">District Nodal</SelectItem>
               <SelectItem value="40">EO</SelectItem>
               <SelectItem value="50">Spl.Enquiry Officer</SelectItem>
             </SelectContent>
@@ -530,8 +530,8 @@ const UserManagement = () => {
             <SelectContent>
               <SelectItem value="300">OC/IC</SelectItem>
               <SelectItem value="700">DIO/SBO</SelectItem>
-              <SelectItem value="100">DYSP/DSP</SelectItem>
-              <SelectItem value="200">SP/DCSB</SelectItem>
+              <SelectItem value="100">Dy.SP/ACP</SelectItem>
+              <SelectItem value="200">SP/DCP</SelectItem>
               <SelectItem value="400">Addl.SP</SelectItem>
               <SelectItem value="500">Addl.CP/JointCP</SelectItem>
               <SelectItem value="600">CP</SelectItem>
@@ -658,7 +658,7 @@ const UserManagement = () => {
                   <TableHead className="font-semibold">Police Station</TableHead>
                   <TableHead className="font-semibold">Designation</TableHead>
                   <TableHead className="font-semibold">User Role</TableHead>
-                  <TableHead className="font-semibold text-center">Actions</TableHead>
+                  {/* <TableHead className="font-semibold text-center">Actions</TableHead> */}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -687,7 +687,7 @@ const UserManagement = () => {
                       <TableCell>
                         <p>{row?.userType || "N/A"}</p>
                       </TableCell>
-                      <TableCell>
+                      {/* <TableCell>
                         <div className="flex space-x-1">
                           {row.IsActive == 0 && (
                             <Button
@@ -710,7 +710,7 @@ const UserManagement = () => {
                             </Button>
                           )}
                         </div>
-                      </TableCell>
+                      </TableCell> */}
                     </TableRow>
                   ))
                 ) : (
