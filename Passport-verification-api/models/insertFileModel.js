@@ -24,8 +24,8 @@ export async function saveApplicationDetailsModel(
   try {
     // Call the stored procedure with input parameters
     const [rows] = await pool.query(
-      `CALL sp_saveApplicationDetails(
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, @ErrorCode
+      `CALL sp_saveApplicationDetailsv1(
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       );`,
       [
         DPHqID,
@@ -51,8 +51,10 @@ export async function saveApplicationDetailsModel(
     );
 
     // Fetch the `@ErrorCode` output parameter
-    const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
-    return result[0].ErrorCode;
+
+    // console.log("error code model", rows[0][0].ErrorCode);
+
+    return rows[0][0].ErrorCode;
   } catch (error) {
     console.error("Error calling sp_saveApplicationDetails:", error);
     throw error;
