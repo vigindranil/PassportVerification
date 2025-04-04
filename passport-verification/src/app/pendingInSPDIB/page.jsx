@@ -19,7 +19,7 @@ export default function allFiles() {
         <main className="flex-1 p-6">
           <CardContent>
             <Card>
-              <DataTable heading='Verification Pending (SP/DIB)' status={50} />
+              <DataTable heading='Verification Pending (SP/DIB)' status={55} />
             </Card>
           </CardContent>
         </main>

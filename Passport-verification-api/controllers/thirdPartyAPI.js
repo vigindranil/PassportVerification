@@ -434,32 +434,49 @@ export const getMadhyamikCertificate = async (req, res) => {
     const { roll, number, examYear } = req.body; // Extract parameters from body
 
     if (!roll || !number || !examYear) {
-      return res.status(400).json({ status: 1, message: "Roll, Number, and Exam Year are required." });
+      return res.status(400).json({
+        status: 1,
+        message: "Roll, Number, and Exam Year are required.",
+      });
     }
 
     // Step 1: Generate Token
     const tokenResponse = await axios.post(
-      "http://117.250.96.97:88/api/auth/generate-token",
+      "https://wbbse.wb.gov.in:8181/api/auth/generate-token",
       { username: "admin", password: "123" },
-      { headers: { "Content-Type": "application/json" } }
+      {
+        headers: { "Content-Type": "application/json" },
+        httpsAgent: new https.Agent({
+          secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+        }),
+      }
     );
 
     const token = tokenResponse.data?.token;
     if (!token) {
-      return res.status(500).json({ status:1, message: "Failed to generate token" });
+      return res
+        .status(500)
+        .json({ status: 1, message: "Failed to generate token" });
     }
 
     // Step 2: Fetch Madhyamik Certificate Details
     const certificateResponse = await axios.post(
-      `http://117.250.96.97:88/api/students/verifyRollNo?roll=${roll}&number=${number}&examYear=${examYear}`,
+      `https://wbbse.wb.gov.in:8181/api/students/verifyRollNo?roll=${roll}&number=${number}&examYear=${examYear}`,
       {},
-      { headers: { Authorization: `Bearer ${token}` } }
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        httpsAgent: new https.Agent({
+          secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+        }),
+      }
     );
 
     console.log("certificateResponse", certificateResponse?.data);
-    
+
     if (!certificateResponse?.data) {
-      return res.status(400).json({ status: 1, message: "Certificate not found", data: null });
+      return res
+        .status(400)
+        .json({ status: 1, message: "Certificate not found", data: null });
     }
     return res.status(200).json({
       status: 0,
@@ -467,7 +484,10 @@ export const getMadhyamikCertificate = async (req, res) => {
       data: certificateResponse?.data,
     });
   } catch (error) {
-    console.error("Error fetching certificate details:", error?.message || error);
+    console.error(
+      "Error fetching certificate details:",
+      error?.message || error
+    );
     return res.status(500).json({
       status: 1,
       message: "Certificate not found",

@@ -17,7 +17,7 @@ export default function allFiles() {
         <main className="flex-1 p-6">
           <CardContent>
             <Card>
-              <PendingApplicationDatatable heading='Total Applications Pending (OC)' status={10} />
+              <PendingApplicationDatatable heading='Total Applications Pending (OC)' status={15} />
             </Card>
           </CardContent>
         </main>
