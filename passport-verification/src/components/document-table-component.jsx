@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
-import { AlertCircle, CheckCircle2, CheckCircle2Icon, Eye, FileCheck2, Loader, MapPin, Search } from "lucide-react"
+import { AlertCircle, BadgeCheck, CheckCircle2, CheckCircle2Icon, Clock4, ClockAlert, Eye, FileCheck2, Frown, Loader, MapPin, Search } from "lucide-react"
 import Image from "next/image"
 import { VisuallyHidden } from "@/components/ui/visually-hidden"
 import { getBirthCertificateDetails, getLandDeedDetails, getMadhyamikCertificate, getWBSEDCLDetails, verifyApplication } from "@/app/applicationDetails/[FileNumber]/api"
@@ -13,6 +13,7 @@ import { ToastAction } from "@/components/ui/toast"
 import { motion } from "framer-motion";
 import { Button } from "./ui/button"
 import moment from "moment"
+import { Badge } from "./ui/badge"
 
 const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, verificationSuccess }) => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
@@ -270,11 +271,11 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
       {[...Array(3)].map((_, index) => (
         <TableRow key={index}>
           <TableCell><div className="h-4 bg-gray-300 rounded w-24 animate-pulse"></div></TableCell>
-          <TableCell><div className="h-4 bg-gray-300 rounded w-32 animate-pulse"></div></TableCell>
-          <TableCell><div className="h-4 bg-gray-300 rounded w-40 animate-pulse"></div></TableCell>
+          <TableCell><div className="h-4 bg-gray-300 rounded w-22 animate-pulse"></div></TableCell>
+          <TableCell><div className="h-4 bg-gray-300 rounded w-20 animate-pulse"></div></TableCell>
           <TableCell><div className="h-4 bg-gray-300 rounded w-28 animate-pulse"></div></TableCell>
-          <TableCell><div className="h-4 bg-gray-300 rounded w-40 animate-pulse"></div></TableCell>
-          <TableCell><div className="h-4 bg-gray-300 rounded w-28 animate-pulse"></div></TableCell>
+          <TableCell><div className="h-4 bg-gray-300 rounded w-20 animate-pulse"></div></TableCell>
+          <TableCell><div className="h-4 bg-gray-300 rounded w-20 animate-pulse"></div></TableCell>
         </TableRow>
       ))}
     </>
@@ -358,7 +359,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                 </VisuallyHidden>
                 <div className="flex h-full">
                   <div className={`${(selectedImage?.DocumentTypeId == 1 || selectedImage?.DocumentTypeId == 8) && (userType != 10) ? 'w-1/2' : 'w-full p-5'} max-h-[90vh] flex items-center justify-center bg-gray-100 rounded-md`}>
-                    {type == "jpg" ? (
+                    {selectedImage.FileType == "jpg" ? (
                       <div className="relative w-full h-full overflow-hidden mx-auto" onClick={() => setZoom(!zoom)}>
                         <motion.div className="mx-auto h-full" animate={{ scale: zoom ? 1.7 : 1 }} transition={{ duration: 0.3 }}>
                           <img
@@ -368,11 +369,13 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                           />
                         </motion.div>
                       </div>
-                    ) : type === "pdf" ? (
-                      <embed src={selectedDoc} type="application/pdf" width="100%" height="100%" />
-                    ) : (
-                      "No file selected"
-                    )}
+                    )
+                      : selectedImage.FileType == "pdf" ? (
+                        <embed src={`https://${selectedDoc}`} type="application/pdf" width="100%" height="100%" />
+                      )
+                        : (
+                          "No file selected"
+                        )}
                   </div>
 
                   {/* Matric Board Certificate */}
@@ -385,21 +388,11 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                         <p><span className="font-bold">Roll:</span> {selectedImage?.IdNumber}</p>
                         <p><span className="font-bold">Number:</span> {selectedImage?.IdNumber2}</p>
                         <p><span className="font-bold">Year of passing:</span> {selectedImage?.IdNumber3}</p>
-                        {selectedImage?.Isverified ? <p><span className="font-bold">Verified by:</span> {selectedImage?.verifyBy ? selectedImage?.verifyBy : 'N/A'}</p> : null}
                       </div>
 
                       {/* current verification Land Deed Data */}
                       {(selectedImage?.Isverified || verified || verifiedResponse) ?
-                        <>
-                          <button
-                            className={`${verified && 'cursor-not-allowed'} flex ${verified ? 'bg-green-500 hover:bg-green-500 text-slate-200' : 'bg-zinc-100 text-slate-600 border-[1.3px] hover:bg-zinc-200'}  p-1 m-1 flex items-center px-3 rounded-md mx-auto`}
-                            onClick={() => handleVerifyApplication(4, 'verifyMadhyamikCertificate', fileNo, selectedImage?.DocumentId, { IdNumber: selectedImage?.IdNumber, IdNumber2: selectedImage?.IdNumber2, IdNumber3: selectedImage?.IdNumber3 }, verifiedResponse)}
-                            disabled={selectedImage?.Isverified || verifyApplicationLoading}
-                          >
-                            {(verifyApplicationLoading) ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Approving</span> : verified ? <><CheckCircle2Icon className="h-4 w-4 mr-1" /> <span>Document Verifed</span></> : <><span className="flex gap-1 justify-center items-center"><FileCheck2 size={18} className="font-extrabold text-green-600" />Approve The Document</span></>}
-                          </button>
-
-                        </>
+                        null
                         :
                         <button
                           className="flex bg-blue-500 text-slate-200 justify-center items-center p-1 m-1 mt-5 px-3 rounded-md hover:bg-blue-600 mx-auto"
@@ -438,8 +431,9 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                       </div>
                         : (verifiedResponse?.status == 1) ? <div className="w-full h-full">
                           <hr className="my-2" />
-                          <h1 className="text-center font-bold text-red-400 m-2 flex justify-center gap-1"><AlertCircle className="text-red-600" /> {verifiedResponse?.message || 'No record found'}</h1>
-                        </div> : null
+                          <h1 className="font-bold text-sm text-yellow-400 m-2 flex flex-col items-center justify-center gap-0"><Frown className="text-yellow-600 mr-1" /> No record found with this roll no. and year</h1>
+                        </div> :
+                          null
                       }
 
                     </div>
@@ -453,21 +447,11 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                       <div>
                         <p><span className="font-bold">Mouza Code (IDN):</span> {selectedImage?.IdNumber}</p>
                         <p><span className="font-bold">Khatian Number:</span> {selectedImage?.IdNumber2}</p>
-                        {selectedImage?.Isverified ? <p><span className="font-bold">Verified by:</span> {selectedImage?.verifyBy ? selectedImage?.verifyBy : 'N/A'}</p> : null}
                       </div>
 
                       {/* current verification Land Deed Data */}
                       {(selectedImage?.Isverified || verified || verifiedResponse) ?
-                        <>
-                          <button
-                            className={`${verified && 'cursor-not-allowed'} flex ${verified ? 'bg-green-500 hover:bg-green-500 text-slate-200' : 'bg-zinc-100 text-slate-600 border-[1.3px] hover:bg-zinc-200'}  p-1 m-1 flex items-center px-3 rounded-md mx-auto`}
-                            onClick={() => handleVerifyApplication(3, 'getLandDeedDetails', fileNo, selectedImage?.DocumentId, { IdNumber: selectedImage?.IdNumber, IdNumber2: selectedImage?.IdNumber2 }, verifiedResponse)}
-                            disabled={selectedImage?.Isverified || verifyApplicationLoading}
-                          >
-                            {(verifyApplicationLoading) ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Approving</span> : verified ? <><CheckCircle2Icon className="h-4 w-4 mr-1" /> <span>Document Verifed</span></> : <><span className="flex gap-1 justify-center items-center"><FileCheck2 size={18} className="font-extrabold text-green-600" />Approve The Document</span></>}
-                          </button>
-
-                        </>
+                        null
                         :
                         <button
                           className="flex bg-blue-500 text-slate-200 justify-center items-center p-1 m-1 mt-5 px-3 rounded-md hover:bg-blue-600 mx-auto"
@@ -504,7 +488,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                       </div>
                         : (verifiedResponse?.[0]) ? <div className="w-full h-full">
                           <hr className="my-2" />
-                          <h1 className="text-center font-bold text-red-400 m-2 flex justify-center gap-1"><AlertCircle className="text-red-600" /> {verifiedResponse?.data[0]?.ERROR || 'No record found with this Mouza code & Khatian no.'}</h1>
+                          <h1 className="font-bold text-sm text-yellow-400 m-2 flex flex-col items-center justify-center gap-0"><Frown className="text-yellow-600 mr-1" /> {verifiedResponse?.data[0]?.ERROR || 'No record found with this Mouza code & Khatian no.'}</h1>
                         </div> : null
                       }
 
@@ -520,7 +504,6 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                       <div>
                         <p><span className="font-bold">Consumer ID:</span> {selectedImage?.IdNumber}</p>
                         <p><span className="font-bold">Installation Number:</span> {selectedImage?.IdNumber2}</p>
-                        {selectedImage?.Isverified ? <p><span className="font-bold">Verified by:</span> {selectedImage?.verifyBy ? selectedImage?.verifyBy : 'N/A'}</p> : null}
                       </div>
 
                       {/* already verified electricity data */}
@@ -548,21 +531,12 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                       </div>
                         : (verifiedResponse == "") ? <div className="w-full h-full">
                           <hr className="my-2" />
-                          <h1 className="text-center font-bold text-red-400 m-2 flex justify-center gap-1"><AlertCircle className="text-red-600" /> No record found with this consumer ID. & installation no.</h1>
+                          <h1 className="font-bold text-sm text-yellow-400 m-2 flex flex-col items-center justify-center gap-0"><Frown className="text-yellow-600 mr-1" /> No record found with this consumer ID. & installation no.</h1>
                         </div> : null
                       }
 
                       {(selectedImage?.Isverified || verified || verifiedResponse) ?
-                        <>
-                          <button
-                            className={`${verified && 'cursor-not-allowed'} flex ${verified ? 'bg-green-500 hover:bg-green-500 text-slate-200' : 'bg-zinc-100 text-slate-600 border-[1.3px] hover:bg-zinc-200'} justify-center items-center p-1 m-1 px-3 rounded-md mx-auto`}
-                            onClick={() => handleVerifyApplication(1, 'getWBSEDCLDetails', fileNo, selectedImage?.DocumentId, { IdNumber: selectedImage?.IdNumber, IdNumber2: selectedImage?.IdNumber2 }, verifiedResponse)}
-                            disabled={selectedImage?.Isverified || verifyApplicationLoading}
-                          >
-                            {(verifyApplicationLoading) ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Approving</span> : verified ? <><CheckCircle2Icon className="h-4 w-4 mr-1" /> <span>Document Verifed</span></> : <><span className="flex gap-1 justify-center items-center"><FileCheck2 size={18} className="font-extrabold text-green-600" />Approve The Document</span></>}
-                          </button>
-
-                        </>
+                        null
                         :
                         <button
                           className="flex bg-blue-500 text-slate-200 justify-center items-center p-1 m-1 mt-5 px-3 rounded-md hover:bg-blue-600 mx-auto"
@@ -584,27 +558,9 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                       <div>
                         <p><span className="font-bold">Certificate No:</span> {selectedImage?.IdNumber}</p>
                         <p><span className="font-bold">Date of Birth:</span> {moment(selectedImage?.IdNumber2).format('DD/MM/YYYY')}</p>
-                        {selectedImage?.Isverified == 1 ? <p><span className="font-bold">Verified by:</span> {selectedImage?.verifyBy ? selectedImage?.verifyBy : 'N/A'}</p> : null}
                       </div>
                       {(selectedImage?.Isverified || verified || verifiedResponse) ?
-                        <>
-                          {!verified ?
-                            <Button
-                              size="small"
-                              className={`${verified && 'cursor-not-allowed'} flex ${verified ? 'bg-green-500 hover:bg-green-500' : 'bg-zinc-100 text-slate-600 border-[1.3px] hover:bg-zinc-200'} justify-center items-center p-1 m-1 px-3 rounded-md mx-auto`}
-                              onClick={() => handleVerifyApplication(1, 'getWBSEDCLDetails', fileNo, selectedImage?.DocumentId, { IdNumber: selectedImage?.IdNumber, IdNumber2: selectedImage?.IdNumber2 }, verifiedResponse)}
-                              disabled={verified || verifyApplicationLoading}
-                            >
-                              {(verifyApplicationLoading) ? <span className="flex items-center gap-1"><Loader size={18} className="animate-spin font-bold" /> Approving</span> : verified ? <><CheckCircle2Icon className="h-4 w-4 mx-0" /> <span>Document Verifed</span></> : <><span className="flex gap-1 justify-center items-center"><FileCheck2 size={18} className="font-extrabold text-green-600" />Approve The Document</span></>}
-                            </Button>
-                            : <button
-                              className={`${verified && 'cursor-not-allowed'} flex bg-green-500 hover:bg-green-500 text-slate-50 justify-center items-center p-1 text-sm m-1 px-3 rounded-md mx-auto gap-1`}
-                              disabled={verified || verifyApplicationLoading}
-                            >
-                              <><CheckCircle2Icon className="h-4 w-4 mx-0" /> <span>Document Verifed</span></>
-                            </button>
-                          }
-                        </>
+                        null
                         :
                         <button
                           className='flex bg-blue-500 text-slate-200 justify-center items-center p-1 m-1 my-3 px-3 rounded-md hover:bg-blue-600 mx-auto'
@@ -664,19 +620,71 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                         </div>
                         : (verifiedResponse == "") ? <div className="w-full h-full">
                           <hr className="my-2" />
-                          <h1 className="text-center font-bold text-red-400 m-2 flex justify-center gap-1"><AlertCircle className="text-red-600" /> No record found with this certificate no. & date of birth</h1>
+                          <h1 className="font-bold text-sm text-yellow-400 m-2 flex flex-col items-center justify-center gap-0"><Frown className="text-yellow-600 mr-1" /> No record found</h1>
+                          <div className="text-justify m-2 flex flex-col gap-1 border p-2 rounded-md bg-gray-50 text-xs"> 
+                            <b className="flex gap-1 justify-center"><AlertCircle className="h-4 w-4 text-violet-600" /> Note:</b> Only the certificate which is generated from Janma-Mrityu-Tathya Portal will be show here. If no data is found, you can still approve it after manual check.
+                          <br/>
+                          <br/>
+                          যদি কোনো ডেটা না পাওয়া যায়, তাহলে ম্যানুয়ালি যাচাই করে ডকুমেন্ট অনুমোদন করতে পারেন।
+                          </div>
                         </div> : null
                       }
                     </div>
                   </div>}
 
                   {/* Remarks */}
-                  {((type != "pdf") && (userType != 10) && (docType != 1 && docType != 8 && docType != 26 && docType != 25)) && <div className={`w-1/3 p-10 h-full`}>
-                    <div className="px-2">
+                  {((type != "pdf") && (userType != 10) && (docType != 1)) && <div className={`w-1/3 p-2 pt-10 h-full`}>
+                    <div className="px-2 pt-5">
 
-                      <div>
-                        <p><span className="font-bold">Remarks against the document:</span><br /> {selectedImage?.Remarks || "N/A"}</p>
-                      </div>
+                      <div className="flex my-1 gap-2"><span className="font-bold">Remarks: </span> {selectedImage?.Remarks || "N/A"}</div>
+
+                      <div className="block w-auto mb-5"><span className="font-bold">Verified by:</span> {selectedImage?.verifyBy ? selectedImage?.verifyBy : <Badge className="bg-amber-400 hover:bg-amber-500"><Clock4 size={16} className="mr-1" /> EO Approval Pending</Badge>}</div>
+                      {(verified) ? <>
+                        <Button
+                          className={`cursor-not-allowed disabled:bg-green-500 mt-5 bg-green-500 hover:bg-green-500 text-slate-200 p-1 m-1 flex items-center px-3 rounded-md mx-auto`}
+                        >
+                          <BadgeCheck className="h-6 w-6" /> Document Verifed
+                        </Button>
+
+                      </>
+                        : <Button
+                          className={`mt-5 flex bg-zinc-100 text-slate-600 border-[1.3px] hover:border-green-500 hover:bg-zinc-200 p-1 m-1 items-center px-3 rounded-md mx-auto`}
+                          onClick={() => handleVerifyApplication(docType == 14 ? 4 : docType == 26 ? 3 : docType == 1 ? 2 : docType == 8 ? 1 : 99, docType == 14 ? 'MadhyamikCertificate' : docType == 26 ? 'LandDeedDetails' : docType == 1 ? 'WBSEDCLDetails' : docType == 8 ? 'BirthCertificateDetails' : 'otherThanThirdPartyApiDocs', fileNo, selectedImage?.DocumentId, { IdNumber: selectedImage?.IdNumber, IdNumber2: selectedImage?.IdNumber2, IdNumber3: selectedImage?.IdNumber3 }, verifiedResponse)}
+                          disabled={selectedImage?.Isverified || verifyApplicationLoading}
+                        >
+                          {(verifyApplicationLoading) ? <span className="flex items-center gap-2"><Loader size={18} className="animate-spin font-bold" /> Approving</span> : verified ? <><CheckCircle2Icon className="h-4 w-4 mr-1" /> <span>Document Verifed</span></> : <><span className="flex gap-1 justify-center items-center text-xs"><FileCheck2 size={18} className="font-extrabold text-green-600" /><span className="flex flex-1">Approve the Document</span></span></>}
+                        </Button>
+                      }
+
+                      {docType == 14 || docType == 26 || docType == 1 || docType == 8 ?
+                        <div className="w-full h-[50vh] overflow-y-scroll border p-2 rounded-md mt-3 bg-violet-50 ">
+                          <span className="flex justify-center items-center gap-1 text-slate-500 mb-2"><AlertCircle className="text-violet-700" />Instructions:</span>
+                          <p className="text-xs text-slate-500 leading-tight mb-1"><b>1.</b> Click 'Retrieve Data'.</p>
+                          <p className="text-xs text-slate-500 leading-tight mb-1"><b>2.</b> Match the data with the image on the left.</p>
+                          <p className="text-xs text-slate-500 leading-tight mb-1"><b>3.</b> Then click 'Approve the Document'.</p>
+                          <p className="text-xs text-slate-500 leading-tight mb-1"><b>Note:</b> If no data is found, you can still approve it after manual check.</p>
+
+                          <br />
+
+                          <p className="text-xs text-slate-500 leading-tight mb-1"><b>1.</b> 'Retrieve Data' বাটনে ক্লিক করুন।</p>
+                          <p className="text-xs text-slate-500 leading-tight mb-1"><b>2.</b> বাম পাশে থাকা ছবির সাথে ডেটা মিলিয়ে দেখুন।</p>
+                          <p className="text-xs text-slate-500 leading-tight mb-1"><b>3.</b> মিলিয়ে নেওয়ার পর 'Approve the Document' বাটনে ক্লিক করুন।</p>
+                          <p className="text-xs text-slate-500 leading-tight mb-1"><b>Note:</b> যদি কোনো ডেটা না পাওয়া যায়, তাহলে ম্যানুয়ালি যাচাই করে ডকুমেন্ট অনুমোদন করতে পারেন।</p>
+                        </div>
+                        : 
+                        <div className="w-full h-[50vh] overflow-y-scroll border p-2 rounded-md mt-3 bg-violet-50 ">
+                          <span className="flex justify-center items-center gap-1 text-slate-500 mb-2"><AlertCircle className="text-violet-700" />Instructions:</span>
+                          <p className="text-xs text-slate-500 leading-tight mb-1"><b>1.</b> Verify Document image & Click 'Approve the Document'.</p>
+                          <p className="text-xs text-slate-500 leading-tight mb-1"><b>Note:</b> If already verified, button will show 'Verifed' in green.</p>
+
+                          <br />
+
+                          <p className="text-xs text-slate-500 leading-tight mb-1"><b>1.</b> ডকুমেন্টের ছবি যাচাই করুন এবং 'Approve the Document' বাটনে ক্লিক করুন।</p>
+                          <p className="text-xs text-slate-500 leading-tight mb-1"><b>Note:</b> যদি আগে থেকেই যাচাই করা থাকে, তাহলে বাটনে 'Verified' সবুজ রঙে দেখা যাবে।</p>
+                        </div>
+                        }
+
+
 
                     </div>
                   </div>}

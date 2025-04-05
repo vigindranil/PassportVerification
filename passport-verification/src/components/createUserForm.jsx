@@ -658,7 +658,7 @@ const UserManagement = () => {
                   <TableHead className="font-semibold">Police Station</TableHead>
                   <TableHead className="font-semibold">Designation</TableHead>
                   <TableHead className="font-semibold">User Role</TableHead>
-                  {/* <TableHead className="font-semibold text-center">Actions</TableHead> */}
+                  <TableHead className="font-semibold text-center">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -687,7 +687,7 @@ const UserManagement = () => {
                       <TableCell>
                         <p>{row?.userType || "N/A"}</p>
                       </TableCell>
-                      {/* <TableCell>
+                      <TableCell>
                         <div className="flex space-x-1">
                           {row.IsActive == 0 && (
                             <Button
@@ -710,7 +710,7 @@ const UserManagement = () => {
                             </Button>
                           )}
                         </div>
-                      </TableCell> */}
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (

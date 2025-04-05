@@ -80,7 +80,6 @@ export const verifyOtpV1 = async (username, otp) => {
     Cookies.save("district", data.district);
     Cookies.save("ds_id", data.DistrictID);
     Cookies.save("__i", 1); // otp verified
-    console.log("message", data.message)
     return data;
   } catch (error) {
     console.log("Error:", error);

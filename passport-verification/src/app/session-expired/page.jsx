@@ -1,10 +1,21 @@
 'use client'
-import React from "react"
-import { Button } from "@/components/ui/button"
+import React, { useEffect } from "react"
 import { TriangleAlert } from "lucide-react"
 import Link from "next/link"
+import Cookies from 'react-cookies'
 
 const SessionExpired = () => {
+  useEffect(() => {
+    // clear all cookies on session expired from react-cookies
+
+    Cookies.remove("data");
+    Cookies.remove("name");
+    Cookies.remove("type");
+    Cookies.remove("ps");
+    Cookies.remove("district");
+    Cookies.remove("ds_id");
+    Cookies.remove("__i");
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

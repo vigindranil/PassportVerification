@@ -22,6 +22,7 @@ import Cookies from "react-cookies";
 import PoliceClearanceCertificate from "@/components/police-clearance-certificate"
 import Image from "next/image"
 import BackgroundImg from "@/assets/passport-bg.jpg"
+import ApplicationRecommendation from "@/components/application-recommendation"
 
 export default function Page({ FileNumber }) {
   const [applicationDetails, setApplicationDetails] = useState(null);
@@ -35,6 +36,13 @@ export default function Page({ FileNumber }) {
   const [criminalRecordsRemark, setCriminalRecordsRemark] = useState("");
   const [districtName, setDistrictName] = useState("");
   const [PSName, setPSName] = useState("");
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    // Load user role on the client side
+    const role = Cookies.load("type");
+    setUserRole(role);
+  }, []);
 
   const { toast } = useToast()
 
@@ -45,6 +53,7 @@ export default function Page({ FileNumber }) {
       const response = await getDetailsApplicationId(ApplicationId);
       console.log("Application Details Data:", response);
       setApplicationDetails(response?.data);
+
     } catch (e) {
       console.log("Error:", e);
     } finally {
@@ -213,7 +222,7 @@ export default function Page({ FileNumber }) {
             src={BackgroundImg}
             alt="Background Image"
             objectFit="cover"
-            className="absolute opacity-20 inset-0 -z-2"
+            className="absolute opacity-10 inset-0 -z-2"
           />
           <div className="container mx-auto px-6 py-8 relative">
             <Tabs defaultValue="applicationDetails" className="w-full">
@@ -223,6 +232,10 @@ export default function Page({ FileNumber }) {
                 <TabsTrigger className="rounded-full bg-white hover:text-blue-500 ring-1 ring-slate-500/40 hover:shadow-md data-[state=active]:bg-blue-500 data-[state=active]:text-white" value="documents">Documents Uploaded by EO</TabsTrigger>
                 <TabsTrigger className="rounded-full bg-white hover:text-blue-500 ring-1 ring-slate-500/40 hover:shadow-md data-[state=active]:bg-blue-500 data-[state=active]:text-white" value="crimeVerification">Crime Verification</TabsTrigger>
                 <TabsTrigger className="rounded-full bg-white hover:text-blue-500 ring-1 ring-slate-500/40 hover:shadow-md data-[state=active]:bg-blue-500 data-[state=active]:text-white" value="statusHistory">Application Timeline</TabsTrigger>
+                {
+                  userRole != 10 && userRole != 50 &&
+                  <TabsTrigger className="rounded-full bg-white hover:text-blue-500 ring-1 ring-slate-500/40 hover:shadow-md data-[state=active]:bg-blue-500 data-[state=active]:text-white" value="applicationRecommendation">Recommend/Not Recommend</TabsTrigger>
+                }
               </TabsList>
 
               {/* Application Details */}
@@ -664,7 +677,7 @@ export default function Page({ FileNumber }) {
                           <>
                             <div className="space-y-2 w-full min-h-[200px] h-full py-10 flex justify-center items-baseline">
                               <div className="flex flex-col w-full min-h-[200px] text-center justify-center items-center">
-                                <span className="text-base font-medium text-gray-500">No Criminal Records Found</span>
+                                <span className="text-base font-medium text-gray-500 flex flex-col justify-center items-center"><CheckCircle2 className="text-green-400" />No Criminal Records Found</span>
                                 <div className="flex flex-col justify-start items-start w-auto max-w-[500px] py-2">
                                   <span className="text-sm"><b>Verified By:</b> {applicationDetails?.applicationDetails?.CriminalRecoedVerifiedby}</span>
                                   <span className="text-justify text-sm"><b>Remarks:</b> {applicationDetails?.applicationDetails?.CrimalRemarks || 'N/A'}</span>
@@ -710,6 +723,11 @@ export default function Page({ FileNumber }) {
               {/* Application Status History */}
               <TabsContent value="statusHistory">
                 <ApplicationStatusHistory status={applicationDetails?.status} isLoadingStatusHistrory={isLoadingStatusHistrory} />
+              </TabsContent>
+
+              {/* Application Recommendation */}
+              <TabsContent value="applicationRecommendation">
+                <ApplicationRecommendation fileNo={FileNumber} />
               </TabsContent>
 
             </Tabs>

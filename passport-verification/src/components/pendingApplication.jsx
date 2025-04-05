@@ -16,12 +16,10 @@ import { toast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import Cookies from "react-cookies";
 import { FileAcceptModal } from "./approve-reject-modal"
-import { TransferModal } from "@/components/transferModal"
 import { updateEnquiryStatus } from "@/app/acceptedAndVerificationPending-eo/api"
 import { transferapplication } from "@/app/allFiles-sp/api"
 
 export default function PendingApplicationDatatable({ status, heading, period, flag }) {
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
   const [selectedDetails, setSelectedDetails] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")

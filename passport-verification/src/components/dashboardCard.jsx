@@ -10,21 +10,21 @@ import { getCountEO } from '@/app/dashboard-eo/api';
 
 const dashboardConfig = {
     10: [
-        { title: "Total Pending \nApplications", key: "TotalPendingApplications", icon: Clock, color: "purple", link: "/totalPending" },
-        { title: "Last 15 Days Pending\nApplications", key: "Last15DaysPendingApplications", icon: CalendarClock, color: "blue", link: "/last15DaysPending" },
+        { title: "Total Pending \nApplications to Accept", key: "TotalPendingApplications", icon: Clock, color: "purple", link: "/totalPending" },
+        { title: "Last 15 Days Pending\nApplications to Accept", key: "Last15DaysPendingApplications", icon: CalendarClock, color: "blue", link: "/last15DaysPending" },
         { title: "Accepted but Verification Pending (EO)", key: "EOAccepectButNotStartedVerify", icon: CircleCheckBig, color: "green", link: "/eoAcceptedFile" },
         // { title: "Verification Pending \n(EO)", key: "EOStartedVerify", icon: FileClock, color: "yellow", link: "/pendingVerificatonEO" },
         { title: "Verified by EO\n ", key: "EOComplete", icon: FileCheck2, color: "lime", link: "/verificationCompletedEO" },
         { title: "Verification Pending \n(OC)", key: "OCPending", icon: ClockAlert, color: "red", link: "/pendingInOC" },
         { title: "Verified By OC\n ", key: "OCComplete", icon: BadgeCheck, color: "teal", link: "/completed-oc" },
         { title: "Verification Pending \n(SP/DIB)", key: "SPPending", icon: Clock, color: "orange", link: "/pendingInSPDIB" },
-        { title: "Verification Pending \n(Enquiry Officer)", key: "SEPending", icon: Clock, color: "pink", link: "/pendingInEnquiryOfficer" },
+        { title: "Verification Pending \n(Spl. Enquiry Officer)", key: "SEPending", icon: Clock, color: "pink", link: "/pendingInEnquiryOfficer" },
     ],
     40: [
         { title: "Verification Pending \n(at Police Station)", key: "TotalPendingApplications", icon: Clock, color: "yellow", link: "/allFiles" },
         { title: "Applications Accepted\nbut Verifiaction Pending", key: "EOAccepectButNotStartedVerify", icon: CheckCheck, color: "blue", link: "/acceptedAndVerificationPending-eo" },
         { title: "Verification Completed\nBy EO", key: "EOComplete", icon: BadgeCheck, color: "purple", link: "/verificationCompletedEO" },
-        { title: "ApplicaRejected\nBy SP/DIB", key: "SPReject", icon: Ban, color: "red", link: "/rejected-sp" },
+        { title: "Application Rejected\nBy SP/DIB", key: "SPReject", icon: Ban, color: "red", link: "/rejected-sp" },
         { title: "Approved\nBy SP/DIB", key: "SPApprove", icon: FileCheck2, color: "teal", link: "/completed-sp" },
     ],
     30: [
@@ -32,27 +32,25 @@ const dashboardConfig = {
         { title: "Verified Applications", key: "OCComplete", icon: BadgeCheck, color: "purple", link: "/completed-oc" },
     ],
     20: [
-        { title: "Total Pending Applications", key: "TotalPendingApplications", icon: CircleDashed, color: "purple", link: "/totalPending" },
+        { title: "Total Pending Applications to Accept", key: "TotalPendingApplications", icon: CircleDashed, color: "purple", link: "/totalPending" },
         { title: "Verification Pending (SP/DIB)", key: "SPPending", icon: ArrowRightToLine, color: "orange", link: "/allFiles-sp" },
         { title: "Verified By SP/DIB", key: "SPDone", icon: ArrowRightToLine, color: "pink", link: "/completed-sp" },
-        { title: "Last 15 Days Pending", key: "Last15DaysPendingApplications", icon: TrendingDown, color: "blue", link: "/last15DaysPending" },
+        { title: "Last 15 Days Pending to Accept", key: "Last15DaysPendingApplications", icon: TrendingDown, color: "blue", link: "/last15DaysPending" },
         { title: "Accepted by EO", key: "EOAccepectButNotStartedVerify", icon: ArrowRightToLine, color: "green", link: "/eoAcceptedFile" },
         // { title: "Verification Pending (EO)", key: "EOStartedVerify", icon: ArrowRightToLine, color: "yellow", link: "/pendingVerificatonEO" },
         { title: "Verified by EO", key: "EOComplete", icon: ArrowRightToLine, color: "lime", link: "/verificationCompletedEO" },
         { title: "Verification Pending (OC)", key: "OCPending", icon: ArrowRightToLine, color: "red", link: "/pendingInOC" },
         { title: "Verified By OC", key: "OCComplete", icon: ArrowRightToLine, color: "teal", link: "/completed-oc" },
-        { title: "Verification Pending \n(Enquiry Officer)", key: "SEPending", icon: ArrowRightToLine, color: "yellow", link: "/pendingInEnquiryOfficer" },
-        { title: "RE-Verified by Enquiry Officer", key: "SPPendingReverify", icon: ArrowRightToLine, color: "orange", link: "/re-verifiedBy-se" },
+        { title: "Verification Pending \n(Spl. EO)", key: "SEPending", icon: ArrowRightToLine, color: "yellow", link: "/pendingInEnquiryOfficer" },
+        { title: "RE-Verified by Spl. EO", key: "SPPendingReverify", icon: ArrowRightToLine, color: "orange", link: "/re-verifiedBy-se" },
         // { title: "Transferd Case", key: "transferCaseCompleted", icon: ArrowRightToLine, color: "green", link: "/transferCaseCompleted" },
         // { title: "Pending Transfer Case", key: "transferCasePending", icon: ArrowRightToLine, color: "red", link: "/transferCasePending" },
         // { title: "Verified by Enquiry Officer", key: "SEComplete", icon: ArrowRightToLine, color: "blue", link: "/completed-se" },
         // { title: "Verified by Enquiry Officer", key: "SPPendingReverify", icon: ArrowRightToLine, color: "orange", link: "/reverifiedBySE" },
-        
-
     ],
     50: [
-        { title: "Verification Pending (SE)", key: "SEPending", icon: ArrowRightToLine, color: "purple", link: "/allFiles-se" },
-        { title: "Verified By (SE)", key: "SEComplete", icon: ArrowRightToLine, color: "lime", link: "/completed-se" },
+        { title: "Verification Pending (Spl. EO)", key: "SEPending", icon: ArrowRightToLine, color: "purple", link: "/allFiles-se" },
+        { title: "Re-Verified By Spl. EO", key: "SEComplete", icon: ArrowRightToLine, color: "lime", link: "/completed-se" },
     ],
 };
 
