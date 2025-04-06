@@ -11,3 +11,12 @@ export const getDistrictNodalDashBoard = async () => {
     return null;
   }
 };
+export const getCountSE = async () => {
+  try {
+
+    return await postRequest("enquiryOfficers/getCountSE");
+  } catch (error) {
+    console.log("Error saving user:", error);
+    return null;
+  }
+};

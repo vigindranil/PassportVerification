@@ -155,7 +155,8 @@ export default function PendingApplicationDatatable({ status }) {
   const handleAcceptFile = async (applicationId, type, remarks, mobile) => {
     try {
       // Implement the logic for accepting the file
-      const response = await updateEnquiryStatus(applicationId, type, remarks, mobile);
+      const reverified = applicationStatus == 100 ? 1 : 0;
+      const response = await updateEnquiryStatus(applicationId, type, remarks, mobile, reverified);
       console.log('reponse:', response);
 
       if (response?.status == 0) {
@@ -334,6 +335,7 @@ export default function PendingApplicationDatatable({ status }) {
                                 setType('approve')
                                 setIsFileAcceptModalOpen(true)
                                 setSelectedDetails(row?.FileNumber)
+                                setApplicationStatus(row?.ApplicationStatus)
                                 setMobile(row?.PhoneNo)
                               }}
                             >

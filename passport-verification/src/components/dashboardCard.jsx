@@ -7,6 +7,7 @@ import { CircleDashed, TrendingDown, ArrowRightToLine, Clock, CalendarClock, Cir
 import DashboardCard from './dashboard-cards';
 import { Skeleton } from "@/components/ui/skeleton";
 import { getCountEO } from '@/app/dashboard-eo/api';
+import { getCountSE } from '@/app/dashboard-se/api';
 
 const dashboardConfig = {
     10: [
@@ -71,7 +72,7 @@ const DashboardCards = () => {
     //         setData(response?.data);
     //     };
     //     console.log("auth_type",auth_type);
-        
+
     //     auth_type !== 40 && fetchDashboard();
     //     setLogin_type(auth_type);
     // }, [login_type]);
@@ -86,20 +87,23 @@ const DashboardCards = () => {
     //     setLogin_type(auth_type);
     // }, [login_type]);
 
-    
-  useEffect(() => {
-    const fetchDashboard = async () => {
-      if (auth_type === "40") {
-        const response = await getCountEO()
-        setData(response?.data)
-      } else {
-        const response = await getDistrictNodalDashBoard()
-        setData(response?.data)
-      }
-    }
 
-    fetchDashboard()
-  }, [auth_type])
+    useEffect(() => {
+        const fetchDashboard = async () => {
+            if (auth_type == "40") {
+                const response = await getCountEO()
+                setData(response?.data)
+            } else if (auth_type == "50") {
+                const response = await getCountSE()
+                setData(response?.data)
+            } else {
+                const response = await getDistrictNodalDashBoard()
+                setData(response?.data)
+            }
+        }
+
+        fetchDashboard()
+    }, [auth_type])
 
     return (
         data ? (

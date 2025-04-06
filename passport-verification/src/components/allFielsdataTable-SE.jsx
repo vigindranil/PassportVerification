@@ -43,10 +43,10 @@ export default function PendingApplicationDatatable({ status }) {
     }
   }
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage)
+  const totalPages = Math.ceil(filteredData?.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  const currentData = filteredData.slice(startIndex, endIndex)
+  const currentData = filteredData?.slice(startIndex, endIndex)
 
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(verificationData)
@@ -60,11 +60,11 @@ export default function PendingApplicationDatatable({ status }) {
     doc.autoTable({
       head: [["File Number", "Applicant Name", "Police Station", "Phone No.", "Date of Birth"]],
       body: verificationData.map((row) => [
-        row.FileNumber,
-        row.ApplicantName,
-        row.PsName,
-        row.PhoneNo,
-        row.DateOfBirth,
+        row?.FileNumber,
+        row?.ApplicantName,
+        row?.PsName,
+        row?.PhoneNo,
+        row?.DateOfBirth,
       ]),
     })
     doc.save("police_verification_data.pdf")
@@ -220,11 +220,11 @@ export default function PendingApplicationDatatable({ status }) {
                 currentData?.length ?
                   currentData?.map((row, index) => (
                     <TableRow key={index}>
-                      <TableCell>{row.FileNumber}</TableCell>
-                      <TableCell>{row.ApplicantName}</TableCell>
-                      <TableCell>{row.PsName}</TableCell>
-                      <TableCell>{row.PhoneNo}</TableCell>
-                      <TableCell>{row.DateOfBirth ? moment(row.DateOfBirth).format("DD/MM/YYYY") : "N/A"}</TableCell>
+                      <TableCell>{row?.FileNumber}</TableCell>
+                      <TableCell>{row?.ApplicantName}</TableCell>
+                      <TableCell>{row?.PsName}</TableCell>
+                      <TableCell>{row?.PhoneNo}</TableCell>
+                      <TableCell>{row?.DateOfBirth ? moment(row?.DateOfBirth).format("DD/MM/YYYY") : "N/A"}</TableCell>
                       <TableCell>
                         <div className="flex space-x-1">
                           <div className="relative group">
@@ -232,7 +232,7 @@ export default function PendingApplicationDatatable({ status }) {
                               size="sm"
                               variant="outline"
                               className="bg-stone-100 ring-[0.5px] ring-slate-300 text-blue-700 hover:bg-blue-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
-                              onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
+                              onClick={() => router.push(`/applicationDetails/${row?.FileNumber}`)}
                             >
                               <FileUser className="m-0 p-0" />
                             </Button>
@@ -249,7 +249,7 @@ export default function PendingApplicationDatatable({ status }) {
                               onClick={() => {
                                 setType('approve')
                                 setIsFileAcceptModalOpen(true)
-                                setSelectedDetails(row.FileNumber)
+                                setSelectedDetails(row?.FileNumber)
                               }}
                             >
                               <FileCheck className="mx-0 px-0" />
@@ -267,7 +267,7 @@ export default function PendingApplicationDatatable({ status }) {
                               onClick={() => {
                                 setType('reject')
                                 setIsFileAcceptModalOpen(true)
-                                setSelectedDetails(row.FileNumber)
+                                setSelectedDetails(row?.FileNumber)
                               }}
                             >
                               <FileX2 className="mx-0 px-0" />

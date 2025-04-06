@@ -2,6 +2,7 @@ import { updateAuthToken } from "../models/authModels.js";
 import { logoutModel } from "../models/logoutModel.js";
 import {
   getApplicationStatusModel,
+  getApplicationStatusModelV3,
   saveUserRegistrationModel,
   updatePasswordModel,
 } from "../models/userModel.js";
@@ -749,6 +750,69 @@ export const updatePassword = async (req, res) => {
     console.log(error);
     
     logger.error("Error:", error);
+    res.status(500).json({
+      status: 1,
+      message: "An error occurred",
+      data: null,
+    });
+  }
+};
+
+export const getApplicationStatusV3 = async (req, res) => {
+  try {
+    const { status_id, start_date, end_date } = req.body;
+    const ipaddress = "test";
+    const macAddress = "test";
+    const Longitude = "test";
+    const Latitude = "test";
+    const OperationName = "getApplicationStatusV3";
+    const json = "{}";
+    //  const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,EntryUserId)
+
+    const [result] = await getApplicationStatusModelV3(
+      req.user.UserID,
+      status_id,
+      start_date,
+      end_date
+    );
+    console.log("result", result);
+
+    if (result?.length > 0) {
+      logger.debug(
+        JSON.stringify({
+          API: "getApplicationStatusModelV3",
+          REQUEST: { status_id, start_date, end_date },
+          RESPONSE: {
+            status: 0,
+            message: "Data fetched successfully",
+            data: result,
+          },
+        })
+      );
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: result,
+      });
+    } else {
+      logger.debug(
+        JSON.stringify({
+          API: "getApplicationStatusModelV3",
+          REQUEST: { status_id, start_date, end_date },
+          RESPONSE: {
+            status: 1,
+            message: "No data found",
+          },
+        })
+      );
+      return res.status(400).json({
+        status: 1,
+        message: "No data found",
+      });
+    }
+  } catch (error) {
+    logger.error("Error fetching :", error);
+    console.log("Error:", error);
     res.status(500).json({
       status: 1,
       message: "An error occurred",

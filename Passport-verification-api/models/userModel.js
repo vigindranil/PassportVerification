@@ -100,9 +100,6 @@ export async function showuserDetailsModel(
   }
 }
 
-
-
-
 export async function getApplicationStatusModel(
   EntryUserID, Status, Periord 
 ) {
@@ -114,8 +111,6 @@ export async function getApplicationStatusModel(
     throw new Error('Database error: ' + error.message);
   }
 }
-
-
 
 export async function getApplicationCountsv1Model(
   EntryUserID
@@ -156,4 +151,21 @@ export async function updatePasswordModel(
   
   return result[0].ErrorCode;
 
+}
+
+
+export async function getApplicationStatusModelV3(
+  userId, Status, startDate, endDate 
+) {
+  try {
+    console.log("userId", userId);
+    console.log("Status", Status);
+    console.log("startDate", startDate);
+    console.log("endDate", endDate);
+    const [rows] = await pool.query('CALL sp_getapplicationstatusv3(?, ?, ?, ?)', [userId, Status, startDate, endDate]);
+    return rows;
+  } catch (error) {
+    console.error('Error in sp_getapplicationstatusv3:', error.message);
+    throw new Error('Database error: ' + error.message);
+  }
 }

@@ -233,8 +233,9 @@ export default function Page({ FileNumber }) {
                 <TabsTrigger className="rounded-full bg-white hover:text-blue-500 ring-1 ring-slate-500/40 hover:shadow-md data-[state=active]:bg-blue-500 data-[state=active]:text-white" value="crimeVerification">Crime Verification</TabsTrigger>
                 <TabsTrigger className="rounded-full bg-white hover:text-blue-500 ring-1 ring-slate-500/40 hover:shadow-md data-[state=active]:bg-blue-500 data-[state=active]:text-white" value="statusHistory">Application Timeline</TabsTrigger>
                 {
-                  userRole != 10 && userRole != 50 &&
-                  <TabsTrigger className="rounded-full bg-white hover:text-blue-500 ring-1 ring-slate-500/40 hover:shadow-md data-[state=active]:bg-blue-500 data-[state=active]:text-white" value="applicationRecommendation">Recommend/Not Recommend</TabsTrigger>
+                  (userRole == 40 && applicationDetails?.applicationDetails?.CurrentStatus == 5) || (userRole == 30 && applicationDetails?.applicationDetails?.CurrentStatus == 10) || (userRole == 20 && applicationDetails?.applicationDetails?.CurrentStatus == 50) ?
+                    <TabsTrigger className="rounded-full bg-white hover:text-blue-500 ring-1 ring-slate-500/40 hover:shadow-md data-[state=active]:bg-blue-500 data-[state=active]:text-white" value="applicationRecommendation">Recommend/Not Recommend</TabsTrigger>
+                    : null
                 }
               </TabsList>
 

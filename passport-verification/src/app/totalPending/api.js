@@ -13,6 +13,20 @@ export const getApplicationStatus = async (status, period) => {
   }
 };
 
+export const getApplicationStatusV3 = async (status, start_date, end_date) => {
+  try {
+
+    return await postRequest("user/getApplicationStatusV3", {
+        "status_id": status,
+        "start_date": start_date || null, 
+        "end_date": end_date || null
+    });
+  } catch (error) {
+    console.log("Error:", error);
+    return null;
+  }
+};
+
 export const revokeEnquiryStatus = async (applicationId, type, remarks) => {
   try {
     const use_details = await fetch("https://ipinfo.io/json");

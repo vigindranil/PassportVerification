@@ -1,6 +1,6 @@
 import { postFileRequest, postRequest } from "../commonAPI";
 
-export const updateEnquiryStatus = async (applicationId, type, remarks, mobile) => {
+export const updateEnquiryStatus = async (applicationId, type, remarks, mobile, reverified = 0) => {
     try {
       const use_details = await fetch("https://ipinfo.io/json");
       const user_details_json = await use_details.json();
@@ -10,7 +10,7 @@ export const updateEnquiryStatus = async (applicationId, type, remarks, mobile) 
             "locationIp": locationIp,
             "macAddress": "-",
             "deviceId": "-",
-            "StatusID": type == 'approve' ? '80' : '60',
+            "StatusID": (reverified == 1 && type == 'approve') ? '110' : type == 'approve' ? '80': '60',
             "StatusText": type == 'approve' ? 'SP APPROVED' : 'SP NOT APPROVE',
             "Remarks": remarks,
             mobile

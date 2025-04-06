@@ -111,12 +111,12 @@ export const assignApplication = async (req, res) => {
         });
       }
   
-      const result = await getCountSEModel(userId );
+      const result = await getCountSEModel(userId);
   
       return res.status(200).json({
         status: 0,
         message: "data fetch susccfully",
-        data: result,
+        data: result[0] || [],
       });
     } catch (error) {
       console.error('Error in getcount:', error.message);

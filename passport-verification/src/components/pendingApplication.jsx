@@ -2,13 +2,16 @@
 
 import { useEffect, useState } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import * as XLSX from "xlsx"
 import jsPDF from "jspdf"
 import "jspdf-autotable"
-import { getApplicationStatus, revokeEnquiryStatus } from "@/app/totalPending/api"
+import { getApplicationStatus, getApplicationStatusV3, revokeEnquiryStatus } from "@/app/totalPending/api"
 import moment from "moment"
 import { useRouter } from "next/navigation"
 import { CheckCircle2, CircleCheckBig, CircleX, Cross, FileCheck, FileUser, Rotate3d, RotateCcw } from "lucide-react"
@@ -34,15 +37,17 @@ export default function PendingApplicationDatatable({ status, heading, period, f
   const [isFileAcceptModalOpen, setIsFileAcceptModalOpen] = useState(false)
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false)
   const [type, setType] = useState("reject");
+  const [startDate, setStartDate] = useState(null)
+  const [endDate, setEndDate] = useState(null)
 
   const filteredData = verificationData?.filter((row) =>
     Object.values(row)?.some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm.toLowerCase())),
   )
 
-  const fetchApplicationStatus = async () => {
+  const fetchApplicationStatus = async (status_id, start_date, end_date) => {
     try {
       setIsLoading(true)
-      const response = await getApplicationStatus(status, period || 0)
+      const response = await getApplicationStatusV3(status_id, start_date, end_date)
       setVerificationData(response?.data)
     } catch (error) {
       console.error("Error fetching application status:", error)
@@ -55,103 +60,11 @@ export default function PendingApplicationDatatable({ status, heading, period, f
     try {
       // Implement the logic for accepting the file
       let response = null;
-      if(type == "revoke"){
+      if (type == "revoke") {
         response = await revokeEnquiryStatus(applicationId, remarks);
       } else {
         response = await updateEnquiryStatus(applicationId, remarks, type);
       }
-      console.log('reponse:', response);
-
-      if (response?.status == 0) {
-        await fetchApplicationStatus();
-        toast({
-          title: (
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-green-500" />
-              <span>Successfull!</span>
-            </div>
-          ),
-          description: response?.message,
-          action: <ToastAction altText="Try again">Close</ToastAction>,
-        })
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Failed to update status!",
-          description: response?.message,
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
-        })
-      }
-    } catch (e) {
-      console.log('Error:', e);
-      toast({
-        variant: "destructive",
-        title: "Failed to update status!",
-        description: 'An error occurred',
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
-      })
-    }
-  }
-
-  const onTransfer = async (fileNumber, remarks, selectedDistrict, selectedPoliceStation) => {
-    if (!selectedDistrict || !selectedPoliceStation) {
-      console.log("Please fill in all fields before transferring.");
-      return;
-    }
-
-    try {
-      console.log("Calling API with:", {
-        fileNumber,
-        locationIp: "115.187.62.100",
-        deviceId: "deviceId",
-        remarks,
-        districtId: selectedDistrict,
-        psId: selectedPoliceStation,
-        macAddress: "test-s4dn-3aos-dn338",
-      });
-
-      const response = await transferapplication({
-        fileNumber,
-        locationIp: "115.187.62.100",
-        deviceId: "deviceId",
-        remarks,
-        districtId: selectedDistrict,
-        psId: selectedPoliceStation,
-        macAddress: "test-s4dn-3aos-dn338",
-      });
-
-      if (response.status == 0) {
-        await fetchApplicationStatus();
-        toast({
-          title: (
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-green-500" />
-              <span>Successfull!</span>
-            </div>
-          ),
-          description: response?.message,
-          action: <ToastAction altText="Try again">Close</ToastAction>,
-        })
-        setRemarks("");
-        setSelectedDistrict("");
-        setSelectedPoliceStation("");
-        setIsTransferModalOpen(false)
-      } else {
-        console.log("Transfer failed. No response from API.");
-      }
-    } catch (error) {
-      console.log("Error transferring application:", error);
-    }
-  };
-
-  const handleCloseTransferModal = () => {
-    setIsTransferModalOpen(false)
-  }
-
-  const handleAcceptFile = async (applicationId, type, remarks) => {
-    try {
-      // Implement the logic for accepting the file
-      const response = await updateEnquiryStatus(applicationId, type, remarks);
       console.log('reponse:', response);
 
       if (response?.status == 0) {
@@ -191,8 +104,15 @@ export default function PendingApplicationDatatable({ status, heading, period, f
   const currentData = filteredData?.slice(startIndex, endIndex)
 
   useEffect(() => {
-    fetchApplicationStatus()
-  }, [status])
+    if (startDate == null || endDate == null) {
+      fetchApplicationStatus(status, null, null);
+    } else {
+      const startDateFormatted = moment(startDate).format("YYYY-MM-DD")
+      const endDateFormatted = moment(endDate).format("YYYY-MM-DD")
+      fetchApplicationStatus(status, startDateFormatted, endDateFormatted);
+    }
+
+  }, [status, startDate, endDate]);
 
   const handleExportExcel = () => {
     const ws = XLSX.utils.json_to_sheet(filteredData)
@@ -201,42 +121,6 @@ export default function PendingApplicationDatatable({ status, heading, period, f
     XLSX.writeFile(wb, "applications.xlsx")
   }
 
-  const handleExportPDF = () => {
-    const doc = new jsPDF()
-    doc.autoTable({
-      head: [["File Number", "Applicant Name", "Police Station", "Phone No.", "Verification Address"]],
-      body: filteredData.map((row) => [
-        row.FileNumber,
-        row.ApplicantName,
-        row.PsName,
-        row.PhoneNo,
-        row.VerificationAddress,
-      ]),
-    })
-    doc.save("applications.pdf")
-  }
-
-  const handlePrint = () => {
-    const printContent = document.getElementById("police-verification-table")
-    const windowPrint = window.open("", "", "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0")
-    windowPrint.document.write(printContent.innerHTML)
-    windowPrint.document.close()
-    windowPrint.focus()
-    windowPrint.print()
-    windowPrint.close()
-  }
-
-  const handleOpenTransferModal = () => {
-    setIsTransferModalOpen(true)
-  }
-
-
-  const handleTransfer = () => {
-    onTransfer(selectedDetails, remarks, selectedDistrict, selectedPoliceStation)
-    setRemarks("")
-    setSelectedDistrict("")
-    setSelectedPoliceStation("")
-  }
 
   return (
     <div className="mx-auto px-0 space-y-8 shadow-md">
@@ -246,7 +130,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
         </div>
       </div>
       <div className="p-6">
-        <div className="flex justify-between mb-4">
+        <div className="flex justify-between items-end mb-4">
           <Input
             type="text"
             placeholder="Search..."
@@ -254,7 +138,35 @@ export default function PendingApplicationDatatable({ status, heading, period, f
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-64"
           />
-          <div className="space-x-2">
+          <div className="space-x-2 flex items-end justify-center">
+            {/* Date Range Picker */}
+            {/* Start Date Input */}
+            <div>
+              <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">
+                Start Date
+              </label>
+              <Input
+                type="date"
+                id="startDate"
+                value={startDate || ""}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="w-40"
+              />
+            </div>
+
+            {/* End Date Input */}
+            <div>
+              <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">
+                End Date
+              </label>
+              <Input
+                type="date"
+                id="endDate"
+                value={endDate || ""}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="w-40"
+              />
+            </div>
             <Button variant={'outline'} onClick={handleExportExcel}>Export Excel</Button>
             {/* <Button variant={'outline'} onClick={handleExportPDF}>Export PDF</Button>
             <Button variant={'outline'} onClick={handlePrint}>Print</Button> */}
@@ -264,6 +176,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
           <Table>
             <TableHeader>
               <TableRow className="bg-[#e6f3ff]">
+                <TableHead className="font-semibold">Sl. No.</TableHead>
                 <TableHead className="font-semibold">File Number</TableHead>
                 <TableHead className="font-semibold">Applicant Name</TableHead>
                 <TableHead className="font-semibold">Police Station</TableHead>
@@ -276,6 +189,9 @@ export default function PendingApplicationDatatable({ status, heading, period, f
               {isLoading ? (
                 [...Array(6)].map((_, index) => (
                   <TableRow key={index}>
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-8" />
+                    </TableCell>
                     <TableCell>
                       <Skeleton className="bg-slate-300 h-4 w-24" />
                     </TableCell>
@@ -299,6 +215,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
               ) : currentData?.length > 0 ? (
                 currentData?.map((row, index) => (
                   <TableRow key={index}>
+                    <TableCell>{index + 1}</TableCell>
                     <TableCell>{row?.FileNumber || 'N/A'}</TableCell>
                     <TableCell>{row?.ApplicantName || 'N/A'}</TableCell>
                     <TableCell>{row?.PsName || 'N/A'}</TableCell>
@@ -379,7 +296,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                             />
                           </div>
                         } */}
-                         {(user_role == 10 && status == 2) && (
+                        {(user_role == 10 && status == 2) && (
                           <div className="relative group">
                             <Button
                               size="sm"
