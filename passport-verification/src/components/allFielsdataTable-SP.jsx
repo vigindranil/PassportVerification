@@ -29,6 +29,7 @@ export default function PendingApplicationDatatable({ status }) {
   const [remarks, setRemarks] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedPoliceStation, setSelectedPoliceStation] = useState("");
+  const [applicantName, setApplicantName] = useState("");
 
   const itemsPerPage = 6
   const [applicationStatus, setApplicationStatus] = useState(null)
@@ -60,7 +61,7 @@ export default function PendingApplicationDatatable({ status }) {
       console.log("Please fill in all fields before transferring.");
       return;
     }
-  
+
     try {
       console.log("Calling API with:", {
         fileNumber,
@@ -71,7 +72,7 @@ export default function PendingApplicationDatatable({ status }) {
         psId: selectedPoliceStation,
         macAddress: "test-s4dn-3aos-dn338",
       });
-  
+
       const response = await transferapplication({
         fileNumber,
         locationIp: "115.187.62.100",
@@ -81,7 +82,7 @@ export default function PendingApplicationDatatable({ status }) {
         psId: selectedPoliceStation,
         macAddress: "test-s4dn-3aos-dn338",
       });
-  
+
       if (response.status == 0) {
         await fetchApplicationStatus();
         toast({
@@ -104,7 +105,7 @@ export default function PendingApplicationDatatable({ status }) {
       console.log("Error transferring application:", error);
     }
   };
-  
+
 
 
   const handleCloseTransferModal = () => {
@@ -302,113 +303,110 @@ export default function PendingApplicationDatatable({ status }) {
                     </TableRow>
                   ))
                 ) :
-                currentData?.length ?
-                  currentData?.map((row, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{row?.FileNumber}</TableCell>
-                      <TableCell>{row?.ApplicantName}</TableCell>
-                      <TableCell>{row?.PsName}</TableCell>
-                      <TableCell>{row?.PhoneNo}</TableCell>
-                      <TableCell>{row?.DateOfBirth ? moment(row.DateOfBirth).format("DD/MM/YYYY") : "N/A"}</TableCell>
-                      <TableCell>
-                        <div className="flex space-x-1">
-                          <div className="relative group">
-                            <Button
-                              size="sm"
-                              variant="default"
-                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-blue-700 hover:bg-blue-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
-                              onClick={() => router.push(`/applicationDetails/${row?.FileNumber}`)}
-                            >
-                              <FileUser className="m-0 p-0" />
-                            </Button>
-                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
-                              View Application
-                            </span>
-                          </div>
+                  currentData?.length ?
+                    currentData?.map((row, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{row?.FileNumber}</TableCell>
+                        <TableCell>{row?.ApplicantName}</TableCell>
+                        <TableCell>{row?.PsName}</TableCell>
+                        <TableCell>{row?.PhoneNo}</TableCell>
+                        <TableCell>{row?.DateOfBirth ? moment(row.DateOfBirth).format("DD/MM/YYYY") : "N/A"}</TableCell>
+                        <TableCell>
+                          <div className="flex space-x-1">
+                            <div className="relative group">
+                              <Button
+                                size="sm"
+                                variant="default"
+                                className="bg-stone-100 ring-[0.5px] ring-slate-300 text-blue-700 hover:bg-blue-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                                onClick={() => router.push(`/applicationDetails/${row?.FileNumber}`)}
+                              >
+                                <FileUser className="m-0 p-0" />
+                              </Button>
+                              <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                                View Application
+                              </span>
+                            </div>
 
-                          <div className="relative group">
-                            <Button
-                              size="sm"
-                              variant="default"
-                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-green-700 hover:bg-green-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
-                              onClick={() => {
-                                setType('approve')
-                                setIsFileAcceptModalOpen(true)
-                                setSelectedDetails(row?.FileNumber)
-                                setApplicationStatus(row?.ApplicationStatus)
-                                setMobile(row?.PhoneNo)
-                              }}
-                            >
-                              <FileCheck className="mx-0 px-0" />
-                            </Button>
-                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
-                              Approve Application
-                            </span>
-                          </div>
+                            <div className="relative group">
+                              <Button
+                                size="sm"
+                                variant="default"
+                                className="bg-stone-100 ring-[0.5px] ring-slate-300 text-green-700 hover:bg-green-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                                onClick={() => {
+                                  setType('approve')
+                                  setIsFileAcceptModalOpen(true)
+                                  setSelectedDetails(row?.FileNumber)
+                                  setApplicationStatus(row?.ApplicationStatus)
+                                  setMobile(row?.PhoneNo)
+                                }}
+                              >
+                                <FileCheck className="mx-0 px-0" />
+                              </Button>
+                              <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                                Approve Application
+                              </span>
+                            </div>
 
-                          <div className="relative group">
-                            <Button
-                              size="sm"
-                              variant="default"
-                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-red-700 hover:bg-red-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
-                              onClick={() => {
-                                setType('reject')
-                                setIsFileAcceptModalOpen(true)
-                                setSelectedDetails(row?.FileNumber)
-                                setMobile(row?.PhoneNo)
-                              }}
-                            >
-                              <FileX2 className="mx-0 px-0" />
-                            </Button>
-                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
-                              Reject Application
-                            </span>
-                          </div>
+                            <div className="relative group">
+                              <Button
+                                size="sm"
+                                variant="default"
+                                className="bg-stone-100 ring-[0.5px] ring-slate-300 text-red-700 hover:bg-red-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                                onClick={() => {
+                                  setType('reject')
+                                  setIsFileAcceptModalOpen(true)
+                                  setSelectedDetails(row?.FileNumber)
+                                  setMobile(row?.PhoneNo)
+                                }}
+                              >
+                                <FileX2 className="mx-0 px-0" />
+                              </Button>
+                              <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                                Reject Application
+                              </span>
+                            </div>
 
-                          <div className="relative group">
-                            <Button
-                              size="sm"
-                              variant="default"
-                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-gray-700 hover:bg-yellow-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
-                              onClick={() => {
-                                setType('query')
-                                setIsFileAcceptModalOpen(true)
-                                setSelectedDetails(row?.FileNumber)
-                              }}
-                            >
-                              <FileQuestion className="mx-0 px-0" />
-                            </Button>
-                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
-                              Raise Query
-                            </span>
-                          </div>
+                            <div className="relative group">
+                              <Button
+                                size="sm"
+                                variant="default"
+                                className="bg-stone-100 ring-[0.5px] ring-slate-300 text-gray-700 hover:bg-yellow-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                                onClick={() => {
+                                  setType('query')
+                                  setIsFileAcceptModalOpen(true)
+                                  setSelectedDetails(row?.FileNumber)
+                                }}
+                              >
+                                <FileQuestion className="mx-0 px-0" />
+                              </Button>
+                              <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                                Raise Query
+                              </span>
+                            </div>
 
-                          <div className="relative group">
-                            <Button
-                              size="sm"
-                              variant="default"
-                              className="bg-gray-100 ring-[0.5px] text-gray-700 hover:bg-teal-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
-                              onClick={handleOpenTransferModal}
-                            >
-                              <Rotate3d className="mx-0 px-0" />
-                            </Button>
-                            <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
-                              Transfer to PS
-                            </span>
-                            <TransferModal
-                              isOpen={isTransferModalOpen}
-                              onClose={handleCloseTransferModal}
-                              fileNumber={row?.FileNumber}
-                              applicantName={row?.ApplicantName}
-                              onTransfer={onTransfer} // Pass the function here
-                            />
+                            <div className="relative group">
+                              <Button
+                                size="sm"
+                                variant="default"
+                                className="bg-gray-100 ring-[0.5px] text-gray-700 hover:bg-teal-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                                onClick={()=>{
+                                  handleOpenTransferModal()
+                                  setApplicantName(row?.ApplicantName)
+                                  setSelectedDetails(row?.FileNumber)
+                                }}
+                              >
+                                <Rotate3d className="mx-0 px-0" />
+                              </Button>
+                              <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                                Transfer to PS
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  )) : <TableRow>
-                    <TableCell className="text-center" colSpan={6}>No record found</TableCell>
-                  </TableRow>}
+                        </TableCell>
+                      </TableRow>
+                    )) : <TableRow>
+                      <TableCell className="text-center" colSpan={6}>No record found</TableCell>
+                    </TableRow>}
             </TableBody>
           </Table>
         </div>
@@ -445,6 +443,13 @@ export default function PendingApplicationDatatable({ status }) {
             </Button>
           </div>
         </div>
+        <TransferModal
+          isOpen={isTransferModalOpen}
+          onClose={handleCloseTransferModal}
+          fileNumber={selectedDetails}
+          applicantName={applicantName}
+          onTransfer={onTransfer}
+        />
         {isFileAcceptModalOpen && selectedDetails && (
           <FileAcceptModal
             isOpen={isFileAcceptModalOpen}
