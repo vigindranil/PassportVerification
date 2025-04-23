@@ -1,5 +1,6 @@
 import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import crypto from 'crypto';
 
 export const fileUploadS3Bucket = async (req, res) => {
   try {
@@ -47,14 +48,19 @@ export const fileUploadS3Bucket = async (req, res) => {
 
 export const getPrivateImage = async (req, res) => {
   try {
-    const { FILE_KEY, AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_BUCKET_NAME } = req.body;
+    const {
+      FILE_KEY,
+      AWS_REGION,
+      AWS_ACCESS_KEY_ID,
+      AWS_SECRET_ACCESS_KEY,
+      AWS_BUCKET_NAME
+    } = req.body;
 
     if (!FILE_KEY || !AWS_REGION || !AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY || !AWS_BUCKET_NAME) {
       return res.status(400).json({ status: 1, message: "Missing required parameters" });
     }
 
-    // Initialize S3 Client with received credentials
-    const s3 = new S3Client({
+    const s3Client = new S3Client({
       region: AWS_REGION,
       credentials: {
         accessKeyId: AWS_ACCESS_KEY_ID,
@@ -62,30 +68,44 @@ export const getPrivateImage = async (req, res) => {
       },
     });
 
-    // Create a command for fetching the object
+    // Prepare the command
     const command = new GetObjectCommand({
       Bucket: AWS_BUCKET_NAME,
       Key: FILE_KEY,
     });
 
-    // Generate a signed URL with a short expiration (e.g., 30 seconds)
-    const signedUrl = await getSignedUrl(s3, command, { expiresIn: 30 });
+    // Get the object stream
+    const response = await s3Client.send(command);
+    const stream = response.Body;
+
+    // Hash the stream
+    const fileHash = await new Promise((resolve, reject) => {
+      const hash = crypto.createHash('sha256');
+      stream.on('data', (chunk) => hash.update(chunk));
+      stream.on('end', () => resolve(hash.digest('hex')));
+      stream.on('error', (err) => reject(err));
+    });
+
+    // Generate signed URL (expires in 30s)
+    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 30 });
 
     return res.status(200).json({
       status: 0,
       message: "One-time signed URL generated successfully",
-      tempSignedUrl: signedUrl, // The URL will expire after first use or 30 seconds
+      tempSignedUrl: signedUrl,
+      sha256: fileHash,
     });
 
   } catch (error) {
-    console.error("Error generating signed URL:", error);
+    console.error("Error generating signed URL or SHA-256 hash:", error);
     return res.status(500).json({
       status: 1,
-      message: "An error occurred while generating the signed URL",
+      message: "An error occurred while processing the request",
       error: error.message,
     });
   }
 };
+
 
 export const getPrivateImagePassportVerification = async (req, res) => {
   try {
