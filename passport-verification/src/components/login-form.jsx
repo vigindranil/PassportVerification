@@ -1,65 +1,73 @@
-"use client"
+"use client";
 
-import React, { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { OTPInput } from "@/components/otp-input"
-import { User, Lock, Eye, EyeOff, RotateCcw, LoaderCircle, CheckCircle2, AlertCircle } from 'lucide-react'
-import { sendOtp, sendOtpV1, verifyOtp, verifyOtpV1 } from "@/app/login/api"
-import { useToast } from "../hooks/use-toast"
-import { ToastAction } from "@/components/ui/toast"
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { OTPInput } from "@/components/otp-input";
+import {
+  User,
+  Lock,
+  Eye,
+  EyeOff,
+  RotateCcw,
+  LoaderCircle,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
+import { sendOtp, sendOtpV1, verifyOtp, verifyOtpV1 } from "@/app/login/api";
+import { useToast } from "../hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 import Cookies from "react-cookies";
 
 const LoginForm = () => {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [loadingOtpSend, setLoadingOtpSend] = useState(false)
-  const [loadingOtpVerify, setLoadingOtpVerify] = useState(false)
-  const [loadingResendOtp, setLoadingResendOtp] = useState(false)
-  const [error, setError] = useState("")
-  const [showOtp, setShowOtp] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-  const [otp, setOtp] = useState("")
-  const [message, setMessage] = useState(null)
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loadingOtpSend, setLoadingOtpSend] = useState(false);
+  const [loadingOtpVerify, setLoadingOtpVerify] = useState(false);
+  const [loadingResendOtp, setLoadingResendOtp] = useState(false);
+  const [error, setError] = useState("");
+  const [showOtp, setShowOtp] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [message, setMessage] = useState(null);
   const [resendTimer, setResendTimer] = useState(60);
-  const router = useRouter()
-  const { toast } = useToast()
+  const router = useRouter();
+  const { toast } = useToast();
 
   const handleSendOtp = async () => {
-
-    setError("")
-    setLoadingOtpSend(true)
+    setError("");
+    setLoadingOtpSend(true);
     try {
       // const response = await sendOtp(username, password)
-      const response = await sendOtpV1(username, password)
+      const response = await sendOtpV1(username, password);
 
       if (response?.status == 0) {
         toast({
           title: (
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-5 w-5 text-green-500" />
-              <span>{response?.message || 'OTP sent successfully!'}</span>
+              <span>{response?.message || "OTP sent successfully!"}</span>
             </div>
           ),
           description: "A six digit code was sent to your phone number",
-        })
-        setShowOtp(true)
+        });
+        setShowOtp(true);
       } else {
         toast({
           variant: "destructive",
           title: (
             <div className="flex items-center gap-2">
               <AlertCircle className="h-5 w-5 text-red-500" />
-              <span>{response?.message || 'Failed to login'}</span>
+              <span>{response?.message || "Failed to login"}</span>
             </div>
           ),
           description: "Please try again",
-        })
+        });
       }
     } catch (error) {
-      setMessage(`Error: ${error.message}`)
+      setMessage(`Error: ${error.message}`);
       toast({
         variant: "destructive",
         title: (
@@ -69,38 +77,35 @@ const LoginForm = () => {
           </div>
         ),
         description: "Something went wrong, Please try again",
-      })
+      });
     } finally {
-      setLoadingOtpSend(false)
+      setLoadingOtpSend(false);
     }
-  }
+  };
 
   const handleVerifyOtp = async () => {
-    setError("")
-    setLoadingOtpVerify(true)
+    setError("");
+    setLoadingOtpVerify(true);
 
     try {
       const response = await verifyOtpV1(username, otp);
       // const response = await verifyOtp(otp);
 
       if (response?.status == 0) {
-        const type = Cookies.load('type');
+        const type = Cookies.load("type");
         if (type == 10) {
-          router.push("/dashboard")
+          router.push("/dashboard");
+        } else if (type == 40) {
+          router.push("/dashboard-eo");
+        } else if (type == 30) {
+          router.push("/dashboard-oc");
+        } else if (type == 20) {
+          router.push("/dashboard-sp");
+        } else if (type == 50) {
+          router.push("/dashboard-se");
+        } else if (type == 150) {
+          router.push("/dashboard-stateadmin");
         }
-        else if (type == 40) {
-          router.push("/dashboard-eo")
-        }
-        else if (type == 30) {
-          router.push("/dashboard-oc")
-        }
-        else if (type == 20) {
-          router.push("/dashboard-sp")
-        }
-        else if (type == 50) {
-          router.push("/dashboard-se")
-        }
-
       } else {
         toast({
           variant: "destructive",
@@ -111,10 +116,9 @@ const LoginForm = () => {
             </div>
           ),
           description: response.message,
-        })
+        });
       }
     } catch (error) {
-
       toast({
         variant: "destructive",
         title: (
@@ -124,22 +128,22 @@ const LoginForm = () => {
           </div>
         ),
         description: "Something went wrong, Please try again",
-      })
+      });
     } finally {
-      setLoadingOtpVerify(false)
+      setLoadingOtpVerify(false);
     }
-  }
+  };
 
   const handleResend = async () => {
-    setError("")
-    setLoadingResendOtp(true)
+    setError("");
+    setLoadingResendOtp(true);
 
     try {
       // const response = await sendOtp(username, password)
-      const response = await sendOtpV1(username, password)
-      setMessage(`OTP sent successfully`)
+      const response = await sendOtpV1(username, password);
+      setMessage(`OTP sent successfully`);
       if (response) {
-        setShowOtp(true)
+        setShowOtp(true);
         setResendTimer(60);
         toast({
           title: (
@@ -149,10 +153,8 @@ const LoginForm = () => {
             </div>
           ),
           description: "A six digit code was sent to your phone number",
-          action: (
-            <ToastAction altText="close">Close</ToastAction>
-          ),
-        })
+          action: <ToastAction altText="close">Close</ToastAction>,
+        });
       } else {
         toast({
           variant: "destructive",
@@ -164,7 +166,7 @@ const LoginForm = () => {
           ),
           description: "Something went wrong, Please try again",
           action: <ToastAction altText="Try again">Try again</ToastAction>,
-        })
+        });
       }
     } catch (error) {
       toast({
@@ -177,15 +179,15 @@ const LoginForm = () => {
         ),
         description: "Something went wrong, Please try again",
         action: <ToastAction altText="Try again">Try again</ToastAction>,
-      })
+      });
     } finally {
-      setLoadingResendOtp(false)
+      setLoadingResendOtp(false);
     }
-  }
+  };
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword)
-  }
+    setShowPassword(!showPassword);
+  };
 
   // Timer for resend OTP
   useEffect(() => {
@@ -203,14 +205,21 @@ const LoginForm = () => {
 
   return (
     <div className="space-y-4 w-full max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg border border-white/20">
-
       {!showOtp && (
-        <><h2 className="text-2xl font-bold text-center mb-6 text-slate-600">Authority Login</h2>
+        <>
+          <h2 className="text-2xl font-bold text-center mb-6 text-slate-600">
+            Authority Login
+          </h2>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username" className="text-slate-500">Username</Label>
+              <Label htmlFor="username" className="text-slate-500">
+                Username
+              </Label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                <User
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  size={18}
+                />
                 <Input
                   id="username"
                   type="text"
@@ -223,9 +232,14 @@ const LoginForm = () => {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-slate-500">Password</Label>
+              <Label htmlFor="password" className="text-slate-500">
+                Password
+              </Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                <Lock
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  size={18}
+                />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
@@ -244,8 +258,18 @@ const LoginForm = () => {
                 </button>
               </div>
             </div>
-            <Button onClick={() => handleSendOtp()} className="w-[150px] flex justify-center self-center mx-auto bg-blue-600 hover:bg-blue-700 text-white" disabled={loadingOtpSend}>
-              {loadingOtpSend ? <>Logging in <LoaderCircle className="animate-spin" /></> : "Login"}
+            <Button
+              onClick={() => handleSendOtp()}
+              className="w-[150px] flex justify-center self-center mx-auto bg-blue-600 hover:bg-blue-700 text-white"
+              disabled={loadingOtpSend}
+            >
+              {loadingOtpSend ? (
+                <>
+                  Logging in <LoaderCircle className="animate-spin" />
+                </>
+              ) : (
+                "Login"
+              )}
             </Button>
           </div>
         </>
@@ -253,35 +277,64 @@ const LoginForm = () => {
 
       {showOtp && (
         <>
-          <h2 className="text-2xl font-bold text-center mb-6 text-slate-600">Verify OTP</h2>
+          <h2 className="text-2xl font-bold text-center mb-6 text-slate-600">
+            Verify OTP
+          </h2>
           <span className="text-sm text-slate-500">
-            A six digit secret code has been sent to your AADHAAR linked phone number.
+            A six digit secret code has been sent to your AADHAAR linked phone
+            number.
           </span>
           <div className="space-y-4 mt-6">
             <div className="space-y-2">
-              <Label htmlFor="otp" className="text-white">Enter 6-digit OTP</Label>
+              <Label htmlFor="otp" className="text-white">
+                Enter 6-digit OTP
+              </Label>
               <OTPInput onComplete={(completedOtp) => setOtp(completedOtp)} />
             </div>
-            <Button onClick={handleVerifyOtp} className="w-[150px] mx-auto flex bg-green-600 hover:bg-green-700 text-white" disabled={loadingOtpVerify}>
-              {loadingOtpVerify ? <>Verifying <LoaderCircle className="animate-spin" /></> : "Verify OTP"}
+            <Button
+              onClick={handleVerifyOtp}
+              className="w-[150px] mx-auto flex bg-green-600 hover:bg-green-700 text-white"
+              disabled={loadingOtpVerify}
+            >
+              {loadingOtpVerify ? (
+                <>
+                  Verifying <LoaderCircle className="animate-spin" />
+                </>
+              ) : (
+                "Verify OTP"
+              )}
             </Button>
-            <p className="whitespace-pre-wrap text-center text-sm">{resendTimer !== 0 ?
-              `Didn't receive the OTP? \nYou can resend in ${resendTimer} seconds.` :
-              <>
-                Didn't receive the OTP?
-                <Button variant="link" onClick={handleResend} className={`text-blue-500 font-bold px-1`} disabled={resendTimer === 0 ? false : true}>
-                  {loadingResendOtp ? <>Please wait...<LoaderCircle className="animate-spin" /></> : <> Resend OTP</>}
-                </Button>
-              </>}
+            <p className="whitespace-pre-wrap text-center text-sm">
+              {resendTimer !== 0 ? (
+                `Didn't receive the OTP? \nYou can resend in ${resendTimer} seconds.`
+              ) : (
+                <>
+                  Didn't receive the OTP?
+                  <Button
+                    variant="link"
+                    onClick={handleResend}
+                    className={`text-blue-500 font-bold px-1`}
+                    disabled={resendTimer === 0 ? false : true}
+                  >
+                    {loadingResendOtp ? (
+                      <>
+                        Please wait...
+                        <LoaderCircle className="animate-spin" />
+                      </>
+                    ) : (
+                      <> Resend OTP</>
+                    )}
+                  </Button>
+                </>
+              )}
             </p>
-
           </div>
         </>
       )}
 
       {error && <p className="text-red-400 text-center mt-4">{error}</p>}
     </div>
-  )
-}
+  );
+};
 
-export default LoginForm
+export default LoginForm;

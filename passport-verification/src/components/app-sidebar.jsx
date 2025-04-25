@@ -169,6 +169,20 @@ const data = {
           { "title": "Completed by SE", "url": "/verificationCompletedEO" },
         ]
       },
+      {
+        "title": "State Admin",
+        "url": "#",
+        "icon": LayoutGrid,
+        "isActive": true,
+        "type": 150,
+        "items": [
+          { "title": "Home", "url": "/dashboard-stateadmin" },
+          // { "title": "Upload Applications", "url": "/upload" },
+          // { "title": "Analytics", "url": "/createUserForm" },
+          { "title": 'Reset Password', "url": '/reset-password' },
+          { "title": "Logout", "url": "/logout" }
+        ]
+      },
     ]
   ,
 };
