@@ -1,10 +1,20 @@
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import crypto from 'crypto';
+import crypto from "crypto";
 
 export const fileUploadS3Bucket = async (req, res) => {
   try {
-    const { FILE_NAME, AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_BUCKET_NAME } = req.body;
+    const {
+      FILE_NAME,
+      AWS_REGION,
+      AWS_ACCESS_KEY_ID,
+      AWS_SECRET_ACCESS_KEY,
+      AWS_BUCKET_NAME,
+    } = req.body;
 
     // Initialize S3 Client
     const s3 = new S3Client({
@@ -53,11 +63,19 @@ export const getPrivateImage = async (req, res) => {
       AWS_REGION,
       AWS_ACCESS_KEY_ID,
       AWS_SECRET_ACCESS_KEY,
-      AWS_BUCKET_NAME
+      AWS_BUCKET_NAME,
     } = req.body;
 
-    if (!FILE_KEY || !AWS_REGION || !AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY || !AWS_BUCKET_NAME) {
-      return res.status(400).json({ status: 1, message: "Missing required parameters" });
+    if (
+      !FILE_KEY ||
+      !AWS_REGION ||
+      !AWS_ACCESS_KEY_ID ||
+      !AWS_SECRET_ACCESS_KEY ||
+      !AWS_BUCKET_NAME
+    ) {
+      return res
+        .status(400)
+        .json({ status: 1, message: "Missing required parameters" });
     }
 
     const s3Client = new S3Client({
@@ -80,10 +98,10 @@ export const getPrivateImage = async (req, res) => {
 
     // Hash the stream
     const fileHash = await new Promise((resolve, reject) => {
-      const hash = crypto.createHash('sha256');
-      stream.on('data', (chunk) => hash.update(chunk));
-      stream.on('end', () => resolve(hash.digest('hex')));
-      stream.on('error', (err) => reject(err));
+      const hash = crypto.createHash("sha256");
+      stream.on("data", (chunk) => hash.update(chunk));
+      stream.on("end", () => resolve(hash.digest("hex")));
+      stream.on("error", (err) => reject(err));
     });
 
     // Generate signed URL (expires in 30s)
@@ -95,7 +113,6 @@ export const getPrivateImage = async (req, res) => {
       tempSignedUrl: signedUrl,
       sha256: fileHash,
     });
-
   } catch (error) {
     console.error("Error generating signed URL or SHA-256 hash:", error);
     return res.status(500).json({
@@ -106,15 +123,16 @@ export const getPrivateImage = async (req, res) => {
   }
 };
 
-
 export const getPrivateImagePassportVerification = async (req, res) => {
   try {
     const { FILE_KEY } = req.query;
 
     if (!FILE_KEY) {
-      return res.status(400).json({ status: 1, message: "Missing required parameters" });
+      return res
+        .status(400)
+        .json({ status: 1, message: "Missing required parameters" });
     }
-    
+
     // Initialize S3 Client with received credentials
     const s3 = new S3Client({
       region: process.env.AWS_REGION,
@@ -138,7 +156,6 @@ export const getPrivateImagePassportVerification = async (req, res) => {
       message: "One-time signed URL generated successfully",
       tempSignedUrl: signedUrl, // The URL will expire after first use or 30 seconds
     });
-
   } catch (error) {
     console.error("Error generating signed URL:", error);
     return res.status(500).json({
@@ -148,4 +165,3 @@ export const getPrivateImagePassportVerification = async (req, res) => {
     });
   }
 };
-
