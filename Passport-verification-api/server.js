@@ -24,7 +24,7 @@ import transferapplication from './routes/spRoutes.js'
 import requireDocument from './routes/requiredDocsRoutes.js'
 import s3uploadRoutes from "./routes/s3-upload.js";
 import s3downloadRoutes from "./routes/s3-download.js";
-
+import stateAdminRoutes from "./routes/stateAdmin.js";
 
 const app = express();
 const port = 3003;
@@ -60,8 +60,8 @@ const upload = multer({ storage: storage });
 //public Route
 app.use("/api/", logRoutes);
 app.use("/api/auth/", loginRoutes);
-app.use("/api/third-party/v2" ,thirtPartyVerifyToken, thirdPartyRoutes);
-app.use("/api/third-party/",verifyToken, thirdPartyRoutes);
+app.use("/api/third-party/v2", thirtPartyVerifyToken, thirdPartyRoutes);
+app.use("/api/third-party/", verifyToken, thirdPartyRoutes);
 app.use("/api/s3-upload", upload.single("file"), s3uploadRoutes);
 app.use("/api/s3-download", s3downloadRoutes);
 
@@ -77,7 +77,7 @@ app.use("/api/upload", verifyToken, upload.single("file"), uploadRoutes);
 app.use("/api/crime", verifyToken, updateCriminalInfo);
 app.use("/api/sp", verifyToken, transferapplication)
 app.use("/api/documents", verifyToken, requireDocument)
-
+app.use("/api/stateadmin", verifyToken, stateAdminRoutes)
 app.use(
   "/api/fileImport",
   verifyToken,
