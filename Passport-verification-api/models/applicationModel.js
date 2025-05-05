@@ -158,7 +158,7 @@ export async function updateAADHAARInfoModelV2(
 ) {
   try {
     const [rows] = await pool.query(
-      `CALL sp_updateAADHAARInfoV2(?,?,?, ?, ?, ?, ?, ?, ?, ?, @ErrorCode)`,
+      `CALL sp_updateAADHAARInfo_V2(?,?,?, ?, ?, ?, ?, ?, ?, ?, @ErrorCode)`,
       [
         ApplicationID,
         btoa(AadharNumber),
