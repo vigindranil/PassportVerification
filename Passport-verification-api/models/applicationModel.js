@@ -264,6 +264,30 @@ export async function getAadharDetailsByapplicationIdModel(
 
 
 
+export async function getApplicationCountMasterAdminModel(
+  userId,
+  districtId,
+  startDate,
+  endDate
+) {
+  try {
+    const [rows] = await pool.query(
+      `CALL sp_getApplicationCountmasteradmin(?,?,?,?)`,
+      [userId, districtId, startDate, endDate]
+    );
+
+    if (rows.length > 0) {
+      return [rows][0]; // First result set
+    } else {
+      return [];
+    }
+  } catch (error) {
+    throw new Error("Database error: " + error.message);
+  }
+}
+
+
+
 
 
 
