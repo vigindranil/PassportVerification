@@ -144,6 +144,43 @@ export async function updateAADHAARInfoModel(
   }
 }
 
+export async function updateAADHAARInfoModelV2(
+  ApplicationID,
+  AadharNumber,
+  AadhaarName,
+  AadhaarDOB,
+  AadharVerifiedStatus,
+  AadhaarFatherName,
+  AadhaarGender,
+  AadhaarAddress,
+  AadharRemarks,
+  EntryUserID,
+) {
+  try {
+    const [rows] = await pool.query(
+      `CALL sp_updateAADHAARInfoV2(?,?,?, ?, ?, ?, ?, ?, ?, ?, @ErrorCode)`,
+      [
+        ApplicationID,
+        btoa(AadharNumber),
+        AadhaarName,
+        AadhaarDOB,
+        AadharVerifiedStatus,
+        AadhaarFatherName,
+        AadhaarGender,
+        AadhaarAddress,
+        AadharRemarks,
+        EntryUserID,
+      ]
+    );
+
+    const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
+    console.log("aadhaar update", result[0].ErrorCode);
+    return result[0].ErrorCode;
+  } catch (error) {
+    throw new Error("Database error: " + error.message);
+  }
+}
+
 export async function setExternelApiLog(
   APITypeId,
   ApplicationId,

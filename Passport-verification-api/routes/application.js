@@ -1,5 +1,5 @@
 import express from 'express';
-import { getApplicationDetails ,getDocumentsApplicationDetailsByFileNo,updateEnquiryStatus, verifyApplication, getAadharDetailsByapplicationId , updateAADHAARInfo} from '../controllers/applicationController.js';
+import { getApplicationDetails ,getDocumentsApplicationDetailsByFileNo,updateEnquiryStatus, verifyApplication, getAadharDetailsByapplicationId , updateAADHAARInfo, updateAADHAARInfoV2} from '../controllers/applicationController.js';
 import { saveCaseAssign } from '../controllers/eoController.js';
 
 const router = express.Router();
@@ -35,5 +35,6 @@ router.post('/verifyApplication', verifyApplication);
 router.post('/getDocumentsApplicationDetailsByFileNo', getDocumentsApplicationDetailsByFileNo);
 router.post('/getAadharDetailsByapplicationId', getAadharDetailsByapplicationId);
 router.post('/updateAADHAARInfo', updateAADHAARInfo);
+router.post('/updateAADHAARInfoV2', updateAADHAARInfoV2);
 
 export default router;

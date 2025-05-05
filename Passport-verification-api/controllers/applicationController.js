@@ -7,6 +7,7 @@ import {
   savethirdpartyVerifyStatus,
   getAadharDetailsByapplicationIdModel,
   updateAADHAARInfoModel,
+  updateAADHAARInfoModelV2,
   
 } from "../models/applicationModel.js";
 import { saveTransactionHistory } from "../models/logModel.js";
@@ -518,6 +519,95 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
         AadhaarFatherName,
         AadhaarGender,
         AadhaarAddress,
+        req.user.UserID
+      );
+  
+      if (result == 0) {
+        logger.debug(
+          JSON.stringify({
+            API: "updateAADHAARInfo",
+            REQUEST: {
+              ApplicationID,
+              AadhaarName,
+              AadharNumber,
+              AadhaarName ,
+              AadhaarDOB,
+              AadharVerifiedStatus,
+              AadhaarFatherName,
+              AadhaarGender,
+              AadhaarAddress,
+            },
+            RESPONSE: {
+              status: 0,
+              message: "Status has been updated successfully",
+            },
+          })
+        );
+        return res.status(200).json({
+          status: 0,
+          message: "Status has been updated successfully",
+        });
+      } else {
+        logger.debug(
+          JSON.stringify({
+            API: "updateAADHAARInfo",
+            REQUEST: {
+              ApplicationID,
+              AadhaarName,
+              AadharNumber,
+              AadhaarName,
+              AadhaarDOB,
+              AadharVerifiedStatus,
+              AadhaarFatherName,
+              AadhaarGender,
+              AadhaarAddress,
+            },
+            RESPONSE: {
+              status: 1,
+              message: "Failed to update enquiry status",
+            },
+          })
+        );
+        return res.status(400).json({
+          status: 1,
+          message: "Failed to update enquiry status",
+        });
+      }
+    } catch (error) {
+      logger.error("Error in updateEnquiryStatusController:", error.message);
+      return res.status(500).json({
+        status: 1,
+        message: "An error occurred while updating the enquiry status.",
+        error: error.message,
+      });
+    }
+  };
+
+  export const updateAADHAARInfoV2 = async (req, res) => {
+    try {
+      const {
+        ApplicationID,
+        AadharNumber,
+        AadhaarName ,
+        AadhaarDOB ,
+        AadharVerifiedStatus ,
+        AadhaarFatherName ,
+        AadhaarGender ,
+        AadhaarAddress,
+        AadharRemarks
+
+      } = req.body;
+  
+      const result = await updateAADHAARInfoModelV2(
+        ApplicationID,
+        AadharNumber,
+        AadhaarName,
+        AadhaarDOB,
+        AadharVerifiedStatus,
+        AadhaarFatherName,
+        AadhaarGender,
+        AadhaarAddress,
+        AadharRemarks,
         req.user.UserID
       );
   
