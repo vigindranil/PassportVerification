@@ -178,7 +178,7 @@ const data = {
         "items": [
           { "title": "Home", "url": "/dashboard-stateadmin" },
           // { "title": "Upload Applications", "url": "/upload" },
-          // { "title": "Analytics", "url": "/createUserForm" },
+          { "title": "Report", "url": "/state-admin-report" },
           { "title": 'Reset Password', "url": '/reset-password' },
           { "title": "Logout", "url": "/logout" }
         ]

@@ -611,6 +611,8 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
         AadharRemarks,
         req.user.UserID
       );
+
+      console.log("updateAADHAARInfoModelV2:", result);
   
       if (result == 0) {
         logger.debug(
@@ -679,7 +681,7 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
       const { districtId, startDate, endDate } = req.body;
       const userId = req.user.UserID;
   
-      if (!userId || !districtId || !startDate || !endDate) {
+      if (!userId || !startDate || !endDate) {
         logger.debug(
           JSON.stringify({
             API: "getApplicationCountMasterAdmin",
