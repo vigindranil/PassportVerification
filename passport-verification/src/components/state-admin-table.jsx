@@ -26,7 +26,7 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
   const [verificationData, setVerificationData] = useState([])
   const [startDate, setStartDate] = useState(type == "previous" ? "2025-04-02" : null)
   const [endDate, setEndDate] = useState(null)
-  const [districtId, setDistrictId] = useState(1)
+  const [districtId, setDistrictId] = useState(0)
   const [districtsData, setDistrictsData] = useState([])
 
   const fetchDistricts = async () => {

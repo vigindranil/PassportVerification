@@ -74,11 +74,11 @@ export function NavUser() {
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                {user?.name} {user?.type == 10 ? '(District Nodal)' : user?.type == 40 ? '(EO)' : user?.type == 30 ? '(OC)' : user?.type == 20 ? '(SP)' : user?.type == 40 ? '(EO)' : user?.type == 50 ? '(SE)' : ''}
+                  {user?.name} {user?.type == 10 ? '(District Nodal)' : user?.type == 40 ? '(EO)' : user?.type == 30 ? '(OC)' : user?.type == 20 ? '(SP)' : user?.type == 40 ? '(EO)' : user?.type == 50 ? '(SE)' : ''}
                 </span>
                 <span className="truncate text-xs">District: {user?.district}</span>
                 {![10, 20, 50]?.includes(user?.type) && (
-                  <span className="truncate text-xs">{user?.ps ? `Police Station: ${user?.ps}` : '' }</span>
+                  <span className="truncate text-xs">{user?.ps ? `Police Station: ${user?.ps}` : ''}</span>
                 )}
               </div>
             </SidebarMenuButton>
@@ -98,7 +98,7 @@ export function NavUser() {
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate text-xs">District: {user?.district}</span>
                   {![10, 20, 50].includes(user?.type) && (
-                    <span className="truncate text-xs">{user?.ps ? `Police Station: ${user?.ps}` : '' }</span>
+                    <span className="truncate text-xs">{user?.ps ? `Police Station: ${user?.ps}` : ''}</span>
                   )}
                 </div>
               </div>
@@ -111,11 +111,21 @@ export function NavUser() {
                 <span>User Manuals</span>
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent>
-                <DropdownMenuItem><a href="https://wb-passport-verify.s3.ap-south-1.amazonaws.com/user_manual_district_nodal" target="_blank">For District Nodal User</a></DropdownMenuItem>
-                <DropdownMenuItem><a href="https://wb-passport-verify.s3.ap-south-1.amazonaws.com/user_manual_eo" target="_blank">For EO/DIO User</a></DropdownMenuItem>
-                <DropdownMenuItem><a href="https://wb-passport-verify.s3.ap-south-1.amazonaws.com/user_manual_oc" target="_blank">For OC/IC User</a></DropdownMenuItem>
-                <DropdownMenuItem><a href="https://wb-passport-verify.s3.ap-south-1.amazonaws.com/user_manual_sp" target="_blank">For SP/DIB User</a></DropdownMenuItem>
-                <DropdownMenuItem><a href="https://wb-passport-verify.s3.ap-south-1.amazonaws.com/user_manual_spl_eo" target="_blank">For Spl. EO User</a></DropdownMenuItem>
+                <DropdownMenuItem>
+                  <a href="/manuals/user_manual_district_nodal.pdf" target="_blank">For District Nodal User</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <a href="/manuals/user_manual_eo.pdf" target="_blank">For EO/DIO User</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <a href="/manuals/user_manual_oc.pdf" target="_blank">For OC/IC User</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <a href="/manuals/user_manual_sp.pdf" target="_blank">For SP/DIB User</a>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <a href="/manuals/user_manual_spl_eo.pdf" target="_blank">For Spl. EO User</a>
+                </DropdownMenuItem>
               </DropdownMenuSubContent>
             </DropdownMenuSub>
 
