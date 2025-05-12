@@ -681,7 +681,7 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
       const { districtId, startDate, endDate } = req.body;
       const userId = req.user.UserID;
   
-      if (!userId || !startDate || !endDate) {
+      if (!userId) {
         logger.debug(
           JSON.stringify({
             API: "getApplicationCountMasterAdmin",

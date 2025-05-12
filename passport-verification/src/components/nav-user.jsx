@@ -108,6 +108,23 @@ export function NavUser() {
             <DropdownMenuSub>
               <DropdownMenuSubTrigger className="flex items-center gap-2">
                 <Info className="size-4" />
+                <span>User Manuals</span>
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem><a href="https://wb-passport-verify.s3.ap-south-1.amazonaws.com/user_manual_district_nodal" target="_blank">For District Nodal User</a></DropdownMenuItem>
+                <DropdownMenuItem><a href="https://wb-passport-verify.s3.ap-south-1.amazonaws.com/user_manual_eo" target="_blank">For EO/DIO User</a></DropdownMenuItem>
+                <DropdownMenuItem><a href="https://wb-passport-verify.s3.ap-south-1.amazonaws.com/user_manual_oc" target="_blank">For OC/IC User</a></DropdownMenuItem>
+                <DropdownMenuItem><a href="https://wb-passport-verify.s3.ap-south-1.amazonaws.com/user_manual_sp" target="_blank">For SP/DIB User</a></DropdownMenuItem>
+                <DropdownMenuItem><a href="https://wb-passport-verify.s3.ap-south-1.amazonaws.com/user_manual_spl_eo" target="_blank">For Spl. EO User</a></DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+
+            <DropdownMenuSeparator />
+
+            {/* Submenu */}
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger className="flex items-center gap-2">
+                <Info className="size-4" />
                 <span>Guidelines</span>
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent>

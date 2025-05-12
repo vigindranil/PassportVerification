@@ -13,18 +13,18 @@ import * as XLSX from "xlsx"
 import jsPDF from "jspdf"
 import "jspdf-autotable"
 import moment from "moment"
-import { getApplicationCountMasterAdmin } from "@/app/state-admin-report/api";
+import { getApplicationCountMasterAdmin } from "@/app/state-admin-report-current/api";
 import { getDistrict } from "@/app/createUserForm/api";
 import { Label } from "./ui/label";
 
-export default function StateAdminReportDatatable({ status, heading, period, flag }) {
+export default function StateAdminReportDatatable({ status, heading, type }) {
   const [selectedDetails, setSelectedDetails] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
   const itemsPerPage = 6
   const [isLoading, setIsLoading] = useState(true)
   const [verificationData, setVerificationData] = useState([])
-  const [startDate, setStartDate] = useState(null)
+  const [startDate, setStartDate] = useState(type == "previous" ? "2025-04-02" : null)
   const [endDate, setEndDate] = useState(null)
   const [districtId, setDistrictId] = useState(1)
   const [districtsData, setDistrictsData] = useState([])
@@ -126,32 +126,36 @@ export default function StateAdminReportDatatable({ status, heading, period, fla
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">
-                Start Date
-              </label>
-              <Input
-                type="date"
-                id="startDate"
-                value={startDate || ""}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-40"
-              />
-            </div>
+            {type == "previous" && (
+              <>
+                <div>
+                  <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">
+                    Start Date
+                  </label>
+                  <Input
+                    type="date"
+                    id="startDate"
+                    value={startDate || ""}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="w-40"
+                    disabled={true}
+                  />
+                </div>
 
-            {/* End Date Input */}
-            <div>
-              <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">
-                End Date
-              </label>
-              <Input
-                type="date"
-                id="endDate"
-                value={endDate || ""}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-40"
-              />
-            </div>
+                <div>
+                  <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">
+                    End Date
+                  </label>
+                  <Input
+                    type="date"
+                    id="endDate"
+                    value={endDate || ""}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="w-40"
+                  />
+                </div>
+              </>
+            )}
           </div>
           {/* <Button variant={'outline'} onClick={handleExportPDF}>Export PDF</Button> */}
           {/* <Button variant={'outline'} onClick={handlePrint}>Print</Button> */}
@@ -163,7 +167,6 @@ export default function StateAdminReportDatatable({ status, heading, period, fla
               <TableRow className="bg-[#e6f3ff]">
                 <TableHead className="font-semibold">Total Applications (till date)</TableHead>
                 <TableHead className="font-semibold">Total Pending Applications to Accept by EO (till date)</TableHead>
-                <TableHead className="font-semibold">Last 15 Days Pending (till date)</TableHead>
                 <TableHead className="font-semibold">Accepect by EO for Verification</TableHead>
                 <TableHead className="font-semibold">Verified by EO</TableHead>
                 <TableHead className="font-semibold">Pending with O/C IC</TableHead>
@@ -182,9 +185,6 @@ export default function StateAdminReportDatatable({ status, heading, period, fla
                     </TableCell>
                     <TableCell>
                       <Skeleton className="bg-slate-300 h-4 w-24" />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="bg-slate-300 h-4 w-32" />
                     </TableCell>
                     <TableCell>
                       <Skeleton className="bg-slate-300 h-4 w-36" />
@@ -215,7 +215,6 @@ export default function StateAdminReportDatatable({ status, heading, period, fla
                   <TableRow key={index}>
                     <TableCell>{row?.TotalApplication || 0}</TableCell>
                     <TableCell>{row?.TotalPendingApplications || 0}</TableCell>
-                    <TableCell>{row?.Last15DaysPendingApplications || 0}</TableCell>
                     <TableCell>{row?.EOStartedVerify || 0}</TableCell>
                     <TableCell>{row?.EOComplete || 0}</TableCell>
                     <TableCell>{row?.OCPending || 0}</TableCell>

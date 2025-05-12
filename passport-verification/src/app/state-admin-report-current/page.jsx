@@ -21,7 +21,7 @@ export default function Dashboard() {
             <div className="mt-8">
               <CardContent>
                 <Card>
-                  <StateAdminReportDatatable status={2} heading="Report" />
+                  <StateAdminReportDatatable status={2} type="current" heading="Current Status Report" />
                 </Card>
               </CardContent>
             </div>
