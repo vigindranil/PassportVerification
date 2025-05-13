@@ -23,6 +23,14 @@ export default function Dashboard() {
                 <Card>
                   <StateAdminReportDatatable status={2} type="previous" heading="Previous Status Report" />
                 </Card>
+                {/* Note Card below the table */}
+                <Card className="mt-6 bg-yellow-50 border-yellow-200 flex items-center" style={{ minHeight: '64px' }}>
+                  <CardContent className="w-full flex items-center justify-start">
+                    <div className="text-sm text-yellow-800">
+                      <strong>Note:</strong>&nbsp;In case of application transfer, the data may vary.
+                    </div>
+                  </CardContent>
+                </Card>
               </CardContent>
             </div>
           </div>

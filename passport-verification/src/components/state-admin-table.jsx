@@ -53,6 +53,7 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
       setIsLoading(true)
       const response = await getApplicationCountMasterAdmin(districtId, start_date, end_date)
       setVerificationData(response?.data?.applicationCounts)
+      console.log("raja", response?.data?.applicationCounts)
     } catch (error) {
       console.error("Error fetching application status:", error)
     } finally {
@@ -166,13 +167,14 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
             <TableHeader>
               <TableRow className="bg-[#e6f3ff]">
                 <TableHead className="font-semibold">Total Applications (till date)</TableHead>
-                <TableHead className="font-semibold">Total Pending Applications to Accept by EO (till date)</TableHead>
-                <TableHead className="font-semibold">Accepect by EO for Verification</TableHead>
+                <TableHead className="font-semibold">Applications pending to be accepted by the EO</TableHead>
+                {(startDate == null && endDate == null) ? <TableHead className="font-semibold">Applications pending for more than 15 days to be accepted by the EO</TableHead> : null}
+                <TableHead className="font-semibold">Accepted but verification pending with EO</TableHead>
                 <TableHead className="font-semibold">Verified by EO</TableHead>
-                <TableHead className="font-semibold">Pending with O/C IC</TableHead>
                 <TableHead className="font-semibold">Verified by O/C IC</TableHead>
-                <TableHead className="font-semibold">Pending with SP DIB / DC SB</TableHead>
+                <TableHead className="font-semibold">Pending with O/C IC</TableHead>
                 <TableHead className="font-semibold">Verified by SP DIB / DC SB</TableHead>
+                <TableHead className="font-semibold">Pending with SP DIB / DC SB</TableHead>
                 <TableHead className="font-semibold">Pending with Spl. EO</TableHead>
               </TableRow>
             </TableHeader>
@@ -186,9 +188,10 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
                     <TableCell>
                       <Skeleton className="bg-slate-300 h-4 w-24" />
                     </TableCell>
-                    <TableCell>
+                    {(startDate == null && endDate == null) ? <TableCell>
                       <Skeleton className="bg-slate-300 h-4 w-36" />
                     </TableCell>
+                      : null}
                     <TableCell>
                       <Skeleton className="bg-slate-300 h-4 w-28" />
                     </TableCell>
@@ -215,12 +218,13 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
                   <TableRow key={index}>
                     <TableCell>{row?.TotalApplication || 0}</TableCell>
                     <TableCell>{row?.TotalPendingApplications || 0}</TableCell>
+                    {(startDate == null && endDate == null) ? <TableCell>{row?.Last15DaysPendingApplications || 0}</TableCell> : null }
                     <TableCell>{row?.EOStartedVerify || 0}</TableCell>
                     <TableCell>{row?.EOComplete || 0}</TableCell>
-                    <TableCell>{row?.OCPending || 0}</TableCell>
                     <TableCell>{row?.OCComplete || 0}</TableCell>
-                    <TableCell>{row?.SPPending || 0}</TableCell>
+                    <TableCell>{row?.OCPending || 0}</TableCell>
                     <TableCell>{row?.SPDone || 0}</TableCell>
+                    <TableCell>{row?.SPPending || 0}</TableCell>
                     <TableCell>{row?.SEPending || 0}</TableCell>
                   </TableRow>
                 ))
