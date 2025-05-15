@@ -105,6 +105,8 @@ const LoginForm = () => {
           router.push("/dashboard-se");
         } else if (type == 150) {
           router.push("/dashboard-stateadmin");
+        } else if (type == 100) {
+          router.push("/dashboard-spl-person");
         }
       } else {
         toast({

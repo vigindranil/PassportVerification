@@ -133,8 +133,8 @@ export const updateCriminalInfoApi = async (payload) => {
 export const getPCCApplicationDetails = async (applicant_name, applicant_aadhaar) => {
   try {
     return await postRequest("third-party/getPCCApplicationDetails", {
-      // applicant_name: "Sanjay",
-      // applicant_aadhaar: "8183",
+      // applicant_name: "Tanmay",
+      // applicant_aadhaar: "6806",
       applicant_name: applicant_name,
       applicant_aadhaar: applicant_aadhaar,
     });

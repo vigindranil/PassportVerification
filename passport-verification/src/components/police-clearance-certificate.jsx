@@ -28,7 +28,7 @@ const SkeletonLoader = () => (
   </>
 );
 
-const PoliceClearanceCertificate = ({ selectedRows, setSelectedRows, applicant_details }) => {
+const PoliceClearanceCertificate = ({ selectedRows, setSelectedRows, setApplicationDetails=null, applicant_details=null }) => {
  
   const [pccData, setPccData] = useState(null);
   const [isLoadingPccRecords, setIsLoadingPccRecords] = useState(false);
@@ -38,7 +38,7 @@ const PoliceClearanceCertificate = ({ selectedRows, setSelectedRows, applicant_d
       console.log("applicant_details", applicant_details);
       
       setIsLoadingPccRecords(true);
-      const response = await getPCCApplicationDetails(applicant_details?.ApplicantName, atob(applicant_details?.AadharNumber).slice(-4));
+      const response = await getPCCApplicationDetails(applicant_details?.ApplicantName, setApplicationDetails ? applicant_details?.AadharNumber?.slice(-4) : atob(applicant_details?.AadharNumber)?.slice(-4));
 
       setPccData(response || null);
       console.log(response?.data);
@@ -61,23 +61,48 @@ const PoliceClearanceCertificate = ({ selectedRows, setSelectedRows, applicant_d
           <div className="flex flex-wrap items-end gap-y-2 w-full my-4 px-14">
             <div className="w-1/3 px-3">
               <Label className="text-zinc-500">Applicant Name</Label>
-              <Input
-                type="text"
-                placeholder="Enter First Name (required)"
-                className="ring-0 bg-slate-100 cursor-not-allowed border-gray-300 rounded-md w-full p-2"
-                value={applicant_details?.ApplicantName}
-                readOnly={true}
-              />
+              {setApplicationDetails && (
+                  <Input
+                    type="text"
+                    placeholder="Enter First Name (required)"
+                    className="ring-0 border-gray-300 rounded-md w-full p-2"
+                    value={applicant_details?.ApplicantName}
+                    readOnly={false}
+                    onChange={e => setApplicationDetails(prev => ({ ...prev, ApplicantName: e.target.value }))}
+                  />
+                )}
+                {!setApplicationDetails && (
+                  <Input
+                    type="text"
+                    placeholder="Enter First Name (required)"
+                    className="ring-0 border-gray-300 rounded-md w-full p-2"
+                    value={applicant_details?.ApplicantName}
+                    readOnly={true}
+                  />
+                )}
+              
             </div>
             <div className="w-1/3 px-3">
               <Label className="text-zinc-500">Aadhaar Number</Label>
+              {setApplicationDetails && (
               <Input
                 type="text"
                 placeholder="Enter First Name (required)"
-                className="ring-0 bg-slate-100 cursor-not-allowed border-gray-300 rounded-md w-full p-2"
+                className="ring-0 border-gray-300 rounded-md w-full p-2"
+                value={applicant_details?.AadharNumber}
+                readOnly={false}
+                onChange={e => setApplicationDetails(prev => ({ ...prev, AadharNumber: e.target.value }))}
+              />
+              )}
+              {!setApplicationDetails && (
+              <Input
+                type="text"
+                placeholder="Enter First Name (required)"
+                className="ring-0 border-gray-300 rounded-md w-full p-2"
                 value={applicant_details?.AadharNumber ? `XXXXXXXX${atob(applicant_details?.AadharNumber).slice(-4)}` : ""}
                 readOnly={true}
               />
+              )}
             </div>
 
 

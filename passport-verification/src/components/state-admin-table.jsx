@@ -165,126 +165,126 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
         <div className="border rounded-lg" id="police-verification-table">
           <Table>
             <TableHeader>
-            <TableRow>
-  <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">A</span></TableHead>
-  <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">B</span></TableHead>
-  {(type == "current") ? <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">C</span></TableHead> : null}
-  <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">D</span></TableHead>
-  <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">E</span></TableHead>
-  <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">F</span></TableHead>
-  <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">G</span></TableHead>
-  <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">H</span></TableHead>
-  <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">I</span></TableHead>
-  <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">J</span></TableHead>
-</TableRow>
-            <TableRow className="bg-[#e6f3ff]">
-              <TableHead className="font-semibold">Applications till date</TableHead>
-              <TableHead className="font-semibold">Applications pending to be accepted by the EO</TableHead>
-              {(type == "current") ? <TableHead className="font-semibold">Applications pending for more than 15 days to be accepted by the EO</TableHead> : null}
-              <TableHead className="font-semibold">Accepted but verification pending with EO <br /><span className="text-blue-500">(A-B)</span></TableHead>
-              <TableHead className="font-semibold">Verified by EO <br /><span className="text-blue-500">(A-B-D)</span></TableHead>
-              <TableHead className="font-semibold">Verified by O/C IC</TableHead>
-              <TableHead className="font-semibold">Pending with O/C IC <br /><span className="text-blue-500">(E-F)</span></TableHead>
-              <TableHead className="font-semibold">Verified by SP DIB / DC SB</TableHead>
-              <TableHead className="font-semibold">Pending with SP DIB / DC SB <br /><span className="text-blue-500">(G-H)</span></TableHead>
-              <TableHead className="font-semibold">Pending with Spl. EO</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              [...Array(6)].map((_, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <Skeleton className="bg-slate-300 h-4 w-8" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="bg-slate-300 h-4 w-24" />
-                  </TableCell>
-                  {(type == "current") ? <TableCell>
-                    <Skeleton className="bg-slate-300 h-4 w-36" />
-                  </TableCell>
-                    : null}
-                  <TableCell>
-                    <Skeleton className="bg-slate-300 h-4 w-28" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="bg-slate-300 h-4 w-24" />
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <Skeleton className="bg-slate-300 h-8 w-16" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="bg-slate-300 h-4 w-8" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="bg-slate-300 h-4 w-24" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="bg-slate-300 h-4 w-32" />
-                  </TableCell>
-
-                </TableRow>
-              ))
-            ) : currentData?.length > 0 ? (
-              currentData?.map((row, index) => (
-                <TableRow key={index}>
-                  <TableCell>{row?.TotalApplication || 0}</TableCell>
-                  <TableCell>{row?.TotalPendingApplications || 0}</TableCell>
-                  {(type == "current") ? <TableCell>{row?.Last15DaysPendingApplications || 0}</TableCell> : null}
-                  <TableCell>{row?.EOStartedVerify || 0}</TableCell>
-                  <TableCell>{row?.EOComplete || 0}</TableCell>
-                  <TableCell>{row?.OCComplete || 0}</TableCell>
-                  <TableCell>{row?.OCPending || 0}</TableCell>
-                  <TableCell>{row?.SPDone || 0}</TableCell>
-                  <TableCell>{row?.SPPending || 0}</TableCell>
-                  <TableCell>{row?.SEPending || 0}</TableCell>
-                </TableRow>
-              ))
-            ) : (
               <TableRow>
-                <TableCell colSpan={13} className="text-center">
-                  No Data Found
-                </TableCell>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">A</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">B</span></TableHead>
+                {(type == "current") ? <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">C</span></TableHead> : null}
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">D</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">E</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">F</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">G</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">H</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">I</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">J</span></TableHead>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-between mt-4 text-sm">
-        <div>
-          Showing {filteredData ? startIndex + 1 : 0} to {filteredData ? Math.min(endIndex, filteredData?.length) : 0}{" "}
-          of {filteredData?.length || 0} entries
+              <TableRow className="bg-[#e6f3ff]">
+                <TableHead className="font-semibold">Applications uploaded till date</TableHead>
+                <TableHead className="font-semibold">Applications Accepted</TableHead>
+                <TableHead className="font-semibold">Applications pending to be accepted by the EO <br /><span className="text-blue-500">(A-B)</span></TableHead>
+                {(type == "current") ? <TableHead className="font-semibold">Applications pending for more than 15 days to be accepted by the EO</TableHead> : null}
+                <TableHead className="font-semibold">Verified by EOs</TableHead>
+                <TableHead className="font-semibold">Verified by OC/IC</TableHead>
+                <TableHead className="font-semibold">Pending with OC/IC <br /><span className="text-blue-500">(E-F)</span></TableHead>
+                <TableHead className="font-semibold">Verified by SP DIB / DC SB</TableHead>
+                <TableHead className="font-semibold">Pending with SP DIB / DC SB <br /><span className="text-blue-500">(G-H)</span></TableHead>
+                <TableHead className="font-semibold">Pending with Spl. EO</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                [...Array(6)].map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-8" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-24" />
+                    </TableCell>
+                    {(type == "current") ? <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-36" />
+                    </TableCell>
+                      : null}
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-28" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-24" />
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Skeleton className="bg-slate-300 h-8 w-16" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-8" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-24" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-32" />
+                    </TableCell>
+
+                  </TableRow>
+                ))
+              ) : currentData?.length > 0 ? (
+                currentData?.map((row, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{row?.TotalApplication || 0}</TableCell>
+                    <TableCell>{row?.EOStartedVerify || 0}</TableCell>
+                    <TableCell>{row?.TotalPendingApplications || 0}</TableCell>
+                    {(type == "current") ? <TableCell>{row?.Last15DaysPendingApplications || 0}</TableCell> : null}
+                    <TableCell>{row?.EOComplete || 0}</TableCell>
+                    <TableCell>{row?.OCComplete || 0}</TableCell>
+                    <TableCell>{row?.OCPending || 0}</TableCell>
+                    <TableCell>{row?.SPDone || 0}</TableCell>
+                    <TableCell>{row?.SPPending || 0}</TableCell>
+                    <TableCell>{row?.SEPending || 0}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={10} className="text-center">
+                    No Data Found
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          >
-            Prev
-          </Button>
-          {Array?.from({ length: totalPages }, (_, i) => i + 1)?.map((page) => (
+        <div className="flex items-center justify-between mt-4 text-sm">
+          <div>
+            Showing {filteredData ? startIndex + 1 : 0} to {filteredData ? Math.min(endIndex, filteredData?.length) : 0}{" "}
+            of {filteredData?.length || 0} entries
+          </div>
+          <div className="flex items-center gap-2 flex-wrap">
             <Button
-              key={page}
-              variant={currentPage === page ? "default" : "outline"}
+              variant="outline"
               size="sm"
-              onClick={() => setCurrentPage(page)}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
             >
-              {page}
+              Prev
             </Button>
-          ))}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </Button>
+            {Array?.from({ length: totalPages }, (_, i) => i + 1)?.map((page) => (
+              <Button
+                key={page}
+                variant={currentPage === page ? "default" : "outline"}
+                size="sm"
+                onClick={() => setCurrentPage(page)}
+              >
+                {page}
+              </Button>
+            ))}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
     </div >
   )
 }

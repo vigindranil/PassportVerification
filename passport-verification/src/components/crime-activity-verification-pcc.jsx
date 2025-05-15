@@ -11,12 +11,12 @@ import { Eye } from "lucide-react";
 import { Label } from "./ui/label";
 import Cookies from "react-cookies";
 
-const CrimeAcivityTablePCC = ({ selectedRows, setSelectedRows, ApplicantName, FathersName }) => {
+const CrimeAcivityTablePCC = ({ selectedRows, setSelectedRows, ApplicantName="", setApplicationDetails=null, FathersName="" }) => {
   const ps = Cookies.load("ps");
   const district = Cookies.load("district");
   const [crimeData, setCrimeData] = useState([]);
   const [isLoadingPccRecords, setIsLoadingPccRecords] = useState(false);
-  const [pccInput, setPccInput] = useState({ fname: ApplicantName?.split(" ")[0], lname: ApplicantName?.split(" ")[1] });
+  const [pccInput, setPccInput] = useState({ fname: setApplicationDetails ? ApplicantName : ApplicantName?.split(" ")[0], lname: setApplicationDetails ? ApplicantName : ApplicantName?.split(" ")[1] });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const [isModalOpen, setIsModalOpen] = useState(false);

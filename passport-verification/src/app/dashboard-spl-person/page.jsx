@@ -7,69 +7,28 @@ import BackgroundImg from "@/assets/passport-bg.jpg";
 import { getStateDashBoard } from "./api";
 
 import PieChartCard from "@/components/reusable-pie-chart";
+import PoliceClearanceCertificate from "@/components/police-clearance-certificate";
+import CrimeAcivityTableKolkataPolice from "@/components/crime-activity-verification-kolkata-police";
+import CrimeAcivityTablePCC from "@/components/crime-activity-verification-pcc";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 export default function Dashboard() {
-  const [data, setData] = useState(null);
-  const [chart, setChart] = useState([]);
+   const [applicationDetails, setApplicationDetails] = useState({
+    ApplicantName: "",
+    AadharNumber: "",
+    FathersName: ""
+   });
+    const [isLoadingStatusHistrory, setIsLoadingStatusHistrory] = useState(true)
+    const [isLoadingDocumentTable, setIsLoadingDocumentTable] = useState(true);
+    const [isLoadingCriminalRecordFound, setIsLoadingCriminalRecordFound] = useState(false)
+    const [isLoadingCriminalRecordNotFound, setIsLoadingCriminalRecordNotFound] = useState(false)
+    const [kolkataPoliceSelectedRows, setKolkataPoliceSelectedRows] = useState([]);
+    const [criminalRecordsRemark, setCriminalRecordsRemark] = useState("");
+    const [cidSelectedRows, setCidSelectedRows] = useState([]);
   useEffect(() => {
-    const fetchDashboard = async () => {
-      const response = await getStateDashBoard();
-      setData(response?.data?.dashboardCount);
-      setChart([
-        {
-          name: "Total",
-          value: response?.data?.dashboardCount?.TotalApplications,
-          fill: "#3B82F6", // blue-500
-        },
-        {
-          name: "Pending",
-          value: response?.data?.dashboardCount?.TotalPendingApplications,
-          fill: "#F59E0B", // amber-500
-        },
-        {
-          name: "Approved",
-          value: response?.data?.dashboardCount?.TotalApplicationsDONE,
-          fill: "#10B981", // emerald-500
-        },
-      ]);
-    };
-    fetchDashboard();
+  
+    setIsLoadingStatusHistrory(false)
   }, []);
-  const chartConfig = {
-    value: {
-      label: "Applications",
-    },
-    "Total Applications": {
-      label: "Total Applications",
-      color: "#3B82F6", // blue-500
-    },
-    "Pending Applications": {
-      label: "Pending Applications",
-      color: "#F59E0B", // amber-500
-    },
-    "Approved Applications": {
-      label: "Approved Applications",
-      color: "#10B981", // emerald-500
-    },
-  };
-
-
-  // const chartData = [
-  //   {
-  //     name: "Total Applications",
-  //     value: data?.TotalApplications,
-  //     fill: "#3B82F6", // blue-500
-  //   },
-  //   {
-  //     name: "Pending Applications",
-  //     value: data?.TotalPendingApplications,
-  //     fill: "#F59E0B", // amber-500
-  //   },
-  //   {
-  //     name: "Approved Applications",
-  //     value: data?.TotalApplicationsDONE,
-  //     fill: "#10B981", // emerald-500
-  //   },
-  // ];
 
 
   return (
@@ -83,15 +42,31 @@ export default function Dashboard() {
             className="absolute opacity-10 inset-0 -z-2"
           />
           <div className="container mx-auto px-6 py-8 relative">
-            <div className="mt-8">
-              <DashboardCards />
+            <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden min-h-[200px]">
+              <div className="bg-gradient-to-r from-violet-600 to-amber-600 px-6 py-3">
+                <h2 className="text-2xl font-bold text-white">Criminal Activity Verification</h2>
+              </div>
+              {
+                isLoadingStatusHistrory ?
+                  <div className="space-y-2 w-full min-h-[200px] h-full py-10 flex justify-center items-baseline">
+                    <div className="flex flex-col w-full min-h-[200px] text-center justify-center items-center text-gray-400">Loading...</div>
+                  </div>
+                  :
+                  <>
+                    {/* PCC Certificate */}
+                    < PoliceClearanceCertificate applicant_details={applicationDetails} setApplicationDetails={setApplicationDetails} selectedRows={kolkataPoliceSelectedRows} setSelectedRows={setKolkataPoliceSelectedRows} />
+
+                    {/* Kolkata Police Crime Records */}
+                    < CrimeAcivityTableKolkataPolice applicant_details={applicationDetails} setApplicationDetails={setApplicationDetails} selectedRows={kolkataPoliceSelectedRows} setSelectedRows={setKolkataPoliceSelectedRows} />
+
+                    {/* PCC Criminal Records */}
+                    <CrimeAcivityTablePCC ApplicantName={applicationDetails?.ApplicantName} setApplicationDetails={setApplicationDetails} FathersName={applicationDetails?.FathersName} selectedRows={cidSelectedRows} setSelectedRows={setCidSelectedRows} />
+                  </>
+
+              }
+
+
             </div>
-          <PieChartCard
-            title="Application Progress Overview"
-            description="This chart displays the distribution of total, pending, and approved applications."
-            data={chart}
-            config={chartConfig}
-          />
           </div>
         </main>
       </div>

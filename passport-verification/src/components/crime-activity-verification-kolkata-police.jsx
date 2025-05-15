@@ -28,7 +28,7 @@ const SkeletonLoader = () => (
   </>
 );
 
-const CrimeAcivityTableKolkataPolice = ({ selectedRows, setSelectedRows, applicant_details }) => {
+const CrimeAcivityTableKolkataPolice = ({ selectedRows, setSelectedRows, setApplicationDetails=null, applicant_details=null }) => {
   const ps = Cookies.load("ps");
   const district = Cookies.load("district");
   const [crimeData, setCrimeData] = useState([]);
@@ -37,12 +37,12 @@ const CrimeAcivityTableKolkataPolice = ({ selectedRows, setSelectedRows, applica
     name_accused: applicant_details?.ApplicantName || "",
     criminal_aliases_name: "",
     address: applicant_details?.PermanentAddress || applicant_details?.VerificationAddress || "",
-    father_accused: applicant_details?.FathersName,
+    father_accused: applicant_details?.FathersName || "",
     age_accused: "",
     from_date: "",
     to_date: "",
     case_yr: "",
-    policestations: applicant_details?.Ps_Name,
+    policestations: applicant_details?.Ps_Name || "",
     pageno: "1",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);

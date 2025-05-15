@@ -169,6 +169,8 @@ const data = {
           { "title": "Completed by SE", "url": "/verificationCompletedEO" },
         ]
       },
+
+      // State Admin
       {
         "title": "State Admin",
         "url": "#",
@@ -177,9 +179,22 @@ const data = {
         "type": 150,
         "items": [
           { "title": "Home", "url": "/dashboard-stateadmin" },
-          // { "title": "Upload Applications", "url": "/upload" },
           { "title": "Current Status Report", "url": "/state-admin-report-current" },
           { "title": "Previous Status Report", "url": "/state-admin-report-previous" },
+          { "title": 'Reset Password', "url": '/reset-password' },
+          { "title": "Logout", "url": "/logout" }
+        ]
+      },
+
+      // Spl. Person Admin
+      {
+        "title": "Spl. Person Admin",
+        "url": "#",
+        "icon": LayoutGrid,
+        "isActive": true,
+        "type": 100,
+        "items": [
+          { "title": "Home", "url": "/dashboard-spl-person" },
           { "title": 'Reset Password', "url": '/reset-password' },
           { "title": "Logout", "url": "/logout" }
         ]
