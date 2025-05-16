@@ -605,7 +605,7 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
         AadhaarName,
         AadhaarDOB,
         AadharVerifiedStatus,
-        AadhaarFatherName,
+        AadhaarFatherName || "N/A",
         AadhaarGender,
         AadhaarAddress,
         AadharRemarks,

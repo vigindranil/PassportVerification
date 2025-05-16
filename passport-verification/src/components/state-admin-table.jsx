@@ -163,12 +163,13 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
           <Button variant={'outline'} onClick={handleExportExcel}>Export Excel</Button>
         </div>
         <div className="border rounded-lg" id="police-verification-table">
+          {(type == "current") ? 
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">A</span></TableHead>
                 <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">B</span></TableHead>
-                {(type == "current") ? <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">C</span></TableHead> : null}
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">C</span></TableHead>
                 <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">D</span></TableHead>
                 <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">E</span></TableHead>
                 <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">F</span></TableHead>
@@ -176,18 +177,20 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
                 <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">H</span></TableHead>
                 <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">I</span></TableHead>
                 <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">J</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">K</span></TableHead>
               </TableRow>
               <TableRow className="bg-[#e6f3ff]">
                 <TableHead className="font-semibold">Applications uploaded till date</TableHead>
                 <TableHead className="font-semibold">Applications Accepted</TableHead>
                 <TableHead className="font-semibold">Applications pending to be accepted by the EO <br /><span className="text-blue-500">(A-B)</span></TableHead>
-                {(type == "current") ? <TableHead className="font-semibold">Applications pending for more than 15 days to be accepted by the EO</TableHead> : null}
+                <TableHead className="font-semibold">Applications pending for more than 15 days to be accepted by the EO</TableHead>
                 <TableHead className="font-semibold">Verified by EOs</TableHead>
+                <TableHead className="font-semibold">Verification pending with EO <br /><span className="text-blue-500">(B-E)</span></TableHead>
                 <TableHead className="font-semibold">Verified by OC/IC</TableHead>
-                <TableHead className="font-semibold">Pending with OC/IC <br /><span className="text-blue-500">(E-F)</span></TableHead>
-                <TableHead className="font-semibold">Verified by SP DIB / DC SB</TableHead>
-                <TableHead className="font-semibold">Pending with SP DIB / DC SB <br /><span className="text-blue-500">(G-H)</span></TableHead>
-                <TableHead className="font-semibold">Pending with Spl. EO</TableHead>
+                <TableHead className="font-semibold">Pending with OC/IC <br /><span className="text-blue-500">(E-G)</span></TableHead>
+                <TableHead className="font-semibold">Approved/ Rejected by SP DIB/ DC SB </TableHead>
+                <TableHead className="font-semibold">Endorsed to Spl. EO by SP DIB/ DC SB </TableHead>
+                <TableHead className="font-semibold">Pending with SP DIB / DC SB <br /><span className="text-blue-500">(G-I-J)</span></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -200,10 +203,9 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
                     <TableCell>
                       <Skeleton className="bg-slate-300 h-4 w-24" />
                     </TableCell>
-                    {(type == "current") ? <TableCell>
+                    <TableCell>
                       <Skeleton className="bg-slate-300 h-4 w-36" />
                     </TableCell>
-                      : null}
                     <TableCell>
                       <Skeleton className="bg-slate-300 h-4 w-28" />
                     </TableCell>
@@ -230,14 +232,104 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
                   <TableRow key={index}>
                     <TableCell>{row?.TotalApplication || 0}</TableCell>
                     <TableCell>{row?.EOStartedVerify || 0}</TableCell>
-                    <TableCell>{row?.TotalPendingApplications || 0}</TableCell>
-                    {(type == "current") ? <TableCell>{row?.Last15DaysPendingApplications || 0}</TableCell> : null}
+                    <TableCell>{(row?.TotalApplication - row?.EOStartedVerify) || 0}</TableCell>
+                    <TableCell>{row?.Last15DaysPendingApplications || 0}</TableCell>
                     <TableCell>{row?.EOComplete || 0}</TableCell>
+                    <TableCell>{(row?.EOStartedVerify - row?.EOComplete)  || 0}</TableCell>
                     <TableCell>{row?.OCComplete || 0}</TableCell>
-                    <TableCell>{row?.OCPending || 0}</TableCell>
+                    <TableCell>{(row?.EOComplete - row?.OCComplete) || 0}</TableCell>
                     <TableCell>{row?.SPDone || 0}</TableCell>
-                    <TableCell>{row?.SPPending || 0}</TableCell>
                     <TableCell>{row?.SEPending || 0}</TableCell>
+                    <TableCell>{ (row?.OCComplete - row?.SPDone - row?.SEPending) || 0}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={11} className="text-center">
+                    No Data Found
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+            : 
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">A</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">B</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">C</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">D</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">E</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">F</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">G</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">H</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">I</span></TableHead>
+                <TableHead className="font-semibold text-center border-r-2"><span className="text-blue-500">J</span></TableHead>
+              </TableRow>
+              <TableRow className="bg-[#e6f3ff]">
+                <TableHead className="font-semibold">Applications uploaded till date</TableHead>
+                <TableHead className="font-semibold">Applications Accepted</TableHead>
+                <TableHead className="font-semibold">Applications pending to be accepted by the EO <br /><span className="text-blue-500">(A-B)</span></TableHead>
+                <TableHead className="font-semibold">Verified by EOs</TableHead>
+                <TableHead className="font-semibold">Verification pending with EO <br /><span className="text-blue-500">(B-D)</span></TableHead>
+                <TableHead className="font-semibold">Verified by OC/IC</TableHead>
+                <TableHead className="font-semibold">Pending with OC/IC <br /><span className="text-blue-500">(D-F)</span></TableHead>
+                <TableHead className="font-semibold">Approved/ Rejected by SP DIB/ DC SB </TableHead>
+                <TableHead className="font-semibold">Endorsed to Spl. EO by SP DIB/ DC SB </TableHead>
+                <TableHead className="font-semibold">Pending with SP DIB / DC SB <br /><span className="text-blue-500">(F-H-I)</span></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                [...Array(6)].map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-8" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-24" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-36" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-28" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-24" />
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Skeleton className="bg-slate-300 h-8 w-16" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-8" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-24" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-32" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="bg-slate-300 h-4 w-32" />
+                    </TableCell>
+
+                  </TableRow>
+                ))
+              ) : currentData?.length > 0 ? (
+                currentData?.map((row, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{row?.TotalApplication || 0}</TableCell>
+                    <TableCell>{row?.EOStartedVerify || 0}</TableCell>
+                    <TableCell>{(row?.TotalApplication - row?.EOStartedVerify) || 0}</TableCell>
+                    <TableCell>{row?.EOComplete || 0}</TableCell>
+                    <TableCell>{(row?.EOStartedVerify - row?.EOComplete)  || 0}</TableCell>
+                    <TableCell>{row?.OCComplete || 0}</TableCell>
+                    <TableCell>{(row?.EOComplete - row?.OCComplete) || 0}</TableCell>
+                    <TableCell>{row?.SPDone || 0}</TableCell>
+                    <TableCell>{row?.SEPending || 0}</TableCell>
+                    <TableCell>{ (row?.OCComplete - row?.SPDone - row?.SEPending) || 0}</TableCell>
                   </TableRow>
                 ))
               ) : (
@@ -248,7 +340,8 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
                 </TableRow>
               )}
             </TableBody>
-          </Table>
+          </Table>  
+          }
         </div>
         <div className="flex items-center justify-between mt-4 text-sm">
           <div>

@@ -8,6 +8,7 @@ import {
   setExternelApiLog,
 } from "../models/applicationModel.js";
 import qs from "qs";
+import { saveCriminalStatusLog } from "../models/logModel.js";
 dotenv.config();
 
 export const generateOtpAadhaar = async (aadhaar_number, user_id) => {
@@ -239,6 +240,7 @@ export const getWBSEDCLDetails = async (req, res) => {
     });
 };
 
+// Kolkata police records
 export const getKolkataPoliceCriminalRecordSearchv4 = async (req, res) => {
   const {
     name_accused,
@@ -252,6 +254,8 @@ export const getKolkataPoliceCriminalRecordSearchv4 = async (req, res) => {
     policestations,
     pageno,
   } = req.body;
+
+  await saveCriminalStatusLog("Kolkata police records", `${name_accused || ""}-${criminal_aliases_name || ""}`, req?.user?.UserID);
 
   // Create FormData instance
   let formData = new FormData();
@@ -303,6 +307,7 @@ export const getKolkataPoliceCriminalRecordSearchv4 = async (req, res) => {
     });
 };
 
+// CID criminal records
 export const getPCCCrimeRecordSearch = async (req, res) => {
   const { fname, lname } = req.body;
 
@@ -311,6 +316,8 @@ export const getPCCCrimeRecordSearch = async (req, res) => {
     fname: fname,
     lname: lname,
   });
+
+  await saveCriminalStatusLog("CID criminal records", `${fname || ""} ${lname || ""}`, req?.user?.UserID);
 
   let config = {
     method: "post",
@@ -339,6 +346,49 @@ export const getPCCCrimeRecordSearch = async (req, res) => {
       return res.status(400).json({
         status: 0,
         message: "Failed to fetched details",
+        data: null,
+      });
+    });
+};
+
+// PCC criminal records
+export const getPCCApplicationDetails = async (req, res) => {
+  const { applicant_name, applicant_aadhaar } = req.body;
+
+  if (!applicant_name) {
+    return res.status(400).json({ error: "Applicant Name is required." });
+  } else if (!applicant_aadhaar) {
+    return res.status(400).json({ error: "Aadhaar is required." });
+  }
+
+  // Create form data
+  let formData = new FormData();
+  formData.append("ApplicantName", applicant_name);
+  formData.append("ApplicantAadhaar", applicant_aadhaar);
+
+  await saveCriminalStatusLog("PCC criminal records", applicant_name, req?.user?.UserID);
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://wbpcb.nltr.org/WBPCCServiceV1/api/GetPassportPCCApplicationDetails",
+    data: formData,
+  };
+
+  axios
+    .request(config)
+    .then((response) => {
+      console.log("response", response.data);
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: response?.data?.data[0],
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res.status(400).json({
+        status: 0,
+        message: "Failed to fetch details",
         data: null,
       });
     });
@@ -494,45 +544,4 @@ export const getMadhyamikCertificate = async (req, res) => {
       data: null,
     });
   }
-};
-
-export const getPCCApplicationDetails = async (req, res) => {
-  const { applicant_name, applicant_aadhaar } = req.body;
-
-  if (!applicant_name) {
-    return res.status(400).json({ error: "Applicant Name is required." });
-  } else if (!applicant_aadhaar) {
-    return res.status(400).json({ error: "Aadhaar is required." });
-  }
-
-  // Create form data
-  let formData = new FormData();
-  formData.append("ApplicantName", applicant_name);
-  formData.append("ApplicantAadhaar", applicant_aadhaar);
-
-  let config = {
-    method: "post",
-    maxBodyLength: Infinity,
-    url: "https://wbpcb.nltr.org/WBPCCServiceV1/api/GetPassportPCCApplicationDetails",
-    data: formData,
-  };
-
-  axios
-    .request(config)
-    .then((response) => {
-      console.log("response", response.data);
-      return res.status(200).json({
-        status: 0,
-        message: "Data fetched successfully",
-        data: response?.data?.data[0],
-      });
-    })
-    .catch((error) => {
-      console.log(error);
-      return res.status(400).json({
-        status: 0,
-        message: "Failed to fetch details",
-        data: null,
-      });
-    });
 };

@@ -150,7 +150,7 @@ export async function updateAADHAARInfoModelV2(
   AadhaarName,
   AadhaarDOB,
   AadharVerifiedStatus,
-  AadhaarFatherName,
+  AadhaarFatherName="N/A",
   AadhaarGender,
   AadhaarAddress,
   AadharRemarks,
