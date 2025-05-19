@@ -286,6 +286,28 @@ export async function getApplicationCountMasterAdminModel(
   }
 }
 
+export async function getApplicationCountMasterAdminModelV1(
+  userId,
+  districtId,
+  startDate,
+  endDate
+) {
+  try {
+    const [rows] = await pool.query(
+      `CALL sp_getApplicationCountmasteradmin_v1(?,?,?,?)`,
+      [userId, districtId, startDate, endDate]
+    );
+
+    if (rows.length > 0) {
+      return [rows][0]; // First result set
+    } else {
+      return [];
+    }
+  } catch (error) {
+    throw new Error("Database error: " + error.message);
+  }
+}
+
 
 
 

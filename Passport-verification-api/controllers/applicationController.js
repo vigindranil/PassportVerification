@@ -9,6 +9,7 @@ import {
   updateAADHAARInfoModel,
   updateAADHAARInfoModelV2,
   getApplicationCountMasterAdminModel,
+  getApplicationCountMasterAdminModelV1,
   
 } from "../models/applicationModel.js";
 import { saveTransactionHistory } from "../models/logModel.js";
@@ -708,6 +709,64 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
       logger.debug(
         JSON.stringify({
           API: "getApplicationCountMasterAdmin",
+          REQUEST: { userId, districtId, startDate, endDate },
+          RESPONSE: {
+            status: 0,
+            message: "Application count retrieved successfully",
+            data: applicationCounts,
+          },
+        })
+      );
+  
+      return res.status(200).json({
+        status: 0,
+        message: "Application count retrieved successfully",
+        data: {
+          applicationCounts,
+        },
+      });
+    } catch (error) {
+      logger.error("Error retrieving application count:", error);
+      return res.status(500).json({
+        status: 1,
+        message: "An error occurred while retrieving the application count",
+        error: error.message,
+      });
+    }
+  };
+
+  export const getApplicationCountMasterAdminV1 = async (req, res) => {
+    try {
+      const { districtId, startDate, endDate } = req.body;
+      const userId = req.user.UserID;
+  
+      if (!userId) {
+        logger.debug(
+          JSON.stringify({
+            API: "getApplicationCountMasterAdminV1",
+            REQUEST: { userId, districtId, startDate, endDate },
+            RESPONSE: {
+              status: 1,
+              message: "Invalid input data",
+            },
+          })
+        );
+        return res.status(400).json({
+          status: 1,
+          message: "Invalid input data",
+        });
+      }
+  
+      const [applicationCounts] = await getApplicationCountMasterAdminModelV1(
+        userId,
+        districtId,
+        startDate,
+        endDate
+      );
+  
+      logger.debug(
+        JSON.stringify({
+          API: "getApplicationCountMasterAdminV1",
           REQUEST: { userId, districtId, startDate, endDate },
           RESPONSE: {
             status: 0,
