@@ -40,7 +40,7 @@ export const fileUploadS3Bucket = async (req, res) => {
       throw new Error("Failed to upload file to S3");
     }
 
-    console.log("\x1b[32m%s\x1b[0m", "document upload complete!");
+    // console.log("\x1b[32m%s\x1b[0m", "document upload complete!");
     return res.status(200).json({
       status: 0,
       message: "Document uploaded successfully",

@@ -117,20 +117,20 @@ export const uploadExcel = async (req, res) => {
       );
 
       if (result == 1) {
-        console.log("error code 1", element["File Number"]);
+        // console.log("error code 1", element["File Number"]);
         failure_error += 1;
         failure_arr.push(element["File Number"]);
       } else if (result == 2) {
-        console.log("error code 2", element["File Number"]);
+        // console.log("error code 2", element["File Number"]);
         duplicate_error += 1;
         duplicate_arr.push(element["File Number"]);
       } else if (result == 3) {
-        console.log("error code 3", element["File Number"]);
+        // console.log("error code 3", element["File Number"]);
         ps_error += 1;
         ps_arr.push(element["File Number"]);
       } else if (result == 0) {
         
-        console.log("error code 0", element["File Number"]);
+        // console.log("error code 0", element["File Number"]);
         
         success_arr.push(element["File Number"]);
       }
@@ -138,7 +138,7 @@ export const uploadExcel = async (req, res) => {
 
     await Promise.all(promises);
 
-    console.log("json", jsonData?.length)
+    // console.log("json", jsonData?.length)
 
     logger.debug(
       JSON.stringify({

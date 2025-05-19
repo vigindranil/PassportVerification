@@ -61,7 +61,7 @@ export const getPoliceStationsByDistrict = async (req, res) => {
   try {
     const districtId = req.user.DistrictID;
 
-    console.log("districtId124",districtId);
+    // console.log("districtId124",districtId);
     
     if (!districtId) {
       logger.debug(
@@ -137,7 +137,7 @@ export const getPoliceStationsById = async (req, res) => {
   try {
     const {districtId} = req.body;
 
-    console.log("districtId124",districtId);
+    // console.log("districtId124",districtId);
     
     if (!districtId) {
       logger.debug(

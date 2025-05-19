@@ -25,7 +25,7 @@ export async function updateCriminalInfoModel(
       );
   
       const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
-      console.log("result", result[0].ErrorCode);
+      // console.log("result", result[0].ErrorCode);
       return result[0].ErrorCode;
     } catch (error) {
       throw new Error("Database error: " + error.message);

@@ -17,7 +17,7 @@ import CrimeAcivityTablePCC from "@/components/crime-activity-verification-pcc"
 import CrimeAcivityTableKolkataPolice from "@/components/crime-activity-verification-kolkata-police"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { AlertCircle, CheckCircle2 } from "lucide-react"
+import { AlertCircle, CheckCircle2, SquarePen } from "lucide-react"
 import Cookies from "react-cookies";
 import PoliceClearanceCertificate from "@/components/police-clearance-certificate"
 import Image from "next/image"
@@ -683,6 +683,7 @@ export default function Page({ FileNumber }) {
                                   <span className="text-sm"><b>Verified By:</b> {applicationDetails?.applicationDetails?.CriminalRecoedVerifiedby}</span>
                                   <span className="text-justify text-sm"><b>Remarks:</b> {applicationDetails?.applicationDetails?.CrimalRemarks || 'N/A'}</span>
                                 </div>
+                                <Button variant="outline" onClick={()=>setApplicationDetails((prev)=>({...prev, applicationDetails: {CriminalStatus: 0}}))}><SquarePen className="text-yellow-600"/> Edit Criminal Records</Button>
                               </div>
                             </div>
                           </> :

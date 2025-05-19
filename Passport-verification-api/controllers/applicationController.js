@@ -19,7 +19,7 @@ export const getApplicationDetails = async (req, res) => {
   try {
     const { applicationId } = req.body;
     const entryUserId = req.user.UserID;
-    console.log("entryUserId", entryUserId);
+    // console.log("entryUserId", entryUserId);
     const filepath = process.env.FILE_UPLOAD_PATH;
     if (!applicationId || !entryUserId) {
       logger.debug(
@@ -60,7 +60,7 @@ export const getApplicationDetails = async (req, res) => {
     const json = "{}";
 
     // const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, applicationId, OperationName, json, entryUserId)
-    // console.log(saveTransaction);
+    // // console.log(saveTransaction);
 
     logger.debug(
       JSON.stringify({
@@ -324,7 +324,7 @@ export const verifyApplication = async (req, res) => {
       EntryUserID,
       Remarks
     );
-    console.log("setExternelApiLog", externelApiLogresponse);
+    // console.log("setExternelApiLog", externelApiLogresponse);
     
     const statusUpdateResponse = await savethirdpartyVerifyStatus(
       ApplicationId,
@@ -333,7 +333,7 @@ export const verifyApplication = async (req, res) => {
       APIResponse,
       EntryUserID
     );
-    console.log("savethirdpartyVerifyStatus", statusUpdateResponse);
+    // console.log("savethirdpartyVerifyStatus", statusUpdateResponse);
 
     if (externelApiLogresponse == 0 && statusUpdateResponse == 0) {
       logger.debug(
@@ -398,7 +398,7 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
   try {
     const { applicationId } = req.body;
     const entryUserId = req.user.UserID;
-    console.log("entryUserId", entryUserId);
+    // console.log("entryUserId", entryUserId);
     const filepath = process.env.FILE_UPLOAD_PATH;
     if (!applicationId || !entryUserId) {
       logger.debug(
@@ -429,7 +429,7 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
     const json = "{}";
 
     // const saveTransaction = await saveTransactionHistory(ipaddress, macAddress, Longitude, Latitude, 0, OperationName, json, entryUserId)
-    // console.log(saveTransaction);
+    // // console.log(saveTransaction);
 
     logger.debug(
       JSON.stringify({
@@ -612,7 +612,7 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
         req.user.UserID
       );
 
-      console.log("updateAADHAARInfoModelV2:", result);
+      // console.log("updateAADHAARInfoModelV2:", result);
   
       if (result == 0) {
         logger.debug(

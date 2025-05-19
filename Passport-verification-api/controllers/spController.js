@@ -24,7 +24,7 @@ export const transferapplication = async (req, res) => {
         req.user.UserID
       );
   
-      console.log("result",result);
+      // console.log("result",result);
       
       if (result == 0) {
         logger.debug(

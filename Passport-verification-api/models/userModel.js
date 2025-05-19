@@ -20,21 +20,21 @@ export async function saveUserRegistrationModel(
   AADHAARMobileNo,
   EntryUserID
 ) {
-  console.log('UserID:',UserID)
-  console.log('UserName:',UserName)
-  console.log('FullName:',FullName)
-  console.log('UserPassword:',UserPassword)
-  console.log('Firstname:',Firstname)
-  console.log('LastName:',LastName)
-  console.log('MobileNo:',MobileNo)
-  console.log('EmailID:',EmailID)
-  console.log('Gender:',Gender)
-  console.log('AADHAARNo:',AADHAARNo)
-  console.log('Designation:',Designation)
-  console.log('UserRoleID:',UserRoleID)
-  console.log('DistrictID:',DistrictID)
-  console.log('PSID:',PSID)
-  console.log('EntryUserID:',EntryUserID)
+  // console.log('UserID:',UserID)
+  // console.log('UserName:',UserName)
+  // console.log('FullName:',FullName)
+  // console.log('UserPassword:',UserPassword)
+  // console.log('Firstname:',Firstname)
+  // console.log('LastName:',LastName)
+  // console.log('MobileNo:',MobileNo)
+  // console.log('EmailID:',EmailID)
+  // console.log('Gender:',Gender)
+  // console.log('AADHAARNo:',AADHAARNo)
+  // console.log('Designation:',Designation)
+  // console.log('UserRoleID:',UserRoleID)
+  // console.log('DistrictID:',DistrictID)
+  // console.log('PSID:',PSID)
+  // console.log('EntryUserID:',EntryUserID)
   
   const [rows] = await pool.query(
     "CALL sp_saveUserRegistrationv2(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?, @ErrorCode, @ID);",
@@ -59,7 +59,7 @@ export async function saveUserRegistrationModel(
   );
 
   const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
-  console.log("ErrorCode", result[0].ErrorCode);
+  // console.log("ErrorCode", result[0].ErrorCode);
   
   return result[0].ErrorCode;
 
@@ -79,7 +79,7 @@ export async function updateUserActivationStatusModel(
   );
 
   const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
-  console.log("error code", result[0].ErrorCode);
+  // console.log("error code", result[0].ErrorCode);
   
   return result[0].ErrorCode;
 
@@ -92,7 +92,7 @@ export async function showuserDetailsModel(
 ) {
   try {
     const [rows] = await pool.query('CALL sp_showuserDetails(?)', [EntryUserID]);
-    console.log(rows);
+    // console.log(rows);
     
     return rows;
   } catch (error) {
@@ -105,7 +105,7 @@ export async function getApplicationStatusModel(
 ) {
   try {
     const [rows] = await pool.query('CALL sp_getapplicationstatusv2(?,?,?)', [EntryUserID,Status, Periord ]);
-    console.log(rows);
+    // console.log(rows);
     return rows;
   } catch (error) {
     throw new Error('Database error: ' + error.message);
@@ -117,7 +117,7 @@ export async function getApplicationCountsv1Model(
 ) {
   try {
     const [rows] = await pool.query('CALL sp_getApplicationCount(?)', [EntryUserID]);
-    console.log("GetApplicationCountsv1", rows);
+    // console.log("GetApplicationCountsv1", rows);
     
     return rows;
   } catch (error) {
@@ -131,11 +131,6 @@ export async function updatePasswordModel(
   NewPassword,
   EntryUserID,
 ) {
-
-  console.log("model", {UserID,
-    OldPassWord,
-    NewPassword,
-    EntryUserID})
   const [rows] = await pool.query(
     "CALL sp_updatepassword(?, ?, ?, ?, @ErrorCode);",
     [
@@ -147,7 +142,7 @@ export async function updatePasswordModel(
   );
 
   const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
-  console.log("updated Password error code", result[0].ErrorCode);
+  // console.log("updated Password error code", result[0].ErrorCode);
   
   return result[0].ErrorCode;
 
@@ -158,10 +153,10 @@ export async function getApplicationStatusModelV3(
   userId, Status, startDate, endDate 
 ) {
   try {
-    console.log("userId", userId);
-    console.log("Status", Status);
-    console.log("startDate", startDate);
-    console.log("endDate", endDate);
+    // console.log("userId", userId);
+    // console.log("Status", Status);
+    // console.log("startDate", startDate);
+    // console.log("endDate", endDate);
     const [rows] = await pool.query('CALL sp_getapplicationstatusv3(?, ?, ?, ?)', [userId, Status, startDate, endDate]);
     return rows;
   } catch (error) {

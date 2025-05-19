@@ -30,9 +30,9 @@ export async function getDocumentApplicationDetailsById(
       [applicationId, entryUserId]
     );
 
-    console.log("applicationId", applicationId);
-    console.log("entryUserId", entryUserId);
-    console.log("document", rows);
+    // console.log("applicationId", applicationId);
+    // console.log("entryUserId", entryUserId);
+    // console.log("document", rows);
     if (rows && rows[0].length > 0) {
       return rows[0];
     } else {
@@ -52,9 +52,9 @@ export async function getApplicationStatusHistoryById(
       `CALL sp_getApplicationStatusHistorybyapplicationId(?, ?)`,
       [applicationId, entryUserId]
     );
-    console.log("applicationId", applicationId);
-    console.log("entryUserId", entryUserId);
-    console.log("document", rows);
+    // console.log("applicationId", applicationId);
+    // console.log("entryUserId", entryUserId);
+    // console.log("document", rows);
 
     if (rows && rows[0].length > 0) {
       return rows[0];
@@ -91,17 +91,17 @@ export async function updateEnquiryStatusModel(
       ]
     );
 
-    console.log('ApplicationID', ApplicationID);
-    console.log('locationIp', locationIp);
-    console.log('macAddress', macAddress);
-    console.log('deviceId', deviceId);
-    console.log('StatusID', StatusID);
-    console.log('StatusText', StatusText);
-    console.log('Remarks', Remarks);
-    console.log('EntryUserID', EntryUserID);
+    // console.log('ApplicationID', ApplicationID);
+    // console.log('locationIp', locationIp);
+    // console.log('macAddress', macAddress);
+    // console.log('deviceId', deviceId);
+    // console.log('StatusID', StatusID);
+    // console.log('StatusText', StatusText);
+    // console.log('Remarks', Remarks);
+    // console.log('EntryUserID', EntryUserID);
 
     const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
-    console.log("updateEnqueryStatusv2", result[0].ErrorCode);
+    // console.log("updateEnqueryStatusv2", result[0].ErrorCode);
     return result[0].ErrorCode;
   } catch (error) {
     console.error("Error updating enquiry status:", error.message);
@@ -137,7 +137,7 @@ export async function updateAADHAARInfoModel(
     );
 
     const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
-    console.log("aadhaar update", result[0].ErrorCode);
+    // console.log("aadhaar update", result[0].ErrorCode);
     return result[0].ErrorCode;
   } catch (error) {
     throw new Error("Database error: " + error.message);
@@ -174,7 +174,7 @@ export async function updateAADHAARInfoModelV2(
     );
 
     const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
-    console.log("aadhaar update", result[0].ErrorCode);
+    // console.log("aadhaar update", result[0].ErrorCode);
     return result[0].ErrorCode;
   } catch (error) {
     throw new Error("Database error: " + error.message);
@@ -224,15 +224,15 @@ export async function savethirdpartyVerifyStatus(
       [ApplicationId, DocumentID, VerifyStatus, ApiResponse, EntryuserId]
     );
 
-    console.log('sp_savethirdpartyVerifyStatus');
-    console.log('ApplicationId', ApplicationId);
-    console.log('DocumentID', DocumentID);
-    console.log('VerifyStatus', VerifyStatus);
-    console.log('ApiResponse', ApiResponse);
-    console.log('EntryuserId', EntryuserId);
+    // console.log('sp_savethirdpartyVerifyStatus');
+    // console.log('ApplicationId', ApplicationId);
+    // console.log('DocumentID', DocumentID);
+    // console.log('VerifyStatus', VerifyStatus);
+    // console.log('ApiResponse', ApiResponse);
+    // console.log('EntryuserId', EntryuserId);
     
     const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
-    console.log('ErrorCode', result[0].ErrorCode);
+    // console.log('ErrorCode', result[0].ErrorCode);
     return result[0].ErrorCode;
   } catch (error) {
     throw new Error("Database error: " + error.message);
@@ -245,8 +245,8 @@ export async function getAadharDetailsByapplicationIdModel(
   EntryuserId 
 ) {
   try {
-      console.log("userId",ApplicationId )
-      console.log("status",EntryuserId )
+      // console.log("userId",ApplicationId )
+      // console.log("status",EntryuserId )
       
     const [rows] = await pool.query('CALL sp_getAadharDetailsByapplicationId(?,?);',
       [
@@ -254,7 +254,7 @@ export async function getAadharDetailsByapplicationIdModel(
         EntryuserId
       ]
     );
-    console.log("getApplicationStatus", rows);
+    // console.log("getApplicationStatus", rows);
     
     return rows[0];
   } catch (error) {

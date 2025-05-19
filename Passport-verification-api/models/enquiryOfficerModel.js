@@ -7,11 +7,11 @@ export async function getSpecialEnquiryOfficersModel(
         const [rows] = await pool.query("CALL sp_getSpecialEnquiryofficersDetails(?);", [
             EntryUserId,
         ]);
-        console.log("rows", rows);
+        // console.log("rows", rows);
 
         return rows[0];
     } catch (error) {
-        console.log("error", error);
+        // console.log("error", error);
         throw new Error("Database error: " + error.message);
     }
 }
@@ -44,7 +44,7 @@ export async function assignApplicationToSEModel(
 
         // Fetch the `@ErrorCode` output parameter
         const [result] = await pool.query("SELECT @ErrorCode AS ErrorCode;");
-        console.log("result", result);
+        // console.log("result", result);
         
         return result[0].ErrorCode;
     } catch (error) {
@@ -63,9 +63,9 @@ export async function getStatusbySEModal(
     period
   ) {
     try {
-        console.log("userId",userId)
-        console.log("status",status)
-        console.log("period",period)
+        // console.log("userId",userId)
+        // console.log("status",status)
+        // console.log("period",period)
       const [rows] = await pool.query('CALL sp_getStatusbySE(?, ?, ?);',
         [
             userId,
@@ -73,7 +73,7 @@ export async function getStatusbySEModal(
             period
         ]
       );
-      console.log("getApplicationStatus", rows);
+      // console.log("getApplicationStatus", rows);
       
       return rows[0];
     } catch (error) {
@@ -91,11 +91,11 @@ export async function getStatusbySEModal(
         const [rows] = await pool.query("CALL sp_getCountSE(?);", [
             userId ,
         ]);
-        console.log("rows", rows);
+        // console.log("rows", rows);
 
         return rows[0];
     } catch (error) {
-        console.log("error", error);
+        // console.log("error", error);
         throw new Error("Database error: " + error.message);
     }
 }

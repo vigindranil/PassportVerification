@@ -35,7 +35,7 @@ const verifyToken = async (req, res, next) => {
 
     next(); // Proceed to the next middleware or route handler
   } catch (error) {
-    console.log("error", error);
+    // console.log("error", error);
 
     res.status(401).json({ status: 1, message: "Invalid or expired token." });
   }

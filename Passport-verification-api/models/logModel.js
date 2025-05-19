@@ -14,7 +14,7 @@ export async function saveTransactionHistory(ipaddress, macAddress, Longitude, L
 
     const [[{ ErrorCode: errorCode }]] = await pool.query(`SELECT @ErrorCode AS ErrorCode`);
 
-    console.log('sp_savetransaction', result);
+    // console.log('sp_savetransaction', result);
 
     if (errorCode === 0) {
       return true;
@@ -27,16 +27,19 @@ export async function saveTransactionHistory(ipaddress, macAddress, Longitude, L
   }
 }
 
-export async function saveCriminalStatusLog(SearchTypeName, SearchedName, ApiRequest="", UserId) {
+export async function saveCriminalStatusLog(SearchTypeName, SearchedName, UserId) {
   try {
 
     const [result] = await pool.query(
       `CALL sp_SaveCriminalStatusLog(?, ?, ?, ?, @ErrorCode)`,
-      [SearchTypeName, SearchedName, ApiRequest, UserId]
+      [SearchTypeName, SearchedName, '{"SearchedName": "SearchedName"}', UserId]
     );
 
     const [[{ ErrorCode: errorCode }]] = await pool.query(`SELECT @ErrorCode AS ErrorCode`);
 
+    console.log(`payload`, {SearchTypeName, SearchedName, ApiRequest: '{"SearchedName": "SearchedName"}', UserId});
+    console.log(`saveCriminalStatusLog (${SearchTypeName})`, errorCode);
+    
     if (errorCode === 0) {
       return true;
     } else {

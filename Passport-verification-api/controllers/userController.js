@@ -88,7 +88,7 @@ export const saveUserRegistration = async (req, res) => {
       AADHAARMobileNo,
     } = req.body;
 
-    console.log("req.user.UserID", req.user.UserID);
+    // console.log("req.user.UserID", req.user.UserID);
     const ipaddress = "test";
     const macAddress = "test";
     const Longitude = "test";
@@ -184,7 +184,7 @@ export const saveUserRegistration = async (req, res) => {
       req.user.UserID
     ); // change aadhar token
 
-    console.log("askodgjklmv", result);
+    // console.log("askodgjklmv", result);
 
     if (result == 0) {
       logger.debug(
@@ -334,7 +334,7 @@ export const updateUserActivationStatus = async (req, res) => {
       ActivationStatus
     ); // change aadhar token
 
-    console.log("result", result);
+    // console.log("result", result);
 
     if (result == 0) {
       logger.debug(
@@ -417,7 +417,7 @@ export const updateUserActivationStatus = async (req, res) => {
 // export const getDistrictNodalDashBoard = async (req, res) => {
 //     try {
 //         const [result] = await getDistrictNodalDashBoardModel(req.user.UserID);
-//         console.log("result", result);
+//         // console.log("result", result);
 
 //         if (result?.length !== 0) {
 //             return res.status(200).json({
@@ -500,7 +500,7 @@ export const showuserDetails = async (req, res) => {
     const json = "{}";
     //  const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0,OperationName ,json ,EntryUserId)
     const [result] = await showuserDetailsModel(req.user.UserID);
-    console.log("result", result);
+    // console.log("result", result);
 
     if (result?.length !== 0) {
       logger.debug(
@@ -562,7 +562,7 @@ export const getApplicationStatus = async (req, res) => {
       // periord_id
       0
     );
-    console.log("result", result);
+    // console.log("result", result);
 
     if (result?.length > 0) {
       logger.debug(
@@ -617,7 +617,7 @@ export const getApplicationCountsv1 = async (req, res) => {
     const json = "{}";
     // const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0 ,OperationName ,json ,req.user.UserID)
     const [result] = await getApplicationCountsv1Model(req.user.UserID);
-    console.log("result", result);
+    // console.log("result", result);
 
     if (result?.length !== 0) {
       logger.debug(
@@ -666,7 +666,7 @@ export const logout = async (req, res) => {
   try {
     // Remove token from Redis
     // const result = await client.del(`user:${req.user.UserID}:token`);
-    // console.log("result", result);
+    // // console.log("result", result);
 
     return res.status(200).json({
       status: 0,
@@ -713,7 +713,7 @@ export const updatePassword = async (req, res) => {
       user_id
     );
 
-    console.log("result", saveTransaction);
+    // console.log("result", saveTransaction);
 
     if (result == 0) {
       logger.debug(
@@ -747,7 +747,7 @@ export const updatePassword = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     
     logger.error("Error:", error);
     res.status(500).json({
@@ -775,7 +775,7 @@ export const getApplicationStatusV3 = async (req, res) => {
       start_date,
       end_date
     );
-    console.log("result", result);
+    // console.log("result", result);
 
     if (result?.length > 0) {
       logger.debug(
@@ -812,7 +812,7 @@ export const getApplicationStatusV3 = async (req, res) => {
     }
   } catch (error) {
     logger.error("Error fetching :", error);
-    console.log("Error:", error);
+    // console.log("Error:", error);
     res.status(500).json({
       status: 1,
       message: "An error occurred",

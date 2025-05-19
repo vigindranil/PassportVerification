@@ -101,7 +101,7 @@ export const sendOtp = async (req, res) => {
       );
 
       const token = btoa(jwt_token);
-      console.log("token");
+      // console.log("token");
 
       const [result] = await updateAuthToken(
         rows[0]["UserID"],
@@ -177,7 +177,7 @@ export const sendOtpV1 = async (req, res) => {
 
     const rows = await genearateOtp(username, btoa(password));
 
-    console.log("genrate otp", rows);
+    // console.log("genrate otp", rows);
 
     if (!rows || rows.length == 0) {
       return res.status(400).json({
@@ -238,7 +238,7 @@ export const verifyOtp = async (req, res) => {
   try {
     const { otp } = req.body;
 
-    console.log("otp", otp);
+    // console.log("otp", otp);
     if (!otp) {
       logger.debug(
         JSON.stringify({
@@ -264,12 +264,6 @@ export const verifyOtp = async (req, res) => {
     // const transactionId = aadhaar_response?.transaction_id;
 
     const transactionId = "";
-
-    console.log("jwt", {
-      ...req.user,
-      TransactionId: transactionId,
-      isLoggedIn: 1,
-    });
 
     const jwt_token = jwt.sign(
       {
@@ -473,7 +467,7 @@ export const verifyOtpV1 = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
     logger.error(error.message);
     return res.status(500).json({
       status: 1,
@@ -509,7 +503,7 @@ export const generateSecretToken = async (req, res) => {
       token: jwt_token,
     });
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
     logger.error(error.message);
     return res.status(500).json({
       status: 1,

@@ -52,7 +52,7 @@ export async function saveApplicationDetailsModel(
 
     // Fetch the `@ErrorCode` output parameter
 
-    // console.log("error code model", rows[0][0].ErrorCode);
+    // // console.log("error code model", rows[0][0].ErrorCode);
 
     return rows[0][0].ErrorCode;
   } catch (error) {

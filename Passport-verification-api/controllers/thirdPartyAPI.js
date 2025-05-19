@@ -33,11 +33,11 @@ export const generateOtpAadhaar = async (aadhaar_number, user_id) => {
 
   try {
     const result = await axios.request(config);
-    console.log("response", result?.data);
+    // console.log("response", result?.data);
     return result?.data;
   } catch (error) {
     if (error?.response) {
-      console.log(error?.response?.data); // Logs only the response data
+      // console.log(error?.response?.data); // Logs only the response data
       return error?.response?.data;
     } else {
       return null;
@@ -69,11 +69,11 @@ export const verifyOtpAadhaar = async (otp, user_id, transaction_id) => {
 
   try {
     const result = await axios.request(config);
-    console.log("response", result?.data);
+    // console.log("response", result?.data);
     return result?.data;
   } catch (error) {
     if (error?.response) {
-      console.log(error?.response?.data); // Logs only the response data
+      // console.log(error?.response?.data); // Logs only the response data
       return error?.response?.data;
     } else {
       return null;
@@ -148,7 +148,7 @@ export const getBirthCertificateDetails = async (req, res) => {
       });
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
       return res.status(400).json({
         status: 0,
         message: "Failed to fetched details",
@@ -177,7 +177,7 @@ export const getLandDeedDetails = async (req, res) => {
   axios
     .request(config)
     .then(async (response) => {
-      console.log("response", response);
+      // console.log("response", response);
       return res.status(200).json({
         status: 0,
         message: "Data fetched successfully",
@@ -185,7 +185,7 @@ export const getLandDeedDetails = async (req, res) => {
       });
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
       return res.status(400).json({
         status: 0,
         message: "Failed to fetched details",
@@ -223,7 +223,7 @@ export const getWBSEDCLDetails = async (req, res) => {
   axios
     .request(config)
     .then(async (response) => {
-      console.log("response", response);
+      // console.log("response", response);
       return res.status(200).json({
         status: 0,
         message: "Data fetched successfully",
@@ -231,7 +231,7 @@ export const getWBSEDCLDetails = async (req, res) => {
       });
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
       return res.status(400).json({
         status: 0,
         message: "Failed to fetched details",
@@ -255,7 +255,11 @@ export const getKolkataPoliceCriminalRecordSearchv4 = async (req, res) => {
     pageno,
   } = req.body;
 
-  await saveCriminalStatusLog("Kolkata police records", `${name_accused || ""}-${criminal_aliases_name || ""}`, req?.user?.UserID);
+  const isLogSaved = await saveCriminalStatusLog("Kolkata police records", `${name_accused || ""}-${criminal_aliases_name || ""}`, req?.user?.UserID);
+
+  // if(isLogSaved == 0){
+
+  // }
 
   // Create FormData instance
   let formData = new FormData();
@@ -298,7 +302,7 @@ export const getKolkataPoliceCriminalRecordSearchv4 = async (req, res) => {
       });
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
       return res.status(400).json({
         status: 0,
         message: "Failed to fetched details",
@@ -342,7 +346,7 @@ export const getPCCCrimeRecordSearch = async (req, res) => {
       });
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
       return res.status(400).json({
         status: 0,
         message: "Failed to fetched details",
@@ -377,7 +381,7 @@ export const getPCCApplicationDetails = async (req, res) => {
   axios
     .request(config)
     .then((response) => {
-      console.log("response", response.data);
+      // console.log("response", response.data);
       return res.status(200).json({
         status: 0,
         message: "Data fetched successfully",
@@ -385,7 +389,7 @@ export const getPCCApplicationDetails = async (req, res) => {
       });
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
       return res.status(400).json({
         status: 0,
         message: "Failed to fetch details",
@@ -424,7 +428,7 @@ export const sendSMS = async (req, res) => {
       }
     );
 
-    console.log("SMS Execution:", response);
+    // console.log("SMS Execution:", response);
     return res.status(200).json({
       status: 0,
       message: "SMS sent successfully",
@@ -474,7 +478,7 @@ export const sendSMSInternally = async (
       return false;
     }
   } catch (error) {
-    console.log("Exception:", error.message);
+    // console.log("Exception:", error.message);
     return false;
   }
 };
@@ -521,7 +525,7 @@ export const getMadhyamikCertificate = async (req, res) => {
       }
     );
 
-    console.log("certificateResponse", certificateResponse?.data);
+    // console.log("certificateResponse", certificateResponse?.data);
 
     if (!certificateResponse?.data) {
       return res

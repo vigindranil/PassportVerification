@@ -25,6 +25,7 @@ import requireDocument from './routes/requiredDocsRoutes.js'
 import s3uploadRoutes from "./routes/s3-upload.js";
 import s3downloadRoutes from "./routes/s3-download.js";
 import stateAdminRoutes from "./routes/stateAdmin.js";
+import updateAadhaarRoutes from "./routes/aadhaarUpdate.js";
 
 const app = express();
 const port = 3003;
@@ -78,6 +79,7 @@ app.use("/api/crime", verifyToken, updateCriminalInfo);
 app.use("/api/sp", verifyToken, transferapplication)
 app.use("/api/documents", verifyToken, requireDocument)
 app.use("/api/stateadmin", verifyToken, stateAdminRoutes)
+app.use("/api/update-aadhaar", updateAadhaarRoutes)
 app.use(
   "/api/fileImport",
   verifyToken,
@@ -93,8 +95,8 @@ app.use("/test", (req, res) => {
 setupSwagger(app);
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-  console.log(`Swagger UI is available at http://localhost:${port}/api-docs`);
-  console.log(`API log is available at http://localhost:${port}/api/logs?file=debug.log`);
-  console.log(`API log is available at http://localhost:${port}/api/logs?file=error.log`);
+  // console.log(`Server is running on port ${port}`);
+  // console.log(`Swagger UI is available at http://localhost:${port}/api-docs`);
+  // console.log(`API log is available at http://localhost:${port}/api/logs?file=debug.log`);
+  // console.log(`API log is available at http://localhost:${port}/api/logs?file=error.log`);
 });

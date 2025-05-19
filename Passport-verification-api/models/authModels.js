@@ -8,11 +8,11 @@ export async function getUserLoginModel(username, password) {
     ]);
     return rows[0];
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
     return null;
   } finally {
     // await pool.end(); // Close the pool after execution
-    console.log("Connection closed");
+    // console.log("Connection closed");
   }
 }
 

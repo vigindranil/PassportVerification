@@ -35,7 +35,7 @@ export const saveDocumentUpload = async (req, res) => {
     const file = req.file;
     const filepath = req?.file_name;
 
-    console.log("req.file",req.file)
+    // console.log("req.file",req.file)
     if (!file) {
       logger.debug(
         JSON.stringify({
