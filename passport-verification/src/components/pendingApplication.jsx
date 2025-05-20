@@ -56,7 +56,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
     }
   }
 
-  const handleCompleteVerification = async (applicationId, remarks = "") => {
+  const handleCompleteVerification = async (applicationId, type, remarks) => {
     try {
       // Implement the logic for accepting the file
       let response = null;
