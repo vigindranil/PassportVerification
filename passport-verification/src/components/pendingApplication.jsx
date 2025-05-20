@@ -14,7 +14,7 @@ import "jspdf-autotable"
 import { getApplicationStatus, getApplicationStatusV3, revokeEnquiryStatus } from "@/app/totalPending/api"
 import moment from "moment"
 import { useRouter } from "next/navigation"
-import { CheckCircle2, CircleCheckBig, CircleX, Cross, FileCheck, FileUser, Rotate3d, RotateCcw } from "lucide-react"
+import { CheckCircle2, CircleCheckBig, CircleX, Cross, FileCheck, FileUser, Forward, Rotate3d, RotateCcw } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import Cookies from "react-cookies";
@@ -56,7 +56,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
     }
   }
 
-  const handleCompleteVerification = async (applicationId, remarks = "Recommend for Apporval") => {
+  const handleCompleteVerification = async (applicationId, remarks = "") => {
     try {
       // Implement the logic for accepting the file
       let response = null;
@@ -270,6 +270,27 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                               </Button>
                               <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
                                 Not Recommend
+                              </span>
+                            </div>
+                          </>
+                        }
+                        {(user_role == 40 && flag == "eo-accepted-file") &&
+                          <>
+                            <div className="relative group">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="bg-stone-100 ring-[0.5px] ring-slate-300 text-violet-700 hover:bg-violet-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                                onClick={() => {
+                                  setType('forward-sp')
+                                  setIsFileAcceptModalOpen(true)
+                                  setSelectedDetails(row.FileNumber)
+                                }}
+                              >
+                                <Forward className="mx-0 px-0" />
+                              </Button>
+                              <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                                Forward to SP
                               </span>
                             </div>
                           </>

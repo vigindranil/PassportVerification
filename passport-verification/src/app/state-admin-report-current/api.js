@@ -3,7 +3,7 @@ import { postRequest } from "../commonAPI";
 export const getApplicationCountMasterAdmin = async (districtId, start_date, end_date) => {
   try {
 
-    return await postRequest("application/getApplicationCountMasterAdmin", {
+    return await postRequest("application/getApplicationCountMasterAdminV1", {
         "districtId": districtId,
         "startDate": start_date || null, 
         "endDate": end_date || null

@@ -15,9 +15,9 @@ export const updateEnquiryStatus = async (
       locationIp: locationIp,
       macAddress: "-",
       deviceId: "-",
-      StatusID: "10",
+      StatusID: type == "approve" ? "10" : type == "reject" ? "10" : "50",
       StatusText:
-        type == "approve" ? "Recommended by EO" : "Not Recommended by EO",
+        type == "approve" ? "Recommended by EO" : type == "reject" ? "Not Recommended by EO" : "Forwarded to SP",
       Remarks: remarks,
     });
   } catch (error) {

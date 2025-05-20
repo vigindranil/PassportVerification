@@ -230,17 +230,17 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
               ) : currentData?.length > 0 ? (
                 currentData?.map((row, index) => (
                   <TableRow key={index}>
-                    <TableCell>{row?.TotalApplication || 0}</TableCell>
-                    <TableCell>{row?.EOStartedVerify || 0}</TableCell>
-                    <TableCell>{(row?.TotalApplication - row?.EOStartedVerify) || 0}</TableCell>
-                    <TableCell>{row?.Last15DaysPendingApplications || 0}</TableCell>
-                    <TableCell>{row?.EOComplete || 0}</TableCell>
-                    <TableCell>{(row?.EOStartedVerify - row?.EOComplete)  || 0}</TableCell>
-                    <TableCell>{row?.OCComplete || 0}</TableCell>
-                    <TableCell>{(row?.EOComplete - row?.OCComplete) || 0}</TableCell>
-                    <TableCell>{row?.SPDone || 0}</TableCell>
-                    <TableCell>{row?.SEPending || 0}</TableCell>
-                    <TableCell>{ (row?.OCComplete - row?.SPDone - row?.SEPending) || 0}</TableCell>
+                    <TableCell>{row["TotalApplication(A)"] || 0}</TableCell>
+                    <TableCell>{row["ApplicationsAccepted(B)"] || 0}</TableCell>
+                    <TableCell>{row["ApplicationspendingtobeacceptedbytheEO(C=(A-B))"] || 0}</TableCell>
+                    <TableCell>{row["Last15DaysPendingApplications(D)"] || 0}</TableCell>
+                    <TableCell>{row["EOComplete(E)"] || 0}</TableCell>
+                    <TableCell>{row["EOStartedVerify(F=(B-E))"] || 0}</TableCell>
+                    <TableCell>{row["OCComplete(G)"] || 0}</TableCell>
+                    <TableCell>{row["OCPending(H=(E-G))"] || 0}</TableCell>
+                    <TableCell>{row["SPDone(I)"] || 0}</TableCell>
+                    <TableCell>{row["SEPending(J)"] || 0}</TableCell>
+                    <TableCell>{row["SPPending(k=(G-I-J)"] || 0}</TableCell>
                   </TableRow>
                 ))
               ) : (
@@ -320,16 +320,16 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
               ) : currentData?.length > 0 ? (
                 currentData?.map((row, index) => (
                   <TableRow key={index}>
-                    <TableCell>{row?.TotalApplication || 0}</TableCell>
-                    <TableCell>{row?.EOStartedVerify || 0}</TableCell>
-                    <TableCell>{(row?.TotalApplication - row?.EOStartedVerify) || 0}</TableCell>
-                    <TableCell>{row?.EOComplete || 0}</TableCell>
-                    <TableCell>{(row?.EOStartedVerify - row?.EOComplete)  || 0}</TableCell>
-                    <TableCell>{row?.OCComplete || 0}</TableCell>
-                    <TableCell>{(row?.EOComplete - row?.OCComplete) || 0}</TableCell>
-                    <TableCell>{row?.SPDone || 0}</TableCell>
-                    <TableCell>{row?.SEPending || 0}</TableCell>
-                    <TableCell>{ (row?.OCComplete - row?.SPDone - row?.SEPending) || 0}</TableCell>
+                    <TableCell>{row["TotalApplication(A)"] || 0}</TableCell>
+                    <TableCell>{row["ApplicationsAcceptedEO(B)"] || 0}</TableCell>
+                    <TableCell>{row["TotalPendingApplications(c=(A-B))"] || 0}</TableCell>
+                    <TableCell>{row["EOComplete(D)"] || 0}</TableCell>
+                    <TableCell>{row["EOStartedVerify(E=(B-D))"] || 0}</TableCell>
+                    <TableCell>{row["OCComplete(F)"] || 0}</TableCell>
+                    <TableCell>{row["OCPending(G=(D-F))"] || 0}</TableCell>
+                    <TableCell>{row["SPDone(H)"] || 0}</TableCell>
+                    <TableCell>{row["SEPending(I)"] || 0}</TableCell>
+                    <TableCell>{row["SPPending(J=(F-H-I))"] || 0}</TableCell>
                   </TableRow>
                 ))
               ) : (

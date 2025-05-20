@@ -89,7 +89,7 @@ export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type
         <DialogHeader>
           <DialogTitle className="text-2xl text-center text-slate-600">
             <CircleHelp size="60" className="mx-auto text-blue-200" />
-            Are you sure you want to {type == "approve" ? "recommend for approval" : type == "reject" ? "not recommend for approval" : type} ?
+            Are you sure you want to {type == "approve" ? "recommend for approval" : type == "reject" ? "not recommend for approval" : "forward to sp"} ?
           </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-4 p-4">
@@ -141,13 +141,13 @@ export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type
                     ? "bg-green-500 hover:bg-green-600"
                     : type === "revoke"
                       ? "bg-yellow-500 hover:bg-yellow-600"
-                      : ""
+                      : "bg-violet-500 hover:bg-violet-600"
               }`}
             disabled={(type === "query" && !enquiryOfficer) || isLoading}
           >
             {isLoading
               ? "Processing..."
-              : type === "approve"
+              : type === "approve" || type === "forward-sp"
                 ? "Yes, Proceed"
                 : type === "reject"
                   ? "Yes, Proceed"
