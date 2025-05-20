@@ -173,11 +173,6 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
           </Button>
         </div>
 
-        {/* Data status indicator */}
-        <div className="mb-4 p-2 bg-gray-100 rounded-lg">
-          <p>Data Status: {isLoading ? "Loading..." : verificationData.length > 0 ? "Data Loaded" : "No Data"}</p>
-          <p>Records: {verificationData.length}</p>
-        </div>
 
         <div className="border rounded-lg" id="police-verification-table">
           {type == "current" ? (
