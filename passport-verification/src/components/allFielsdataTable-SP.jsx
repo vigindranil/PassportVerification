@@ -98,6 +98,7 @@ export default function PendingApplicationDatatable({ status }) {
         setRemarks("");
         setSelectedDistrict("");
         setSelectedPoliceStation("");
+        setIsFileAcceptModalOpen(false)
       } else {
         console.log("Transfer failed. No response from API.");
       }
