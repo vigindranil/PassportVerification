@@ -258,6 +258,7 @@ export const saveDocumentUpload = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error)
     console.error("Error saving document upload:", error);
     return res.status(500).json({
       status: 1,

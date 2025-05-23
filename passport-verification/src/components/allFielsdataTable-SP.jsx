@@ -444,6 +444,7 @@ export default function PendingApplicationDatatable({ status }) {
             </Button>
           </div>
         </div>
+        {isTransferModalOpen &&
         <TransferModal
           isOpen={isTransferModalOpen}
           onClose={handleCloseTransferModal}
@@ -451,6 +452,7 @@ export default function PendingApplicationDatatable({ status }) {
           applicantName={applicantName}
           onTransfer={onTransfer}
         />
+        }
         {isFileAcceptModalOpen && selectedDetails && (
           <FileAcceptModal
             isOpen={isFileAcceptModalOpen}
