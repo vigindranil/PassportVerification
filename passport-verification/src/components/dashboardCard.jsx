@@ -17,6 +17,7 @@ import {
   CheckCheck,
   BadgeCheck,
   Ban,
+  Stamp,
 } from "lucide-react";
 import DashboardCard from "./dashboard-cards";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -107,6 +108,13 @@ const dashboardConfig = {
       link: "/verificationCompletedEO",
     },
     {
+      title: "Special Application\nCompleted by EO",
+      key: "EOSplApplication",
+      icon: Stamp,
+      color: "lime",
+      link: "/spl-application-eo",
+    },
+    {
       title: "Application Rejected\nBy SP/DIB",
       key: "SPReject",
       icon: Ban,
@@ -151,6 +159,13 @@ const dashboardConfig = {
       icon: ArrowRightToLine,
       color: "orange",
       link: "/allFiles-sp",
+    },
+    {
+      title: "Special Application\nPending by SP/DIB",
+      key: "SPecialApplicationPending",
+      icon: ArrowRightToLine,
+      color: "purple",
+      link: "/spl-application-sp",
     },
     {
       title: "Verified By SP/DIB",
@@ -209,6 +224,7 @@ const dashboardConfig = {
       color: "orange",
       link: "/re-verifiedBy-se",
     },
+
     // { title: "Transferd Case", key: "transferCaseCompleted", icon: ArrowRightToLine, color: "green", link: "/transferCaseCompleted" },
     // { title: "Pending Transfer Case", key: "transferCasePending", icon: ArrowRightToLine, color: "red", link: "/transferCasePending" },
     // { title: "Verified by Enquiry Officer", key: "SEComplete", icon: ArrowRightToLine, color: "blue", link: "/completed-se" },
@@ -295,7 +311,7 @@ const DashboardCards = () => {
       } else if (auth_type == "50") {
         const response = await getCountSE();
         setData(response?.data);
-      }else if(auth_type == "150"){
+      } else if (auth_type == "150") {
         const response = await getStateDashBoard();
         setData(response?.data?.dashboardCount);
       } else {
@@ -308,7 +324,11 @@ const DashboardCards = () => {
   }, [auth_type]);
 
   return data ? (
-    <div className={`grid gap-4 md:grid-cols-2 ${auth_type == 150 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}>
+    <div
+      className={`grid gap-4 md:grid-cols-2 ${
+        auth_type == 150 ? "lg:grid-cols-3" : "lg:grid-cols-4"
+      }`}
+    >
       {dashboardConfig[login_type]?.map((item, index) => (
         <DashboardCard
           key={index}
