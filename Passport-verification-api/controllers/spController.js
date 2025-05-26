@@ -24,7 +24,7 @@ export const transferapplication = async (req, res) => {
         req.user.UserID
       );
   
-      // console.log("result",result);
+      console.log("result",result);
       
       if (result == 0) {
         logger.debug(
@@ -74,6 +74,8 @@ export const transferapplication = async (req, res) => {
         });
       }
     } catch (error) {
+      console.log(error);
+      
       logger.error("Error in updateEnquiryStatusController:", error.message);
       return res.status(500).json({
         status: 1,
