@@ -43,8 +43,9 @@ export async function genearateOtp(username, password) {
 
 export async function checkOTP(username, otp) {
   const [rows] = await pool.query(
-    "CALL sp_checkOTP(?, ?, @userDetails, @ErrorCode);",
+    "CALL sp_checkOTP_v1(?, ?, @userDetails, @ErrorCode);",
     [username, otp]
   );
-  return await pool.query("SELECT @userDetails AS UserDetails, @ErrorCode AS ErrorCode;");
+  const respose = await pool.query("SELECT @userDetails AS UserDetails, @ErrorCode AS ErrorCode;");
+  return respose;
 }
