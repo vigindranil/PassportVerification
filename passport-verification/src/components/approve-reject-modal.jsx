@@ -89,7 +89,7 @@ export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type
         <DialogHeader>
           <DialogTitle className="text-2xl text-center text-slate-600">
             <CircleHelp size="60" className="mx-auto text-blue-200" />
-            Are you sure you want to {type == "approve" ? "recommend for approval" : type == "reject" ? "not recommend for approval" : "forward to sp"} ?
+            Are you sure you want to {type == "approve" ? "recommend for approval" : type == "reject" ? "not recommend for approval" : type == "send-back-to-eo" ? "Send back to EO" : "forward to sp"} ?
           </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-4 p-4">
@@ -118,7 +118,7 @@ export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type
               </Select>
             </div>
           )}
-          <div className={`${type == 'approve' && 'hidden'}`}>
+          <div className={`${type != 'reject' && 'hidden'}`}>
             <Label htmlFor="remarks">Remarks:</Label>
             <textarea
               id="remarks"
@@ -147,7 +147,7 @@ export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type
           >
             {isLoading
               ? "Processing..."
-              : type === "approve" || type === "forward-sp"
+              : type === "approve" || type === "forward-sp" || type === "send-back-to-eo"
                 ? "Yes, Proceed"
                 : type === "reject"
                   ? "Yes, Proceed"

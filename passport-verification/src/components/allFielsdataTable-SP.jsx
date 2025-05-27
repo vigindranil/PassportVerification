@@ -38,6 +38,7 @@ import {
   FileQuestion,
   FileUser,
   FileX2,
+  Forward,
   Rotate3d,
 } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
@@ -398,12 +399,12 @@ export default function PendingApplicationDatatable({ status }) {
                         : "N/A"}
                     </TableCell>
                     <TableCell>
-                      <div className="flex space-x-1">
+                      <div className="flex space-x-1 flex-wrap justify-center gap-1">
                         <div className="relative group">
                           <Button
                             size="sm"
                             variant="default"
-                            className="bg-stone-100 ring-[0.5px] ring-slate-300 text-blue-700 hover:bg-blue-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                            className=" ring-slate-300 hover:text-white bg-blue-400 hover:bg-blue-600 text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
                             onClick={() =>
                               router.push(
                                 `/applicationDetails/${row?.FileNumber}`
@@ -417,11 +418,12 @@ export default function PendingApplicationDatatable({ status }) {
                           </span>
                         </div>
 
+                        {/* approve */}
                         <div className="relative group">
                           <Button
                             size="sm"
                             variant="default"
-                            className="bg-stone-100 ring-[0.5px] ring-slate-300 text-green-700 hover:bg-green-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                            className=" ring-slate-300 hover:text-white bg-green-400 hover:bg-green-600 text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
                             onClick={() => {
                               setType("approve");
                               setIsFileAcceptModalOpen(true);
@@ -437,11 +439,12 @@ export default function PendingApplicationDatatable({ status }) {
                           </span>
                         </div>
 
+                        {/* reject */}
                         <div className="relative group">
                           <Button
                             size="sm"
                             variant="default"
-                            className="bg-stone-100 ring-[0.5px] ring-slate-300 text-red-700 hover:bg-red-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                            className=" ring-slate-300 hover:text-white bg-red-400 hover:bg-red-600 text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
                             onClick={() => {
                               setType("reject");
                               setIsFileAcceptModalOpen(true);
@@ -455,12 +458,13 @@ export default function PendingApplicationDatatable({ status }) {
                             Reject Application
                           </span>
                         </div>
-
+                         
+                         {/* query */}
                         <div className="relative group">
                           <Button
                             size="sm"
                             variant="default"
-                            className="bg-stone-100 ring-[0.5px] ring-slate-300 text-gray-700 hover:bg-yellow-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                            className=" ring-slate-300 hover:text-white bg-yellow-400 hover:bg-yellow-600 text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
                             onClick={() => {
                               setType("query");
                               setIsFileAcceptModalOpen(true);
@@ -474,11 +478,31 @@ export default function PendingApplicationDatatable({ status }) {
                           </span>
                         </div>
 
+                        {/* send back to EO */}
+                        <div className="relative group">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className=" ring-slate-300 hover:text-white bg-violet-400 hover:bg-violet-600 text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                            onClick={() => {
+                              setType('send-back-to-eo')
+                              setIsFileAcceptModalOpen(true)
+                              setSelectedDetails(row.FileNumber)
+                            }}
+                          >
+                            <Forward className="mx-0 px-0" />
+                          </Button>
+                          <span className="absolute left-1/2 -top-11 w-[80px] -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                            Send Back to EO
+                          </span>
+                        </div>
+
+                        {/* transfer */}
                         <div className="relative group">
                           <Button
                             size="sm"
                             variant="default"
-                            className="bg-gray-100 ring-[0.5px] text-gray-700 hover:bg-teal-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                            className="bg-gray-100 ring-[0.5px] hover:text-white bg-teal-400 hover:bg-teal-600 text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
                             onClick={() => {
                               handleOpenTransferModal();
                               setApplicantName(row?.ApplicantName);
@@ -491,6 +515,7 @@ export default function PendingApplicationDatatable({ status }) {
                             Transfer to PS
                           </span>
                         </div>
+
                       </div>
                     </TableCell>
                   </TableRow>

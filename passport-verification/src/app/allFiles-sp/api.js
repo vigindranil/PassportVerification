@@ -21,9 +21,11 @@ export const updateEnquiryStatus = async (
           ? "110"
           : type == "approve"
           ? "80"
-          : "60",
-      StatusText: type == "approve" ? "SP APPROVED" : "SP NOT APPROVE",
-      Remarks: remarks,
+          : type == "reject"
+          ? "60" 
+          : "5",
+      StatusText: type == "approve" ? "SP APPROVED" : type == "reject" ? "SP NOT APPROVE" : "Back TO EO",
+      Remarks: remarks || "Not Provided",
       mobile,
     });
   } catch (error) {
