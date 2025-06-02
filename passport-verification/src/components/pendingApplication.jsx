@@ -14,7 +14,7 @@ import "jspdf-autotable"
 import { getApplicationStatus, getApplicationStatusV3, revokeEnquiryStatus } from "@/app/totalPending/api"
 import moment from "moment"
 import { useRouter } from "next/navigation"
-import { CheckCircle2, CircleCheckBig, CircleX, Cross, FileCheck, FileUser, Forward, Rotate3d, RotateCcw } from "lucide-react"
+import { CheckCircle2, CircleCheckBig, CircleX, Cross, FileCheck, FileUser, Forward, Rotate3d, RotateCcw, X } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import Cookies from "react-cookies";
@@ -40,9 +40,20 @@ export default function PendingApplicationDatatable({ status, heading, period, f
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
 
-  const filteredData = verificationData?.filter((row) =>
-    Object.values(row)?.some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm.toLowerCase())),
-  )
+  const filteredData = verificationData?.filter(row => {
+    // Check if searchTerm is of format: key=value
+    const match = searchTerm?.match(/^(\w+)\s*=\s*(.+)$/);
+
+    if (match) {
+      const [, key, value] = match;
+      return row?.[key]?.toString()?.toLowerCase()?.includes(value.toLowerCase());
+    } else {
+      // Default global search across all fields
+      return Object.values(row).some(value =>
+        value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+      );
+    }
+  });
 
   const fetchApplicationStatus = async (status_id, start_date, end_date) => {
     try {
@@ -227,7 +238,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                           <Button
                             size="sm"
                             variant="outline"
-                            className="bg-stone-100 ring-[0.5px] ring-slate-300 text-blue-700 hover:bg-blue-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                            className="hover:bg-blue-500 ring-[0.5px] ring-slate-300 hover:text-white bg-blue-400 text-blue-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
                             onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
                           >
                             <FileUser className="m-0 p-0" />
@@ -242,7 +253,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="bg-stone-100 ring-[0.5px] ring-slate-300 text-green-700 hover:bg-green-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                                className="hover:bg-green-500 ring-[0.5px] ring-slate-300 hover:text-white bg-green-400 text-green-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
                                 onClick={() => {
                                   setType('approve')
                                   setIsFileAcceptModalOpen(true)
@@ -259,14 +270,14 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="bg-stone-100 ring-[0.5px] ring-slate-300 text-red-700 hover:bg-red-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                                className="hover:bg-red-500 ring-[0.5px] ring-slate-300 hover:text-white bg-red-400 text-red-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
                                 onClick={() => {
                                   setType('reject')
                                   setIsFileAcceptModalOpen(true)
                                   setSelectedDetails(row.FileNumber)
                                 }}
                               >
-                                <CircleX className="mx-0 px-0" />
+                                <X className="mx-0 px-0" />
                               </Button>
                               <span className="absolute left-1/2 -top-11 -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
                                 Not Recommend
@@ -280,7 +291,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="bg-stone-100 ring-[0.5px] ring-slate-300 text-violet-700 hover:bg-violet-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                                className="hover:bg-violet-500 ring-[0.5px] ring-slate-300 hover:text-white bg-violet-400 text-violet-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
                                 onClick={() => {
                                   setType('forward-sp')
                                   setIsFileAcceptModalOpen(true)
@@ -300,7 +311,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                             <Button
                               size="sm"
                               variant="default"
-                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-teal-700 hover:bg-teal-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              className="hover:bg-teal-500 ring-[0.5px] ring-slate-300 hover:text-white bg-teal-400 text-teal-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
                               onClick={handleOpenTransferModal}
                             >
                               <Rotate3d className="mx-0 px-0" />
@@ -322,7 +333,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                             <Button
                               size="sm"
                               variant="default"
-                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-yellow-700 hover:bg-yellow-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              className="hover:bg-yellow-500 ring-[0.5px] ring-slate-300 hover:text-white bg-yellow-400 text-yellow-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
                               onClick={() => {
                                 setType("revoke")
                                 setIsFileAcceptModalOpen(true)
