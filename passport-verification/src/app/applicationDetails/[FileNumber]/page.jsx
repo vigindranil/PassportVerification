@@ -74,18 +74,18 @@ export default function Page({ FileNumber }) {
       let PSNameKolkataPolice = [];
       let PSNameCID = [];
 
-      if (kolkataPoliceRecord == 0 && cidRecord == 0) {
-        toast({
-          variant: "destructive",
-          title: (
-            <div className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-red-500" />
-              <span>No criminal records selected!</span>
-            </div>
-          ),
-          description: "Please select any criminal record and then click on this button."
-        })
-      }
+      // if (kolkataPoliceRecord == 0 && cidRecord == 0) {
+      //   toast({
+      //     variant: "destructive",
+      //     title: (
+      //       <div className="flex items-center gap-2">
+      //         <AlertCircle className="h-5 w-5 text-red-500" />
+      //         <span>No criminal records selected!</span>
+      //       </div>
+      //     ),
+      //     description: "Please select any criminal record and then click on this button."
+      //   })
+      // }
 
       if (kolkataPoliceRecord && cidRecord) {
         // CriminalRecordType = "Kolkata Police Criminal Record & CID Criminal Record"
@@ -106,20 +106,20 @@ export default function Page({ FileNumber }) {
         PSNameCID = cidSelectedRows?.map(record => record?.psName || 'N/A');
       }
 
-      if (kolkataPoliceRecord || cidRecord) {
+    
         const payload = {
           "ApplicationID": FileNumber,
           "CaseRefferenceNumber": JSON.stringify({
-            "KolkataPolice": CaseRefferenceNumberKolkataPolice,
-            "CID": CaseRefferenceNumberCID,
+            "KolkataPolice": CaseRefferenceNumberKolkataPolice || "N/A",
+            "CID": CaseRefferenceNumberCID || "N/A",
           }),
           "PSName": JSON.stringify({
-            "KolkataPolice": PSNameKolkataPolice,
-            "CID": PSNameCID,
+            "KolkataPolice": PSNameKolkataPolice || "N/A",
+            "CID": PSNameCID || "N/A",
           }),
           "CriminalStatus": 1,
           "CriminalStatusRemarks": criminalRecordsRemark || 'N/A',
-          "CriminalRecordType": CriminalRecordType,
+          "CriminalRecordType": CriminalRecordType || 0,
         }
         const response = await updateCriminalInfoApi(payload);
         if (response?.status == 0) {
@@ -147,7 +147,7 @@ export default function Page({ FileNumber }) {
           })
         }
         console.log("updateCriminalInfoApi:", response);
-      }
+      
     } catch (e) {
       console.log("Error:", e);
     } finally {

@@ -118,7 +118,7 @@ export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type
               </Select>
             </div>
           )}
-          <div className={`${type != 'reject' && 'hidden'}`}>
+          <div className={`${type == 'approve' && 'hidden'}`}>
             <Label htmlFor="remarks">Remarks:</Label>
             <textarea
               id="remarks"

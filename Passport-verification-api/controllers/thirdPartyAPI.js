@@ -454,8 +454,6 @@ export const sendSMSInternally = async (
 
   try {
     const numbers = encodeURIComponent(mobileNumber);
-    // const numbers = encodeURIComponent("6202734737");
-    // const numbers = encodeURIComponent("9836700645");
     const message = encodeURIComponent(smstext);
     const passkeyNew = encodeURIComponent(passkey);
 

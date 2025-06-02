@@ -28,6 +28,7 @@ import { toast } from "@/hooks/use-toast";
 import { ToastAction } from "./ui/toast";
 import { FileAcceptModal } from "./approve-reject-modal";
 import {
+  getPoliceStationsByDsId,
   transferapplication,
   updateEnquiryStatus,
 } from "@/app/allFiles-sp/api";
@@ -42,6 +43,9 @@ import {
   Rotate3d,
 } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
+import Cookies from "react-cookies"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Label } from "@/components/ui/label"
 
 export default function PendingApplicationDatatable({ status }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -64,11 +68,20 @@ export default function PendingApplicationDatatable({ status }) {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-  const filteredData = verificationData?.filter((row) =>
-    Object?.values(row)?.some((value) =>
-      value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())
-    )
-  );
+  const filteredData = verificationData?.filter(row => {
+    // Check if searchTerm is of format: key=value
+    const match = searchTerm?.match(/^(\w+)\s*=\s*(.+)$/);
+
+    if (match) {
+      const [, key, value] = match;
+      return row?.[key]?.toString()?.toLowerCase()?.includes(value.toLowerCase());
+    } else {
+      // Default global search across all fields
+      return Object.values(row).some(value =>
+        value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+      );
+    }
+  });
 
   const fetchApplicationStatus = async () => {
     try {
@@ -334,7 +347,7 @@ export default function PendingApplicationDatatable({ status }) {
             <span className="text-sm text-gray-500">Search:</span>
             <Input
               className="w-64"
-              placeholder="Search..."
+              placeholder="e.g. PsName=Alipurduar PS"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -458,8 +471,8 @@ export default function PendingApplicationDatatable({ status }) {
                             Reject Application
                           </span>
                         </div>
-                         
-                         {/* query */}
+
+                        {/* query */}
                         <div className="relative group">
                           <Button
                             size="sm"
