@@ -26,7 +26,7 @@ import { getCountSE } from "@/app/dashboard-se/api";
 import { getStateDashBoard } from "@/app/dashboard-stateadmin/api";
 
 const dashboardConfig = {
-  10: [
+  10: [ // district nodal officer
     {
       title: "Applications pending to be accepted by the EO",
       key: "TotalPendingApplications",
@@ -85,7 +85,7 @@ const dashboardConfig = {
       link: "/pendingInEnquiryOfficer",
     },
   ],
-  40: [
+  40: [ // enquiry officer
     {
       title: "Verification Pending \n(at Police Station)",
       key: "TotalPendingApplications",
@@ -129,7 +129,7 @@ const dashboardConfig = {
       link: "/completed-sp",
     },
   ],
-  30: [
+  30: [ // OC/IC 
     {
       title: "Verification Pending",
       key: "OCPending",
@@ -145,7 +145,7 @@ const dashboardConfig = {
       link: "/completed-oc",
     },
   ],
-  20: [
+  20: [ // SP DIB/ DC SB
     {
       title: "Applications pending to be accepted by the EO",
       key: "TotalPendingApplications",
@@ -224,13 +224,20 @@ const dashboardConfig = {
       color: "orange",
       link: "/re-verifiedBy-se",
     },
+    {
+      title: "Applications Sent back to EO",
+      key: "RevertedApplicationswithEO",
+      icon: TrendingDown,
+      color: "blue",
+      link: "/reverted-to-eo",
+    },
 
     // { title: "Transferd Case", key: "transferCaseCompleted", icon: ArrowRightToLine, color: "green", link: "/transferCaseCompleted" },
     // { title: "Pending Transfer Case", key: "transferCasePending", icon: ArrowRightToLine, color: "red", link: "/transferCasePending" },
     // { title: "Verified by Enquiry Officer", key: "SEComplete", icon: ArrowRightToLine, color: "blue", link: "/completed-se" },
     // { title: "Verified by Enquiry Officer", key: "SPPendingReverify", icon: ArrowRightToLine, color: "orange", link: "/reverifiedBySE" },
   ],
-  50: [
+  50: [ // Spl. EO
     {
       title: "Verification Pending (Spl. EO)",
       key: "SEPending",
@@ -246,7 +253,7 @@ const dashboardConfig = {
       link: "/completed-se",
     },
   ],
-  150: [
+  150: [ // state admin
     {
       title: "Total Applications",
       key: "TotalApplications",

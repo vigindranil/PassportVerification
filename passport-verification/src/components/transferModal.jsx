@@ -74,13 +74,13 @@ export function TransferModal({ isOpen, onClose, fileNumber, applicantName, onTr
           <p>Are you sure you want to transfer this file?</p>
           <div className="space-y-2">
             <Label htmlFor="district">District</Label>
-            <Select value={selectedDistrict} onValueChange={setSelectedDistrict} disabled>
-              <SelectTrigger id="district" disabled>
+            <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>
+              <SelectTrigger id="district">
                 <SelectValue placeholder="Select a district" />
               </SelectTrigger>
               <SelectContent>
                 {districts.map((district) => (
-                  <SelectItem key={district.districtId} value={district.districtId.toString()} disabled>
+                  <SelectItem key={district.districtId} value={district.districtId.toString()}>
                     {district.districtName}
                   </SelectItem>
                 ))}

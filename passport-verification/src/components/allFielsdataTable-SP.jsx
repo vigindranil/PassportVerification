@@ -47,7 +47,7 @@ import Cookies from "react-cookies"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 
-export default function PendingApplicationDatatable({ status }) {
+export default function PendingApplicationDatatable({ status, heading="Pending Applications" }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [selectedDetails, setSelectedDetails] = useState({});
   const [mobile, setMobile] = useState(null);
@@ -267,7 +267,8 @@ export default function PendingApplicationDatatable({ status }) {
       <div className="mt-0 bg-white dark:bg-gray-800 rounded-t-md overflow-hidden">
         <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6">
           <h2 className="text-2xl font-bold text-white">
-            {status === 65 ? `Pending Special Applications` : `Pending Applications`}
+            {/* {status === 65 ? `Pending Special Applications` : `Pending Applications`} */}
+            {heading}
           </h2>
         </div>
       </div>

@@ -17,7 +17,7 @@ export default function allFiles() {
         <main className="flex-1 overflow-y-auto p-6">
           <CardContent>
             <Card>
-              <DataTable status={100} heading='Reverified Application by Special Enquiry Officer' />
+              <DataTable status={75} heading="Application sent back to EO"/>
             </Card>
           </CardContent>
         </main>

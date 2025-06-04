@@ -238,7 +238,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                           <Button
                             size="sm"
                             variant="outline"
-                            className="hover:bg-blue-500 ring-[0.5px] ring-slate-300 hover:text-white bg-blue-400 text-blue-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
+                            className="hover:bg-blue-500 ring-[0.5px] ring-slate-300 hover:text-white bg-blue-200 text-blue-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
                             onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
                           >
                             <FileUser className="m-0 p-0" />
@@ -253,7 +253,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="hover:bg-green-500 ring-[0.5px] ring-slate-300 hover:text-white bg-green-400 text-green-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
+                                className="hover:bg-green-500 ring-[0.5px] ring-slate-300 hover:text-white bg-green-200 text-green-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
                                 onClick={() => {
                                   setType('approve')
                                   setIsFileAcceptModalOpen(true)
@@ -270,7 +270,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="hover:bg-red-500 ring-[0.5px] ring-slate-300 hover:text-white bg-red-400 text-red-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
+                                className="hover:bg-red-500 ring-[0.5px] ring-slate-300 hover:text-white bg-red-200 text-red-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
                                 onClick={() => {
                                   setType('reject')
                                   setIsFileAcceptModalOpen(true)
@@ -291,7 +291,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="hover:bg-violet-500 ring-[0.5px] ring-slate-300 hover:text-white bg-violet-400 text-violet-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
+                                className="hover:bg-violet-500 ring-[0.5px] ring-slate-300 hover:text-white bg-violet-200 text-violet-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
                                 onClick={() => {
                                   setType('forward-sp')
                                   setIsFileAcceptModalOpen(true)
@@ -311,7 +311,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                             <Button
                               size="sm"
                               variant="default"
-                              className="hover:bg-teal-500 ring-[0.5px] ring-slate-300 hover:text-white bg-teal-400 text-teal-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
+                              className="hover:bg-teal-500 ring-[0.5px] ring-slate-300 hover:text-white bg-teal-200 text-teal-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
                               onClick={handleOpenTransferModal}
                             >
                               <Rotate3d className="mx-0 px-0" />
@@ -333,7 +333,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                             <Button
                               size="sm"
                               variant="default"
-                              className="hover:bg-yellow-500 ring-[0.5px] ring-slate-300 hover:text-white bg-yellow-400 text-yellow-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
+                              className="hover:bg-yellow-500 ring-[0.5px] ring-slate-300 hover:text-white bg-yellow-200 text-yellow-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
                               onClick={() => {
                                 setType("revoke")
                                 setIsFileAcceptModalOpen(true)
