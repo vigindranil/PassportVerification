@@ -181,6 +181,7 @@ const data = {
           { "title": "Home", "url": "/dashboard-stateadmin" },
           { "title": "Current Status Report", "url": "/state-admin-report-current" },
           { "title": "Previous Status Report", "url": "/state-admin-report-previous" },
+          { "title": "Track Applications", "url": "/track-applications" },
           { "title": 'Reset Password', "url": '/reset-password' },
           { "title": "Logout", "url": "/logout" }
         ]

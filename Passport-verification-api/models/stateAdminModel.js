@@ -59,3 +59,26 @@ export async function getPoliceStationtwiseApplicationCountModel(
         throw new Error("Database error: " + error.message);
     }
 }
+
+export async function getApplicationTimeLineModel(
+    userId,
+    districtId,
+    psId,
+    startdate,
+    enddate
+) {
+    try {
+        const [rows] = await pool.query(
+            `CALL sp_getApplicationTimeLine(?,?,?,?,?)`,
+            [userId, districtId, psId, startdate, enddate]
+        );
+
+        if (rows.length > 0) {
+            return [rows][0];
+        } else {
+            null;
+        }
+    } catch (error) {
+        throw new Error("Database error: " + error.message);
+    }
+}
