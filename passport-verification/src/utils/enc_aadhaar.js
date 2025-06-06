@@ -1,11 +1,11 @@
-import crypto from 'crypto';
+const crypto = require('crypto');
 
 // Use 32-byte key for AES-256
 const ENCRYPTION_KEY = Buffer.from("c7f85e2f0c67e125d8b80ec928deec6ae7132bc67b1a04aa92f30836e0dc0b45", 'hex');
 const IV_LENGTH = 16; // AES block size for CBC mode
 
 // Encrypt function
-export const encrypt = (text)=> {
+const encrypt = (text)=> {
   const iv = crypto.randomBytes(IV_LENGTH);
   const cipher = crypto.createCipheriv('aes-256-cbc', ENCRYPTION_KEY, iv);
   let encrypted = cipher.update(text, 'utf8', 'hex');
@@ -15,7 +15,7 @@ export const encrypt = (text)=> {
 }
 
 // Decrypt function
-export const decrypt = (encryptedText) => {
+const decrypt = (encryptedText) => {
   try {
     const [ivHex, encrypted] = encryptedText.split(':');
     if (!ivHex || !encrypted) throw new Error('Invalid encrypted format');
@@ -26,16 +26,21 @@ export const decrypt = (encryptedText) => {
     decrypted += decipher.final('utf8');
     return decrypted;
   } catch (err) {
-    console.error('Decryption error:', err.message);
+    console.log('Decryption error:', err.message);
     return null;
   }
+};
+
+module.exports = {
+  encrypt,
+  decrypt
 };
 
 // Example usage
 // const original = '816124495494';
 // const encrypted = encrypt(original);
-const decrypted = decrypt('80ad966a8254ce1d3e91199cb7a5e870:e1c6575105d34cfbf9ee913cb03e020a');
+// const decrypted = decrypt('80ad966a8254ce1d3e91199cb7a5e870:e1c6575105d34cfbf9ee913cb03e020a');
 
 // console.log('Original:', original);
 // console.log('Encrypted:', encrypted);
-console.log('Decrypted:', decrypted);
+// console.log('Decrypted:', decrypted);

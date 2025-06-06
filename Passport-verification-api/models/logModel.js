@@ -37,8 +37,8 @@ export async function saveCriminalStatusLog(SearchTypeName, SearchedName, UserId
 
     const [[{ ErrorCode: errorCode }]] = await pool.query(`SELECT @ErrorCode AS ErrorCode`);
 
-    console.log(`payload`, {SearchTypeName, SearchedName, ApiRequest: '{"SearchedName": "SearchedName"}', UserId});
-    console.log(`saveCriminalStatusLog (${SearchTypeName})`, errorCode);
+    // console.log(`payload`, {SearchTypeName, SearchedName, ApiRequest: '{"SearchedName": "SearchedName"}', UserId});
+    // console.log(`saveCriminalStatusLog (${SearchTypeName})`, errorCode);
     
     if (errorCode === 0) {
       return true;

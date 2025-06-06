@@ -79,7 +79,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
       console.log('reponse:', response);
 
       if (response?.status == 0) {
-        await fetchApplicationStatus();
+        await fetchApplicationStatus(status, null, null);
         toast({
           title: (
             <div className="flex items-center gap-2">

@@ -95,8 +95,8 @@ app.use("/test", (req, res) => {
 setupSwagger(app);
 
 app.listen(port, () => {
-  // console.log(`Server is running on port ${port}`);
-  // console.log(`Swagger UI is available at http://localhost:${port}/api-docs`);
-  // console.log(`API log is available at http://localhost:${port}/api/logs?file=debug.log`);
-  // console.log(`API log is available at http://localhost:${port}/api/logs?file=error.log`);
+  console.log(`Server is running on port ${port}`);
+  console.log(`Swagger UI is available at http://localhost:${port}/api-docs`);
+  console.log(`API log is available at http://localhost:${port}/api/logs?file=debug.log`);
+  console.log(`API log is available at http://localhost:${port}/api/logs?file=error.log`);
 });

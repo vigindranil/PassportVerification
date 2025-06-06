@@ -1,5 +1,6 @@
 import pool from "../db.js";
 
+// get user aadhaar info
 export async function getUserAADHARInfoModel(startindex, endIndex) {
   try {
     const [rows] = await pool.query(`CALL sp_getUserAADHARInfo(?, ?)`, [
@@ -15,6 +16,7 @@ export async function getUserAADHARInfoModel(startindex, endIndex) {
   }
 }
 
+// update user aadhaar number
 export async function updateAadharNumber(UserId, AadhaarNumber) {
   try {
     const [result] = await pool.query(
@@ -25,9 +27,6 @@ export async function updateAadharNumber(UserId, AadhaarNumber) {
     const [[{ ErrorCode: errorCode }]] = await pool.query(
       `SELECT @ErrorCode AS ErrorCode`
     );
-    // console.log("model result",result?.affectedRows);
-    // console.log("model errorCode", errorCode);
-
     if (result?.affectedRows) {
       return true;
     } else {
@@ -38,3 +37,42 @@ export async function updateAadharNumber(UserId, AadhaarNumber) {
     throw new Error("Database error: " + error.message);
   }
 }
+
+// get applicant aadhaar info
+export async function getApplicantAADHARInfoModel(startindex, endIndex) {
+  try {
+    const [rows] = await pool.query(`CALL sp_getApplicantAADHARInfo(?, ?)`, [
+      startindex,
+      endIndex,
+    ]);
+    return rows[0];
+  } catch (error) {
+    return null;
+  }
+}
+
+// update applicant aadhaar number
+export async function updateApplicantAAdharNumber(appId, AadhaarNumber) {
+  try {
+    const [result] = await pool.query(
+      `CALL sp_updateApplicantAAdharNumber(?, ?, @ErrorCode)`,
+      [appId, AadhaarNumber]
+    );
+    const [[{ ErrorCode: errorCode }]] = await pool.query(
+      `SELECT @ErrorCode AS ErrorCode`
+    );
+    console.log("result", result);
+    if (result?.affectedRows) {
+      return true;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log("Error saving transaction:", error.message);
+    throw new Error("Database error: " + error.message);
+  }
+}
+
+
+
+

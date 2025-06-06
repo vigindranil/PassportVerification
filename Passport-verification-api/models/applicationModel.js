@@ -1,4 +1,5 @@
 import pool from "../db.js";
+import { encrypt } from "../enc_aadhaar.js";
 
 export async function getApplicationDetailsByApplicationId(
   applicationId,
@@ -161,7 +162,7 @@ export async function updateAADHAARInfoModelV2(
       `CALL sp_updateAADHAARInfo_V2(?,?,?, ?, ?, ?, ?, ?, ?, ?, @ErrorCode)`,
       [
         ApplicationID,
-        btoa(AadharNumber),
+        encrypt(AadharNumber),
         AadhaarName,
         AadhaarDOB,
         AadharVerifiedStatus,

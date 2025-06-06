@@ -23,6 +23,7 @@ import PoliceClearanceCertificate from "@/components/police-clearance-certificat
 import Image from "next/image"
 import BackgroundImg from "@/assets/passport-bg.jpg"
 import ApplicationRecommendation from "@/components/application-recommendation"
+import { decrypt } from "@/utils/enc_aadhaar"
 
 export default function Page({ FileNumber }) {
   const [applicationDetails, setApplicationDetails] = useState(null);
@@ -51,8 +52,11 @@ export default function Page({ FileNumber }) {
       setIsLoadingStatusHistrory(true)
       setIsLoadingDocumentTable(true)
       const response = await getDetailsApplicationId(ApplicationId);
-      console.log("Application Details Data:", response);
       setApplicationDetails(response?.data);
+      if (response?.data?.applicationDetails?.AadharNumber) {
+        const decrypted = decrypt(response?.data?.applicationDetails?.AadharNumber);
+        setApplicationDetails((prev) => ({ ...prev, applicationDetails: { ...prev.applicationDetails, AadharNumber: decrypted } }));
+      }
 
     } catch (e) {
       console.log("Error:", e);
@@ -106,48 +110,48 @@ export default function Page({ FileNumber }) {
         PSNameCID = cidSelectedRows?.map(record => record?.psName || 'N/A');
       }
 
-    
-        const payload = {
-          "ApplicationID": FileNumber,
-          "CaseRefferenceNumber": JSON.stringify({
-            "KolkataPolice": CaseRefferenceNumberKolkataPolice || "N/A",
-            "CID": CaseRefferenceNumberCID || "N/A",
-          }),
-          "PSName": JSON.stringify({
-            "KolkataPolice": PSNameKolkataPolice || "N/A",
-            "CID": PSNameCID || "N/A",
-          }),
-          "CriminalStatus": 1,
-          "CriminalStatusRemarks": criminalRecordsRemark || 'N/A',
-          "CriminalRecordType": CriminalRecordType || 0,
-        }
-        const response = await updateCriminalInfoApi(payload);
-        if (response?.status == 0) {
-          // reload
-          window.location.reload();
-          toast({
-            title: (
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
-                <span>Successfull!</span>
-              </div>
-            ),
-            description: "Criminal activity has been verified successfully"
-          })
-        } else {
-          toast({
-            variant: "destructive",
-            title: (
-              <div className="flex items-center gap-2">
-                <AlertCircle className="h-5 w-5 text-red-500" />
-                <span>Failed to update criminal records!</span>
-              </div>
-            ),
-            description: "Please try again later."
-          })
-        }
-        console.log("updateCriminalInfoApi:", response);
-      
+
+      const payload = {
+        "ApplicationID": FileNumber,
+        "CaseRefferenceNumber": JSON.stringify({
+          "KolkataPolice": CaseRefferenceNumberKolkataPolice || "N/A",
+          "CID": CaseRefferenceNumberCID || "N/A",
+        }),
+        "PSName": JSON.stringify({
+          "KolkataPolice": PSNameKolkataPolice || "N/A",
+          "CID": PSNameCID || "N/A",
+        }),
+        "CriminalStatus": 1,
+        "CriminalStatusRemarks": criminalRecordsRemark || 'N/A',
+        "CriminalRecordType": CriminalRecordType || 0,
+      }
+      const response = await updateCriminalInfoApi(payload);
+      if (response?.status == 0) {
+        // reload
+        window.location.reload();
+        toast({
+          title: (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-green-500" />
+              <span>Successfull!</span>
+            </div>
+          ),
+          description: "Criminal activity has been verified successfully"
+        })
+      } else {
+        toast({
+          variant: "destructive",
+          title: (
+            <div className="flex items-center gap-2">
+              <AlertCircle className="h-5 w-5 text-red-500" />
+              <span>Failed to update criminal records!</span>
+            </div>
+          ),
+          description: "Please try again later."
+        })
+      }
+      console.log("updateCriminalInfoApi:", response);
+
     } catch (e) {
       console.log("Error:", e);
     } finally {
@@ -204,6 +208,7 @@ export default function Page({ FileNumber }) {
   useEffect(() => {
     console.log("FileNumber:", FileNumber);
     FileNumber && fetchData(FileNumber);
+
     const district = Cookies.load('ds');
     const ps = Cookies.load('ps');
 
@@ -562,7 +567,7 @@ export default function Page({ FileNumber }) {
                           <div className="space-y-2 my-2">
                             <div className="flex flex-col">
                               <span className="text-sm font-medium text-gray-500">Aadhaar Number</span>
-                              <span className="text-base">{applicationDetails?.applicationDetails?.AadharNumber ? "XXXXXXXX" + atob(applicationDetails?.applicationDetails?.AadharNumber).slice(-4) : 'N/A'}</span>
+                              <span className="text-base">{applicationDetails?.applicationDetails?.AadharNumber ? "XXXXXXXX" + applicationDetails?.applicationDetails?.AadharNumber.slice(-4) : 'N/A'}</span>
                             </div>
                           </div>
                           <div className="space-y-2 my-2">
@@ -683,7 +688,7 @@ export default function Page({ FileNumber }) {
                                   <span className="text-sm"><b>Verified By:</b> {applicationDetails?.applicationDetails?.CriminalRecoedVerifiedby}</span>
                                   <span className="text-justify text-sm"><b>Remarks:</b> {applicationDetails?.applicationDetails?.CrimalRemarks || 'N/A'}</span>
                                 </div>
-                                <Button variant="outline" onClick={()=>setApplicationDetails((prev)=>({...prev, applicationDetails: {CriminalStatus: 0}}))}><SquarePen className="text-yellow-600"/> Edit Criminal Records</Button>
+                                <Button variant="outline" onClick={() => setApplicationDetails((prev) => ({ ...prev, applicationDetails: { ...applicationDetails?.applicationDetails, CriminalStatus: 0 } }))}><SquarePen className="text-yellow-600" /> Edit Criminal Records</Button>
                               </div>
                             </div>
                           </> :

@@ -13,6 +13,7 @@ import { AlertCircle, CheckCircle2, Eye } from "lucide-react";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import Cookies from "react-cookies";
+import { decrypt } from "../utils/enc_aadhaar";
 
 const SkeletonLoader = () => (
   <>
@@ -32,13 +33,17 @@ const PoliceClearanceCertificate = ({ selectedRows, setSelectedRows, setApplicat
  
   const [pccData, setPccData] = useState(null);
   const [isLoadingPccRecords, setIsLoadingPccRecords] = useState(false);
+  const [dec_aadhar, setDecAadhar] = useState(null);
+  
+  useEffect(() => {
+    setDecAadhar(applicant_details?.AadharNumber);
+  }, [applicant_details?.AadharNumber]);
 
   const fetchPccData = async () => {
     try {
-      console.log("applicant_details", applicant_details);
       
       setIsLoadingPccRecords(true);
-      const response = await getPCCApplicationDetails(applicant_details?.ApplicantName, setApplicationDetails ? applicant_details?.AadharNumber?.slice(-4) : atob(applicant_details?.AadharNumber)?.slice(-4));
+      const response = await getPCCApplicationDetails(applicant_details?.ApplicantName, dec_aadhar ? dec_aadhar?.slice(-4) : "");
 
       setPccData(response || null);
       console.log(response?.data);
@@ -50,8 +55,6 @@ const PoliceClearanceCertificate = ({ selectedRows, setSelectedRows, setApplicat
       setIsLoadingPccRecords(false);
     }
   };
-
-
   return (
     <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl overflow-hidden">
       <div className="m-3">
@@ -99,7 +102,7 @@ const PoliceClearanceCertificate = ({ selectedRows, setSelectedRows, setApplicat
                 type="text"
                 placeholder="Enter First Name (required)"
                 className="ring-0 border-gray-300 rounded-md w-full p-2"
-                value={applicant_details?.AadharNumber ? `XXXXXXXX${atob(applicant_details?.AadharNumber).slice(-4)}` : ""}
+                value={dec_aadhar ? `XXXXXXXX${dec_aadhar?.slice(-4)}` : ""}
                 readOnly={true}
               />
               )}

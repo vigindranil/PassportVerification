@@ -15,7 +15,7 @@ import { toast } from "@/hooks/use-toast"
 import { ToastAction } from "./ui/toast"
 import { FileAcceptModal } from "./approve-reject-modal"
 import { updateEnquiryStatus } from "@/app/allFiles-oc/api"
-import { CheckCircle2, Eye, FileCheck, FileUser, FileX2 } from "lucide-react"
+import { CheckCircle2, Eye, FileCheck, FileUser, FileX2, Forward, Undo2 } from "lucide-react"
 
 export default function PendingApplicationDatatable({ status }) {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false)
@@ -224,7 +224,7 @@ export default function PendingApplicationDatatable({ status }) {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-blue-700 hover:bg-blue-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              className="bg-blue-200 ring-[0.5px] ring-slate-300 text-blue-700 hover:bg-blue-600 hover:text-white text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
                               onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
                             >
                               <FileUser className="m-0 p-0" />
@@ -238,7 +238,7 @@ export default function PendingApplicationDatatable({ status }) {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-green-700 hover:bg-green-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              className="bg-green-200 ring-[0.5px] ring-slate-300 text-green-700 hover:bg-green-600 hover:text-white text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
                               onClick={() => {
                                 setType('approve')
                                 setIsFileAcceptModalOpen(true)
@@ -256,7 +256,7 @@ export default function PendingApplicationDatatable({ status }) {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="bg-stone-100 ring-[0.5px] ring-slate-300 text-red-600 hover:bg-red-400 hover:text-slate-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                              className="bg-red-200 ring-[0.5px] ring-slate-300 text-red-600 hover:bg-red-600 hover:text-white text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
                               onClick={() => {
                                 setType('reject')
                                 setIsFileAcceptModalOpen(true)
@@ -269,14 +269,25 @@ export default function PendingApplicationDatatable({ status }) {
                               Not Recommend
                             </span>
                           </div>
-                          {/* <Button
+                         
+                         {/* send back to EO */}
+                        <div className="relative group">
+                          <Button
                             size="sm"
-                            variant="default"
-                            className="bg-purple-600 hover:bg-purple-700 text-white text-xs px-1 py-1"
-                            onClick={() => handleViewPPAttachment(row.fileNumber)}
+                            variant="outline"
+                            className=" ring-slate-300 hover:text-white bg-violet-200 hover:bg-violet-600 text-violet-700 text-xs px-[0.65rem] py-0 rounded-full flex gap-1"
+                            onClick={() => {
+                              setType('send-back-to-eo')
+                              setIsFileAcceptModalOpen(true)
+                              setSelectedDetails(row.FileNumber)
+                            }}
                           >
-                            View PP Attachment
-                          </Button> */}
+                            <Undo2 className="mx-0 px-0" />
+                          </Button>
+                          <span className="absolute left-1/2 -top-11 w-[80px] -translate-x-1/2 scale-0 bg-white shadow-md text-slate-500 text-xs rounded px-2 py-1 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200">
+                            Send Back to EO
+                          </span>
+                        </div>
                         </div>
                       </TableCell>
                     </TableRow>

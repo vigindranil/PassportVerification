@@ -28,8 +28,8 @@ export const updateEnquiryStatus = async (applicationId, type, remarks) => {
             "locationIp": locationIp,
             "macAddress": "-",
             "deviceId": "-",
-            "StatusID": "50",
-            "StatusText": type == 'approve' ? 'OC APPROVED' : 'OC NOT APPROVE',
+            "StatusID": type == 'send-back-to-eo' ? "5" : "50",
+            "StatusText": type == 'send-back-to-eo' ? 'Back TO EO' : type == 'approve' ? 'OC APPROVED' : 'OC NOT APPROVE',
             "Remarks": remarks
         });
     } catch (error) {
