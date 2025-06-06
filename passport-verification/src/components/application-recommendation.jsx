@@ -45,10 +45,10 @@ const ApplicationRecommendation = ({ fileNo }) => {
         response = await updateEnquiryStatus(applicationId, remarks, type);
       }
       else if (user_role == 30) { // OC
-        response = await updateEnquiryStatusOC(applicationId, remarks, type);
+        response = await updateEnquiryStatusOC(applicationId, type, remarks);
       }
       else if (user_role == 20) { // SP
-        response = await updateEnquiryStatusSP(applicationId, remarks, type);
+        response = await updateEnquiryStatusSP(applicationId, type, remarks);
       }
 
       if (response?.status == 0) {

@@ -335,7 +335,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                           <button
                             className="flex bg-blue-100 justify-center items-center p-1 m-1 px-2 rounded-md hover:bg-blue-200 text-sm"
                             onClick={() => {
-                              setSelectedLocationDetails({ ip: doc?.LocationIp, MacAddress: doc?.MacAddress, loc: doc?.Latitude + "," + doc?.Longitude })
+                              setSelectedLocationDetails({ DeviceId: doc?.DeviceId, ip: doc?.LocationIp, MacAddress: doc?.MacAddress, loc: doc?.Latitude + "," + doc?.Longitude })
                               setIsLocationDetailsModalOpen(true)
                             }}
                           >
@@ -710,6 +710,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                       {selectedLocationDetails?.postal && <div><span className='font-bold'>Postal:</span> <span>{selectedLocationDetails?.postal}</span></div>}
                       {selectedLocationDetails?.timezone && <div><span className='font-bold'>Timezone:</span> <span>{selectedLocationDetails?.timezone}</span></div>}
                       {selectedLocationDetails?.MacAddress && <div><span className='font-bold'>Mac-Address:</span> <span>{selectedLocationDetails?.MacAddress}</span></div>}
+                      {selectedLocationDetails?.DeviceId && <div><span className='font-bold'>Device ID:</span> <span>{selectedLocationDetails?.DeviceId}</span></div>}
 
                       <div><span className='font-bold'>Lat-Long:</span> {selectedLocationDetails?.loc}</div>
                       <div><span className='font-bold'>Map:</span> <a className='text-blue-500 underline' target="_blank" href={`https://www.google.co.in/maps/@${selectedLocationDetails?.loc}`}>view in map</a></div>

@@ -22,8 +22,6 @@ export const updateEnquiryStatus = async (applicationId, type, remarks) => {
         const user_details_json = await use_details.json();
     
         const locationIp = user_details_json?.ip;
-
-        console.log("type", type);
         
         return await postRequest("application/updateEnquiryStatus", {
             "ApplicationID": applicationId,
