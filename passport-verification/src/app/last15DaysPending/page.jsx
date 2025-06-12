@@ -17,7 +17,7 @@ export default function allFiles() {
         <main className="flex-1 p-6">
           <CardContent>
             <Card>
-              <DataTable heading='Last 15 Days Pending' status={0} period={15} />
+              <DataTable heading='Last 15 Days Pending' status={0} period={15} last15DaysPending={true} />
             </Card>
           </CardContent>
         </main>

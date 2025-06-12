@@ -559,8 +559,7 @@ export const getApplicationStatus = async (req, res) => {
     const [result] = await getApplicationStatusModel(
       req.user.UserID,
       status_id,
-      // periord_id
-      0
+      periord_id
     );
     // console.log("result", result);
 

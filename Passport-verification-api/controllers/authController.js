@@ -405,7 +405,7 @@ export const verifyOtpV1 = async (req, res) => {
 
     if (result[0][0].ErrorCode == 0) {
       const user = JSON.parse(result[0][0]?.UserDetails);
-      console.log("user", user);
+      // console.log("user", user);
       
 
       const jwt_token = jwt.sign(

@@ -676,6 +676,7 @@ export default function Page({ FileNumber }) {
                                 <span className="text-sm text-gray-500 mb-2"><b className="text-black">Police Station. (CID Records):</b> {applicationDetails?.applicationDetails?.CriminalRecordPsName ? JSON.parse(applicationDetails?.applicationDetails?.CriminalRecordPsName)?.CID?.join(", ") : 'N/A'}</span>
                                 <span className="text-justify text-sm text-gray-500 mb-2"><b className="text-black">Remarks:</b> {applicationDetails?.applicationDetails?.CrimalRemarks || 'N/A'}</span>
                               </div>
+                              <Button variant="outline" onClick={() => setApplicationDetails((prev) => ({ ...prev, applicationDetails: { ...applicationDetails?.applicationDetails, CriminalStatus: 0 } }))}><SquarePen className="text-yellow-600" /> Edit Criminal Records</Button>
                             </div>
                           </div>
                         </> :

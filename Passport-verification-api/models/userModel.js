@@ -101,7 +101,7 @@ export async function showuserDetailsModel(
 }
 
 export async function getApplicationStatusModel(
-  EntryUserID, Status, Periord 
+  EntryUserID, Status, Periord=0 
 ) {
   try {
     const [rows] = await pool.query('CALL sp_getapplicationstatusv2(?,?,?)', [EntryUserID,Status, Periord ]);

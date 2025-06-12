@@ -22,7 +22,7 @@ import { FileAcceptModal } from "./approve-reject-modal"
 import { updateEnquiryStatus } from "@/app/acceptedAndVerificationPending-eo/api"
 import { transferapplication } from "@/app/allFiles-sp/api"
 
-export default function PendingApplicationDatatable({ status, heading, period, flag }) {
+export default function PendingApplicationDatatable({ status, heading, period, flag, last15DaysPending }) {
   const [selectedDetails, setSelectedDetails] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState("")
@@ -58,7 +58,12 @@ export default function PendingApplicationDatatable({ status, heading, period, f
   const fetchApplicationStatus = async (status_id, start_date, end_date) => {
     try {
       setIsLoading(true)
-      const response = await getApplicationStatusV3(status_id, start_date, end_date)
+      let response = null;
+      if (last15DaysPending) {
+        response = await getApplicationStatus(status_id, 15)
+      } else {
+        response = await getApplicationStatusV3(status_id, start_date, end_date)
+      }
       setVerificationData(response?.data)
     } catch (error) {
       console.error("Error fetching application status:", error)
@@ -149,10 +154,11 @@ export default function PendingApplicationDatatable({ status, heading, period, f
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-64"
           />
+          
           <div className="space-x-2 flex items-end justify-center">
             {/* Date Range Picker */}
             {/* Start Date Input */}
-            <div>
+            {!last15DaysPending && <div>
               <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">
                 Start Date
               </label>
@@ -164,9 +170,10 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                 className="w-40"
               />
             </div>
+}
 
             {/* End Date Input */}
-            <div>
+            {!last15DaysPending && <div>
               <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">
                 End Date
               </label>
@@ -177,7 +184,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                 onChange={(e) => setEndDate(e.target.value)}
                 className="w-40"
               />
-            </div>
+            </div>}
             <Button variant={'outline'} onClick={handleExportExcel}>Export Excel</Button>
             {/* <Button variant={'outline'} onClick={handleExportPDF}>Export PDF</Button>
             <Button variant={'outline'} onClick={handlePrint}>Print</Button> */}
