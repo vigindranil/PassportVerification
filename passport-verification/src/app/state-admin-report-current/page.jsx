@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import BackgroundImg from "@/assets/passport-bg.jpg";
 import { Card, CardContent } from "@/components/ui/card";
-import StateAdminReportDatatable from "@/components/state-admin-table";
+import StateAdminReportDatatable from "@/components/state-admin-table1";
 export default function Dashboard() {
 
   return (
