@@ -215,6 +215,9 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
                   <TableHead className="font-semibold text-center border-r-2">
                     <span className="text-blue-500">L</span>
                   </TableHead>
+                  <TableHead className="font-semibold text-center border-r-2">
+                    <span className="text-blue-500">M</span>
+                  </TableHead>
                 </TableRow>
                 <TableRow className="bg-[#e6f3ff]">
                   <TableHead className="font-semibold">Applications uploaded till date</TableHead>
@@ -243,7 +246,10 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
                     <span className="text-blue-500">(G-I-J)</span>
                   </TableHead>
                    <TableHead className="font-semibold">
-                   Applications pending for more than 15 days to SP DIB / DC SB 
+                   Pending with the SP DIB / DCP SB for more than 15 days
+                  </TableHead>
+                  <TableHead className="font-semibold">
+                   Pending With EO for more than 10 days 
                   </TableHead>
                 </TableRow>
               </TableHeader>
@@ -287,6 +293,9 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
                       <TableCell>
                         <Skeleton className="bg-slate-300 h-4 w-32" />
                       </TableCell>
+                      <TableCell>
+                        <Skeleton className="bg-slate-300 h-4 w-32" />
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : verificationData && verificationData.length > 0 ? (
@@ -303,11 +312,12 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
                     <TableCell>{verificationData[0]["SPDone(I)"] || 0}</TableCell>
                     <TableCell>{verificationData[0]["SEPending(J)"] || 0}</TableCell>
                     <TableCell>{verificationData[0]["SPPending(k=(G-I-J)"] || 0}</TableCell>
-                    <TableCell>{verificationData[0]["Last15DaysPendingApplicationsINSp"] || 0}</TableCell>
+                    <TableCell>{verificationData[0]["Pending with the SP DIB / DCP SB for more than 15 days"] || 0}</TableCell>
+                    <TableCell>{verificationData[0]["Pending With EO for more than 10 days"] || 0}</TableCell>
                   </TableRow>
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={12} className="text-center">
+                    <TableCell colSpan={13} className="text-center">
                       No Data Found
                     </TableCell>
                   </TableRow>
