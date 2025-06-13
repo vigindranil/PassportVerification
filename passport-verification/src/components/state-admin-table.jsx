@@ -246,7 +246,7 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
                     <span className="text-blue-500">(G-I-J)</span>
                   </TableHead>
                    <TableHead className="font-semibold">
-                   Pending with the SP DIB / DCP SB for more than 15 days
+                   Verification pending for more than 15 days from the date of receipt.
                   </TableHead>
                   <TableHead className="font-semibold">
                    Pending With EO for more than 10 days 
@@ -312,7 +312,7 @@ export default function StateAdminReportDatatable({ status, heading, type }) {
                     <TableCell>{verificationData[0]["SPDone(I)"] || 0}</TableCell>
                     <TableCell>{verificationData[0]["SEPending(J)"] || 0}</TableCell>
                     <TableCell>{verificationData[0]["SPPending(k=(G-I-J)"] || 0}</TableCell>
-                    <TableCell>{verificationData[0]["Pending with the SP DIB / DCP SB for more than 15 days"] || 0}</TableCell>
+                    <TableCell>{verificationData[0]["Verification pending for more than 15 days from the date of receipt."] || 0}</TableCell>
                     <TableCell>{verificationData[0]["Pending With EO for more than 10 days"] || 0}</TableCell>
                   </TableRow>
                 ) : (
