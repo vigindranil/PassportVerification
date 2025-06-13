@@ -60,7 +60,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
       setIsLoading(true)
       let response = null;
       if (last15DaysPending) {
-        response = await getApplicationStatus(status_id, 15)
+        response = await getApplicationStatus(status_id, period)
       } else {
         response = await getApplicationStatusV3(status_id, start_date, end_date)
       }
