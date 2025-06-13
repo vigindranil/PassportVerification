@@ -176,7 +176,7 @@ const dashboardConfig = {
     },
     {
       title: "Applications pending for more than 10 days to be accepted by the EO",
-      key: "Last10DaysPendingApplications",
+      key: "PendingWithEOformorethan10days",
       icon: CalendarClock,
       color: "blue",
       link: "/last10DaysPending",
