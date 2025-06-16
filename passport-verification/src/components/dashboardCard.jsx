@@ -238,6 +238,13 @@ const dashboardConfig = {
       color: "blue",
       link: "/reverted-to-eo",
     },
+     {
+      title: "Verification pending for more than 15 days from the date of receipt",
+      key: "Verification pending for more than 15 days from the date of receipt.",
+      icon: TrendingDown,
+      color: "teal",
+      link: "/moreThan15DaysPending",
+    },
 
     // { title: "Transferd Case", key: "transferCaseCompleted", icon: ArrowRightToLine, color: "green", link: "/transferCaseCompleted" },
     // { title: "Pending Transfer Case", key: "transferCasePending", icon: ArrowRightToLine, color: "red", link: "/transferCasePending" },
