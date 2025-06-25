@@ -175,7 +175,7 @@ const dashboardConfig = {
       link: "/completed-sp",
     },
     {
-      title: "Applications pending for more than 10 days to be accepted by the EO",
+      title: "Pending with the EO for more than 10 days for verification",
       key: "PendingWithEOformorethan10days",
       icon: CalendarClock,
       color: "blue",
