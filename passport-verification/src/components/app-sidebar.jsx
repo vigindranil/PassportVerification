@@ -182,6 +182,10 @@ const data = {
           { "title": "Current Status Report", "url": "/state-admin-report-current" },
           { "title": "Previous Status Report", "url": "/state-admin-report-previous" },
           { "title": "Track Applications", "url": "/track-applications" },
+          { "title": 'WBSEDCL Bill', "url": '/thirt-party-api/wbsedcl' },
+          { "title": 'Land Deed', "url": '/thirt-party-api/land-deed' },
+          { "title": 'Birth Certificate', "url": '/thirt-party-api/birth-certificate' },
+          { "title": 'Madhyamik Certificate', "url": '/thirt-party-api/madhyamik-cert' },
           { "title": 'Reset Password', "url": '/reset-password' },
           { "title": "Logout", "url": "/logout" }
         ]
