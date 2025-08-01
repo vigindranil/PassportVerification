@@ -300,7 +300,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
               {isLoadingDocumentTable ? <SkeletonLoader /> :
                 documents?.length > 0 ?
                   documents?.map((doc, index) => (
-                    <TableRow key={index}>
+                    <TableRow key={index} className={`${doc?.Isverified ? 'bg-green-100' : ''}`}>
                       <TableCell>{doc?.DocumentTypeName || "-"}</TableCell>
                       <TableCell>{doc?.FileType || "-"}</TableCell>
                       <TableCell>{doc?.IdNumber || "-"}</TableCell>
@@ -323,7 +323,8 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                           View
                         </button>
                         {(doc?.DocumentTypeId == 13) ? <button
-                          className="flex bg-blue-100 justify-center items-center p-1 m-1 px-2 rounded-md hover:bg-blue-200 text-sm"
+                          className="flex bg-blue-100 justify-center items-center p-1 m-1 px-2 rounded-md hover
+                          :bg-blue-200 text-sm"
                           onClick={() => {
                             setSelectedLocationDetails(doc?.UserAgent ? JSON.parse(doc?.UserAgent) : {})
                             setIsLocationDetailsModalOpen(true)

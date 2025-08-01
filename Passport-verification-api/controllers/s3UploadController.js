@@ -32,6 +32,9 @@ export const fileUploadS3Bucket = async (req, res) => {
       Body: req.file.buffer,
       ContentType: req.file.mimetype || "application/octet-stream", // Set content type dynamically
       // ACL: "public-read", // This allows the file to be publicly readable
+      // StorageClass: "INTELLIGENT_TIERING",
+      // StorageClass: "GLACIER",
+      // StorageClass: "GLACIER",
     };
     try {
       await s3.send(new PutObjectCommand(params));
@@ -40,7 +43,6 @@ export const fileUploadS3Bucket = async (req, res) => {
       throw new Error("Failed to upload file to S3");
     }
 
-    // console.log("\x1b[32m%s\x1b[0m", "document upload complete!");
     return res.status(200).json({
       status: 0,
       message: "Document uploaded successfully",
