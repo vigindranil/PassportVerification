@@ -154,7 +154,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-64"
           />
-          
+
           <div className="space-x-2 flex items-end justify-center">
             {/* Date Range Picker */}
             {/* Start Date Input */}
@@ -170,7 +170,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                 className="w-40"
               />
             </div>
-}
+            }
 
             {/* End Date Input */}
             {!last15DaysPending && <div>
@@ -200,7 +200,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                 <TableHead className="font-semibold">Police Station</TableHead>
                 <TableHead className="font-semibold">Phone No.</TableHead>
                 <TableHead className="font-semibold whitespace-nowrap">Verification Address</TableHead>
-                <TableHead className="font-semibold text-center">Actions</TableHead>
+                {status != 45 && <TableHead className="font-semibold text-center">Actions</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -239,7 +239,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                     <TableCell>{row?.PsName || 'N/A'}</TableCell>
                     <TableCell>{row?.PhoneNo || 'N/A'}</TableCell>
                     <TableCell>{row?.VerificationAddress || 'N/A'}</TableCell>
-                    <TableCell>
+                    {status != 45 && <TableCell>
                       <div className="flex space-x-1">
                         <div className="relative group">
                           <Button
@@ -356,6 +356,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                         )}
                       </div>
                     </TableCell>
+                    }
                   </TableRow>
                 ))
               ) : (

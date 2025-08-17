@@ -3,10 +3,10 @@ import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
-import { AlertCircle, BadgeCheck, CheckCircle2, CheckCircle2Icon, Clock4, ClockAlert, Eye, FileCheck2, Frown, Loader, MapPin, Search } from "lucide-react"
+import { AlertCircle, BadgeCheck, CheckCircle2, CheckCircle2Icon, Clock4, ClockAlert, Eye, FileCheck2, Frown, Info, Loader, MapPin, RefreshCw, Search } from "lucide-react"
 import Image from "next/image"
 import { VisuallyHidden } from "@/components/ui/visually-hidden"
-import { getBirthCertificateDetails, getLandDeedDetails, getMadhyamikCertificate, getWBSEDCLDetails, verifyApplication } from "@/app/applicationDetails/[FileNumber]/api"
+import { getBirthCertificateDetails, getLandDeedDetails, getMadhyamikCertificate, getWBSEDCLDetails, restoreFile, verifyApplication } from "@/app/applicationDetails/[FileNumber]/api"
 import Cookies from "react-cookies";
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
@@ -24,6 +24,8 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
   const [verifyElectricityLoading, setVerifyElectricityLoading] = useState(false)
   const [verifyApplicationLoading, setVerifyApplicationLoading] = useState(false)
   const [verified, setVerified] = useState(false)
+  const [isRestored, setIsRestored] = useState(false)
+  const [isRestoring, setIsRestoring] = useState(false)
   const [docType, setDocType] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [userType, setUserType] = useState(null);
@@ -31,6 +33,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
   const userTypeCookies = Cookies.load("type");
   const { toast } = useToast()
   const [type, setType] = useState("")
+  const [restroreMessage, setRestroreMessage] = useState("")
 
 
   const verifyMadhyamikCertificate = async (roll, number, year) => {
@@ -69,16 +72,23 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
     }
   }
 
-  const verifyLandDeed = async (mouzaCode, khatianNo) => {
+  const restoreFileApi = async (doc_id, file) => {
     try {
-      setVerifyElectricityLoading(true);
-      setVerifiedResponse(null)
-      const response = await getLandDeedDetails(
-        // "0101055", 276
-        mouzaCode, khatianNo
+      setIsRestoring(true)
+      const response = await restoreFile(
+        doc_id, file
       );
-      console.log("response", response);
 
+      if(response?.status == 0){
+        setIsRestored(response?.onProcess);
+      }
+
+      if(response?.restored) {
+        setIsRestored(1);
+        setRestroreMessage(`${response?.message} till ${response?.restoreHeader?.split("expiry-date=")[1]}` || "");
+      } else {
+        setRestroreMessage(response?.message || "");
+      }
       toast({
         title: (
           <div className="flex items-center gap-2">
@@ -86,12 +96,11 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
             <span>Success!</span>
           </div>
         ),
-        description: "Data has been successfully retrieved",
+        description: response?.message,
         action: (
           <ToastAction altText="close">Close</ToastAction>
         ),
       })
-      setVerifiedResponse(response || "");
     } catch (error) {
       console.log(error);
       toast({
@@ -101,7 +110,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       })
     } finally {
-      setVerifyElectricityLoading(false);
+      setIsRestoring(false);
     }
   }
 
@@ -360,7 +369,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                 </VisuallyHidden>
                 <div className="flex h-full">
                   <div className={`${(selectedImage?.DocumentTypeId == 1 || selectedImage?.DocumentTypeId == 8) && (userType != 10) ? 'w-1/2' : 'w-full p-5'} max-h-[90vh] flex items-center justify-center bg-gray-100 rounded-md`}>
-                    {selectedImage.FileType == "jpg" ? (
+                    {!selectedImage?.IsArchived && !selectedImage?.IsRestore && selectedImage?.FileType == "jpg" ? (
                       <div className="relative w-full h-full overflow-hidden mx-auto" onClick={() => setZoom(!zoom)}>
                         <motion.div className="mx-auto h-full" animate={{ scale: zoom ? 1.7 : 1 }} transition={{ duration: 0.3 }}>
                           <img
@@ -371,11 +380,36 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                         </motion.div>
                       </div>
                     )
-                      : selectedImage.FileType == "pdf" ? (
+                      : !selectedImage?.IsArchived && !selectedImage?.IsRestore && selectedImage?.FileType == "pdf" ? (
                         <embed src={`https://${selectedDoc}`} type="application/pdf" width="100%" height="100%" />
                       )
-                        : (
-                          "No file selected"
+                        : selectedImage?.IsArchived == 11 || selectedImage?.IsRestore ? (
+                          <div className="flex flex-col justify-center items-center">
+                          {restroreMessage && <span className="flex justify-center items-center bg-indigo-200 border-indigo-500 border-2 rounded-md p-1 px-2 text-xl"><Info className="mr-1" size={24} /> {restroreMessage}</span>}
+                              <button
+                              className="flex bg-amber-500 text-slate-200 justify-center items-center p-1 m-1 mt-5 px-3 rounded-md hover:bg-amber-600 mx-auto"
+                              disabled={isRestoring}
+                              onClick={() => restoreFileApi(selectedImage?.DocumentId, selectedImage?.DocumentPath?.split("https://wb-passport-verify.s3.ap-south-1.amazonaws.com/")[1])}
+                            >
+                              { isRestoring ? (<><RefreshCw className="mr-1 animate-spin" size={18} /> Checking Status...</>) : (<><RefreshCw className="mr-1" size={18} /> Check Restore Status</> )}
+                            </button>
+                            
+                            {isRestored && <a className="flex bg-blue-500 text-slate-200 justify-center items-center p-1 m-1 mt-5 px-3 rounded-md hover:bg-blue-600 mx-auto"
+                            href={selectedDoc} target="_blank">View Restored File</a>}
+                          </div>
+                        ) : (
+                          <div>
+                          <span>This file is archived because SP/CP has approved/rejected the application. If you want to retore this file then click on Restore Button.</span>
+                          {restroreMessage && <span className="bg-indigo-200 border-indigo-500 border-2 rounded-md p-1 px-2"><Info className="mr-1" size={18} /> {restroreMessage}</span>}
+                              <button
+                              className="flex bg-blue-500 text-slate-200 justify-center items-center p-1 m-1 mt-5 px-3 rounded-md hover:bg-blue-600 mx-auto"
+                              disabled={isRestoring}
+                              onClick={() => restoreFileApi(selectedImage?.DocumentId, selectedImage?.DocumentPath?.split("https://wb-passport-verify.s3.ap-south-1.amazonaws.com/")[1])}
+                              >
+                              { isRestoring ? (<><RefreshCw className="mr-1 animate-spin" size={18} /> Restoring File...</>) : (<><RefreshCw className="mr-1" size={18} /> Restore This File</> )}
+                            </button>
+
+                          </div>
                         )}
                   </div>
 

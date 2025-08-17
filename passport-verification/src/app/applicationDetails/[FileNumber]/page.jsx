@@ -608,13 +608,19 @@ export default function Page({ FileNumber }) {
                           <div className="space-y-2">
                             <div className="flex flex-col">
                               <span className="text-sm font-medium text-gray-500">Aadhaar Verified Status</span>
-                              <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedstatus == 1 ? <Badge className="bg-emerald-400 hover:bg-emerald-400">matched</Badge> : <Badge className="bg-red-500 hover:bg-red-500">not machted</Badge>}</span>
+                              <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedstatus == 1 ? <Badge className="bg-emerald-400 hover:bg-emerald-400">matched</Badge> : applicationDetails?.applicationDetails?.AadharVerifiedstatus == 2 ? <Badge className="bg-red-500 hover:bg-red-500">not machted</Badge> : <Badge className="bg-blue-500 hover:bg-blue-500">Verified by m-Aadhaar</Badge>}</span>
                             </div>
                           </div>
                           <div className="space-y-2">
                             <div className="flex flex-col">
                               <span className="text-sm font-medium text-gray-500">Aadhaar Verified By</span>
                               <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedby}</span>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <div className="flex flex-col">
+                              <span className="text-sm font-medium text-gray-500">Aadhaar Remarks</span>
+                              <span className="text-base">{applicationDetails?.applicationDetails?.AadharRemarks}</span>
                             </div>
                           </div>
                         </div>

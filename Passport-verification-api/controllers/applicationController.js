@@ -48,6 +48,9 @@ export const getApplicationDetails = async (req, res) => {
       applicationId,
       entryUserId
     );
+
+
+
     const status = await getApplicationStatusHistoryById(
       applicationId,
       entryUserId
@@ -76,7 +79,7 @@ export const getApplicationDetails = async (req, res) => {
             status: status || [],
             filepath,
           },
-        },
+        }, 
       })
     );
     return res.status(200).json({

@@ -143,3 +143,17 @@ export const getPCCApplicationDetails = async (applicant_name, applicant_aadhaar
     return null;
   }
 };
+
+export const restoreFile = async (
+  document_id,
+  file_name
+) => {
+  try {
+    return await postRequest("s3-upload/restoreFile", {
+      document_id,
+      file_name
+    });
+  } catch (error) {
+    return error.message;
+  }
+};

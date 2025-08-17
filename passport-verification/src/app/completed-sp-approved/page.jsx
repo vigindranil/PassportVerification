@@ -19,7 +19,7 @@ export default function allFiles() {
         <main className="flex-1 overflow-y-auto p-6">
           <CardContent>
             <Card>
-              <PendingApplicationDatatable heading='Completed Verification SP' status={80} />
+              <PendingApplicationDatatable heading='Applications Approved by SP DIB/ DC SB' status={85} />
             </Card>
           </CardContent>
         </main>
