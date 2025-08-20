@@ -383,16 +383,22 @@ export default function PendingApplicationDatatable({ status, heading, period, f
             >
               Prev
             </Button>
-            {Array?.from({ length: totalPages }, (_, i) => i + 1)?.map((page) => (
-              <Button
-                key={page}
-                variant={currentPage === page ? "default" : "outline"}
-                size="sm"
-                onClick={() => setCurrentPage(page)}
-              >
-                {page}
-              </Button>
-            ))}
+           {Array.from({ length: Math.min(10, totalPages) }, (_, i) => {
+              const startPage = Math.floor((currentPage - 1) / 10) * 10 + 1; // window start
+              const page = startPage + i;
+              if (page > totalPages) return null;
+
+              return (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </Button>
+              );
+            })}
             <Button
               variant="outline"
               size="sm"
