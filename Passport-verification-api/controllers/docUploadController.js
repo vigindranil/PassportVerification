@@ -1,6 +1,10 @@
+import moment from "moment/moment.js";
 import { updateDocumentRestoreStatusByDocumentId } from "../models/restoreAndArchiveDocModel.js";
 import logger from "../utils/logger.js";
 import { S3Client, PutObjectCommand, HeadObjectCommand, RestoreObjectCommand } from "@aws-sdk/client-s3";
+import { getDocumentdoneBySP, updateDocumentarchiveStatus } from "../models/cronJobModel.js";
+import moment from "moment/moment.js";
+import { archiveSPApprovedFileToGlacier } from "./eoController.js";
 
 /**
  * @swagger
@@ -171,3 +175,24 @@ export const restoreFile = async (req, res) => {
     }
   }
 }
+
+export const archiveDocumentToGlacier = async (req, res) => {
+ 
+  try {
+    const { fromDate, toDate } = req.body;
+    
+    const response = await getDocumentdoneBySP(fromDate, toDate); // this will return a array
+
+    if(response?.length){
+      for await (const document of response) {
+        const file_key = document?.DocumentPath?.split('https://wb-passport-verify.s3.ap-south-1.amazonaws.com/')[1];
+        if(!file_key) continue
+        const doc_id = await archiveSPApprovedFileToGlacier(document);
+        if(!doc_id) continue
+        const response = await updateDocumentarchiveStatus(doc_id);
+      }
+    }
+  } catch (error) {
+    console.error("Error executing autoOCApprovallUpdate:", error);
+  }
+};
