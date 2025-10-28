@@ -246,7 +246,7 @@ export default function PendingApplicationDatatable({ status, heading, period, f
                             size="sm"
                             variant="outline"
                             className="hover:bg-blue-500 ring-[0.5px] ring-slate-300 hover:text-white bg-blue-200 text-blue-700 text-sm px-[0.65rem] py-0 rounded-full flex gap-1"
-                            onClick={() => router.push(`/applicationDetails/${row.FileNumber}`)}
+                            onClick={() => router.push(`/applicationDetails/${row.FileNumber}?ActiveStatusId=${row?.ApplicationStatus == 60 ? 0 : 1}`)}
                           >
                             <FileUser className="m-0 p-0" />
                           </Button>

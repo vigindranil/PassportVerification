@@ -1,9 +1,10 @@
 import { postRequest } from "@/app/commonAPI";
 
-export const getDetailsApplicationId = async (applicationId) => {
+export const getDetailsApplicationId = async (applicationId, ActiveStatusId=1) => {
   try {
     return await postRequest("application/detailsapplicationId", {
       applicationId: applicationId,
+      ActiveStatusId: ActiveStatusId,
     });
   } catch (error) {
     console.log("Error:", error);

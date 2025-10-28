@@ -21,7 +21,7 @@ const archiveDocumentToGlacier = async () => {
     // const date = "2025-08-09";
     console.log("date", date);
     
-    const response = await getDocumentdoneBySP(date, date); // this will return a array
+    const response = await getDocumentdoneBySP('2025-07-01','2025-07-31' ); // this will return a array
 
     if(response?.length){
       for await (const document of response) {
@@ -39,15 +39,3 @@ const archiveDocumentToGlacier = async () => {
 };
 
 archiveDocumentToGlacier();
-
-// Schedule the task to run at 09:00 AM every day
-cron.schedule(
-  // "* * * * *", // every 1 mint.
-  "0 23 * * *",
-  async () => {
-    archiveDocumentToGlacier();
-  },
-  {
-    timezone: "Asia/Kolkata",
-  }
-);

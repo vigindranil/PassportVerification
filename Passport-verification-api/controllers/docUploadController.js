@@ -3,7 +3,6 @@ import { updateDocumentRestoreStatusByDocumentId } from "../models/restoreAndArc
 import logger from "../utils/logger.js";
 import { S3Client, PutObjectCommand, HeadObjectCommand, RestoreObjectCommand } from "@aws-sdk/client-s3";
 import { getDocumentdoneBySP, updateDocumentarchiveStatus } from "../models/cronJobModel.js";
-import moment from "moment/moment.js";
 import { archiveSPApprovedFileToGlacier } from "./eoController.js";
 
 /**

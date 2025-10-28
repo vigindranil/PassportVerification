@@ -6,7 +6,8 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // create array of object with key as user and value as password
 const userArray = [
   { user: "vyoma", password: "@vyoma@123#" },
-  { user: "IBUSER", password: "@IBUSER@123#" }
+  { user: "IBUSER", password: "@IBUSER@123#" },
+  { user: "Sankalan", password: "@Sankalan@123#" },
 ]
 
 const verifyToken = async (req, res, next) => {

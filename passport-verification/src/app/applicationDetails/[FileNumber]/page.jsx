@@ -24,8 +24,12 @@ import Image from "next/image"
 import BackgroundImg from "@/assets/passport-bg.jpg"
 import ApplicationRecommendation from "@/components/application-recommendation"
 import { decrypt } from "@/utils/enc_aadhaar"
+import { useSearchParams } from 'next/navigation';
 
 export default function Page({ FileNumber }) {
+
+  const searchParams = useSearchParams();
+  const ActiveStatusId = searchParams.get('ActiveStatusId');
   const [applicationDetails, setApplicationDetails] = useState(null);
   const [isLoadingStatusHistrory, setIsLoadingStatusHistrory] = useState(true)
   const [isLoadingDocumentTable, setIsLoadingDocumentTable] = useState(true);
@@ -47,11 +51,11 @@ export default function Page({ FileNumber }) {
 
   const { toast } = useToast()
 
-  const fetchData = async (ApplicationId) => {
+  const fetchData = async (ApplicationId, ActiveStatusId) => {
     try {
       setIsLoadingStatusHistrory(true)
       setIsLoadingDocumentTable(true)
-      const response = await getDetailsApplicationId(ApplicationId);
+      const response = await getDetailsApplicationId(ApplicationId, ActiveStatusId);
       setApplicationDetails(response?.data);
       if (response?.data?.applicationDetails?.AadharNumber) {
         const decrypted = decrypt(response?.data?.applicationDetails?.AadharNumber);
@@ -207,7 +211,7 @@ export default function Page({ FileNumber }) {
 
   useEffect(() => {
     console.log("FileNumber:", FileNumber);
-    FileNumber && fetchData(FileNumber);
+    FileNumber && fetchData(FileNumber, ActiveStatusId);
 
     const district = Cookies.load('ds');
     const ps = Cookies.load('ps');

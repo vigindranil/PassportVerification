@@ -3,7 +3,8 @@ import { encrypt } from "../enc_aadhaar.js";
 
 export async function getApplicationDetailsByApplicationId(
   applicationId,
-  entryUserId
+  entryUserId,
+  ActiveStatusId = 1
 ) {
   try {
     const [rows] = await pool.query(
@@ -23,7 +24,8 @@ export async function getApplicationDetailsByApplicationId(
 
 export async function getDocumentApplicationDetailsById(
   applicationId,
-  entryUserId
+  entryUserId,
+  ActiveStatusId = 1
 ) {
   try {
     const [rows] = await pool.query(
@@ -46,12 +48,13 @@ export async function getDocumentApplicationDetailsById(
 
 export async function getApplicationStatusHistoryById(
   applicationId,
-  entryUserId
+  entryUserId,
+  ActiveStatusId
 ) {
   try {
     const [rows] = await pool.query(
       `CALL sp_getApplicationStatusHistorybyapplicationId(?, ?)`,
-      [applicationId, entryUserId]
+      [applicationId,entryUserId]
     );
     // console.log("applicationId", applicationId);
     // console.log("entryUserId", entryUserId);
@@ -243,13 +246,14 @@ export async function savethirdpartyVerifyStatus(
 
 export async function getAadharDetailsByapplicationIdModel(
   ApplicationId ,
-  EntryuserId 
+  EntryuserId ,
+  ActiveStatusId = 1
 ) {
   try {
       // console.log("userId",ApplicationId )
       // console.log("status",EntryuserId )
       
-    const [rows] = await pool.query('CALL sp_getAadharDetailsByapplicationId(?,?);',
+      const [rows] = await pool.query('CALL sp_getAadharDetailsByapplicationId(?,?);',
       [
         ApplicationId,
         EntryuserId
@@ -309,8 +313,13 @@ export async function getApplicationCountMasterAdminModelV1(
   }
 }
 
-
-
-
-
-
+export async function getApplicationStatusBetweenDaterangeModel(StatusId, StartDate, EndDate, PageNumber, PageSize) {
+  try {
+     
+    const [rows] = await pool.query('CALL sp_getApplicationStatusBetweenDaterange(?, ?, ?, ?, ?)', [StatusId, StartDate, EndDate, PageNumber, PageSize]);
+    // console.log("rows",rows);
+    return rows[0]; 
+  } catch (error) {
+    throw new Error('Database error: ' + error.message);
+  }
+}
