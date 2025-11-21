@@ -145,6 +145,20 @@ export const getPCCApplicationDetails = async (applicant_name, applicant_aadhaar
   }
 };
 
+export const getPCCApplicationDetailsV2 = async (applicant_name, applicant_aadhaar) => {
+  try {
+    return await postRequest("third-party/getPCCApplicationDetailsV2", {
+      // applicant_name: "Tanmay",
+      // applicant_aadhaar: "6806",
+      name: applicant_name,
+      contact_no: applicant_aadhaar,
+    });
+  } catch (error) {
+    console.log("Error:", error);
+    return null;
+  }
+};
+
 export const restoreFile = async (
   document_id,
   file_name

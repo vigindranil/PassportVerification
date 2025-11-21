@@ -411,6 +411,50 @@ export const getPCCApplicationDetails = async (req, res) => {
     });
 };
 
+export const searchSuspectedPerson = async (req, res) => {
+  const { name, contact_no } = req.body;
+
+  if (!contact_no && !name) {
+    return res.status(400).json({ error: "Please enter Contact number or applicant name." });
+  }
+
+  // Prepare FormData exactly like curl
+  let formData = new FormData();
+  formData.append("Name", name || "");
+  formData.append("ContactNo", contact_no);
+  formData.append("RequestDomain", "www.passport");
+  formData.append("RequestUser", "1");
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    // url: "http://115.187.62.16:3700/wbpccservice/api/searchSuspectedPersonInfoByNameAndContactNo",
+    url: 'https://pcc.wb.gov.in/WBPCCServiceV2/api/searchSuspectedPersonInfoByNameAndContactNo',
+    headers: {
+      APIToken: "PASS@20112025$!#",
+    },
+    data: formData,
+  };
+
+  axios
+    .request(config)
+    .then((response) => {
+      return res.status(200).json({
+        status: 1,
+        message: "Data fetched successfully",
+        data: response.data,
+      });
+    })
+    .catch((error) => {
+      console.log("Error :", error?.message);
+      return res.status(400).json({
+        status: 0,
+        message: "Failed to fetch details",
+        data: null,
+      });
+    });
+};
+
 export const sendSMS = async (req, res) => {
   const { smstext, mobileNumber, smsCategory = "N/A", tpid } = req.body;
   if (!mobileNumber) {

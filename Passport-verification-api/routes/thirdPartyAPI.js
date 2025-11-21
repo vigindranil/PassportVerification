@@ -1,5 +1,5 @@
 import express from 'express';
-import { getApplicationStatusBetweenDaterange, getBirthCertificateDetails, getKolkataPoliceCriminalRecordSearchv4, getLandDeedDetails, getMadhyamikCertificate, getPCCApplicationDetails, getPCCCrimeRecordSearch, getWBSEDCLDetails, sendSMS } from '../controllers/thirdPartyAPI.js';
+import { getApplicationStatusBetweenDaterange, getBirthCertificateDetails, getKolkataPoliceCriminalRecordSearchv4, getLandDeedDetails, getMadhyamikCertificate, getPCCApplicationDetails, getPCCCrimeRecordSearch, getWBSEDCLDetails, searchSuspectedPerson, sendSMS } from '../controllers/thirdPartyAPI.js';
 
 const router = express.Router();
 
@@ -11,5 +11,6 @@ router.post('/getCIDCrimeRecordSearch', getPCCCrimeRecordSearch);
 router.post('/sendSMS', sendSMS);
 router.post('/getMadhyamikCertificate', getMadhyamikCertificate);
 router.post('/getPCCApplicationDetails', getPCCApplicationDetails);
+router.post('/getPCCApplicationDetailsV2', searchSuspectedPerson);
 router.post('/getPassportApplicationDetails', getApplicationStatusBetweenDaterange);
 export default router;

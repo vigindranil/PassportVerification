@@ -49,3 +49,23 @@ export async function getDocumentdoneBySP(
     throw new Error("Database error: " + error.message);
   }
 }
+
+
+export async function getApplicationCountallDsistrict() {
+  try {
+    const [rows] = await pool.query(
+      `CALL sp_getApplicationCountallDsistrict(?, ?, ?)`,
+      [1, null, null]
+    );
+
+    if (rows.length > 0) {
+      console.log(rows[0]);
+      
+      return rows[0];
+    } else {
+      null;
+    }
+  } catch (error) {
+    throw new Error("Database error: " + error.message);
+  }
+}

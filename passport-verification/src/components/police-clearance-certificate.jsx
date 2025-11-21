@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Input } from "./ui/input";
 import moment from "moment";
-import { getKolkataPoliceCriminalRecordSearchv4, getPCCApplicationDetails, getPccCrimeDetails } from "@/app/applicationDetails/[FileNumber]/api";
+import { getKolkataPoliceCriminalRecordSearchv4, getPCCApplicationDetails, getPCCApplicationDetailsV2, getPccCrimeDetails } from "@/app/applicationDetails/[FileNumber]/api";
 import DateRangePicker from "./date-range-picker";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { VisuallyHidden } from "./ui/visually-hidden";
@@ -29,25 +29,27 @@ const SkeletonLoader = () => (
   </>
 );
 
-const PoliceClearanceCertificate = ({ selectedRows, setSelectedRows, setApplicationDetails=null, applicant_details=null }) => {
- 
+const PoliceClearanceCertificate = ({ selectedRows, setSelectedRows, setApplicationDetails = null, applicant_details = null }) => {
+
   const [pccData, setPccData] = useState(null);
   const [isLoadingPccRecords, setIsLoadingPccRecords] = useState(false);
   const [dec_aadhar, setDecAadhar] = useState(null);
-  
+
   useEffect(() => {
     setDecAadhar(applicant_details?.AadharNumber);
+    console.log("applicant_details", applicant_details);
+
   }, [applicant_details?.AadharNumber]);
 
   const fetchPccData = async () => {
     try {
-      
-      setIsLoadingPccRecords(true);
-      const response = await getPCCApplicationDetails(applicant_details?.ApplicantName, dec_aadhar ? dec_aadhar?.slice(-4) : "");
 
-      setPccData(response || null);
-      console.log(response?.data);
+      setIsLoadingPccRecords(true);
+      const response = await getPCCApplicationDetailsV2(applicant_details?.ApplicantName, applicant_details?.PhoneNo);
+      // const response = await getPCCApplicationDetailsV2("", "7980544903");
       
+      setPccData(response?.data || null);
+
 
     } catch (e) {
       console.log("Error:", e);
@@ -65,81 +67,91 @@ const PoliceClearanceCertificate = ({ selectedRows, setSelectedRows, setApplicat
             <div className="w-1/3 px-3">
               <Label className="text-zinc-500">Applicant Name</Label>
               {setApplicationDetails && (
-                  <Input
-                    type="text"
-                    placeholder="Enter First Name (required)"
-                    className="ring-0 border-gray-300 rounded-md w-full p-2"
-                    value={applicant_details?.ApplicantName}
-                    readOnly={false}
-                    onChange={e => setApplicationDetails(prev => ({ ...prev, ApplicantName: e.target.value }))}
-                  />
-                )}
-                {!setApplicationDetails && (
-                  <Input
-                    type="text"
-                    placeholder="Enter First Name (required)"
-                    className="ring-0 border-gray-300 rounded-md w-full p-2"
-                    value={applicant_details?.ApplicantName}
-                    readOnly={true}
-                  />
-                )}
-              
-            </div>
-            <div className="w-1/3 px-3">
-              <Label className="text-zinc-500">Aadhaar Number</Label>
-              {setApplicationDetails && (
-              <Input
-                type="text"
-                placeholder="Enter First Name (required)"
-                className="ring-0 border-gray-300 rounded-md w-full p-2"
-                value={applicant_details?.AadharNumber}
-                readOnly={false}
-                onChange={e => setApplicationDetails(prev => ({ ...prev, AadharNumber: e.target.value }))}
-              />
+                <Input
+                  type="text"
+                  placeholder="Enter First Name (required)"
+                  className="ring-0 border-gray-300 rounded-md w-full p-2"
+                  value={applicant_details?.ApplicantName}
+                  readOnly={false}
+                  onChange={e => setApplicationDetails(prev => ({ ...prev, ApplicantName: e.target.value }))}
+                />
               )}
               {!setApplicationDetails && (
-              <Input
-                type="text"
-                placeholder="Enter First Name (required)"
-                className="ring-0 border-gray-300 rounded-md w-full p-2"
-                value={dec_aadhar ? `XXXXXXXX${dec_aadhar?.slice(-4)}` : ""}
-                readOnly={true}
-              />
+                <Input
+                  type="text"
+                  placeholder="Enter First Name (required)"
+                  className="ring-0 border-gray-300 rounded-md w-full p-2"
+                  value={applicant_details?.ApplicantName}
+                  readOnly={true}
+                />
+              )}
+
+            </div>
+            <div className="w-1/3 px-3">
+              <Label className="text-zinc-500">Mobile Number</Label>
+              {setApplicationDetails && (
+                <Input
+                  type="text"
+                  placeholder="Enter First Name (required)"
+                  className="ring-0 border-gray-300 rounded-md w-full p-2"
+                  value={applicant_details?.PhoneNo}
+                  readOnly={false}
+                  onChange={e => setApplicationDetails(prev => ({ ...prev, PhoneNo: e.target.value }))}
+                />
+              )}
+              {!setApplicationDetails && (
+                <Input
+                  type="text"
+                  placeholder="Enter First Name (required)"
+                  className="ring-0 border-gray-300 rounded-md w-full p-2"
+                  value={applicant_details?.PhoneNo}
+                  readOnly={true}
+                />
               )}
             </div>
 
 
 
-          <Button
-            variant="secondary"
-            disabled={isLoadingPccRecords}
-            className="mx-2 text-slate-700 hover:bg-zinc-200 shadow-sm border-2"
-            onClick={() => fetchPccData()}
-          >
-            {isLoadingPccRecords ? 'Searching...' : 'Search PCC Details'}
-          </Button>
+            <Button
+              variant="secondary"
+              disabled={isLoadingPccRecords}
+              className="mx-2 text-slate-700 hover:bg-zinc-200 shadow-sm border-2"
+              onClick={() => fetchPccData()}
+            >
+              {isLoadingPccRecords ? 'Searching...' : 'Search PCC Details'}
+            </Button>
           </div>
         </div>
 
         <Card>
           <CardContent className="p-0">
-            {pccData && <div className="border-1 min-h-[100px] bg-slate-50">
-             <h1 className="text-center font-bold text-slate-500 py-2 flex justify-center gap-1">{pccData?.data != null ? <CheckCircle2 className="text-green-500"/> : <AlertCircle className="text-amber-500"/>}{pccData?.message}</h1>
-          
-              {pccData?.data ? <div className="container py-5">
-                <div className="row">
-                  <div className="col-md-4 flex text-sm items-center flex-col">
-                    <div className="flex flex-col gap-2">
-                      <span><b>PCC Status:</b> {pccData?.data?.AuthorityApproveStatus}</span>
-                      <span><b>Remarks:</b> {pccData?.data?.AuthorityApprovalRemarks}</span>
-                      <span><b>Authority Approve (Date):</b> {pccData?.data?.AuthorityApproveOn}</span>
-                      <span><b>Udin Number:</b> {pccData?.data?.UdinNo || "Certificate Not Generated"}</span>
-                    </div>
-                  </div>
-                </div>
-              </div> : <span className="flex justify-center text-sm">No PCC certificate has generated with this name and aadhaar</span>}
-            </div>}
 
+            <h1 className="text-center font-bold text-slate-500 py-2 flex justify-center gap-1">{pccData?.data?.length ? <> <CheckCircle2 className="text-green-500" />PCC Record found</>: <><AlertCircle className="text-amber-500" /> No record found.</>}</h1>
+
+            {pccData?.data?.length ? (
+              <div className="container py-5">
+                <div className="row">
+                    <div className="col-md-4 flex text-sm items-center flex-col">
+                      <div className="flex flex-col gap-2">
+                        <span><b>Name:</b> {pccData?.data[0]?.FirstName} {pccData?.data[0]?.LastName}</span>
+                        <span><b>Father/Mother Name:</b> {pccData?.data[0]?.FatherOrMotherName}</span>
+                        <span><b>Address:</b> {pccData?.data[0]?.AadhaarAddress}</span>
+                        <span><b>Pincode:</b> {pccData?.data[0]?.Pincode}</span>
+                        <span><b>City:</b> {pccData?.data[0]?.City}</span>
+                        <span><b>District:</b> {pccData?.data[0]?.District}</span>
+                       
+                        <span><b>Police Station:</b> {pccData?.data[0]?.PoliceStation}</span>
+                        <span><b>Adverse Report:</b> {pccData?.data[0]?.AdverseReport}</span>
+                        <span><b>Remarks:</b> {pccData?.data[0]?.Remarks}</span>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            ) : (
+              <span className="flex justify-center text-sm">
+                No PCC certificate has generated with this name and aadhaar
+              </span>
+            )}
 
           </CardContent>
         </Card>
