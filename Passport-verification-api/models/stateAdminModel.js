@@ -82,3 +82,20 @@ export async function getApplicationTimeLineModel(
         throw new Error("Database error: " + error.message);
     }
 }
+
+export async function getApplicationStatusByFileNumberModel(ApplicationId,) {
+    try {
+        const [rows] = await pool.query(
+            `CALL sp_getApplicationTrack(?)`,
+            [ApplicationId]
+        )
+
+        if (rows.length > 0) {
+            return [rows][0];
+        } else {
+            null;
+        }
+    } catch (error) {
+        throw new Error("Database error: " + error.message);
+    }
+}

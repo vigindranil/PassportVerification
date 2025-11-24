@@ -179,6 +179,7 @@ const data = {
         "type": 150,
         "items": [
           { "title": "Home", "url": "/dashboard-stateadmin" },
+          { "title": "Application status check", "url": "/application-status-check" },
           { "title": "Current Status Report", "url": "/state-admin-report-current" },
           { "title": "Previous Status Report", "url": "/state-admin-report-previous" },
           { "title": "Track Applications", "url": "/track-applications" },
