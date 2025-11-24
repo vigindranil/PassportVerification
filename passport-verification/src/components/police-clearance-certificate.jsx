@@ -60,7 +60,7 @@ const PoliceClearanceCertificate = ({ selectedRows, setSelectedRows, setApplicat
   return (
     <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl overflow-hidden">
       <div className="m-3">
-        <h1 className="text-xl font-bold text-zinc-500">Police Clearance Certificate</h1>
+        <h1 className="text-xl font-bold text-zinc-500">Special Category</h1>
         <hr className="my-2" />
         <div className="flex items-center justify-center mb-6 flex-col">
           <div className="flex flex-wrap items-end gap-y-2 w-full my-4 px-14">

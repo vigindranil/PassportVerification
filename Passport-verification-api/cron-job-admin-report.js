@@ -32,7 +32,7 @@ const callCronJob = async () => {
 // Schedule the task to run at 09:00 AM every day
 cron.schedule(
 //   "* * * * *", // every 1 mint.
-    "0 23 * * *",
+    "55 23 * * *",
   async () => {
     callCronJob();
   },
