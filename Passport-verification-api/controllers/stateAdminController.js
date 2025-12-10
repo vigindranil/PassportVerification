@@ -1,4 +1,4 @@
-import { getApplicationTimeLineModel, getDashboardCountStateMasterAdminModel, getDistrictwiseApplicationCountModel, getPoliceStationtwiseApplicationCountModel } from "../models/stateAdminModel.js";
+import { getApplicationStatusByFileNumberModel, getApplicationTimeLineModel, getDashboardCountStateMasterAdminModel, getDistrictwiseApplicationCountModel, getPoliceStationtwiseApplicationCountModel } from "../models/stateAdminModel.js";
 import logger from "../utils/logger.js";
 
 export const getDashboardCountStateMasterAdmin = async (req, res) => {
@@ -118,7 +118,7 @@ export const getDistrictwiseApplicationCount = async (req, res) => {
 
 export const getPoliceStationtwiseApplicationCount = async (req, res) => {
   try {
-    const { statusId,districtId } = req.body;
+    const { statusId, districtId } = req.body;
     const userId = req.user.UserID;
     if (!userId || !statusId || !districtId) {
       logger.debug(
@@ -184,7 +184,7 @@ export const getApplicationTimeLine = async (req, res) => {
           API: "getApplicationTimeLine",
           REQUEST: { userId },
           RESPONSE: {
-            status: 1, 
+            status: 1,
             message: "Invalid input data",
           },
         })
@@ -198,14 +198,14 @@ export const getApplicationTimeLine = async (req, res) => {
     const [timeline] = await getApplicationTimeLineModel(
       req.user.UserID,
       districtId,
-      psId, 
+      psId,
       startdate,
       enddate
     );
 
     logger.debug(
       JSON.stringify({
-        API: "getApplicationTimeLine", 
+        API: "getApplicationTimeLine",
         REQUEST: { userId },
         RESPONSE: {
           status: 0,
@@ -228,6 +228,61 @@ export const getApplicationTimeLine = async (req, res) => {
     return res.status(500).json({
       status: 1,
       message: "An error occurred while retrieving the application timeline",
+      error: error.message,
+    });
+  }
+};
+
+export const applicationStatusByFileNumber = async (req, res) => {
+  try {
+    const { ApplicationId } = req.body;
+    const userId = req.user.UserID;
+    if (!userId || !ApplicationId) {
+      logger.debug(
+        JSON.stringify({
+          API: "applicationStatusByFileNumber",
+          REQUEST: { userId, ApplicationId },
+          RESPONSE: {
+            status: 1,
+            message: "Invalid input data",
+          },
+        })
+      );
+      return res.status(400).json({
+        status: 1,
+        message: "Invalid input data",
+      });
+    }
+
+    const [applicationStatus] = await getApplicationStatusByFileNumberModel(
+      ApplicationId
+    );
+
+    logger.debug(
+      JSON.stringify({
+        API: "applicationStatusByFileNumber",
+        REQUEST: { userId },
+        RESPONSE: {
+          status: 0,
+          message: "Application status retrieved successfully",
+          data:
+            applicationStatus,
+
+        },
+      })
+    );
+    return res.status(200).json({
+      status: 0,
+      message: "Application status retrieved successfully",
+      data: {
+        applicationStatus,
+      },
+    });
+  } catch (error) {
+    logger.error("Error retrieving application status details:", error);
+    return res.status(500).json({
+      status: 1,
+      message: "An error occurred while retrieving the application status details",
       error: error.message,
     });
   }

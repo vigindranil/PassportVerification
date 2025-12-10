@@ -1,5 +1,9 @@
+import moment from "moment/moment.js";
+import { updateDocumentRestoreStatusByDocumentId } from "../models/restoreAndArchiveDocModel.js";
 import logger from "../utils/logger.js";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, HeadObjectCommand, RestoreObjectCommand } from "@aws-sdk/client-s3";
+import { getDocumentdoneBySP, updateDocumentarchiveStatus } from "../models/cronJobModel.js";
+import { archiveSPApprovedFileToGlacier } from "./eoController.js";
 
 /**
  * @swagger
@@ -93,7 +97,101 @@ export const fileUploadS3Bucket = async (req, res) => {
     return res.status(500).json({
       status: 1,
       message: "An error occurred while saving document upload",
-      error: error.message,
+      error: error?.message,
     });
+  }
+};
+
+export const restoreFile = async (req, res) => {
+  const { document_id, file_name } = req.body;
+
+  // Initialize S3 Client
+  const s3 = new S3Client({
+    region: process.env.AWS_REGION,
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+  });
+
+  // Step 2: Fetch object metadata to get the storage class
+  const headData = await s3.send(
+    new HeadObjectCommand({
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: file_name,
+    })
+  );
+  
+  const restoreHeader = headData?.Restore;
+  const isRestored = restoreHeader?.includes("ongoing-request=\"false\"");
+
+  if(headData?.StorageClass == "GLACIER") {
+    if (!restoreHeader){ // restore logic
+  
+      const restoreParams = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: file_name,
+        RestoreRequest: {
+          Days: 1,
+          GlacierJobParameters: {
+            Tier: "Standard", // Expedited(1-5 minutes) | Standard(3-5 hours) | Bulk(5-12 hours)
+          },
+        },
+      };
+  
+      await s3.send(new RestoreObjectCommand(restoreParams));
+
+      const response = await updateDocumentRestoreStatusByDocumentId(document_id, 11, 0);
+
+      return res.status(200).json({
+        status: 0,
+        message: "The file will be available in 3-5 hours"
+      });
+      
+    } else {
+      if (isRestored) {
+        const response = await updateDocumentRestoreStatusByDocumentId(document_id, 0, 1);
+        if(response == 0) {
+          return res.status(200).json({
+            status: 0,
+            restored: 1,
+            restoreHeader,
+            message: "File is successfully restored and temporarily available"
+          });
+        } else {
+          return res.status(200).json({
+            status: 1,
+            message: "Failed to restore please try again"
+          });
+        }
+      } else {
+        return res.status(200).json({
+          status: 0,
+          onProgress: 1,
+          message: "File restore is still in progress."
+        });
+      }
+    }
+  }
+}
+
+export const archiveDocumentToGlacier = async (req, res) => {
+ 
+  try {
+    const { fromDate, toDate } = req.body;
+    
+    const response = await getDocumentdoneBySP(fromDate, toDate); // this will return a array
+
+    if(response?.length){
+      for await (const document of response) {
+        const file_key = document?.DocumentPath?.split('https://wb-passport-verify.s3.ap-south-1.amazonaws.com/')[1];
+        if(!file_key) continue
+        const doc_id = await archiveSPApprovedFileToGlacier(document);
+        if(!doc_id) continue
+        const response = await updateDocumentarchiveStatus(doc_id);
+      }
+    }
+  } catch (error) {
+    console.error("Error executing autoOCApprovallUpdate:", error);
   }
 };

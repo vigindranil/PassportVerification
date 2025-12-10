@@ -126,7 +126,7 @@ const dashboardConfig = {
       key: "SPApprove",
       icon: FileCheck2,
       color: "teal",
-      link: "/completed-sp",
+      link: "/completed-sp-approved",
     },
   ],
   30: [ // OC/IC 
@@ -168,11 +168,18 @@ const dashboardConfig = {
       link: "/spl-application-sp",
     },
     {
-      title: "Approved/ Rejected by SP DIB/ DC SB",
-      key: "SPDone",
-      icon: CalendarClock,
-      color: "pink",
-      link: "/completed-sp",
+      title: "Approved by SP DIB/ DC SB",
+      key: "SPApprove",
+      icon: FileCheck2,
+      color: "green",
+      link: "/completed-sp-approved",
+    },
+    {
+      title: "Rejected by SP DIB/ DC SB",
+      key: "SPReject",
+      icon: Ban,
+      color: "red",
+      link: "/completed-sp-rejected",
     },
     {
       title: "Pending with the EO for more than 10 days for verification",
@@ -194,6 +201,13 @@ const dashboardConfig = {
       icon: ArrowRightToLine,
       color: "green",
       link: "/eoAcceptedFile",
+    },
+    {
+      title: "Transferred Applications",
+      key: "TransferApplicationCount",
+      icon: CircleDashed,
+      color: "purple",
+      link: "/transfer-application-count",
     },
     // { title: "Verification Pending (EO)", key: "EOStartedVerify", icon: ArrowRightToLine, color: "yellow", link: "/pendingVerificatonEO" },
     {

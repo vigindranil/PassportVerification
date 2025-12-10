@@ -23,8 +23,35 @@ export async function saveApplicationDetailsModel(
 ) {
   try {
     // Call the stored procedure with input parameters
-    const [rows] = await pool.query(
-      `CALL sp_saveApplicationDetailsv1(
+    // const [rows] = await pool.query(
+    //   `CALL sp_saveApplicationDetailsv1(
+    //     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    //   );`,
+    //   [
+    //     DPHqID,
+    //     psName,
+    //     fileNumber,
+    //     PVRequestID,
+    //     applicant_name,
+    //     gender,
+    //     dob,
+    //     place_birth,
+    //     spouse_name,
+    //     father_name,
+    //     PVInitiationDate,
+    //     PVRequeststatus,
+    //     PVStatusDate,
+    //     verificationAddress,
+    //     permanentAddress,
+    //     PVsequenceNO,
+    //     emailId,
+    //     phonenumber,
+    //     EntryUserID
+    //   ]
+    // );
+
+     const [rows] = await pool.query(
+      `CALL sp_saveApplicationDetailsv2(
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       );`,
       [

@@ -1,25 +1,23 @@
 import React from 'react'
-import Navbar from '@/components/navbar';
-import Sidebar from '@/components/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import PendingApplicationDatatable from '@/components/pendingApplication';
 import Image from 'next/image';
 import BackgroundImg from '@/assets/passport-bg.jpg';
+import BirthCertificateReport from '@/components/birth-certificate';
 
 export default function allFiles() {
   return (
-    <div className="flex h-full min-h-screen bg-gray-100 relative">
+    <div className="flex w-full h-full min-h-[100vh] bg-gray-100 relative">
       <Image
         src={BackgroundImg}
         alt="Background Image"
         objectFit="cover"
-        className="absolute opacity-10 inset-0 -z-2"
+        className="absolute opacity-15 inset-0 -z-2"
       />
       <div className="flex-1 flex flex-col overflow-hidden relative">
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 p-6 w-[80%] mx-auto">
           <CardContent>
             <Card>
-              <PendingApplicationDatatable heading='Completed Verification SP' status={80} />
+              <BirthCertificateReport />
             </Card>
           </CardContent>
         </main>

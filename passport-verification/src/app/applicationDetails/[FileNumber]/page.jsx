@@ -24,8 +24,12 @@ import Image from "next/image"
 import BackgroundImg from "@/assets/passport-bg.jpg"
 import ApplicationRecommendation from "@/components/application-recommendation"
 import { decrypt } from "@/utils/enc_aadhaar"
+import { useSearchParams } from 'next/navigation';
 
 export default function Page({ FileNumber }) {
+
+  const searchParams = useSearchParams();
+  const ActiveStatusId = searchParams.get('ActiveStatusId');
   const [applicationDetails, setApplicationDetails] = useState(null);
   const [isLoadingStatusHistrory, setIsLoadingStatusHistrory] = useState(true)
   const [isLoadingDocumentTable, setIsLoadingDocumentTable] = useState(true);
@@ -47,11 +51,11 @@ export default function Page({ FileNumber }) {
 
   const { toast } = useToast()
 
-  const fetchData = async (ApplicationId) => {
+  const fetchData = async (ApplicationId, ActiveStatusId) => {
     try {
       setIsLoadingStatusHistrory(true)
       setIsLoadingDocumentTable(true)
-      const response = await getDetailsApplicationId(ApplicationId);
+      const response = await getDetailsApplicationId(ApplicationId, ActiveStatusId);
       setApplicationDetails(response?.data);
       if (response?.data?.applicationDetails?.AadharNumber) {
         const decrypted = decrypt(response?.data?.applicationDetails?.AadharNumber);
@@ -207,7 +211,7 @@ export default function Page({ FileNumber }) {
 
   useEffect(() => {
     console.log("FileNumber:", FileNumber);
-    FileNumber && fetchData(FileNumber);
+    FileNumber && fetchData(FileNumber, ActiveStatusId);
 
     const district = Cookies.load('ds');
     const ps = Cookies.load('ps');
@@ -608,13 +612,19 @@ export default function Page({ FileNumber }) {
                           <div className="space-y-2">
                             <div className="flex flex-col">
                               <span className="text-sm font-medium text-gray-500">Aadhaar Verified Status</span>
-                              <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedstatus == 1 ? <Badge className="bg-emerald-400 hover:bg-emerald-400">matched</Badge> : <Badge className="bg-red-500 hover:bg-red-500">not machted</Badge>}</span>
+                              <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedstatus == 1 ? <Badge className="bg-emerald-400 hover:bg-emerald-400">matched</Badge> : applicationDetails?.applicationDetails?.AadharVerifiedstatus == 2 ? <Badge className="bg-red-500 hover:bg-red-500">not machted</Badge> : <Badge className="bg-blue-500 hover:bg-blue-500">Verified by m-Aadhaar</Badge>}</span>
                             </div>
                           </div>
                           <div className="space-y-2">
                             <div className="flex flex-col">
                               <span className="text-sm font-medium text-gray-500">Aadhaar Verified By</span>
                               <span className="text-base">{applicationDetails?.applicationDetails?.AadharVerifiedby}</span>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <div className="flex flex-col">
+                              <span className="text-sm font-medium text-gray-500">Aadhaar Remarks</span>
+                              <span className="text-base">{applicationDetails?.applicationDetails?.AadharRemarks}</span>
                             </div>
                           </div>
                         </div>

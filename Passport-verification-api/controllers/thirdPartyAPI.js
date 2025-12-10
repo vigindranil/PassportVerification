@@ -4,6 +4,7 @@ import axios from "axios";
 import https from "https";
 import crypto from "crypto";
 import {
+  getApplicationStatusBetweenDaterangeModel,
   savethirdpartyVerifyStatus,
   setExternelApiLog,
 } from "../models/applicationModel.js";
@@ -255,7 +256,11 @@ export const getKolkataPoliceCriminalRecordSearchv4 = async (req, res) => {
     pageno,
   } = req.body;
 
-  const isLogSaved = await saveCriminalStatusLog("Kolkata police records", `${name_accused || ""}-${criminal_aliases_name || ""}`, req?.user?.UserID);
+  const isLogSaved = await saveCriminalStatusLog(
+    "Kolkata police records",
+    `${name_accused || ""}-${criminal_aliases_name || ""}`,
+    req?.user?.UserID
+  );
 
   // if(isLogSaved == 0){
 
@@ -321,7 +326,11 @@ export const getPCCCrimeRecordSearch = async (req, res) => {
     lname: lname,
   });
 
-  await saveCriminalStatusLog("CID criminal records", `${fname || ""} ${lname || ""}`, req?.user?.UserID);
+  await saveCriminalStatusLog(
+    "CID criminal records",
+    `${fname || ""} ${lname || ""}`,
+    req?.user?.UserID
+  );
 
   let config = {
     method: "post",
@@ -370,12 +379,16 @@ export const getPCCApplicationDetails = async (req, res) => {
   formData.append("ApplicantName", applicant_name);
   formData.append("ApplicantAadhaar", applicant_aadhaar);
 
-  await saveCriminalStatusLog("PCC criminal records", applicant_name, req?.user?.UserID);
+  // await saveCriminalStatusLog("PCC criminal records", applicant_name, req?.user?.UserID);
   let config = {
     method: "post",
     maxBodyLength: Infinity,
-    url: "https://wbpcb.nltr.org/WBPCCServiceV1/api/GetPassportPCCApplicationDetails",
+    url: "http://wbpcb.nltr.org/WBPCCServiceV1/api/GetPassportPCCApplicationDetails",
     data: formData,
+    // headers: formData.getHeaders(),
+    // httpsAgent: new https.Agent({
+    //   secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+    // }),
   };
 
   axios
@@ -389,7 +402,58 @@ export const getPCCApplicationDetails = async (req, res) => {
       });
     })
     .catch((error) => {
-      // console.log(error);
+      console.log(error);
+      return res.status(400).json({
+        status: 0,
+        message: "Failed to fetch details",
+        data: null,
+      });
+    });
+};
+
+export const searchSuspectedPerson = async (req, res) => {
+  const { name, contact_no } = req.body;
+
+  if (!contact_no && !name) {
+    return res
+      .status(400)
+      .json({ error: "Please enter Contact number or applicant name." });
+  }
+
+  // Prepare FormData exactly like curl
+  let formData = new FormData();
+  formData.append("Name", name || "");
+  formData.append("ContactNo", contact_no);
+  formData.append("RequestDomain", "wbpassportverify.link");
+  formData.append("RequestUser", "1");
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    // url: "http://115.187.62.16:3700/wbpccservice/api/searchSuspectedPersonInfoByNameAndContactNo",
+    url: "https://pcc.wb.gov.in/WBPCCServiceV2/api/searchSuspectedPersonInfoByNameAndContactNo",
+    headers: {
+      APIToken: "PASS@20112025$!#",
+      "Content-Type": "application/json",
+    },
+    data: formData,
+    httpsAgent: new https.Agent({
+      secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+      rejectUnauthorized: false, // Some servers need this too
+    }),
+  };
+
+  axios
+    .request(config)
+    .then((response) => {
+      return res.status(200).json({
+        status: 1,
+        message: "Data fetched successfully",
+        data: response.data,
+      });
+    })
+    .catch((error) => {
+      console.log("Error :", error);
       return res.status(400).json({
         status: 0,
         message: "Failed to fetch details",
@@ -544,6 +608,53 @@ export const getMadhyamikCertificate = async (req, res) => {
       status: 1,
       message: "Certificate not found",
       data: null,
+    });
+  }
+};
+
+export const getApplicationStatusBetweenDaterange = async (req, res) => {
+  const { StatusId, StartDate, EndDate, Page, Limit } = req.body;
+
+  try {
+    if (!StartDate) {
+      return res.status(400).json({
+        status: 1,
+        message: "Invalid Start Date.",
+      });
+    } else if (!EndDate) {
+      return res.status(400).json({
+        status: 1,
+        message: "Invalid End Date.",
+      });
+    } else if (!Limit) {
+      return res.status(400).json({
+        status: 1,
+        message: "Invalid Limit",
+      });
+    }
+
+    const result = await getApplicationStatusBetweenDaterangeModel(
+      StatusId,
+      StartDate,
+      EndDate,
+      Page,
+      Limit
+    );
+
+    return res.status(200).json({
+      status: 0,
+      message: "data fetch susccfully",
+      total_records: result[0].TotalApplicationCount || 0,
+      page_no: Page || 0,
+      limit: Limit || 0,
+      data: result || [],
+    });
+  } catch (error) {
+    console.error("Error in getcount:", error.message);
+    return res.status(500).json({
+      status: 1,
+      message: "Internal server error",
+      error: error.message,
     });
   }
 };

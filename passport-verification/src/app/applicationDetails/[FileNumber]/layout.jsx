@@ -4,8 +4,8 @@ import Loading from "./loading";
 import SidebarLayout from "@/components/sidebar-layout";
 import Cookies from 'react-cookies'
 
-const layout = async ({ params }) => {
-    const { FileNumber } = await params;
+const layout = ({ params }) => {
+    const { FileNumber } = params;
     const type = Cookies.load('type');
 
     const breadcrumb = [

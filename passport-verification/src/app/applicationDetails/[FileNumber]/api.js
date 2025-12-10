@@ -1,9 +1,10 @@
 import { postRequest } from "@/app/commonAPI";
 
-export const getDetailsApplicationId = async (applicationId) => {
+export const getDetailsApplicationId = async (applicationId, ActiveStatusId=1) => {
   try {
     return await postRequest("application/detailsapplicationId", {
       applicationId: applicationId,
+      ActiveStatusId: ActiveStatusId,
     });
   } catch (error) {
     console.log("Error:", error);
@@ -141,5 +142,33 @@ export const getPCCApplicationDetails = async (applicant_name, applicant_aadhaar
   } catch (error) {
     console.log("Error:", error);
     return null;
+  }
+};
+
+export const getPCCApplicationDetailsV2 = async (applicant_name, applicant_aadhaar) => {
+  try {
+    return await postRequest("third-party/getPCCApplicationDetailsV2", {
+      // applicant_name: "Tanmay",
+      // applicant_aadhaar: "6806",
+      name: applicant_name,
+      contact_no: applicant_aadhaar,
+    });
+  } catch (error) {
+    console.log("Error:", error);
+    return null;
+  }
+};
+
+export const restoreFile = async (
+  document_id,
+  file_name
+) => {
+  try {
+    return await postRequest("s3-upload/restoreFile", {
+      document_id,
+      file_name
+    });
+  } catch (error) {
+    return error.message;
   }
 };

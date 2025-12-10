@@ -18,7 +18,7 @@ import { sendSMSInternally } from "./thirdPartyAPI.js";
 
 export const getApplicationDetails = async (req, res) => {
   try {
-    const { applicationId } = req.body;
+    const { applicationId, ActiveStatusId } = req.body;
     const entryUserId = req.user.UserID;
     // console.log("entryUserId", entryUserId);
     const filepath = process.env.FILE_UPLOAD_PATH;
@@ -41,16 +41,22 @@ export const getApplicationDetails = async (req, res) => {
 
     const applicationDetails = await getApplicationDetailsByApplicationId(
       applicationId,
-      entryUserId
+      entryUserId,
+      ActiveStatusId
     );
 
     const documents = await getDocumentApplicationDetailsById(
       applicationId,
-      entryUserId
+      entryUserId,
+      ActiveStatusId
     );
+
+
+
     const status = await getApplicationStatusHistoryById(
       applicationId,
-      entryUserId
+      entryUserId,
+      ActiveStatusId
     );
 
     const ipaddress = "test";
@@ -76,7 +82,7 @@ export const getApplicationDetails = async (req, res) => {
             status: status || [],
             filepath,
           },
-        },
+        }, 
       })
     );
     return res.status(200).json({
@@ -365,7 +371,7 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
 
   export const getAadharDetailsByapplicationId = async (req, res) => {
     try {
-      const { ApplicationId  } = req.body;
+      const { ApplicationId, ActiveStatusId } = req.body;
       const EntryuserId  = req.user.UserID; // Extract logged-in user ID
   
       if (!ApplicationId || !EntryuserId) {
@@ -375,7 +381,7 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
         });
       }
   
-      const applicationStatuses = await getAadharDetailsByapplicationIdModel(ApplicationId , EntryuserId );
+      const applicationStatuses = await getAadharDetailsByapplicationIdModel(ApplicationId , EntryuserId, ActiveStatusId );
   
       return res.status(200).json({
         status: 0,

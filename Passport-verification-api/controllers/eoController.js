@@ -8,8 +8,14 @@ import {
 } from "../models/eoModel.js";
 import { saveTransactionHistory } from "../models/logModel.js";
 import logger from "../utils/logger.js";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { sendSMSInternally } from "./thirdPartyAPI.js";
+import zlib from "zlib";
+import {
+  S3Client,
+  PutObjectCommand,
+  CopyObjectCommand,
+  HeadObjectCommand
+} from "@aws-sdk/client-s3";
 
 export const saveDocumentUpload = async (req, res) => {
   try {
@@ -109,15 +115,21 @@ export const saveDocumentUpload = async (req, res) => {
       },
     });
 
-    // Check if the S3 bucket exists
+    // Compress the file buffer using gzip
+    const compressedBuffer = zlib.gzipSync(req.file.buffer);
 
+    // Check if the S3 bucket exists
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: `${ApplicationId}-${DocumentTypeId}`, // Unique name for the file
-      Body: req.file.buffer,
+      Body: compressedBuffer,
       ContentType: req.file.mimetype || "application/octet-stream", // Set content type dynamically
       ACL: "public-read", // This allows the file to be publicly readable
+      StorageClass: "INTELLIGENT_TIERING",
+      ContentEncoding: "gzip", // Important to mark it as compressed
+      ServerSideEncryption: "AES256",
     };
+
     try {
       await s3.send(new PutObjectCommand(params));
     } catch (error) {
@@ -577,5 +589,51 @@ export const getCountEO = async (req, res) => {
       message: "An error occurred while retrieving application statuses.",
       error: error.message,
     });
+  }
+};
+
+export const archiveSPApprovedFileToGlacier = async (document, STORAGE_CLASS = "GLACIER") => {
+  try {
+    const FILE_KEY = document?.DocumentPath?.split('https://wb-passport-verify.s3.ap-south-1.amazonaws.com/')[1];
+    console.log(FILE_KEY);
+    if (!FILE_KEY) {
+      return null;
+    }
+
+    const s3 = new S3Client({
+      region: process.env.AWS_REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      },
+    });
+
+    const headData = await s3.send(
+      new HeadObjectCommand({
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: FILE_KEY,
+      })
+    );
+
+    if(headData?.StorageClass == "GLACIER"){
+      return document?.DocumentId;
+    }
+
+    const copyCommand = new CopyObjectCommand({
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: FILE_KEY,
+      CopySource: `/${process.env.AWS_BUCKET_NAME}/${FILE_KEY}`,
+      StorageClass: STORAGE_CLASS,
+      MetadataDirective: "COPY",
+    });
+
+    await s3.send(copyCommand);
+
+    return document?.DocumentId;
+
+  } catch (error) {
+    console.log(error);
+    
+    return null;
   }
 };

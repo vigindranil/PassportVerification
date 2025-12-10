@@ -26,6 +26,7 @@ import s3uploadRoutes from "./routes/s3-upload.js";
 import s3downloadRoutes from "./routes/s3-download.js";
 import stateAdminRoutes from "./routes/stateAdmin.js";
 import updateAadhaarRoutes from "./routes/aadhaarUpdate.js";
+import testRoutes from "./routes/test.js";
 
 const app = express();
 const port = 3003;
@@ -80,6 +81,7 @@ app.use("/api/sp", verifyToken, transferapplication)
 app.use("/api/documents", verifyToken, requireDocument)
 app.use("/api/stateadmin", verifyToken, stateAdminRoutes)
 app.use("/api/update-aadhaar", updateAadhaarRoutes)
+app.use("/api/test", testRoutes)
 app.use(
   "/api/fileImport",
   verifyToken,

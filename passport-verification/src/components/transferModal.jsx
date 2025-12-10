@@ -51,7 +51,9 @@ export function TransferModal({ isOpen, onClose, fileNumber, applicantName, onTr
 
     const transferapplication = async () => {
       try {
-        onTransfer(fileNumber, remarks, selectedDistrict, selectedPoliceStation)
+        await onTransfer(fileNumber, remarks, selectedDistrict, selectedPoliceStation)
+        onClose()
+
       } catch (error) {
         console.log("Error transferring application:", error)
       }

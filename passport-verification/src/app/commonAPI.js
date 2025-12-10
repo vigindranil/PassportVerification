@@ -37,6 +37,41 @@ export const postRequest = async (url, request_body = {}) => {
   }
 };
 
+export const postRequestThirdParty = async (url, request_body = {}) => {
+  try {
+    const authToken = Cookies.load("third_party_tk");
+
+    const HEADERS = {
+      Authorization: `Bearer ${authToken}`,
+      "Content-Type": "application/json",
+    };
+
+    const requestOptions = {
+      method: "POST",
+      headers: new Headers(HEADERS),
+      body: JSON.stringify(request_body),
+      redirect: "follow",
+    };
+
+    const response = await fetch(`${BASE_URL}${url}`, requestOptions);
+
+    if (response?.status === 401) {
+      // Cookies.remove("data");
+      // Cookies.remove("type");
+      // Cookies.remove("name");
+      // Cookies.remove("ps");
+      // Cookies.remove("district");
+      // Cookies.remove("ds_id");
+      // window.location.href = "/session-expired";
+    } else {
+      const result = await response.json(); // Assuming the API returns JSON
+      return result;
+    }
+  } catch (error) {
+    throw error.message; // Propagate error to the caller
+  }
+};
+
 export const logout = async () => {
   try {
     const authToken = Cookies.load("data");
