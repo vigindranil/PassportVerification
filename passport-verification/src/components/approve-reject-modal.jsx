@@ -89,7 +89,7 @@ export function FileAcceptModal({ isOpen, onClose, applicationId, onAccept, type
         <DialogHeader>
           <DialogTitle className="text-2xl text-center text-slate-600">
             <CircleHelp size="60" className="mx-auto text-blue-200" />
-            Are you sure you want to {type == "approve" ? "recommend for approval" : type == "reject" ? "not recommend for approval" : type == "send-back-to-eo" ? "Send back to EO" : "forward to sp"} ?
+            Are you sure you want to {type == "approve" ? "recommend for approval" : type == "reject" ? "not recommend for approval" : type == "send-back-to-eo" ? "Send back to EO" : type == "revoke" ? "send back this application" : "forward to sp"} ?
           </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-4 p-4">
