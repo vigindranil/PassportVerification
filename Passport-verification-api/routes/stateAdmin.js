@@ -1,5 +1,5 @@
 import express from 'express';
-import { applicationStatusByFileNumber, getApplicationTimeLine, getDashboardCountStateMasterAdmin, getDistrictwiseApplicationCount, getPoliceStationtwiseApplicationCount } from '../controllers/stateAdminController.js';
+import { applicationStatusByFileNumber, getApplicationTimeLine, getDashboardCountStateMasterAdmin, getDistrictwiseApplicationCount, getPoliceStationtwiseApplicationCount, showDistrictNodal } from '../controllers/stateAdminController.js';
 
 
 
@@ -9,5 +9,7 @@ router.post('/getDistrictwiseApplicationCount', getDistrictwiseApplicationCount)
 router.post('/getPoliceStationtwiseApplicationCount', getPoliceStationtwiseApplicationCount)
 router.post('/getApplicationTimeLine', getApplicationTimeLine)
 router.post('/applicationStatusByFileNumber', applicationStatusByFileNumber)
+router.post('/showDistrictNodal', showDistrictNodal)
+
 
 export default router;

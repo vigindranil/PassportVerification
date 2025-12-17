@@ -99,3 +99,19 @@ export async function getApplicationStatusByFileNumberModel(ApplicationId,) {
         throw new Error("Database error: " + error.message);
     }
 }
+
+
+export async function showDistrictNodalModel(
+  EntryUserID
+) {
+  try {
+    const [rows] = await pool.query('CALL sp_showDistrictNodal(?)', [EntryUserID]);
+    // console.log(rows);
+    
+    return rows;
+  } catch (error) {
+    throw new Error('Database error: ' + error.message);
+  }
+}
+
+

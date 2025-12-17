@@ -180,6 +180,7 @@ const data = {
         "items": [
           { "title": "Home", "url": "/dashboard-stateadmin" },
           { "title": "Application status check", "url": "/application-status-check" },
+          { "title": "Create District User", "url": "/createDistrictUserForm" },
           { "title": "Current Status Report", "url": "/state-admin-report-current" },
           { "title": "Previous Status Report", "url": "/state-admin-report-previous" },
           { "title": "Track Applications", "url": "/track-applications" },
