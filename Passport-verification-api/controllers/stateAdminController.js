@@ -1,4 +1,4 @@
-import { getApplicationStatusByFileNumberModel, getApplicationTimeLineModel, getDashboardCountStateMasterAdminModel, getDistrictwiseApplicationCountModel, getPoliceStationtwiseApplicationCountModel } from "../models/stateAdminModel.js";
+import { getApplicationStatusByFileNumberModel, getApplicationTimeLineModel, getDashboardCountStateMasterAdminModel, getDistrictwiseApplicationCountModel, getPoliceStationtwiseApplicationCountModel, showDistrictNodalModel } from "../models/stateAdminModel.js";
 import logger from "../utils/logger.js";
 
 export const getDashboardCountStateMasterAdmin = async (req, res) => {
@@ -284,6 +284,62 @@ export const applicationStatusByFileNumber = async (req, res) => {
       status: 1,
       message: "An error occurred while retrieving the application status details",
       error: error.message,
+    });
+  }
+};
+
+
+export const showDistrictNodal = async (req, res) => {
+  try {
+    const ipaddress = "test";
+    const macAddress = "test";
+    const Longitude = "test";
+    const Latitude = "test";
+    const OperationName = "showDistrictNodal";
+    const json = "{}";
+    //  const saveTransaction = await saveTransactionHistory(ipaddress , macAddress , Longitude , Latitude , 0,OperationName ,json ,EntryUserId)
+    const [result] = await showDistrictNodalModel(req.user.UserID);
+    // console.log("result", result);
+
+    if (result?.length !== 0) {
+      logger.debug(
+        JSON.stringify({
+          API: "showDistrictNodal",
+          REQUEST: { EntryuserId: req.user.UserID },
+          RESPONSE: {
+            status: 0,
+            message: "Data fetched successfully",
+            data: result,
+          },
+        })
+      );
+      return res.status(200).json({
+        status: 0,
+        message: "Data fetched successfully",
+        data: result,
+      });
+    } else {
+      logger.debug(
+        JSON.stringify({
+          API: "showDistrictNodal",
+          REQUEST: { EntryuserId: req.user.UserID },
+          RESPONSE: {
+            status: 1,
+            message: "No data found",
+          },
+        })
+      );
+      return res.status(400).json({
+        status: 1,
+        message: "No data found",
+      });
+    }
+  } catch (error) {
+    logger.error("Error fetching :", error);
+    res.status(500).json({
+      status: 1,
+      message: "An error occurred",
+      data: null,
     });
   }
 };
