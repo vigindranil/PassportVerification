@@ -116,7 +116,9 @@ const UserManagement = () => {
     }
 
     const filteredData = users?.filter((row) =>
-        Object.values(row).some((value) => value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())),
+        [row.FullName, row.DistrictName].some((value) =>
+            value?.toString()?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+        ),
     )
 
     const totalPages = Math?.ceil(filteredData?.length / itemsPerPage)
@@ -662,7 +664,7 @@ const UserManagement = () => {
                                             <TableCell>
                                                 <p>{row?.userType || "N/A"}</p>
                                             </TableCell>
-                                            {/* <TableCell>
+                                            <TableCell>
                                                 <div className="flex space-x-1">
                                                     {row.IsActive == 0 && (
                                                         <Button
@@ -685,7 +687,7 @@ const UserManagement = () => {
                                                         </Button>
                                                     )}
                                                 </div>
-                                            </TableCell> */}
+                                            </TableCell>
                                         </TableRow>
                                     ))
                                 ) : (
