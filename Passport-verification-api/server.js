@@ -27,6 +27,7 @@ import s3downloadRoutes from "./routes/s3-download.js";
 import stateAdminRoutes from "./routes/stateAdmin.js";
 import updateAadhaarRoutes from "./routes/aadhaarUpdate.js";
 import testRoutes from "./routes/test.js";
+import ftpUploadRoutes from "./routes/ftp-upload.js";
 
 const app = express();
 const port = 3003;
@@ -66,6 +67,7 @@ app.use("/api/third-party/v2", thirtPartyVerifyToken, thirdPartyRoutes);
 app.use("/api/third-party/", verifyToken, thirdPartyRoutes);
 app.use("/api/s3-upload", upload.single("file"), s3uploadRoutes);
 app.use("/api/s3-download", s3downloadRoutes);
+app.use("/api/ftp", upload.array("file"), ftpUploadRoutes);
 
 //private Route
 app.use("/api/auth/", verifyToken, authRoutes);

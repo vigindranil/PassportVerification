@@ -41,65 +41,13 @@ export const saveDocumentUpload = async (req, res) => {
     const file = req.file;
     const filepath = req?.file_name;
 
-    // console.log("req.file",req.file)
     if (!file) {
-      // logger.debug(
-      //   JSON.stringify({
-      //     API: "saveDocumentUpload",
-      //     REQUEST: {
-      //       DocDetailsID,
-      //       ApplicationId,
-      //       filepath,
-      //       DocumentRemarks,
-      //       DocumentTypeId,
-      //       IdNumber,
-      //       IdNumber2,
-      //       IdNumber3,
-      //       IdNumber4,
-      //       IdNumber5,
-      //       ipaddress,
-      //       MacAddress,
-      //       longitude,
-      //       latitude,
-      //       DeviceId,
-      //       appDocId,
-      //       EntryUserId,
-      //     },
-      //     RESPONSE: { status: 1, message: "No file uploaded" },
-      //   })
-      // );
+
       return res.status(400).json({ status: 1, message: "No file uploaded" });
     }
 
     if (!ApplicationId || !DocumentTypeId || !EntryUserId) {
-      // logger.debug(
-      //   JSON.stringify({
-      //     API: "saveDocumentUpload",
-      //     REQUEST: {
-      //       DocDetailsID,
-      //       ApplicationId,
-      //       filepath,
-      //       DocumentRemarks,
-      //       DocumentTypeId,
-      //       IdNumber,
-      //       IdNumber2,
-      //       IdNumber3,
-      //       IdNumber4,
-      //       IdNumber5,
-      //       ipaddress,
-      //       MacAddress,
-      //       longitude,
-      //       latitude,
-      //       DeviceId,
-      //       appDocId,
-      //       EntryUserId,
-      //     },
-      //     RESPONSE: {
-      //       status: 1,
-      //       message: "Invalid input data",
-      //     },
-      //   })
-      // );
+
       return res.status(400).json({
         status: 1,
         message: "Invalid input data",
@@ -187,35 +135,8 @@ export const saveDocumentUpload = async (req, res) => {
       json,
       EntryUserId
     );
-    console.log("Document upload",result)
+    console.log("Document upload", result)
     if (result == 0) {
-      // logger.debug(
-      //   JSON.stringify({
-      //     API: "saveDocumentUpload",
-      //     REQUEST: {
-      //       ApplicationId,
-      //       filepath,
-      //       DocumentRemarks,
-      //       DocumentTypeId,
-      //       IdNumber,
-      //       IdNumber2,
-      //       IdNumber3,
-      //       IdNumber4,
-      //       IdNumber5,
-      //       ipaddress,
-      //       MacAddress,
-      //       longitude,
-      //       latitude,
-      //       DeviceId,
-      //       appDocId,
-      //       EntryUserId,
-      //     },
-      //     RESPONSE: {
-      //       status: 0,
-      //       message: "Document uploaded successfully",
-      //     },
-      //   })
-      // );
 
       return res.status(200).json({
         status: 0,
@@ -223,67 +144,12 @@ export const saveDocumentUpload = async (req, res) => {
         fileUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`,
       });
     } else if (result == 3) {
-      // logger.debug(
-      //   JSON.stringify({
-      //     API: "saveDocumentUpload",
-      //     REQUEST: {
-      //       ApplicationId,
-      //       DocumentRemarks,
-      //       filepath,
-      //       DocumentTypeId,
-      //       IdNumber,
-      //       IdNumber2,
-      //       IdNumber3,
-      //       IdNumber4,
-      //       IdNumber5,
-      //       ipaddress,
-      //       MacAddress,
-      //       longitude,
-      //       latitude,
-      //       DeviceId,
-      //       appDocId,
-      //       EntryUserId,
-      //     },
-      //     RESPONSE: {
-      //       status: 1,
-      //       message: "Failed to upload document",
-      //     },
-      //   })
-      // );
 
       return res.status(403).json({
         status: 1,
         message: "User does not have permission to upload documents",
       });
     } else {
-      // logger.debug(
-      //   JSON.stringify({
-      //     API: "saveDocumentUpload",
-      //     REQUEST: {
-      //       ApplicationId,
-      //       DocumentRemarks,
-      //       filepath,
-      //       DocumentTypeId,
-      //       IdNumber,
-      //       IdNumber2,
-      //       IdNumber3,
-      //       IdNumber4,
-      //       IdNumber5,
-      //       ipaddress,
-      //       MacAddress,
-      //       longitude,
-      //       latitude,
-      //       DeviceId,
-      //       appDocId,
-      //       EntryUserId,
-      //     },
-      //     RESPONSE: {
-      //       status: 1,
-      //       message: "Failed to upload document",
-      //     },
-      //   })
-      // );
-
       return res.status(400).json({
         status: 1,
         message: "Failed to upload document",
@@ -615,7 +481,7 @@ export const archiveSPApprovedFileToGlacier = async (document, STORAGE_CLASS = "
       })
     );
 
-    if(headData?.StorageClass == "GLACIER"){
+    if (headData?.StorageClass == "GLACIER") {
       return document?.DocumentId;
     }
 
@@ -633,7 +499,7 @@ export const archiveSPApprovedFileToGlacier = async (document, STORAGE_CLASS = "
 
   } catch (error) {
     console.log(error);
-    
+
     return null;
   }
 };
