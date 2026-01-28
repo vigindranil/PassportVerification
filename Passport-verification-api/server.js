@@ -90,6 +90,11 @@ app.use(
   excelupload.single("file"),
   fileImportRoutes
 );
+app.use(
+  "/api/fileImportV2",
+  excelupload.single("file"),
+  fileImportRoutes
+);
 
 // test route
 app.use("/test", (req, res) => {

@@ -9,7 +9,7 @@ import {
 import { saveTransactionHistory } from "../models/logModel.js";
 import logger from "../utils/logger.js";
 import { sendSMSInternally } from "./thirdPartyAPI.js";
-import zlib from "zlib";
+import sharp from "sharp";
 import {
   S3Client,
   PutObjectCommand,
@@ -39,22 +39,18 @@ export const saveDocumentUpload = async (req, res) => {
 
     const EntryUserId = req.user.UserID;
     const file = req.file;
-    const filepath = req?.file_name;
 
     if (!file) {
-
       return res.status(400).json({ status: 1, message: "No file uploaded" });
     }
 
     if (!ApplicationId || !DocumentTypeId || !EntryUserId) {
-
       return res.status(400).json({
         status: 1,
         message: "Invalid input data",
       });
     }
 
-    // Initialize S3 Client
     const s3 = new S3Client({
       region: process.env.AWS_REGION,
       credentials: {
@@ -63,18 +59,35 @@ export const saveDocumentUpload = async (req, res) => {
       },
     });
 
-    // Compress the file buffer using gzip
-    const compressedBuffer = zlib.gzipSync(req.file.buffer);
+    /* ================= ONLY CHANGE: IMAGE COMPRESSION ================= */
+    let uploadBuffer = file.buffer;
+    let contentType = file.mimetype;
+    let fileKey = `${ApplicationId}-${DocumentTypeId}`;
 
-    // Check if the S3 bucket exists
+    if (file.mimetype?.startsWith("image/")) {
+      uploadBuffer = await sharp(file.buffer)
+        .resize({
+          width: 1600,
+          withoutEnlargement: true,
+        })
+        .webp({
+          quality: 45,
+          effort: 6,
+        })
+        .toBuffer();
+
+      contentType = "image/webp";
+      fileKey = `${ApplicationId}-${DocumentTypeId}`;
+    }
+
+    /* ================= S3 UPLOAD (UNCHANGED LOGIC) ================= */
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
-      Key: `${ApplicationId}-${DocumentTypeId}`, // Unique name for the file
-      Body: compressedBuffer,
-      ContentType: req.file.mimetype || "application/octet-stream", // Set content type dynamically
-      ACL: "public-read", // This allows the file to be publicly readable
+      Key: fileKey,
+      Body: uploadBuffer,
+      ContentType: contentType || "application/octet-stream",
+      ACL: "public-read",
       StorageClass: "INTELLIGENT_TIERING",
-      ContentEncoding: "gzip", // Important to mark it as compressed
       ServerSideEncryption: "AES256",
     };
 
@@ -85,12 +98,12 @@ export const saveDocumentUpload = async (req, res) => {
       throw new Error("Failed to upload file to S3");
     }
 
-    const OperationName = "saveDocumentUpload";
-    const json = "{}";
+    const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`;
+
     const result = await saveDocumentUploadModel(
       DocDetailsID,
       ApplicationId,
-      `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`,
+      fileUrl,
       DocumentRemarks,
       DocumentTypeId,
       IdNumber,
@@ -106,45 +119,25 @@ export const saveDocumentUpload = async (req, res) => {
       appDocId,
       EntryUserId
     );
-    console.log("payload", {
-      DocDetailsID,
-      ApplicationId,
-      imgUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`,
-      DocumentRemarks,
-      DocumentTypeId,
-      IdNumber,
-      IdNumber2,
-      IdNumber3,
-      IdNumber4,
-      IdNumber5,
-      DeviceId,
-      MacAddress,
-      longitude,
-      latitude,
-      ipaddress,
-      appDocId,
-      EntryUserId
-    })
+
     await saveTransactionHistory(
       ipaddress,
       MacAddress,
       longitude,
       latitude,
       0,
-      OperationName,
-      json,
+      "saveDocumentUpload",
+      "{}",
       EntryUserId
     );
-    console.log("Document upload", result)
-    if (result == 0) {
 
+    if (result == 0) {
       return res.status(200).json({
         status: 0,
         message: "Document uploaded successfully",
-        fileUrl: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`,
+        fileUrl,
       });
     } else if (result == 3) {
-
       return res.status(403).json({
         status: 1,
         message: "User does not have permission to upload documents",
@@ -156,7 +149,6 @@ export const saveDocumentUpload = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error)
     console.error("Error saving document upload:", error);
     return res.status(500).json({
       status: 1,
