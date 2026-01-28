@@ -9,6 +9,7 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import crypto from "crypto";
 import zlib from "zlib";
+import sharp from "sharp";
 
 export const fileUploadS3Bucket = async (req, res) => {
   try {
@@ -18,7 +19,7 @@ export const fileUploadS3Bucket = async (req, res) => {
       AWS_ACCESS_KEY_ID,
       AWS_SECRET_ACCESS_KEY,
       AWS_BUCKET_NAME,
-      STORAGE_CLASS = "INTELLIGENT_TIERING" || "STANDARD_IA" || "STANDARD" || "DEEP_ARCHIVE" || "GLACIER",
+      STORAGE_CLASS = "INTELLIGENT_TIERING",
     } = req.body;
 
     if (!req.file || !req.file.buffer) {
@@ -28,15 +29,32 @@ export const fileUploadS3Bucket = async (req, res) => {
       });
     }
 
-    
-    // Compress the file buffer using gzip
-    const compressedBuffer = zlib.gzipSync(req.file.buffer);
-    const decompressedBuffer = zlib.gunzipSync(compressedBuffer);
+    let outputBuffer = req.file.buffer;
+    let contentType = req.file.mimetype;
 
-    // 4. HASH: SHA-256 of decompressed file
-    const fileHash = crypto.createHash("sha256").update(decompressedBuffer).digest("hex");
+    /* ================= IMAGE SUPER COMPRESSION ================= */
+    if (contentType.startsWith("image/")) {
+      outputBuffer = await sharp(req.file.buffer)
+        .resize({
+          width: 1600,        // 🔥 reduce resolution (optional)
+          withoutEnlargement: true,
+        })
+        .webp({
+          quality: 45,        // 🔥 VERY strong compression
+          effort: 6,
+        })
+        .toBuffer();
 
-    // Initialize S3 Client
+      contentType = "image/webp";
+    }
+
+    /* ================= FILE HASH ================= */
+    const fileHash = crypto
+      .createHash("sha256")
+      .update(outputBuffer)
+      .digest("hex");
+
+    /* ================= S3 UPLOAD ================= */
     const s3 = new S3Client({
       region: AWS_REGION,
       credentials: {
@@ -45,35 +63,34 @@ export const fileUploadS3Bucket = async (req, res) => {
       },
     });
 
+    const keyName = contentType === "image/webp"
+      ? FILE_NAME.replace(/\.[^/.]+$/, ".webp")
+      : FILE_NAME;
+
     const params = {
       Bucket: AWS_BUCKET_NAME,
-      Key: `${FILE_NAME}`, // Optional: add .gz extension
-      Body: compressedBuffer,
-      ContentType: req.file.mimetype || "application/octet-stream",
-      ContentEncoding: "gzip", // Important to mark it as compressed
-      StorageClass: STORAGE_CLASS, // "INTELLIGENT_TIERING" || "STANDARD_IA" || "STANDARD" || "DEEP_ARCHIVE" || "GLACIER".
-      // ACL: "public-read",
+      Key: keyName,
+      Body: outputBuffer,
+      ContentType: contentType,
+      StorageClass: STORAGE_CLASS,
       ServerSideEncryption: "AES256",
     };
 
-    try {
-      await s3.send(new PutObjectCommand(params));
-    } catch (error) {
-      console.error("S3 Upload Error:", error);
-      throw new Error("Failed to upload file to S3");
-    }
+    await s3.send(new PutObjectCommand(params));
 
     return res.status(200).json({
       status: 0,
-      message: "Compressed document uploaded successfully",
-      fileUrl: `https://${AWS_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${params.Key}`,
-      fileHash
+      message: "Image uploaded with super compression",
+      fileUrl: `https://${AWS_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com/${keyName}`,
+      fileHash,
+      originalSizeKB: (req.file.size / 1024).toFixed(2),
+      compressedSizeKB: (outputBuffer.length / 1024).toFixed(2),
     });
   } catch (error) {
-    console.error("Error saving compressed document:", error);
+    console.error("Upload Error:", error);
     return res.status(500).json({
       status: 1,
-      message: "An error occurred while saving compressed document",
+      message: "Failed to upload compressed image",
       error: error.message,
     });
   }
@@ -252,7 +269,10 @@ export const getPrivateImage = async (req, res) => {
     } = req.body;
 
     if (!FILE_KEY || !AWS_REGION || !AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY || !AWS_BUCKET_NAME) {
-      return res.status(400).json({ status: 1, message: "Missing required parameters" });
+      return res.status(400).json({
+        status: 1,
+        message: "Missing required parameters",
+      });
     }
 
     const s3Client = new S3Client({
@@ -263,11 +283,13 @@ export const getPrivateImage = async (req, res) => {
       },
     });
 
-    // 1. HEAD: Check if archived or still restoring
-    const headData = await s3Client.send(new HeadObjectCommand({
-      Bucket: AWS_BUCKET_NAME,
-      Key: FILE_KEY,
-    }));
+    /* ================= HEAD: ARCHIVE CHECK ================= */
+    const headData = await s3Client.send(
+      new HeadObjectCommand({
+        Bucket: AWS_BUCKET_NAME,
+        Key: FILE_KEY,
+      })
+    );
 
     const restoreHeader = headData?.Restore;
     const storageClass = headData?.StorageClass;
@@ -276,62 +298,69 @@ export const getPrivateImage = async (req, res) => {
       if (!restoreHeader) {
         return res.status(423).json({
           status: 1,
-          message: "File is archived in Glacier. Restore request not initiated.",
+          message: "File is archived in Glacier. Restore not initiated.",
         });
       }
 
       if (restoreHeader.includes('ongoing-request="true"')) {
         return res.status(425).json({
           status: 1,
-          message: "File restore is still in progress. Please wait.",
+          message: "File restore is in progress.",
         });
       }
     }
 
-    // 2. GET: Fetch the object
+    /* ================= GET OBJECT ================= */
     const getCommand = new GetObjectCommand({
       Bucket: AWS_BUCKET_NAME,
       Key: FILE_KEY,
     });
 
-    const { Body: compressedStream } = await s3Client.send(getCommand);
+    const { Body: fileStream, ContentType } = await s3Client.send(getCommand);
 
-    // 3. DECOMPRESS: Gzip → Original
-    const decompressedStream = compressedStream.pipe(zlib.createGunzip());
-
-    // 4. HASH: SHA-256 of decompressed file
+    /* ================= HASH (SHA-256) ================= */
     const fileHash = await new Promise((resolve, reject) => {
       const hash = crypto.createHash("sha256");
-      decompressedStream.on("data", (chunk) => hash.update(chunk));
-      decompressedStream.on("end", () => resolve(hash.digest("hex")));
-      decompressedStream.on("error", reject);
+      fileStream.on("data", (chunk) => hash.update(chunk));
+      fileStream.on("end", () => resolve(hash.digest("hex")));
+      fileStream.on("error", reject);
     });
 
-    // 5. SIGNED URL (original stream is gzip, client needs to decompress)
-    const signedUrl = await getSignedUrl(s3Client, getCommand, { expiresIn: 30 });
+    /* ================= SIGNED URL ================= */
+    const signedUrl = await getSignedUrl(s3Client, getCommand, {
+      expiresIn: 60, // seconds
+    });
 
     return res.status(200).json({
       status: 0,
-      message: "Signed URL generated. File is Gzip compressed.",
+      message: "Signed URL generated successfully",
       tempSignedUrl: signedUrl,
       sha256: fileHash,
+      contentType: ContentType || "image/webp",
       compressed: true,
+      compressionType: "sharp-webp",
     });
 
   } catch (error) {
     console.error("Error in getPrivateImage:", error);
 
     if (error.name === "NoSuchKey") {
-      return res.status(404).json({ status: 1, message: "File not found" });
+      return res.status(404).json({
+        status: 1,
+        message: "File not found",
+      });
     }
 
     if (error.Code === "InvalidObjectState") {
-      return res.status(423).json({ status: 1, message: "File is archived and not restored yet." });
+      return res.status(423).json({
+        status: 1,
+        message: "File is archived and not restored yet.",
+      });
     }
 
     return res.status(500).json({
       status: 1,
-      message: "An error occurred while processing the request",
+      message: "Failed to fetch private image",
       error: error.message,
     });
   }

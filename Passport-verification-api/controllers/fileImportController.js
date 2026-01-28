@@ -49,12 +49,53 @@ const trimJsonData = (data) => {
   );
 };
 
+const trimJsonDataGeneric = (data) => {
+  // const allowedKeys = new Set([
+  //   "Sr. No.",
+  //   "DPHq ID/Name",
+  //   "Police Station",
+  //   "File Number",
+  //   "PV Request ID",
+  //   "Applicant Name",
+  //   "Gender",
+  //   "Date of Birth",
+  //   "Place of Birth",
+  //   "Spouse Name",
+  //   "Father's Name",
+  //   "PV Initiation Date",
+  //   "PV Request Status",
+  //   "PV Status Date",
+  //   "Verification Address",
+  //   "Permanent Address",
+  //   "PV Sequence No.",
+  //   "E-mail ID",
+  //   "Phone No.",
+  // ]);
+
+  // for (const row of data) {
+  //   // If any key in row is not in allowedKeys, return []
+  //   if (Object.keys(row).some((key) => !allowedKeys.has(key.trim()))) {
+  //     return [];
+  //   }
+  // }
+
+  // If all keys are valid, process and return data
+  return data.map((row) =>
+    Object.fromEntries(
+      Object.entries(row).map(([key, value]) => [
+        key.trim(),
+        value,
+      ])
+    )
+  );
+};
+
 export const convertExcelToJson = async (req, res) => {
   try {
     const file = req.file;
 
     if (!file) {
-      return res.status(400).json({status: 1, message: "No file uploaded", data: null });
+      return res.status(400).json({ status: 1, message: "No file uploaded", data: null });
     }
 
     const workbook = xlsx.read(file.buffer, { type: "buffer" });
@@ -63,16 +104,16 @@ export const convertExcelToJson = async (req, res) => {
     const data = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
     // Trim JSON keys and values
-    const jsonData = trimJsonData(data);    
+    const jsonData = trimJsonData(data);
 
-    if(jsonData?.length > 0) {
+    if (jsonData?.length > 0) {
       res.status(200).json({
         status: 0,
         message: `${jsonData.length} record(s) have been converted successfully`,
         data: jsonData
       });
-    }else {
-      res.status(200).json({status: 1, message: "Invalid excel format, Please check the correct format before importing", data: []});
+    } else {
+      res.status(200).json({ status: 1, message: "Invalid excel format, Please check the correct format before importing", data: [] });
     }
 
   } catch (error) {
@@ -80,6 +121,83 @@ export const convertExcelToJson = async (req, res) => {
     res.status(500).json({ status: 1, message: "Error processing file", data: null });
   }
 };
+
+export const convertExcelToJsonV2 = async (req, res) => {
+  try {
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({
+        status: 1,
+        message: "No file uploaded",
+        data: null
+      });
+    }
+
+    let workbook;
+
+    // 🔹 Detect CSV vs Excel
+    if (
+      file.mimetype === "text/csv" ||
+      file.originalname.toLowerCase().endsWith(".csv")
+    ) {
+      // CSV file
+      workbook = xlsx.read(file.buffer, {
+        type: "buffer",
+        raw: true,
+      });
+    } else {
+      // Excel file (.xlsx, .xls)
+      workbook = xlsx.read(file.buffer, {
+        type: "buffer",
+      });
+    }
+
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+
+    if (!worksheet) {
+      return res.status(200).json({
+        status: 1,
+        message: "Invalid file format or empty file",
+        data: []
+      });
+    }
+
+    const data = xlsx.utils.sheet_to_json(worksheet, {
+      defval: "",   // 🔥 avoid undefined values
+      raw: false,
+      trim: true,
+    });
+
+    // Trim JSON keys & values (your existing helper)
+    const jsonData = trimJsonDataGeneric(data);
+
+
+    if (jsonData?.length > 0) {
+      return res.status(200).json({
+        status: 0,
+        message: `${jsonData.length} record(s) have been converted successfully`,
+        data: jsonData
+      });
+    }
+
+    return res.status(400).json({
+      status: 1,
+      message: "Invalid file format, please check the correct format before importing",
+      data: []
+    });
+
+  } catch (error) {
+    console.error("Error processing file:", error);
+    return res.status(500).json({
+      status: 1,
+      message: "Error processing file",
+      data: null
+    });
+  }
+};
+
 
 export const uploadExcel = async (req, res) => {
   try {
@@ -129,9 +247,9 @@ export const uploadExcel = async (req, res) => {
         ps_error += 1;
         ps_arr.push(element["File Number"]);
       } else if (result == 0) {
-        
+
         // console.log("error code 0", element["File Number"]);
-        
+
         success_arr.push(element["File Number"]);
       }
     });

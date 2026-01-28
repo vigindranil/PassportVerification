@@ -635,7 +635,7 @@ const UserManagement = () => {
                                     {/* <TableHead className="font-semibold">Police Station</TableHead> */}
                                     <TableHead className="font-semibold">Designation</TableHead>
                                     <TableHead className="font-semibold">User Role</TableHead>
-                                    {/* <TableHead className="font-semibold text-center">Actions</TableHead> */}
+                                    <TableHead className="font-semibold text-center">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
