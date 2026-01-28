@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { AlertCircle, BadgeCheck, CheckCircle2, CheckCircle2Icon, Clock4, ClockAlert, Eye, FileCheck2, Frown, Info, Loader, MapPin, RefreshCw, Search } from "lucide-react"
 import Image from "next/image"
 import { VisuallyHidden } from "@/components/ui/visually-hidden"
-import { getBirthCertificateDetails, getLandDeedDetails, getMadhyamikCertificate, getWBSEDCLDetails, restoreFile, verifyApplication } from "@/app/applicationDetails/[FileNumber]/api"
+import { getBirthCertificateDetails, getLandDeedDetails, getMadhyamikCertificate, getPrivateFilePreview, getWBSEDCLDetails, restoreFile, verifyApplication } from "@/app/applicationDetails/[FileNumber]/api"
 import Cookies from "react-cookies";
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
@@ -35,6 +35,29 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
   const [type, setType] = useState("")
   const [restroreMessage, setRestroreMessage] = useState("")
 
+  const handleDocPreview = async (doc) => {
+    console.log(`test path---- ${doc?.DocumentPath}`)
+    if (doc?.DocumentPath.includes("https://wb-passport-verify.s3")) {
+      setVerifiedResponse(null)
+      setSelectedDoc(`${doc?.DocumentPath}`)
+      setType(doc?.FileType)
+      setIsDetailsModalOpen(true)
+      setDocType(doc?.DocumentTypeId)
+      setSelectedImage(doc)
+      setVerified(doc?.Isverified)
+    }
+    else {
+      const fileKey = doc?.DocumentPath?.split("https://wb-passport-verify-stf.s3.ap-south-1.amazonaws.com/")[1];
+      const filePreview = await getPrivateFilePreview(fileKey);
+      setVerifiedResponse(null)
+      setSelectedDoc(`${filePreview?.tempSignedUrl}`)
+      setType(doc?.FileType)
+      setIsDetailsModalOpen(true)
+      setDocType(doc?.DocumentTypeId)
+      setSelectedImage(doc)
+      setVerified(doc?.Isverified)
+    }
+  }
 
   const verifyMadhyamikCertificate = async (roll, number, year) => {
     try {
@@ -79,11 +102,11 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
         doc_id, file
       );
 
-      if(response?.status == 0){
+      if (response?.status == 0) {
         setIsRestored(response?.onProcess);
       }
 
-      if(response?.restored) {
+      if (response?.restored) {
         setIsRestored(1);
         setRestroreMessage(`${response?.message} till ${response?.restoreHeader?.split("expiry-date=")[1]}` || "");
       } else {
@@ -318,15 +341,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                       <TableCell className="flex">
                         <button
                           className="flex bg-blue-100 justify-center items-center p-1 m-1 px-2 rounded-md hover:bg-blue-200 text-sm"
-                          onClick={() => {
-                            setVerifiedResponse(null)
-                            setSelectedDoc(`${doc?.DocumentPath}`)
-                            setType(doc?.FileType)
-                            setIsDetailsModalOpen(true)
-                            setDocType(doc?.DocumentTypeId)
-                            setSelectedImage(doc)
-                            setVerified(doc?.Isverified)
-                          }}
+                          onClick={() => handleDocPreview(doc)}
                         >
                           <Eye className="text-blue-600 mr-2 h-4 w-4" />
                           View
@@ -385,28 +400,28 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                       )
                         : selectedImage?.IsArchived == 11 || selectedImage?.IsRestore ? (
                           <div className="flex flex-col justify-center items-center">
-                          {restroreMessage && <span className="flex justify-center items-center bg-indigo-200 border-indigo-500 border-2 rounded-md p-1 px-2 text-xl"><Info className="mr-1" size={24} /> {restroreMessage}</span>}
-                              <button
+                            {restroreMessage && <span className="flex justify-center items-center bg-indigo-200 border-indigo-500 border-2 rounded-md p-1 px-2 text-xl"><Info className="mr-1" size={24} /> {restroreMessage}</span>}
+                            <button
                               className="flex bg-amber-500 text-slate-200 justify-center items-center p-1 m-1 mt-5 px-3 rounded-md hover:bg-amber-600 mx-auto"
                               disabled={isRestoring}
                               onClick={() => restoreFileApi(selectedImage?.DocumentId, selectedImage?.DocumentPath?.split("https://wb-passport-verify.s3.ap-south-1.amazonaws.com/")[1])}
                             >
-                              { isRestoring ? (<><RefreshCw className="mr-1 animate-spin" size={18} /> Checking Status...</>) : (<><RefreshCw className="mr-1" size={18} /> Check Restore Status</> )}
+                              {isRestoring ? (<><RefreshCw className="mr-1 animate-spin" size={18} /> Checking Status...</>) : (<><RefreshCw className="mr-1" size={18} /> Check Restore Status</>)}
                             </button>
-                            
+
                             {isRestored && <a className="flex bg-blue-500 text-slate-200 justify-center items-center p-1 m-1 mt-5 px-3 rounded-md hover:bg-blue-600 mx-auto"
-                            href={selectedDoc} target="_blank">View Restored File</a>}
+                              href={selectedDoc} target="_blank">View Restored File</a>}
                           </div>
                         ) : (
                           <div>
-                          <span>This file is archived because SP/CP has approved/rejected the application. If you want to retore this file then click on Restore Button.</span>
-                          {restroreMessage && <span className="bg-indigo-200 border-indigo-500 border-2 rounded-md p-1 px-2"><Info className="mr-1" size={18} /> {restroreMessage}</span>}
-                              <button
+                            <span>This file is archived because SP/CP has approved/rejected the application. If you want to retore this file then click on Restore Button.</span>
+                            {restroreMessage && <span className="bg-indigo-200 border-indigo-500 border-2 rounded-md p-1 px-2"><Info className="mr-1" size={18} /> {restroreMessage}</span>}
+                            <button
                               className="flex bg-blue-500 text-slate-200 justify-center items-center p-1 m-1 mt-5 px-3 rounded-md hover:bg-blue-600 mx-auto"
                               disabled={isRestoring}
                               onClick={() => restoreFileApi(selectedImage?.DocumentId, selectedImage?.DocumentPath?.split("https://wb-passport-verify.s3.ap-south-1.amazonaws.com/")[1])}
-                              >
-                              { isRestoring ? (<><RefreshCw className="mr-1 animate-spin" size={18} /> Restoring File...</>) : (<><RefreshCw className="mr-1" size={18} /> Restore This File</> )}
+                            >
+                              {isRestoring ? (<><RefreshCw className="mr-1 animate-spin" size={18} /> Restoring File...</>) : (<><RefreshCw className="mr-1" size={18} /> Restore This File</>)}
                             </button>
 
                           </div>
@@ -656,11 +671,11 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                         : (verifiedResponse == "") ? <div className="w-full h-full">
                           <hr className="my-2" />
                           <h1 className="font-bold text-sm text-yellow-400 m-2 flex flex-col items-center justify-center gap-0"><Frown className="text-yellow-600 mr-1" /> No record found</h1>
-                          <div className="text-justify m-2 flex flex-col gap-1 border p-2 rounded-md bg-gray-50 text-xs"> 
+                          <div className="text-justify m-2 flex flex-col gap-1 border p-2 rounded-md bg-gray-50 text-xs">
                             <b className="flex gap-1 justify-center"><AlertCircle className="h-4 w-4 text-violet-600" /> Note:</b> Only the certificate which is generated from Janma-Mrityu-Tathya Portal will be show here. If no data is found, you can still approve it after manual check.
-                          <br/>
-                          <br/>
-                          যদি কোনো ডেটা না পাওয়া যায়, তাহলে ম্যানুয়ালি যাচাই করে ডকুমেন্ট অনুমোদন করতে পারেন।
+                            <br />
+                            <br />
+                            যদি কোনো ডেটা না পাওয়া যায়, তাহলে ম্যানুয়ালি যাচাই করে ডকুমেন্ট অনুমোদন করতে পারেন।
                           </div>
                         </div> : null
                       }
@@ -706,7 +721,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                           <p className="text-xs text-slate-500 leading-tight mb-1"><b>3.</b> মিলিয়ে নেওয়ার পর 'Approve the Document' বাটনে ক্লিক করুন।</p>
                           <p className="text-xs text-slate-500 leading-tight mb-1"><b>Note:</b> যদি কোনো ডেটা না পাওয়া যায়, তাহলে ম্যানুয়ালি যাচাই করে ডকুমেন্ট অনুমোদন করতে পারেন।</p>
                         </div>
-                        : 
+                        :
                         <div className="w-full h-[50vh] overflow-y-scroll border p-2 rounded-md mt-3 bg-violet-50 ">
                           <span className="flex justify-center items-center gap-1 text-slate-500 mb-2"><AlertCircle className="text-violet-700" />Instructions:</span>
                           <p className="text-xs text-slate-500 leading-tight mb-1"><b>1.</b> Verify Document image & Click 'Approve the Document'.</p>
@@ -717,7 +732,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
                           <p className="text-xs text-slate-500 leading-tight mb-1"><b>1.</b> ডকুমেন্টের ছবি যাচাই করুন এবং 'Approve the Document' বাটনে ক্লিক করুন।</p>
                           <p className="text-xs text-slate-500 leading-tight mb-1"><b>Note:</b> যদি আগে থেকেই যাচাই করা থাকে, তাহলে বাটনে 'Verified' সবুজ রঙে দেখা যাবে।</p>
                         </div>
-                        }
+                      }
 
 
 

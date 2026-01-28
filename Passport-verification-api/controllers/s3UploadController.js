@@ -365,6 +365,108 @@ export const getPrivateImage = async (req, res) => {
     });
   }
 };
+export const getPrivateImagePreview = async (req, res) => {
+  try {
+    const { FILE_KEY } = req.query;
+
+
+    if (!FILE_KEY) {
+      return res.status(400).json({
+        status: 1,
+        message: "Missing required parameters",
+      });
+    }
+
+    const s3Client = new S3Client({
+      region: process.env.AWS_REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      },
+    });
+
+    /* ================= HEAD: ARCHIVE CHECK ================= */
+    const headData = await s3Client.send(
+      new HeadObjectCommand({
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: FILE_KEY,
+      })
+    );
+
+    const restoreHeader = headData?.Restore;
+    const storageClass = headData?.StorageClass;
+
+    if (storageClass?.includes("GLACIER") || storageClass === "DEEP_ARCHIVE") {
+      if (!restoreHeader) {
+        return res.status(423).json({
+          status: 1,
+          message: "File is archived in Glacier. Restore not initiated.",
+        });
+      }
+
+      if (restoreHeader.includes('ongoing-request="true"')) {
+        return res.status(425).json({
+          status: 1,
+          message: "File restore is in progress.",
+        });
+      }
+    }
+
+    /* ================= GET OBJECT ================= */
+    const getCommand = new GetObjectCommand({
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: FILE_KEY,
+    });
+
+    const { Body: fileStream, ContentType } = await s3Client.send(getCommand);
+
+    /* ================= HASH (SHA-256) ================= */
+    const fileHash = await new Promise((resolve, reject) => {
+      const hash = crypto.createHash("sha256");
+      fileStream.on("data", (chunk) => hash.update(chunk));
+      fileStream.on("end", () => resolve(hash.digest("hex")));
+      fileStream.on("error", reject);
+    });
+
+    /* ================= SIGNED URL ================= */
+    const signedUrl = await getSignedUrl(s3Client, getCommand, {
+      expiresIn: 60, // seconds
+    });
+
+    return res.status(200).json({
+      status: 0,
+      message: "Signed URL generated successfully",
+      tempSignedUrl: signedUrl,
+      sha256: fileHash,
+      contentType: ContentType || "image/webp",
+      compressed: true,
+      compressionType: "sharp-webp",
+    });
+
+  } catch (error) {
+    console.error("Error in getPrivateImage:", error);
+
+    if (error.name === "NoSuchKey") {
+      return res.status(404).json({
+        status: 1,
+        message: "File not found",
+      });
+    }
+
+    if (error.Code === "InvalidObjectState") {
+      return res.status(423).json({
+        status: 1,
+        message: "File is archived and not restored yet.",
+      });
+    }
+
+    return res.status(500).json({
+      status: 1,
+      message: "Failed to fetch private image",
+      error: error.message,
+    });
+  }
+};
 
 export const getPrivateImagePassportVerification = async (req, res) => {
   try {

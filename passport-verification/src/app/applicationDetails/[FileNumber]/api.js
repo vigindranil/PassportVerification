@@ -1,6 +1,6 @@
-import { postRequest } from "@/app/commonAPI";
+import { getRequest, postRequest } from "@/app/commonAPI";
 
-export const getDetailsApplicationId = async (applicationId, ActiveStatusId=1) => {
+export const getDetailsApplicationId = async (applicationId, ActiveStatusId = 1) => {
   try {
     return await postRequest("application/detailsapplicationId", {
       applicationId: applicationId,
@@ -168,6 +168,16 @@ export const restoreFile = async (
       document_id,
       file_name
     });
+  } catch (error) {
+    return error.message;
+  }
+};
+
+export const getPrivateFilePreview = async (file_name) => {
+  try {
+    return await getRequest(
+      "s3-download/getPrivateFilePreview?FILE_KEY=" + file_name
+    );
   } catch (error) {
     return error.message;
   }

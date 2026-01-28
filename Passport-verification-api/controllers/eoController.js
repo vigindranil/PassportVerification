@@ -86,7 +86,7 @@ export const saveDocumentUpload = async (req, res) => {
       Key: fileKey,
       Body: uploadBuffer,
       ContentType: contentType || "application/octet-stream",
-      ACL: "public-read",
+      // ACL: "public-read",
       StorageClass: "INTELLIGENT_TIERING",
       ServerSideEncryption: "AES256",
     };
@@ -99,7 +99,7 @@ export const saveDocumentUpload = async (req, res) => {
     }
 
     const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`;
-
+    
     const result = await saveDocumentUploadModel(
       DocDetailsID,
       ApplicationId,
