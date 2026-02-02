@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { AlertCircle, BadgeCheck, CheckCircle2, CheckCircle2Icon, Clock4, ClockAlert, Eye, FileCheck2, Frown, Info, Loader, MapPin, RefreshCw, Search } from "lucide-react"
 import Image from "next/image"
 import { VisuallyHidden } from "@/components/ui/visually-hidden"
-import { getBirthCertificateDetails, getLandDeedDetails, getMadhyamikCertificate, getPrivateFilePreview, getWBSEDCLDetails, restoreFile, verifyApplication } from "@/app/applicationDetails/[FileNumber]/api"
+import { getBirthCertificateDetails, getLandDeedDetails, getMadhyamikCertificate, getPrivateFilePreview, getPrivateFilePreviewOld, getWBSEDCLDetails, restoreFile, verifyApplication } from "@/app/applicationDetails/[FileNumber]/api"
 import Cookies from "react-cookies";
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
@@ -36,10 +36,12 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
   const [restroreMessage, setRestroreMessage] = useState("")
 
   const handleDocPreview = async (doc) => {
-    console.log(`test path---- ${doc?.DocumentPath}`)
+    // console.log(`test path---- ${doc?.DocumentPath}`)
     if (doc?.DocumentPath.includes("https://wb-passport-verify.s3")) {
+      const fileKey = doc?.DocumentPath?.split("https://wb-passport-verify.s3.ap-south-1.amazonaws.com/")[1];
+      const filePreview = await getPrivateFilePreviewOld(fileKey);
       setVerifiedResponse(null)
-      setSelectedDoc(`${doc?.DocumentPath}`)
+      setSelectedDoc(`${filePreview?.tempSignedUrl}`)
       setType(doc?.FileType)
       setIsDetailsModalOpen(true)
       setDocType(doc?.DocumentTypeId)

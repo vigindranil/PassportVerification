@@ -182,3 +182,13 @@ export const getPrivateFilePreview = async (file_name) => {
     return error.message;
   }
 };
+
+export const getPrivateFilePreviewOld = async (file_name) => {
+  try {
+    return await getRequest(
+      "s3-download/getPrivateFilePreviewOld?FILE_KEY=" + file_name
+    );
+  } catch (error) {
+    return error.message;
+  }
+};
