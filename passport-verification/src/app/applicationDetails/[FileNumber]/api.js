@@ -92,7 +92,7 @@ export const verifyApplication = async (
 
 export const getPccCrimeDetails = async (fname, lname) => {
   try {
-    return await postRequest("third-party/getPCCCrimeRecordSearch", {
+    return await postRequest("third-party/getCIDCrimeRecordSearch", {
       fname: fname,
       lname: lname,
     });

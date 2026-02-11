@@ -38,7 +38,7 @@ export function OTPInput({ onComplete }) {
         return (
           <input
             key={index}
-            type="text"
+            type="password"
             inputMode="numeric"
             maxLength={1}
             value={data}
@@ -53,4 +53,3 @@ export function OTPInput({ onComplete }) {
     </div>
   )
 }
-

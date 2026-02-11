@@ -281,6 +281,42 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
     }
   }
 
+  const verifyLandDeed = async (mouzaCode, khatianNo) => {
+    try {
+      setVerifyElectricityLoading(true);
+      setVerifiedResponse(null)
+      const response = await getLandDeedDetails(
+        // "0101055", 276
+        mouzaCode, khatianNo
+      );
+      console.log("response", response);
+
+      toast({
+        title: (
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="h-5 w-5 text-green-500" />
+            <span>Success!</span>
+          </div>
+        ),
+        description: "Data has been successfully retrieved",
+        action: (
+          <ToastAction altText="close">Close</ToastAction>
+        ),
+      })
+      setVerifiedResponse(response || "");
+    } catch (error) {
+      console.log(error);
+      toast({
+        variant: "destructive",
+        title: "Failure!",
+        description: "Something went wrong, Please try again",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      })
+    } finally {
+      setVerifyElectricityLoading(false);
+    }
+  }
+
   useEffect(() => {
     setUserType(userTypeCookies);
   }, [userTypeCookies])
