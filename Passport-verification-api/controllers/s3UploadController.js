@@ -371,7 +371,7 @@ export const getPrivateImagePreviewOld = async (req, res) => {
   try {
     const { FILE_KEY } = req.query;
 
-    if (!FILE_KEY ) {
+    if (!FILE_KEY) {
       return res.status(400).json({
         status: 1,
         message: "Missing required parameters",
@@ -431,7 +431,7 @@ export const getPrivateImagePreviewOld = async (req, res) => {
 
     /* ================= SIGNED URL ================= */
     const signedUrl = await getSignedUrl(s3Client, getCommand, {
-      expiresIn: 60, // seconds
+      expiresIn: 900, // seconds
     });
 
     return res.status(200).json({
@@ -536,7 +536,7 @@ export const getPrivateImagePreview = async (req, res) => {
 
     /* ================= SIGNED URL ================= */
     const signedUrl = await getSignedUrl(s3Client, getCommand, {
-      expiresIn: 60, // seconds
+      expiresIn: 900, // seconds
     });
 
     return res.status(200).json({
@@ -573,6 +573,10 @@ export const getPrivateImagePreview = async (req, res) => {
     });
   }
 };
+
+
+
+
 
 export const getPrivateImagePassportVerification = async (req, res) => {
   try {
