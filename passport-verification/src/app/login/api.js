@@ -77,7 +77,7 @@ export const verifyOtp = async (otp) => {
         redirect: "follow",
       };
 
-      const resp = await fetch("https://wbpassportverify.link/api/auth/generateSecretToken", requestOptions);
+      const resp = await fetch(`${BASE_URL}auth/generateSecretToken`, requestOptions);
       const json_data = await resp.json();
       Cookies.save("third_party_tk", json_data?.token);
 
@@ -118,7 +118,7 @@ export const verifyOtpV1 = async (username, otp) => {
         redirect: "follow",
       };
 
-      const resp = await fetch("https://wbpassportverify.link/api/auth/generateSecretToken", requestOptions);
+      const resp = await fetch(`${BASE_URL}auth/generateSecretToken`, requestOptions);
       const json_data = await resp.json();
       Cookies.save("third_party_tk", json_data?.token);
 

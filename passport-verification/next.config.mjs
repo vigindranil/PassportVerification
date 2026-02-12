@@ -10,7 +10,7 @@ const nextConfig = {
   //   ];
   // },
   images: {
-    domains: ['localhost', '13.235.73.233', 'wbpassportverify.link'], // Add 'localhost' as a valid domain for next/image
+    domains: ['localhost', '13.235.73.233', 'wbstfpassportverify.link'], // Add 'localhost' as a valid domain for next/image
   },
 };
 
