@@ -39,7 +39,7 @@ const DocumentTable = ({ documents, docPath, fileNo, isLoadingDocumentTable, ver
     // console.log(`test path---- ${doc?.DocumentPath}`)
     if (doc?.DocumentPath.includes("https://wb-passport-verify.s3")) {
       const fileKey = doc?.DocumentPath?.split("https://wb-passport-verify.s3.ap-south-1.amazonaws.com/")[1];
-      const filePreview = await getPrivateFilePreviewOld(fileKey);
+      const filePreview = await getPrivateFilePreview(fileKey);
       setVerifiedResponse(null)
       setSelectedDoc(`${filePreview?.tempSignedUrl}`)
       setType(doc?.FileType)
