@@ -658,3 +658,100 @@ export const getApplicationStatusBetweenDaterange = async (req, res) => {
     });
   }
 };
+
+export const sendOtpV3ecanteenapi = async (mobile, msg) => {
+  if (!mobile) {
+    return { error: "Mobile number is required." };
+  } else if (!msg) {
+    return { error: "Message is required." };
+  }
+
+  let data = JSON.stringify({
+    mobile: mobile,
+    msg: msg,
+  });
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://ecanteenapi.wb.gov.in/SMS/api/PassportLoginOTP",
+    headers: {
+      "x-api-key": process.env.ECANTEEN_API_KEY,
+      "Content-Type": "application/json",
+    },
+    data: data,
+    httpsAgent: new https.Agent({
+      secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+    }),
+  };
+
+  try {
+    const response = await axios.request(config);
+    return {
+      status: 0,
+      message: "OTP sent successfully",
+      data: response?.data,
+    };
+  } catch (error) {
+    console.error("Error sending OTP:", error?.message);
+    return {
+      status: 1,
+      message: "Failed to send OTP",
+      data: null,
+    };
+  }
+};
+
+export const sendVerificationStatusNotification = async (
+  mobile,
+  applicationNo,
+  verificationStatus
+) => {
+  if (!mobile) {
+    return { error: "Mobile number is required." };
+  } else if (!applicationNo) {
+    return { error: "Application No. is required." };
+  } else if (!verificationStatus) {
+    return { error: "Verification Status is required." };
+  }
+
+  const msg = `Your police verification for Passport Application No. ${applicationNo} has been completed. Verification Status: ${verificationStatus} by verification authority - WBP`;
+
+  let data = JSON.stringify({
+    mobile: mobile,
+    msg: msg,
+  });
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://ecanteenapi.wb.gov.in/SMS/api/PassportVerificationStatus",
+    headers: {
+      "x-api-key": process.env.ECANTEEN_API_KEY,
+      "Content-Type": "application/json",
+    },
+    data: data,
+    httpsAgent: new https.Agent({
+      secureOptions: crypto.constants.SSL_OP_LEGACY_SERVER_CONNECT,
+    }),
+  };
+
+  try {
+    const response = await axios.request(config);
+    return {
+      status: 0,
+      message: "Verification status notification sent successfully",
+      data: response?.data,
+    };
+  } catch (error) {
+    console.error("Error sending verification status:", error?.message);
+    return {
+      status: 1,
+      message: "Failed to send verification status notification",
+      data: null,
+    };
+  }
+};
+
+
+

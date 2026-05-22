@@ -10,11 +10,11 @@ import {
   updateAADHAARInfoModelV2,
   getApplicationCountMasterAdminModel,
   getApplicationCountMasterAdminModelV1,
-  
+
 } from "../models/applicationModel.js";
 import { saveTransactionHistory } from "../models/logModel.js";
 import logger from "../utils/logger.js";
-import { sendSMSInternally } from "./thirdPartyAPI.js";
+import { sendSMSInternally, sendVerificationStatusNotification } from "./thirdPartyAPI.js";
 
 export const getApplicationDetails = async (req, res) => {
   try {
@@ -82,7 +82,7 @@ export const getApplicationDetails = async (req, res) => {
             status: status || [],
             filepath,
           },
-        }, 
+        },
       })
     );
     return res.status(200).json({
@@ -149,20 +149,21 @@ export const updateEnquiryStatus = async (req, res) => {
         })
       );
 
-      if(StatusText == "SP APPROVED" || StatusText == "SP NOT APPROVE"){
+      if (StatusText == "SP APPROVED" || StatusText == "SP NOT APPROVE") {
         // const shortenURLResponse = await axios.get(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(filepath)}`);
         // const shortenURL = shortenURLResponse.data;
-        const smstext = `Your police verification for Passport Application No. ${ApplicationID} has been completed. Verification Status: ${StatusText == "SP APPROVED" ? "Apporved by verification autority" : "Rejected by verification autority"} - WB Police`;
-        const mobileNumber = mobile;
-        const smsCategory = "verification completed";
-        const tpid = "1307174023428206731";
-  
-        const smsStatus = await sendSMSInternally(smstext, mobileNumber, smsCategory, tpid);
+        // const smstext = `Your police verification for Passport Application No. ${ApplicationID} has been completed. Verification Status: ${StatusText == "SP APPROVED" ? "Apporved by verification autority" : "Rejected by verification autority"} - WB Police`;
+        // const mobileNumber = mobile;
+        // const smsCategory = "verification completed";
+        // const tpid = "1307174023428206731";
+        // const smsStatus = await sendSMSInternally(smstext, mobileNumber, smsCategory, tpid);
+
+        const verificationStatus = StatusText == "SP APPROVED" ? "Approved" : "Rejected";
+        const smsStatus = await sendVerificationStatusNotification(mobile, ApplicationID, verificationStatus);
         return res.status(200).json({
           status: 0,
           message: "Status has been updated successfully",
-          smsStatus,
-          smstext
+          smsStatus
         });
       } else {
         return res.status(200).json({
@@ -229,7 +230,7 @@ export const verifyApplication = async (req, res) => {
       Remarks
     );
     // console.log("setExternelApiLog", externelApiLogresponse);
-    
+
     const statusUpdateResponse = await savethirdpartyVerifyStatus(
       ApplicationId,
       DocumentID,
@@ -369,333 +370,333 @@ export const getDocumentsApplicationDetailsByFileNo = async (req, res) => {
 
 
 
-  export const getAadharDetailsByapplicationId = async (req, res) => {
-    try {
-      const { ApplicationId, ActiveStatusId } = req.body;
-      const EntryuserId  = req.user.UserID; // Extract logged-in user ID
-  
-      if (!ApplicationId || !EntryuserId) {
-        return res.status(400).json({
-          status: 1,
-          message: 'Invalid input data. All fields are required.',
-        });
-      }
-  
-      const applicationStatuses = await getAadharDetailsByapplicationIdModel(ApplicationId , EntryuserId, ActiveStatusId );
-  
+export const getAadharDetailsByapplicationId = async (req, res) => {
+  try {
+    const { ApplicationId, ActiveStatusId } = req.body;
+    const EntryuserId = req.user.UserID; // Extract logged-in user ID
+
+    if (!ApplicationId || !EntryuserId) {
+      return res.status(400).json({
+        status: 1,
+        message: 'Invalid input data. All fields are required.',
+      });
+    }
+
+    const applicationStatuses = await getAadharDetailsByapplicationIdModel(ApplicationId, EntryuserId, ActiveStatusId);
+
+    return res.status(200).json({
+      status: 0,
+      message: 'Application statuses retrieved successfully',
+      data: applicationStatuses,
+    });
+  } catch (error) {
+    console.error('Error in getApplicationStatusController:', error.message);
+    return res.status(500).json({
+      status: 1,
+      message: 'An error occurred while retrieving application statuses.',
+      error: error.message,
+    });
+  }
+};
+
+
+
+
+export const updateAADHAARInfo = async (req, res) => {
+  try {
+    const {
+      ApplicationID,
+      AadharNumber,
+      AadhaarName,
+      AadhaarDOB,
+      AadharVerifiedStatus,
+      AadhaarFatherName,
+      AadhaarGender,
+      AadhaarAddress
+
+    } = req.body;
+
+    const result = await updateAADHAARInfoModel(
+      ApplicationID,
+      AadharNumber,
+      AadhaarName,
+      AadhaarDOB,
+      AadharVerifiedStatus,
+      AadhaarFatherName,
+      AadhaarGender,
+      AadhaarAddress,
+      req.user.UserID
+    );
+
+    if (result == 0) {
+      logger.debug(
+        JSON.stringify({
+          API: "updateAADHAARInfo",
+          REQUEST: {
+            ApplicationID,
+            AadhaarName,
+            AadharNumber,
+            AadhaarName,
+            AadhaarDOB,
+            AadharVerifiedStatus,
+            AadhaarFatherName,
+            AadhaarGender,
+            AadhaarAddress,
+          },
+          RESPONSE: {
+            status: 0,
+            message: "Status has been updated successfully",
+          },
+        })
+      );
       return res.status(200).json({
         status: 0,
-        message: 'Application statuses retrieved successfully',
-        data: applicationStatuses,
+        message: "Status has been updated successfully",
       });
-    } catch (error) {
-      console.error('Error in getApplicationStatusController:', error.message);
-      return res.status(500).json({
+    } else {
+      logger.debug(
+        JSON.stringify({
+          API: "updateAADHAARInfo",
+          REQUEST: {
+            ApplicationID,
+            AadhaarName,
+            AadharNumber,
+            AadhaarName,
+            AadhaarDOB,
+            AadharVerifiedStatus,
+            AadhaarFatherName,
+            AadhaarGender,
+            AadhaarAddress,
+          },
+          RESPONSE: {
+            status: 1,
+            message: "Failed to update enquiry status",
+          },
+        })
+      );
+      return res.status(400).json({
         status: 1,
-        message: 'An error occurred while retrieving application statuses.',
-        error: error.message,
+        message: "Failed to update enquiry status",
       });
     }
-  };
+  } catch (error) {
+    logger.error("Error in updateEnquiryStatusController:", error.message);
+    return res.status(500).json({
+      status: 1,
+      message: "An error occurred while updating the enquiry status.",
+      error: error.message,
+    });
+  }
+};
 
+export const updateAADHAARInfoV2 = async (req, res) => {
+  try {
+    const {
+      ApplicationID,
+      AadharNumber,
+      AadhaarName,
+      AadhaarDOB,
+      AadharVerifiedStatus,
+      AadhaarFatherName,
+      AadhaarGender,
+      AadhaarAddress,
+      AadharRemarks
 
+    } = req.body;
 
+    const result = await updateAADHAARInfoModelV2(
+      ApplicationID,
+      AadharNumber,
+      AadhaarName,
+      AadhaarDOB,
+      AadharVerifiedStatus,
+      AadhaarFatherName || "N/A",
+      AadhaarGender,
+      AadhaarAddress,
+      AadharRemarks,
+      req.user.UserID
+    );
 
-  export const updateAADHAARInfo = async (req, res) => {
-    try {
-      const {
-        ApplicationID,
-        AadharNumber,
-        AadhaarName ,
-        AadhaarDOB ,
-        AadharVerifiedStatus ,
-        AadhaarFatherName ,
-        AadhaarGender ,
-        AadhaarAddress
+    // console.log("updateAADHAARInfoModelV2:", result);
 
-      } = req.body;
-  
-      const result = await updateAADHAARInfoModel(
-        ApplicationID,
-        AadharNumber,
-        AadhaarName,
-        AadhaarDOB,
-        AadharVerifiedStatus,
-        AadhaarFatherName,
-        AadhaarGender,
-        AadhaarAddress,
-        req.user.UserID
+    if (result == 0) {
+      logger.debug(
+        JSON.stringify({
+          API: "updateAADHAARInfo",
+          REQUEST: {
+            ApplicationID,
+            AadhaarName,
+            AadharNumber,
+            AadhaarName,
+            AadhaarDOB,
+            AadharVerifiedStatus,
+            AadhaarFatherName,
+            AadhaarGender,
+            AadhaarAddress,
+          },
+          RESPONSE: {
+            status: 0,
+            message: "Status has been updated successfully",
+          },
+        })
       );
-  
-      if (result == 0) {
-        logger.debug(
-          JSON.stringify({
-            API: "updateAADHAARInfo",
-            REQUEST: {
-              ApplicationID,
-              AadhaarName,
-              AadharNumber,
-              AadhaarName ,
-              AadhaarDOB,
-              AadharVerifiedStatus,
-              AadhaarFatherName,
-              AadhaarGender,
-              AadhaarAddress,
-            },
-            RESPONSE: {
-              status: 0,
-              message: "Status has been updated successfully",
-            },
-          })
-        );
-        return res.status(200).json({
-          status: 0,
-          message: "Status has been updated successfully",
-        });
-      } else {
-        logger.debug(
-          JSON.stringify({
-            API: "updateAADHAARInfo",
-            REQUEST: {
-              ApplicationID,
-              AadhaarName,
-              AadharNumber,
-              AadhaarName,
-              AadhaarDOB,
-              AadharVerifiedStatus,
-              AadhaarFatherName,
-              AadhaarGender,
-              AadhaarAddress,
-            },
-            RESPONSE: {
-              status: 1,
-              message: "Failed to update enquiry status",
-            },
-          })
-        );
-        return res.status(400).json({
-          status: 1,
-          message: "Failed to update enquiry status",
-        });
-      }
-    } catch (error) {
-      logger.error("Error in updateEnquiryStatusController:", error.message);
-      return res.status(500).json({
+      return res.status(200).json({
+        status: 0,
+        message: "Status has been updated successfully",
+      });
+    } else {
+      logger.debug(
+        JSON.stringify({
+          API: "updateAADHAARInfo",
+          REQUEST: {
+            ApplicationID,
+            AadhaarName,
+            AadharNumber,
+            AadhaarName,
+            AadhaarDOB,
+            AadharVerifiedStatus,
+            AadhaarFatherName,
+            AadhaarGender,
+            AadhaarAddress,
+          },
+          RESPONSE: {
+            status: 1,
+            message: "Failed to update enquiry status",
+          },
+        })
+      );
+      return res.status(400).json({
         status: 1,
-        message: "An error occurred while updating the enquiry status.",
-        error: error.message,
+        message: "Failed to update enquiry status",
       });
     }
-  };
-
-  export const updateAADHAARInfoV2 = async (req, res) => {
-    try {
-      const {
-        ApplicationID,
-        AadharNumber,
-        AadhaarName ,
-        AadhaarDOB ,
-        AadharVerifiedStatus ,
-        AadhaarFatherName ,
-        AadhaarGender ,
-        AadhaarAddress,
-        AadharRemarks
-
-      } = req.body;
-  
-      const result = await updateAADHAARInfoModelV2(
-        ApplicationID,
-        AadharNumber,
-        AadhaarName,
-        AadhaarDOB,
-        AadharVerifiedStatus,
-        AadhaarFatherName || "N/A",
-        AadhaarGender,
-        AadhaarAddress,
-        AadharRemarks,
-        req.user.UserID
-      );
-
-      // console.log("updateAADHAARInfoModelV2:", result);
-  
-      if (result == 0) {
-        logger.debug(
-          JSON.stringify({
-            API: "updateAADHAARInfo",
-            REQUEST: {
-              ApplicationID,
-              AadhaarName,
-              AadharNumber,
-              AadhaarName ,
-              AadhaarDOB,
-              AadharVerifiedStatus,
-              AadhaarFatherName,
-              AadhaarGender,
-              AadhaarAddress,
-            },
-            RESPONSE: {
-              status: 0,
-              message: "Status has been updated successfully",
-            },
-          })
-        );
-        return res.status(200).json({
-          status: 0,
-          message: "Status has been updated successfully",
-        });
-      } else {
-        logger.debug(
-          JSON.stringify({
-            API: "updateAADHAARInfo",
-            REQUEST: {
-              ApplicationID,
-              AadhaarName,
-              AadharNumber,
-              AadhaarName,
-              AadhaarDOB,
-              AadharVerifiedStatus,
-              AadhaarFatherName,
-              AadhaarGender,
-              AadhaarAddress,
-            },
-            RESPONSE: {
-              status: 1,
-              message: "Failed to update enquiry status",
-            },
-          })
-        );
-        return res.status(400).json({
-          status: 1,
-          message: "Failed to update enquiry status",
-        });
-      }
-    } catch (error) {
-      logger.error("Error in updateEnquiryStatusController:", error.message);
-      return res.status(500).json({
-        status: 1,
-        message: "An error occurred while updating the enquiry status.",
-        error: error.message,
-      });
-    }
-  };
+  } catch (error) {
+    logger.error("Error in updateEnquiryStatusController:", error.message);
+    return res.status(500).json({
+      status: 1,
+      message: "An error occurred while updating the enquiry status.",
+      error: error.message,
+    });
+  }
+};
 
 
-  export const getApplicationCountMasterAdmin = async (req, res) => {
-    try {
-      const { districtId, startDate, endDate } = req.body;
-      const userId = req.user.UserID;
-  
-      if (!userId) {
-        logger.debug(
-          JSON.stringify({
-            API: "getApplicationCountMasterAdmin",
-            REQUEST: { userId, districtId, startDate, endDate },
-            RESPONSE: {
-              status: 1,
-              message: "Invalid input data",
-            },
-          })
-        );
-        return res.status(400).json({
-          status: 1,
-          message: "Invalid input data",
-        });
-      }
-  
-      const [applicationCounts] = await getApplicationCountMasterAdminModel(
-        userId,
-        districtId,
-        startDate,
-        endDate
-      );
-  
+export const getApplicationCountMasterAdmin = async (req, res) => {
+  try {
+    const { districtId, startDate, endDate } = req.body;
+    const userId = req.user.UserID;
+
+    if (!userId) {
       logger.debug(
         JSON.stringify({
           API: "getApplicationCountMasterAdmin",
           REQUEST: { userId, districtId, startDate, endDate },
           RESPONSE: {
-            status: 0,
-            message: "Application count retrieved successfully",
-            data: applicationCounts,
+            status: 1,
+            message: "Invalid input data",
           },
         })
       );
-  
-      return res.status(200).json({
-        status: 0,
-        message: "Application count retrieved successfully",
-        data: {
-          applicationCounts,
-        },
-      });
-    } catch (error) {
-      logger.error("Error retrieving application count:", error);
-      return res.status(500).json({
+      return res.status(400).json({
         status: 1,
-        message: "An error occurred while retrieving the application count",
-        error: error.message,
+        message: "Invalid input data",
       });
     }
-  };
 
-  export const getApplicationCountMasterAdminV1 = async (req, res) => {
-    try {
-      const { districtId, startDate, endDate } = req.body;
-      const userId = req.user.UserID;
-  
-      if (!userId) {
-        logger.debug(
-          JSON.stringify({
-            API: "getApplicationCountMasterAdminV1",
-            REQUEST: { userId, districtId, startDate, endDate },
-            RESPONSE: {
-              status: 1,
-              message: "Invalid input data",
-            },
-          })
-        );
-        return res.status(400).json({
-          status: 1,
-          message: "Invalid input data",
-        });
-      }
-  
-      const [applicationCounts] = await getApplicationCountMasterAdminModelV1(
-        userId,
-        districtId,
-        startDate,
-        endDate
-      );
-  
+    const [applicationCounts] = await getApplicationCountMasterAdminModel(
+      userId,
+      districtId,
+      startDate,
+      endDate
+    );
+
+    logger.debug(
+      JSON.stringify({
+        API: "getApplicationCountMasterAdmin",
+        REQUEST: { userId, districtId, startDate, endDate },
+        RESPONSE: {
+          status: 0,
+          message: "Application count retrieved successfully",
+          data: applicationCounts,
+        },
+      })
+    );
+
+    return res.status(200).json({
+      status: 0,
+      message: "Application count retrieved successfully",
+      data: {
+        applicationCounts,
+      },
+    });
+  } catch (error) {
+    logger.error("Error retrieving application count:", error);
+    return res.status(500).json({
+      status: 1,
+      message: "An error occurred while retrieving the application count",
+      error: error.message,
+    });
+  }
+};
+
+export const getApplicationCountMasterAdminV1 = async (req, res) => {
+  try {
+    const { districtId, startDate, endDate } = req.body;
+    const userId = req.user.UserID;
+
+    if (!userId) {
       logger.debug(
         JSON.stringify({
           API: "getApplicationCountMasterAdminV1",
           REQUEST: { userId, districtId, startDate, endDate },
           RESPONSE: {
-            status: 0,
-            message: "Application count retrieved successfully",
-            data: applicationCounts,
+            status: 1,
+            message: "Invalid input data",
           },
         })
       );
-  
-      return res.status(200).json({
-        status: 0,
-        message: "Application count retrieved successfully",
-        data: {
-          applicationCounts,
-        },
-      });
-    } catch (error) {
-      logger.error("Error retrieving application count:", error);
-      return res.status(500).json({
+      return res.status(400).json({
         status: 1,
-        message: "An error occurred while retrieving the application count",
-        error: error.message,
+        message: "Invalid input data",
       });
     }
-  };
-  
+
+    const [applicationCounts] = await getApplicationCountMasterAdminModelV1(
+      userId,
+      districtId,
+      startDate,
+      endDate
+    );
+
+    logger.debug(
+      JSON.stringify({
+        API: "getApplicationCountMasterAdminV1",
+        REQUEST: { userId, districtId, startDate, endDate },
+        RESPONSE: {
+          status: 0,
+          message: "Application count retrieved successfully",
+          data: applicationCounts,
+        },
+      })
+    );
+
+    return res.status(200).json({
+      status: 0,
+      message: "Application count retrieved successfully",
+      data: {
+        applicationCounts,
+      },
+    });
+  } catch (error) {
+    logger.error("Error retrieving application count:", error);
+    return res.status(500).json({
+      status: 1,
+      message: "An error occurred while retrieving the application count",
+      error: error.message,
+    });
+  }
+};
+
 
 
 

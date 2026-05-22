@@ -7,6 +7,7 @@ import {
 } from "../models/authModels.js";
 import {
   generateOtpAadhaar,
+  sendOtpV3ecanteenapi,
   sendSMSInternally,
   verifyOtpAadhaar,
 } from "./thirdPartyAPI.js";
@@ -199,18 +200,20 @@ export const sendOtpV1 = async (req, res) => {
         })
       );
 
-      const smstext = `OTP to login in Passport Verification Application is ${rows[0][0]["OTP"]} DITE GoWB`;
+      const smstext = `OTP to login in Passport Verification Application is ${rows[0][0]["OTP"]} - WBP`;
       const mobileNumber = rows[0][0]["ContactNumber"];
       // const mobileNumber = "6202734737";
       const smsCategory = "login message";
-      const tpid = "1307172596406664446";
+      // const tpid = "1307172596406664446";
 
-      const smsStatus = await sendSMSInternally(
-        smstext,
-        mobileNumber,
-        smsCategory,
-        tpid
-      );
+      // const smsStatus = await sendSMSInternally(
+      //   smstext,
+      //   mobileNumber,
+      //   smsCategory,
+      //   tpid
+      // );
+
+      const smsStatus = await sendOtpV3ecanteenapi(mobileNumber, smstext);
 
       res.status(200).json({
         status: 0,
@@ -406,7 +409,7 @@ export const verifyOtpV1 = async (req, res) => {
     if (result[0][0].ErrorCode == 0) {
       const user = JSON.parse(result[0][0]?.UserDetails);
       // console.log("user", user);
-      
+
 
       const jwt_token = jwt.sign(
         {
